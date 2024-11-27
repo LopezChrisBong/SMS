@@ -1,22 +1,23 @@
 <template>
   <v-app>
-    <!-- Header -->
+    <!-- Top Bar -->
     <v-app-bar app color="primary" dark>
-      <v-btn icon v-if="!$vuetify.breakpoint.smAndUp">
-        <v-icon class="text-green-6DB249" @click="openMobileNav()"
-          >mdi-menu</v-icon
+      <v-toolbar-title>
+        <!-- <v-icon class="mr-2">mdi-account</v-icon> -->
+        <v-btn
+          v-if="$vuetify.breakpoint.smAndDown"
+          icon
+          @click="sidebarOpen = !sidebarOpen"
         >
-      </v-btn>
-      <v-toolbar-title :class="$vuetify.breakpoint.smAndUp ? 'pt-4' : ''">
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
         {{
           $vuetify.breakpoint.smAndUp
             ? "School Management System - Asuncion National High School"
             : "  SMS - ANHS"
-        }}</v-toolbar-title
-      >
-
+        }}
+      </v-toolbar-title>
       <v-spacer></v-spacer>
-
       <v-menu>
         <template v-slot:activator="{ on }">
           <v-chip v-on="on" color="#1976D2" class="rounded-lg d-flex py-2">
@@ -91,91 +92,154 @@
       </v-menu>
     </v-app-bar>
 
-    <!-- Sidebar and Main Content -->
+    <!-- Sidebar -->
     <v-navigation-drawer
-      persistent
-      v-model="drawer"
-      :permanent="$vuetify.breakpoint.smAndUp"
-      :mini-variant.sync="mini"
-      :temporary="!$vuetify.breakpoint.smAndUp"
       app
-      style="background-color: #808080"
+      v-model="sidebarOpen"
+      :temporary="$vuetify.breakpoint.smAndDown"
+      class="pa-3"
+      v-if="$vuetify.breakpoint.smAndDown"
     >
-      <v-list dense>
-        <v-list-item-group active-class="text--primary">
-          <div class=" px-2">
-            <div>
-              <v-list-item-avatar v-if="!$vuetify.breakpoint.smAndUp">
-                <v-img
-                  src="../../assets/img/Asuncion National High Scholl.jpg"
-                ></v-img>
-              </v-list-item-avatar>
-              <span v-if="!$vuetify.breakpoint.smAndUp" class="px-4 "
-                >SMS - ANHS</span
-              >
-              <v-btn
-                icon
-                @click="closeNav()"
-                v-if="!$vuetify.breakpoint.smAndUp"
-              >
-                <v-icon class="white--text">mdi-menu</v-icon>
-              </v-btn>
-            </div>
-          </div>
-
-          <v-list nav dense class="sidebar mt-2">
-            <div
-              v-for="(link, i) in links"
-              :key="i"
-              style="background: #808080"
+      <v-list nav dense class="sidebar mt-2">
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-avatar>
+              <img :src="profImg" max-width="60" />
+            </v-avatar>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title class="text-uppercase"
+              >{{ $store.state.user.fname }}
+              {{ $store.state.user.lname }}</v-list-item-title
             >
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
+        <div v-for="(link, i) in links" :key="i" style="background: white">
+          <v-list-item
+            v-if="!link.subLink"
+            :key="link.title"
+            router
+            :to="'/' + userType + link.route"
+            color="#808191"
+          >
+            <v-list-item-icon>
+              <v-icon>{{ link.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ link.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-group v-else :key="link" color="#3a3b3a" :value="false">
+            <v-icon slot="prependIcon">{{ link.icon }}</v-icon>
+            <template v-slot:activator>
+              <v-list-item-title>{{ link.title }}</v-list-item-title>
+            </template>
+            <div class="sub-item">
               <v-list-item
-                v-if="!link.subLink"
-                :key="link.title"
+                v-for="sublink in link.subLink"
                 router
-                :to="'/' + userType + link.route"
+                :to="'/' + userType + sublink.route"
+                :key="sublink.title"
                 color="#808191"
               >
                 <v-list-item-icon>
-                  <v-icon>{{ link.icon }}</v-icon>
+                  <!-- <v-icon class="">{{ sublink.icon }}</v-icon> -->
                 </v-list-item-icon>
+                <v-list-item-title class="">{{
+                  sublink.title
+                }}</v-list-item-title>
+              </v-list-item>
+            </div>
+          </v-list-group>
+        </div>
+      </v-list>
+    </v-navigation-drawer>
 
+    <!-- Layout with Sidebar and Content -->
+    <v-main>
+      <v-container fluid>
+        <v-row>
+          <!-- Sidebar -->
+          <v-col
+            :cols="$vuetify.breakpoint.smAndUp ? '3' : '0'"
+            class="pa-3"
+            style="border-right: 1px solid #ddd; "
+            v-if="$vuetify.breakpoint.smAndUp"
+          >
+            <v-list nav dense class="sidebar mt-2">
+              <v-list-item>
+                <v-list-item-avatar>
+                  <v-avatar>
+                    <img :src="profImg" max-width="60" />
+                  </v-avatar>
+                </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title>{{ link.title }}</v-list-item-title>
+                  <v-list-item-title class="text-uppercase"
+                    >{{ $store.state.user.fname }}
+                    {{ $store.state.user.lname }}</v-list-item-title
+                  >
                 </v-list-item-content>
               </v-list-item>
 
-              <v-list-group v-else :key="link" color="#3a3b3a" :value="false">
-                <v-icon slot="prependIcon">{{ link.icon }}</v-icon>
-                <template v-slot:activator>
-                  <v-list-item-title>{{ link.title }}</v-list-item-title>
-                </template>
-                <div class="sub-item">
-                  <v-list-item
-                    v-for="sublink in link.subLink"
-                    router
-                    :to="'/' + userType + sublink.route"
-                    :key="sublink.title"
-                    color="#808191"
-                  >
-                    <v-list-item-icon>
-                      <!-- <v-icon class="">{{ sublink.icon }}</v-icon> -->
-                    </v-list-item-icon>
-                    <v-list-item-title class="">{{
-                      sublink.title
-                    }}</v-list-item-title>
-                  </v-list-item>
-                </div>
-              </v-list-group>
-            </div>
-          </v-list>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
-    <v-main style="background-color: #1976D2; ">
-      <div class=" fill-height pb-6" style="background-color:white; ">
-        <div class="d-flex justify-space-between py-4 px-4  ">
-          <!-- <div>
+              <v-divider></v-divider>
+
+              <div
+                v-for="(link, i) in links"
+                :key="i"
+                style="background: white"
+              >
+                <v-list-item
+                  v-if="!link.subLink"
+                  :key="link.title"
+                  router
+                  :to="'/' + userType + link.route"
+                  color="#808191"
+                >
+                  <v-list-item-icon>
+                    <v-icon>{{ link.icon }}</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>{{ link.title }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-list-group v-else :key="link" color="#3a3b3a" :value="false">
+                  <v-icon slot="prependIcon">{{ link.icon }}</v-icon>
+                  <template v-slot:activator>
+                    <v-list-item-title>{{ link.title }}</v-list-item-title>
+                  </template>
+                  <div class="sub-item">
+                    <v-list-item
+                      v-for="sublink in link.subLink"
+                      router
+                      :to="'/' + userType + sublink.route"
+                      :key="sublink.title"
+                      color="#808191"
+                    >
+                      <v-list-item-icon>
+                        <!-- <v-icon class="">{{ sublink.icon }}</v-icon> -->
+                      </v-list-item-icon>
+                      <v-list-item-title class="">{{
+                        sublink.title
+                      }}</v-list-item-title>
+                    </v-list-item>
+                  </div>
+                </v-list-group>
+              </div>
+            </v-list>
+          </v-col>
+
+          <!-- Feed -->
+          <v-col :cols="$vuetify.breakpoint.smAndUp ? '9' : '12'" class="pa-3">
+            <div class=" fill-height pb-6" style="background-color:white; ">
+              <div class="d-flex justify-space-between py-4 px-4  ">
+                <!-- <div>
             <v-select
               label="Year"
               color="#519043"
@@ -186,10 +250,13 @@
               :items="filterYears"
             ></v-select>
           </div> -->
-          <strong class="text-gray-100">{{ $route.meta.title }}</strong>
-        </div>
-        <router-view v-on:reloadProfile="loadImg" />
-      </div>
+                <strong class="text-gray-100">{{ $route.meta.title }}</strong>
+              </div>
+              <router-view v-on:reloadProfile="loadImg" />
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-main>
   </v-app>
 </template>
@@ -233,6 +300,7 @@ export default {
       interval: null,
       loading: false,
       options: [],
+      sidebarOpen: true,
     };
   },
 
@@ -631,18 +699,18 @@ export default {
 }
 
 .sidebar .v-list-item--active {
-  background-color: white !important;
+  background-color: #bcedc8 !important;
   color: #3a3b3a !important;
 }
 .sidebar .v-list-group--active {
-  background-color: white !important;
+  background-color: #bcedc8 !important;
   border-radius: 5px;
 
   color: #3a3b3a !important;
 }
 
 .sidebar div .sub-item .v-list-item {
-  background-color: white !important;
+  background-color: rgb(255, 255, 255) !important;
 }
 
 .sidebar div .sub-item .v-list-item .v-list-item__title {
@@ -691,7 +759,7 @@ export default {
 }
 
 .v-list-item__icon i {
-  color: white !important;
+  color: rgb(0, 0, 0) !important;
 }
 
 /* 
@@ -706,7 +774,7 @@ export default {
   color: #3a3b3a !important;
 }
 ::v-deep .v-list-group i {
-  color: white !important;
+  color: rgb(0, 0, 0) !important;
 }
 
 ::v-deep .v-list-group--active i {

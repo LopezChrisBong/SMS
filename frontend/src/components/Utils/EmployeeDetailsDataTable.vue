@@ -226,6 +226,7 @@ export default {
       { text: "First Name", value: "fname", align: "center" },
       { text: "Middle Name", value: "mname", align: "center" },
       { text: "Sex", value: "sex", align: "center" },
+      { text: "Mobile No.", value: "mobile_no", align: "center" },
       {
         text: "Actions",
         value: "actions",

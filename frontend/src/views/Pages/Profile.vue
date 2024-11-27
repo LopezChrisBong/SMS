@@ -317,6 +317,8 @@ export default {
         mname: null,
         lname: null,
         suffix: null,
+        sex: null,
+        mobile_no: null,
         profile_img: null,
       },
       oldPass: null,
@@ -345,6 +347,8 @@ export default {
           this.data.mname = res.data.mname;
           this.data.lname = res.data.lname;
           this.data.suffix = res.data.suffix;
+          this.data.sex = res.data.sex;
+          this.data.mobile_no = res.data.mobile_no;
           this.data.profile_img = res.data.profile_img
             ? process.env.VUE_APP_SERVER +
               "/user-details/getProfileImg/" +
