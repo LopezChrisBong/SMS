@@ -143,19 +143,23 @@ export class UserDetailsService {
  async getPersonalInfo(user: any) {
     
     const id = user.userdetail.id;
-    return await this.dataSource
+    let data =  await this.dataSource
       .createQueryBuilder(UserDetail, 'ud')
       .select([
         'ud.fname as fname',
         'ud.mname as mname',
         'ud.lname as lname',
         'ud.suffix as suffix',
+        'ud.sex as sex',
+        'ud.mobile_no as mobile_no',
         'ud.profile_img as profile_img',
       ])
-      .leftJoin(Users, 'u', 'u.id = ud.userID')
-      .leftJoin(UserType, 'ut', 'u.usertypeID = ut.id')
       .where('ud.id = :id', { id })
       .getRawOne();
+
+
+      // console.log('Personal Info',data)
+      return data;
   }
 
   async uploadProfileImg(filename: string, user: any) {
@@ -192,6 +196,8 @@ export class UserDetailsService {
         mname: updateUserDetailDto.mname,
         lname: updateUserDetailDto.lname,
         suffix: updateUserDetailDto.suffix,
+        sex: updateUserDetailDto.sex,
+        mobile_no: updateUserDetailDto.mobile_no,
       });
 
       if (upd.affected == 1) {
