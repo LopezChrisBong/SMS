@@ -101,43 +101,11 @@ export default {
   },
   methods: {
     initialize() {
-      this.getUpComingBdays();
-      this.getMaleFemaleCount();
-      this.getEmployeeStats();
-      // this.getMyDirectHeadCount();
-      this.getIfHasDirectHead();
-      this.getMyDirectHead();
-
-      // this.datas = [300, 50, 100];
-      // this.label = ["Plantilla", "COS", "JO"];
-      // let statuses = [1,3,5,6]
-      // this.axiosCall("/dashboard/getAllWorkStatusCount", "POST", statuses).then((res) => {
-      //   if (res){
-      //       this.scheduledWorks = res.data.worksArray[0].work_detail_status_count
-      //       this.dispatchWorks = res.data.worksArray[1].work_detail_status_count
-      //       this.cancelledWorks = res.data.worksArray[2].work_detail_status_count
-      //       this.completedWorks = res.data.worksArray[3].work_detail_status_count
-      //       this.$refs.DoughnutChart1.renderGraph(res.data.total.total_works,res.data.worksArray[0].work_detail_status_count)
-      //       this.$refs.DoughnutChart2.renderGraph(res.data.total.total_works,res.data.worksArray[1].work_detail_status_count)
-      //       this.$refs.DoughnutChart3.renderGraph(res.data.total.total_works,res.data.worksArray[2].work_detail_status_count)
-      //       this.$refs.DoughnutChart4.renderGraph(res.data.total.total_works,res.data.worksArray[3].work_detail_status_count)
-      //   }
-      // });
-      // this.axiosCall("/dashboard/getAllTopClients", "GET").then((res) => {
-      //   if (res){
-      //       this.top_clients = res.data
-      //   }
-      // });
-      // this.axiosCall("/dashboard/getAllWorkRequest", "GET",).then((res) => {
-      //   if (res){
-      //       res.data.forEach(item => {
-      //         this.label.push(item.request_type_description)
-      //         this.datas.push(item.work_request_count)
-      //       });
-      //     this.$refs.PieChart.renderGraph(this.datas,this.label)
-      //   }
-      // });
-      // console.log(this.$store.getters.getIsAuthenticated);
+      // this.getUpComingBdays();
+      // this.getMaleFemaleCount();
+      // this.getEmployeeStats();
+      // this.getIfHasDirectHead();
+      // this.getMyDirectHead();
     },
 
     getDayOnDate() {
@@ -157,55 +125,55 @@ export default {
     open(event) {
       alert(event.title);
     },
-    getUpComingBdays() {
-      this.axiosCall("/user-details/getBdayToday", "GET").then(
-        (res) => {
-          if (res) {
-            this.today = res.data.today;
-            this.activeCalendar = res.data.today;
-            this.tracked = res.data.data;
-            console.log("tracked", this.tracked);
-          }
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
+    // getUpComingBdays() {
+    //   this.axiosCall("/user-details/getBdayToday", "GET").then(
+    //     (res) => {
+    //       if (res) {
+    //         this.today = res.data.today;
+    //         this.activeCalendar = res.data.today;
+    //         this.tracked = res.data.data;
+    //         console.log("tracked", this.tracked);
+    //       }
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
+    // },
 
-    shiftCalendar(move) {
-      this.isCalendarFocus = false;
-      let date = new Date(this.activeCalendar);
-      if (move == "prev") {
-        date.setMonth(date.getMonth() - 1);
-      } else {
-        date.setMonth(date.getMonth() + 1);
-      }
-      this.activeCalendar = date.toLocaleDateString();
+    // shiftCalendar(move) {
+    //   this.isCalendarFocus = false;
+    //   let date = new Date(this.activeCalendar);
+    //   if (move == "prev") {
+    //     date.setMonth(date.getMonth() - 1);
+    //   } else {
+    //     date.setMonth(date.getMonth() + 1);
+    //   }
+    //   this.activeCalendar = date.toLocaleDateString();
 
-      this.axiosCall("/user-details/shiftCalendar/" + date, "GET").then(
-        (res) => {
-          if (res) {
-            this.today = res.data.today;
-            this.tracked = res.data.data;
-          }
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
+    //   this.axiosCall("/user-details/shiftCalendar/" + date, "GET").then(
+    //     (res) => {
+    //       if (res) {
+    //         this.today = res.data.today;
+    //         this.tracked = res.data.data;
+    //       }
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
+    // },
 
-    getMyDirectHead() {
-      this.axiosCall("/user-details/getMyDirectHead", "GET").then(
-        (res) => {
-          console.log(res.data);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
+    // getMyDirectHead() {
+    //   this.axiosCall("/user-details/getMyDirectHead", "GET").then(
+    //     (res) => {
+    //       console.log(res.data);
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
+    // },
 
     // getMyDirectHeadCount() {
     //   this.axiosCall("/my-direct-head/getMyDirectHeadCount", "GET").then(
@@ -221,63 +189,63 @@ export default {
     //   );
     // },
 
-    getIfHasDirectHead() {
-      this.axiosCall("/my-direct-head/getIfHasDirectHead", "GET").then(
-        (res) => {
-          console.log("hasdirecthead", res.data);
-          this.head_data = res.data;
-        }
-      );
-    },
+    // getIfHasDirectHead() {
+    //   this.axiosCall("/my-direct-head/getIfHasDirectHead", "GET").then(
+    //     (res) => {
+    //       console.log("hasdirecthead", res.data);
+    //       this.head_data = res.data;
+    //     }
+    //   );
+    // },
 
-    getEmployeeStats() {
-      this.axiosCall("/user-details/getEmployeeStats", "GET").then(
-        (res) => {
-          if (res.data) {
-            this.datas = {
-              label: [
-                "Permanent",
-                "Temporary",
-                "Casual",
-                "COS",
-                "JO",
-                "Coterminous",
-              ],
+    // getEmployeeStats() {
+    //   this.axiosCall("/user-details/getEmployeeStats", "GET").then(
+    //     (res) => {
+    //       if (res.data) {
+    //         this.datas = {
+    //           label: [
+    //             "Permanent",
+    //             "Temporary",
+    //             "Casual",
+    //             "COS",
+    //             "JO",
+    //             "Coterminous",
+    //           ],
 
-              data: [
-                res.data.permanent,
-                res.data.temporary,
-                res.data.casual,
-                res.data.COS,
-                res.data.JO,
-                res.data.coterminous,
-              ],
-            };
-          }
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
+    //           data: [
+    //             res.data.permanent,
+    //             res.data.temporary,
+    //             res.data.casual,
+    //             res.data.COS,
+    //             res.data.JO,
+    //             res.data.coterminous,
+    //           ],
+    //         };
+    //       }
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
+    // },
 
-    getMaleFemaleCount() {
-      this.axiosCall("/user-details/getMaleFemaleCount", "GET").then(
-        (res) => {
-          if (res.data) {
-            this.maleCnt = res.data.male;
-            this.femaleCnt = res.data.female;
-            this.maleFemaleData = {
-              label: ["Male", "Female"],
-              data: [res.data.male, res.data.female],
-            };
-          }
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
+    // getMaleFemaleCount() {
+    //   this.axiosCall("/user-details/getMaleFemaleCount", "GET").then(
+    //     (res) => {
+    //       if (res.data) {
+    //         this.maleCnt = res.data.male;
+    //         this.femaleCnt = res.data.female;
+    //         this.maleFemaleData = {
+    //           label: ["Male", "Female"],
+    //           data: [res.data.male, res.data.female],
+    //         };
+    //       }
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
+    // },
   },
   created() {
     if (this.$store.state.expiryDate < Date.now()) {

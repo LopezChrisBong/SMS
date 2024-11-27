@@ -37,7 +37,7 @@
                   <v-btn
                     x-small
                     class="white--text my-2 rounded-lg"
-                    color="#147452"
+                    color="#5A67DA"
                     block
                     @click="viewUserData(item)"
                   >

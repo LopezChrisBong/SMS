@@ -15,10 +15,10 @@
           dense
         ></v-text-field>
 
-        <v-btn color="#519043" outlined class="ml-2" @click="viewPrintOption()">
+        <!-- <v-btn color="#519043" outlined class="ml-2" @click="viewPrintOption()">
           <v-icon class="mr-1">mdi-printer</v-icon>
           Print
-        </v-btn>
+        </v-btn> -->
         <!-- <v-btn color="#519043" outlined class="ml-2" @click="printEmpCount()">
           <v-icon class="mr-1">mdi-printer</v-icon>
           Print Employee Count
@@ -72,7 +72,7 @@
           >
             <v-icon size="14">mdi-eye</v-icon> View
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             x-small
             color="grey"
             class="mx-1"
@@ -80,7 +80,7 @@
             @click="editItem(item)"
           >
             <v-icon size="14">mdi-pencil-outline</v-icon> Update
-          </v-btn>
+          </v-btn> -->
         </template>
       </v-data-table>
     </v-card>
@@ -135,54 +135,7 @@
           </v-btn>
         </v-card-title>
         <v-col> </v-col>
-        <v-card-text style="max-height: 700px">
-          <v-form ref="PrintFormref">
-            <v-container>
-              <v-row>
-                <v-col cols="12">
-                  <v-autocomplete
-                    label="Report"
-                    v-model="toPrint"
-                    :rules="[formRules.required]"
-                    dense
-                    class="rounded-lg"
-                    item-text="type"
-                    item-value="id"
-                    color="#93CB5B"
-                    :items="reportTypeList"
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <v-col cols="12" v-if="toPrint == 8">
-                  <v-autocomplete
-                    label="Month"
-                    v-model="selectedMonth"
-                    :rules="toPrint == 8 ? [formRules.required] : []"
-                    dense
-                    class="rounded-lg"
-                    item-text="name"
-                    item-value="id"
-                    color="#93CB5B"
-                    :items="monthsList"
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <v-col cols="12" v-if="toPrint == 8">
-                  <v-autocomplete
-                    label="Year"
-                    v-model="selectedYear"
-                    :rules="toPrint == 8 ? [formRules.required] : []"
-                    dense
-                    class="rounded-lg"
-                    color="#93CB5B"
-                    :items="yearList"
-                  >
-                  </v-autocomplete>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-form>
-        </v-card-text>
+        <v-card-text style="max-height: 700px"> </v-card-text>
 
         <v-card-actions class="pa-5">
           <v-spacer></v-spacer>
@@ -190,7 +143,7 @@
             <v-icon>mdi-close-circle-outline</v-icon>
             Cancel
           </v-btn>
-          <v-btn color="#519043" class="white--text" @click="print()">
+          <v-btn color="#5A67DA" class="white--text" @click="print()">
             <v-icon class="mr-1">mdi-printer</v-icon>
             Print
           </v-btn>
@@ -250,16 +203,6 @@ export default {
   },
   data: () => ({
     search: "",
-    reportTypeList: [
-      { id: 1, type: "Plantilla Faculty Profile" },
-      { id: 2, type: "Plantilla Admin Profile" },
-      { id: 3, type: "JO Staff & Utility Profile" },
-      { id: 4, type: "COS Faculty Profile" },
-      { id: 5, type: "Coterminous Employee Profile" },
-      { id: 6, type: "COS Staff Profile" },
-      { id: 7, type: "Casual Employees Profile" },
-      { id: 8, type: "Agency Personnel Complement (Total Employee Count)" },
-    ],
     monthsList: [
       { id: 1, name: "January" },
       { id: 2, name: "February" },
@@ -279,13 +222,10 @@ export default {
     selectedYear: null,
     toPrint: null,
     headers: [
-      { text: "Name", value: "name", align: "start" },
-      { text: "Position", value: "positionDesc", align: "center" },
-      { text: "Date hired", value: "date_hired", align: "center" },
+      { text: "Lastname", value: "lname", align: "start" },
+      { text: "First Name", value: "fname", align: "center" },
+      { text: "Middle Name", value: "mname", align: "center" },
       { text: "Sex", value: "sex", align: "center" },
-      { text: "Employment Status", value: "statusDesc", align: "center" },
-      { text: "Status", value: "isActive", align: "center" },
-      { text: "", value: "inactive_type", align: "center" },
       {
         text: "Actions",
         value: "actions",
@@ -354,14 +294,12 @@ export default {
     pagination(data) {
       this.paginationData = data;
     },
+
     initialize() {
       this.loading = true;
-      this.axiosCall("/employee", "GET").then((res) => {
+      this.axiosCall("/user-details", "GET").then((res) => {
         if (res) {
           let data = res.data;
-          data.forEach((element, i) => {
-            data[i].name = this.toTitleCase(element.name);
-          });
           this.data = data;
           this.loading = false;
         }

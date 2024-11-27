@@ -5,8 +5,8 @@
         <v-col align="center" cols="12" md="6">
           <v-card max-width="400" class="rounded-card">
             <div class="justify-center pa-4">
-              <h3 style="color: #519043">
-                Create your <span style="color: #ffb400">Account</span>
+              <h3 style="color: #5a67da">
+                Create your <span style="color: #5a67da">Account</span>
                 <span class="text-subtitle-1 black--text"> | Sign In</span>
               </h3>
               <p class="text-caption text-gray-100">

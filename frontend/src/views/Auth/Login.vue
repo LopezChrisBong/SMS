@@ -142,6 +142,7 @@ export default {
             res.data.status == 201 ||
             res.data.status == 202
           ) {
+            console.log(res.data);
             localStorage.setItem("token", res.data.token);
             this.$store.commit("setExpiryDate");
             location.reload();
@@ -153,7 +154,6 @@ export default {
             //     headers: { Authorization: `Bearer ${res.data.token}` },
             //   }).then((resp) => {
             //     this.$store.dispatch("setEmp", resp.data);
-            //   });
             // }, 500);
           } else {
             this.fadeAwayMessage.show = true;

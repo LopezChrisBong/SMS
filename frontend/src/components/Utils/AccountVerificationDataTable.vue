@@ -266,7 +266,6 @@ export default {
     //   this.deleteData = item;
     // },
     editItem(item) {
-      console.log(this.tab);
       this.updateData = [{ id: null }];
       setTimeout(() => {
         this.updateData = item;
