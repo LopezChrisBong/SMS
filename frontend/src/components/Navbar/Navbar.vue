@@ -1,5 +1,95 @@
 <template>
-  <div class="mt-2">
+  <v-app>
+    <!-- Header -->
+    <v-app-bar app color="primary" dark>
+      <v-btn icon v-if="!$vuetify.breakpoint.smAndUp">
+        <v-icon class="text-green-6DB249" @click="openMobileNav()"
+          >mdi-menu</v-icon
+        >
+      </v-btn>
+      <v-toolbar-title :class="$vuetify.breakpoint.smAndUp ? 'pt-4' : ''">
+        {{
+          $vuetify.breakpoint.smAndUp
+            ? "School Management System - Asuncion National High School"
+            : "  SMS - ANHS"
+        }}</v-toolbar-title
+      >
+
+      <v-spacer></v-spacer>
+
+      <v-menu>
+        <template v-slot:activator="{ on }">
+          <v-chip v-on="on" color="#1976D2" class="rounded-lg d-flex py-2">
+            <v-avatar left :size="$vuetify.breakpoint.smAndUp ? 100 : 100">
+              <img :src="profImg" max-width="100" />
+            </v-avatar>
+            <span
+              v-show="$vuetify.breakpoint.smAndUp"
+              style="width: 130px; text-align: center ;"
+              ><strong>
+                <v-icon size="30" right class="mx-3">
+                  mdi-account-arrow-right
+                </v-icon> </strong
+              >{{ $store.state.user.usertype.description }}
+            </span>
+            <v-icon
+              v-show="$vuetify.breakpoint.smAndDown"
+              size="30"
+              right
+              class="mx-1"
+              >mdi-account-arrow-right</v-icon
+            >
+            <v-icon right> mdi-chevron-down </v-icon>
+          </v-chip>
+        </template>
+        <v-card width="240">
+          <v-list color="#5a67da">
+            <v-list-item>
+              <v-list-item-avatar>
+                <img :src="profImg" max-width="60" />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title class="white--text"
+                  >{{ $store.state.user.fname }}
+                  {{
+                    $store.state.user.lname.charAt(0).toUpperCase()
+                  }}.</v-list-item-title
+                >
+                <v-list-item-subtitle class="white--text"
+                  >{{ $store.state.user.usertype.description }} /
+                  {{ getMyRole($store.state.user.user.user_roleID) }}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-btn icon @click="menu = false">
+                  <v-icon class="white--text">mdi-close-circle</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+          <v-list>
+            <v-list-item @click="toProfile()">
+              <v-list-item-action>
+                <v-icon>mdi-cog-outline</v-icon>
+              </v-list-item-action>
+              <v-list-item-subtitle
+                ><strong>Profile</strong></v-list-item-subtitle
+              >
+            </v-list-item>
+            <v-list-item @click="logout()">
+              <v-list-item-action>
+                <v-icon>mdi-logout</v-icon>
+              </v-list-item-action>
+              <v-list-item-subtitle
+                ><strong>Sign Out </strong></v-list-item-subtitle
+              >
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-menu>
+    </v-app-bar>
+
+    <!-- Sidebar and Main Content -->
     <v-navigation-drawer
       persistent
       v-model="drawer"
@@ -7,168 +97,99 @@
       :mini-variant.sync="mini"
       :temporary="!$vuetify.breakpoint.smAndUp"
       app
-      style="background-color: #5a67da"
+      style="background-color: #808080"
     >
-      <!-- <v-navigation-drawer
-    v-model="drawer"
-    :mini-variant.sync="mini"
-    permanent
-    style="background-color: transparent"
-  > -->
-      <v-list-item class="px-2" style="margin-top: 5px">
-        <v-list-item-avatar>
-          <v-img
-            src="../../assets/img/Asuncion National High Scholl.jpg"
-          ></v-img>
-        </v-list-item-avatar>
+      <v-list dense>
+        <v-list-item-group active-class="text--primary">
+          <div class=" px-2">
+            <div>
+              <v-list-item-avatar v-if="!$vuetify.breakpoint.smAndUp">
+                <v-img
+                  src="../../assets/img/Asuncion National High Scholl.jpg"
+                ></v-img>
+              </v-list-item-avatar>
+              <span v-if="!$vuetify.breakpoint.smAndUp" class="px-4 "
+                >SMS - ANHS</span
+              >
+              <v-btn
+                icon
+                @click="closeNav()"
+                v-if="!$vuetify.breakpoint.smAndUp"
+              >
+                <v-icon class="white--text">mdi-menu</v-icon>
+              </v-btn>
+            </div>
+          </div>
 
-        <v-list-item-title class="white--text font-weight-bold"
-          >(SMS)
-        </v-list-item-title>
-
-        <v-btn
-          icon
-          @click.stop="mini = !mini"
-          v-if="$vuetify.breakpoint.smAndUp"
-        >
-          <v-icon class="white--text">mdi-menu-open</v-icon>
-        </v-btn>
-        <v-btn icon @click="closeNav()" v-if="!$vuetify.breakpoint.smAndUp">
-          <v-icon class="white--text">mdi-menu-open</v-icon>
-        </v-btn>
-      </v-list-item>
-
-      <v-list nav dense class="sidebar mt-2">
-        <div v-for="(link, i) in links" :key="i" style="background: #5a67da">
-          <v-list-item
-            v-if="!link.subLink"
-            :key="link.title"
-            router
-            :to="'/' + userType + link.route"
-            color="#808191"
-          >
-            <v-list-item-icon>
-              <v-icon>{{ link.icon }}</v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title>{{ link.title }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-group v-else :key="link" color="#3a3b3a" :value="false">
-            <v-icon slot="prependIcon">{{ link.icon }}</v-icon>
-            <template v-slot:activator>
-              <v-list-item-title>{{ link.title }}</v-list-item-title>
-            </template>
-            <div class="sub-item">
+          <v-list nav dense class="sidebar mt-2">
+            <div
+              v-for="(link, i) in links"
+              :key="i"
+              style="background: #808080"
+            >
               <v-list-item
-                v-for="sublink in link.subLink"
+                v-if="!link.subLink"
+                :key="link.title"
                 router
-                :to="'/' + userType + sublink.route"
-                :key="sublink.title"
+                :to="'/' + userType + link.route"
                 color="#808191"
               >
                 <v-list-item-icon>
-                  <!-- <v-icon class="">{{ sublink.icon }}</v-icon> -->
+                  <v-icon>{{ link.icon }}</v-icon>
                 </v-list-item-icon>
-                <v-list-item-title class="">{{
-                  sublink.title
-                }}</v-list-item-title>
+
+                <v-list-item-content>
+                  <v-list-item-title>{{ link.title }}</v-list-item-title>
+                </v-list-item-content>
               </v-list-item>
+
+              <v-list-group v-else :key="link" color="#3a3b3a" :value="false">
+                <v-icon slot="prependIcon">{{ link.icon }}</v-icon>
+                <template v-slot:activator>
+                  <v-list-item-title>{{ link.title }}</v-list-item-title>
+                </template>
+                <div class="sub-item">
+                  <v-list-item
+                    v-for="sublink in link.subLink"
+                    router
+                    :to="'/' + userType + sublink.route"
+                    :key="sublink.title"
+                    color="#808191"
+                  >
+                    <v-list-item-icon>
+                      <!-- <v-icon class="">{{ sublink.icon }}</v-icon> -->
+                    </v-list-item-icon>
+                    <v-list-item-title class="">{{
+                      sublink.title
+                    }}</v-list-item-title>
+                  </v-list-item>
+                </div>
+              </v-list-group>
             </div>
-          </v-list-group>
-        </div>
+          </v-list>
+        </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-
-    <!-- <v-app-bar app flat> -->
-    <v-app-bar app flat color="#5a67da">
-      <div
-        class="d-flex elevation-4 mt-6 px-2 align-center rounded-t-lg"
-        style="background-color: white; width: 100%; height: 60px"
-      >
-        <v-btn icon v-if="!$vuetify.breakpoint.smAndUp">
-          <v-icon class="text-green-6DB249" @click="openMobileNav()"
-            >mdi-menu-open</v-icon
-          >
-        </v-btn>
-        <div class="pt-4" v-show="$vuetify.breakpoint.smAndUp">
-          <!-- <h4 class="text-gray-100">Welcome {{ $store.state.user.fname }}!</h4> -->
-          <h4 class="text-gray-100">
-            School Management System - Asuncion National High School
-          </h4>
-          <p></p>
-          <!-- <p class="text-caption text-gray-200">{{ getCurrentDate() }}</p> -->
+    <v-main style="background-color: #1976D2; ">
+      <div class=" fill-height pb-6" style="background-color:white; ">
+        <div class="d-flex justify-space-between py-4 px-4  ">
+          <!-- <div>
+            <v-select
+              label="Year"
+              color="#519043"
+              @change="changeFilter()"
+              outlined
+              v-model="selectedFiter"
+              dense
+              :items="filterYears"
+            ></v-select>
+          </div> -->
+          <strong class="text-gray-100">{{ $route.meta.title }}</strong>
         </div>
-        <v-spacer></v-spacer>
-
-        <v-menu>
-          <template v-slot:activator="{ on }">
-            <v-chip v-on="on" color="white" class="rounded-lg d-flex py-2">
-              <v-avatar left :size="$vuetify.breakpoint.smAndUp ? 100 : 100">
-                <img :src="profImg" max-width="100" />
-              </v-avatar>
-              <span
-                v-if="$vuetify.breakpoint.smAndUp"
-                style="width: 130px; text-align: center"
-                ><strong
-                  >{{ $store.state.user.fname }}
-                  {{ $store.state.user.lname.charAt(0).toUpperCase() }}.</strong
-                ><br />{{ $store.state.user.usertype.description }} /
-                {{ getMyRole($store.state.user.user.user_roleID) }}
-              </span>
-              <v-icon right> mdi-chevron-down </v-icon>
-            </v-chip>
-          </template>
-          <v-card width="240">
-            <v-list color="#5a67da">
-              <v-list-item>
-                <v-list-item-avatar>
-                  <img :src="profImg" max-width="60" />
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title class="white--text"
-                    >{{ $store.state.user.fname }}
-                    {{
-                      $store.state.user.lname.charAt(0).toUpperCase()
-                    }}.</v-list-item-title
-                  >
-                  <v-list-item-subtitle class="white--text"
-                    >{{ $store.state.user.usertype.description }} /
-                    {{ getMyRole($store.state.user.user.user_roleID) }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-btn icon @click="menu = false">
-                    <v-icon class="white--text">mdi-close-circle</v-icon>
-                  </v-btn>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-            <v-list>
-              <v-list-item @click="toProfile()">
-                <v-list-item-action>
-                  <v-icon>mdi-cog-outline</v-icon>
-                </v-list-item-action>
-                <v-list-item-subtitle
-                  ><strong>Profile</strong></v-list-item-subtitle
-                >
-              </v-list-item>
-              <v-list-item @click="logout()">
-                <v-list-item-action>
-                  <v-icon>mdi-logout</v-icon>
-                </v-list-item-action>
-                <v-list-item-subtitle
-                  ><strong>Sign Out </strong></v-list-item-subtitle
-                >
-              </v-list-item>
-            </v-list>
-          </v-card>
-        </v-menu>
+        <router-view v-on:reloadProfile="loadImg" />
       </div>
-    </v-app-bar>
-  </div>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -540,12 +561,12 @@ export default {
   padding: 8px !important;
 }
 .v-list-item__icon {
-  color: white !important;
+  color: gray !important;
 }
 .sidebar .v-list-item {
   border-radius: 5px;
   /* margin-left: 10px; */
-  color: white;
+  color: gray;
 }
 
 .notifBadgeYellow {
@@ -664,7 +685,7 @@ export default {
 }
 
 .v-list-item__title {
-  color: white !important;
+  color: black !important;
 }
 
 .v-list-item__icon i {

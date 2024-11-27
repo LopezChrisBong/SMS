@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "../store";
 import OuterLayout from "../layouts/OuterLayout.vue";
-import MainLayout from "../layouts/MainLayout.vue";
+import MainLayout from "../layouts/MainLayout2.vue";
 import Register from "../views/Auth/Register.vue";
 import Login from "../views/Auth/Login.vue";
 import ResetPassword from "../views/Auth/ResetPassword.vue";

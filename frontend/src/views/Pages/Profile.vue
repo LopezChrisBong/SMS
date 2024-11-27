@@ -3,7 +3,7 @@
     <v-card class="mt-2 pt-2 pb-8">
       <v-row style="border-radius: 10px" class="elevation-4 mx-6 mt-6">
         <!-- <v-card class="card-style rounded-xl"> -->
-        <v-col cols="12" md="7">
+        <v-col cols="12" md="12">
           <v-img align="center">
             <v-row align="center" class="fill-height">
               <v-col align-self="start" cols="12">
@@ -67,107 +67,15 @@
                   </v-list-item>
                 </span>
               </v-col>
-              <!-- <v-col cols="6" class="pt-0 mt-n3">
-                <span>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title class="text-body-2 font-weight-bold">
-                        {{ data.designation }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-caption">
-                        Designation
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </span>
-              </v-col> -->
-              <v-col cols="6" class="pt-0 mt-n3">
-                <span>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title class="text-body-2 font-weight-bold">
-                        {{ data.position }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-caption">
-                        Position
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </span>
-              </v-col>
-              <v-col cols="6" class="pt-0 mt-n3">
-                <span>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title class="text-body-2 font-weight-bold">
-                        {{ data.office }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-caption">
-                        Office
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </span>
-              </v-col>
-              <v-col cols="6" class="pt-0 mt-n3">
-                <span>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title class="text-body-2 font-weight-bold">
-                        {{ data.institute ? data.institute : "N/A" }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-caption">
-                        Institute
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </span>
-              </v-col>
-              <v-col cols="6" class="pt-0 mt-n3">
-                <span>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title class="text-body-2 font-weight-bold">
-                        {{ data.empID ? data.empID : "N/A" }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-caption">
-                        Employee ID
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </span>
-              </v-col>
-              <v-col cols="6" class="pt-0 mt-n3">
-                <span>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title class="text-body-2 font-weight-bold">
-                        {{ data.empStatus }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-caption">
-                        Employment Status
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </span>
-              </v-col>
             </v-row>
           </v-img>
         </v-col>
         <v-col
           cols="12"
-          md="5"
+          md="12"
           style="border-left: 1px solid; border-color: #e8dfdf"
         >
           <div>
-            <!-- <h2 class="mt-1 pl-3 text-h6">Personal Information</h2> -->
-            <!-- <v-tabs
-              v-model="tab"
-              color="#6DB249"
-              :show-arrows="$vuetify.breakpoint.mdAndUp ? false : true"
-              :grow="$vuetify.breakpoint.mdAndUp ? true : false"
-              background-color="transparent"
-            > -->
             <v-tabs
               v-model="tab"
               color="#6DB249"
@@ -186,7 +94,7 @@
               <v-container class="mt-10">
                 <v-form ref="personalInfo" @submit.prevent>
                   <v-row class="ml-2 mr-2 mt-1">
-                    <v-col cols="12" md="12">
+                    <v-col cols="6" md="6">
                       <v-text-field
                         :rules="[formRules.required]"
                         v-model="data.fname"
@@ -197,7 +105,7 @@
                         color="#6DB249"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="12">
+                    <v-col cols="6" md="6">
                       <v-text-field
                         v-model="data.mname"
                         :readonly="readonly"
@@ -207,7 +115,7 @@
                         color="#6DB249"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="12">
+                    <v-col cols="6" md="6">
                       <v-text-field
                         v-model="data.lname"
                         :rules="[formRules.required]"
@@ -218,11 +126,29 @@
                         color="#6DB249"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="12">
+                    <v-col cols="6" md="6">
                       <v-text-field
                         v-model="data.suffix"
                         :readonly="readonly"
                         label="Suffix"
+                        dense
+                        color="#6DB249"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6" md="6">
+                      <v-text-field
+                        v-model="data.sex"
+                        :readonly="readonly"
+                        label="Sex"
+                        dense
+                        color="#6DB249"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6" md="6">
+                      <v-text-field
+                        v-model="data.mobile_no"
+                        :readonly="readonly"
+                        label="Mobile Number"
                         dense
                         color="#6DB249"
                       ></v-text-field>
@@ -384,19 +310,14 @@ export default {
       selectFile: null,
       previewImg: null,
       tab: null,
-      items: ["Personal Information", "Login Info"],
+      // items: ["Personal Information", "Login Info"],
+      items: ["Personal Information"],
       data: {
         fname: null,
         mname: null,
         lname: null,
         suffix: null,
         profile_img: null,
-        designation: null,
-        position: null,
-        empID: null,
-        empStatus: null,
-        office: null,
-        institute: null,
       },
       oldPass: null,
       password: null,
@@ -424,12 +345,6 @@ export default {
           this.data.mname = res.data.mname;
           this.data.lname = res.data.lname;
           this.data.suffix = res.data.suffix;
-          this.data.designation = res.data.designation;
-          this.data.position = res.data.position;
-          this.data.empID = res.data.empID;
-          this.data.empStatus = res.data.employment_status;
-          this.data.office = res.data.office;
-          this.data.institute = res.data.institute;
           this.data.profile_img = res.data.profile_img
             ? process.env.VUE_APP_SERVER +
               "/user-details/getProfileImg/" +
@@ -466,7 +381,6 @@ export default {
     updateProfile() {
       if (this.$refs.personalInfo.validate()) {
         const fd = new FormData();
-
         this.axiosCall("/user-details/updateUser", "POST", this.data).then(
           (res) => {
             if (res.data.status == 200) {

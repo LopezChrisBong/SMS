@@ -39,7 +39,6 @@ export class AuthService {
   // }
 
   async create(registerUser: RegisterUserDto) {
-   console.log(registerUser)
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
@@ -69,6 +68,8 @@ export class AuthService {
       });
     await queryRunner.manager.save(newUserDetail);
 
+      await queryRunner.commitTransaction();
+
       return {
         status: HttpStatus.CREATED,
         msg: 'User saved.',
@@ -89,7 +90,6 @@ export class AuthService {
 
   async login(loginUser: LoginDto) {
     const res_user = await this.findUser(loginUser.email.toString());
-    // console.log(res_user);
 
     if (res_user) {
       // comparing hashed password in the database with the user's password
@@ -98,7 +98,10 @@ export class AuthService {
         res_user.password,
       );
       if (isMatch) {
-        const userdetail = await this.dataSource
+          
+        const adminApproved = res_user.isAdminApproved
+        if(adminApproved != false){
+          const userdetail = await this.dataSource
           .getRepository(UserDetail)
           .createQueryBuilder('userdetail')
           .leftJoinAndMapOne(
@@ -115,7 +118,6 @@ export class AuthService {
           )
           .where('userdetail.userID = :userid', { userid: res_user.id })
           .getOne();
-          console.log(userdetail)
 
         const {
           bdate,
@@ -160,6 +162,13 @@ export class AuthService {
           status: HttpStatus.OK,
           token: this.jwtService.sign(payload),
         };
+        }else{
+          return new HttpException(
+            'Please contact admin for the approval of your account!.',
+            HttpStatus.NOT_FOUND,
+          );
+        }
+   
       } else {
         return new HttpException(
           'Password do not match.',

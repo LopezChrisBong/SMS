@@ -3,13 +3,12 @@
     v-model="dialog"
     scrollable
     persistent
-    fullscreen
-    hide-overlay
+    width="500px"
     transition="dialog-bottom-transition"
   >
     <v-card>
       <v-card-title dark class="dialog-header">
-        <h2 class="mt-1 text-h6 white--text">Employment Information</h2>
+        <h2 class="mt-1 text-h6 white--text">Faculty Information</h2>
         <v-spacer></v-spacer>
         <v-btn icon dark @click="close()">
           <v-icon>mdi-close</v-icon>
@@ -19,11 +18,11 @@
       <v-card-text class="my-4">
         <v-container>
           <v-row>
-            <v-col cols="6" class="px-2">
+            <v-col cols="12" class="px-2">
               <v-row>
                 <v-col cols="6" class="py-1"
                   ><p class="text-body-1 font-weight-bold">
-                    Employee Name:
+                    Faculty Name:
                   </p></v-col
                 >
                 <v-col cols="6" class="py-1"
@@ -34,51 +33,6 @@
                     {{ name }}
                   </div>
                 </v-col>
-                <v-col cols="6" class="py-1"
-                  ><p class="text-body-1 font-weight-bold">
-                    Employee ID:
-                  </p></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><div
-                    class="text-body-1"
-                    style="width:100%; border-bottom:1px solid grey"
-                  >
-                    <span v-if="!empID" style="visibility:hidden">X</span>
-                    {{ empID }}
-                  </div></v-col
-                >
-
-                <v-col cols="6" class="py-1"
-                  ><p class="text-body-1 font-weight-bold">
-                    Position:
-                  </p></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><div
-                    class="text-body-1"
-                    style="width:100%; border-bottom:1px solid grey"
-                  >
-                    <span v-if="!position" style="visibility:hidden">X</span>
-                    {{ position }}
-                  </div></v-col
-                >
-
-                <v-col cols="6" class="py-1"
-                  ><p class="text-body-1 font-weight-bold">
-                    Status of Appointment:
-                  </p></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><div
-                    class="text-body-1"
-                    style="width:100%; border-bottom:1px solid grey"
-                  >
-                    <span v-if="!empStatus" style="visibility:hidden">X</span>
-                    {{ empStatus }}
-                  </div></v-col
-                >
-
                 <v-col cols="6" class="py-1"
                   ><p class="text-body-1 font-weight-bold">
                     Contact Number:
@@ -95,171 +49,16 @@
                 >
               </v-row>
             </v-col>
-            <v-col cols="6" class="px-16">
-              <v-row>
-                <v-col cols="6" class="py-1"
-                  ><p class="text-body-1 font-weight-bold">
-                    Date Hired:
-                  </p></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><div
-                    class="text-body-1"
-                    style="width:100%; border-bottom:1px solid grey"
-                  >
-                    <span v-if="!date_hired" style="visibility:hidden">X</span>
-                    {{ formatDate(date_hired) }}
-                  </div></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><p class="text-body-1 font-weight-bold">
-                    Office:
-                  </p></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><div
-                    class="text-body-1"
-                    style="width:100%; border-bottom:1px solid grey"
-                  >
-                    <span v-if="!office" style="visibility:hidden">X</span>
-                    {{ office }}
-                  </div></v-col
-                >
-
-                <v-col cols="6" class="py-1"
-                  ><p class="text-body-1 font-weight-bold">
-                    Institute:
-                  </p></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><div
-                    class="text-body-1"
-                    style="width:100%; border-bottom:1px solid grey"
-                  >
-                    <span v-if="!institute" style="visibility:hidden">X</span>
-                    {{ institute }}
-                  </div></v-col
-                >
-
-                <v-col cols="6" class="py-1"
-                  ><p class="text-body-1 font-weight-bold">
-                    Status:
-                  </p></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><div
-                    class="text-body-1"
-                    style="width:100%; border-bottom:1px solid grey"
-                  >
-                    {{ isActive ? "Active" : "Inactive" }}
-                  </div></v-col
-                >
-
-                <v-col cols="6" class="py-1"
-                  ><p class="text-body-1 font-weight-bold">
-                    Email:
-                  </p></v-col
-                >
-                <v-col cols="6" class="py-1"
-                  ><div
-                    class="text-body-1"
-                    style="width:100%; border-bottom:1px solid grey"
-                  >
-                    <span v-if="!email" style="visibility:hidden">X</span>
-                    {{ email }}
-                  </div></v-col
-                >
-              </v-row>
-            </v-col>
 
             <v-col>
-              <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+              <!-- <v-tabs v-model="activeTab" color="#5A67DA" align-tabs="left">
                 <v-tab
                   v-for="tab in tabList"
                   :key="tab.id"
                   @click="changeTab(tab)"
                   >{{ tab.name }}</v-tab
                 >
-              </v-tabs>
-            </v-col>
-            <v-col class="px-0" cols="12">
-              <v-card class="card-style">
-                <v-data-table
-                  :headers="tab == 1 ? coretime_headers : designation_headers"
-                  :items="
-                    tab == 1 ? coretime_table_data : designation_table_data
-                  "
-                  :items-per-page="20"
-                  :loading="loading"
-                  hide-default-footer
-                >
-                  <!-- <template v-slot:[`item.designationID`]="{ item }">
-                    {{
-                      item.isDesignated ? item.designation.description : "N/A"
-                    }}
-                  </template>
-                  <template v-slot:[`item.units`]="{ item }">
-                    {{ item.isDesignated ? item.units : "N/A" }}
-                  </template>
-                  <template v-slot:[`item.specialOrderNo`]="{ item }">
-                    {{ item.isDesignated ? item.specialOrderNo : "N/A" }}
-                  </template>-->
-                  <template v-slot:[`item.ctType`]="{ item }">
-                    {{
-                      item.ctType == 1
-                        ? "Academic Year"
-                        : item.ctType == 2
-                        ? "Calendar Year"
-                        : ""
-                    }}
-                  </template>
-                  <template v-slot:[`item.SY`]="{ item }">
-                    {{
-                      item.cyFrom && item.cyTo
-                        ? formatDate(item.cyFrom) +
-                          " - " +
-                          formatDate(item.cyTo)
-                        : ""
-                    }}
-                  </template>
-                  <template v-slot:[`item.effectivityDate`]="{ item }">
-                    {{ formatDate(item.effectivityDate) }}
-                  </template>
-                  <template v-slot:[`item.sem`]="{ item }">
-                    {{
-                      item.ctType == 1
-                        ? item.sem == 1
-                          ? "First Semester"
-                          : item.sem == 2
-                          ? "Second Semester"
-                          : item.sem == 3
-                          ? "Summer"
-                          : ""
-                        : "N/A"
-                    }}
-                  </template>
-
-                  <template v-slot:[`item.isActive`]="{ item }">
-                    <v-chip
-                      :color="item.isActive ? '#519043' : 'grey'"
-                      class="ma-2 white--text"
-                      x-small
-                    >
-                      {{ item.isActive ? "Active" : "Inactive" }}
-                    </v-chip>
-                  </template>
-                  <template v-slot:[`item.action`]="{ item }">
-                    <v-btn
-                      class="mr-2"
-                      color="grey"
-                      outlined
-                      x-small
-                      @click="viewItem(item)"
-                      >View</v-btn
-                    >
-                  </template>
-                </v-data-table>
-              </v-card>
+              </v-tabs> -->
             </v-col>
           </v-row>
 
@@ -432,12 +231,6 @@ export default {
   data() {
     return {
       dialog: false,
-      activeTab: { id: 1, name: "Core-Time" },
-      tab: 1,
-      tabList: [
-        { id: 1, name: "Core-Time" },
-        { id: 2, name: "Designation" },
-      ],
       viewData: null,
       name: null,
       position: null,

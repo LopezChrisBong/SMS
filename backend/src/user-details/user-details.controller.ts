@@ -57,11 +57,147 @@ export class UserDetailsController {
     // return this.userDetailsService.createauth(createUserAuthDto, req.body);
   }
 
-  @UseGuards(JWTAuthGuard)
-  @ApiBearerAuth()
+  // @UseGuards(JWTAuthGuard)
+  // @ApiBearerAuth()
   @Get('getAllUsersToVerify')
   getAllUsersToVerify() {
     return this.userDetailsService.getAllUsersToVerify();
+  }
+
+
+  // @UseGuards(JWTAuthGuard)
+  // @ApiBearerAuth()
+  @Get('getAllVerifiedUser')
+  getAllVerifiedUser() {
+    return this.userDetailsService.getAllVerifiedUser();
+  }
+
+  // @UseGuards(JWTAuthGuard)
+  // @ApiBearerAuth()
+  @Post('updateVerifiedUser')
+  updateVerifiedUser(@Body() updateVU: UpdateVerifiedUser) {
+    return this.userDetailsService.updateVerifiedUser(updateVU);
+  }
+
+
+  @Get()
+  findAll() {
+    return this.userDetailsService.findAll();
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
+  @Get('getUserProfileImg')
+  getUserProfileImg(@Headers() headers) {
+    var head_str = headers.authorization;
+    // var arr = head_str.split(' ');
+    // var token_string = arr[1].toString();
+
+    // var curr_user = this.jwtService.decode(token_string);
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.getUserProfileImg(curr_user);
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
+  @Get('getPersonalInfo')
+  getPersonalInfo(@Headers() headers) {
+    var head_str = headers.authorization;
+    // var arr = head_str.split(' ');
+    // var token_string = arr[1].toString();
+
+    // var curr_user = this.jwtService.decode(token_string);
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.getPersonalInfo(curr_user);
+  }
+
+
+  
+  @Get('getProfileImg/:filename')
+  getProfileImg(
+    @Param('filename') filename: string,
+    @Response({ passthrough: true }) res,
+  ): StreamableFile {
+    let file;
+   
+    file = createReadStream(join(process.cwd(), '/../upload_img/' + filename));
+    res.set({
+      'Content-Type': 'image/png',
+    });
+    file.on('error', (err) => {
+      console.error(err);
+    });
+
+    return new StreamableFile(file);
+  }
+
+
+  
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
+  // Image uploading
+  @Post('uploadimage')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: Helper.filePath,
+        filename: Helper.customFileName,
+      }),
+    }),
+  )
+  async uploadImage(@UploadedFile(ParseFile) file, @Headers() headers) {
+    var head_str = headers.authorization;
+
+    const curr_user = currentUser(head_str);
+
+    const user = await this.userDetailsService.getPersonalInfo(curr_user);
+
+    if (user.profile_img != 'img_avatar') {
+      //check if app is in production
+      // if (process.env.NODE_ENV == 'production') {
+      //   fs.unlink(
+      //     join(__dirname, `../upload_img/${user.profile_img}`),
+      //     async (err) => {
+      //       if (err) {
+      //         console.log(err);
+      //       }
+      //     },
+      //   );
+      // } else {
+      fs.unlink(
+        join(process.cwd(), `/../upload_img/${user.profile_img}`),
+        async (err) => {
+          if (err) {
+            console.log(err);
+          }
+        },
+      );
+      // }
+    }
+
+    return this.userDetailsService.uploadProfileImg(
+      file.file.filename,
+      curr_user,
+    );
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
+  @Post('updateUser')
+  updateUserDetail(
+    @Headers() headers,
+    @Body() updateUserDetailDto: UpdateUserDetailDto,
+  ) {
+    var head_str = headers.authorization;
+    // var arr = head_str.split(' ');
+    // var token_string = arr[1].toString();
+
+    // var curr_user = this.jwtService.decode(token_string);
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.updateUserDetail(
+      curr_user,
+      updateUserDetailDto,
+    );
   }
 
 }

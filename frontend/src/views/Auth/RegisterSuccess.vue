@@ -13,18 +13,17 @@
                 class="text-caption text-gray-100"
                 style="width: 85%; font-size: 10px"
               >
-                Your account us being reviewed at the moment. Please wait for
-                the confirmation message on your email. Thank you.
+                Please contact admin to verify your registered account!
               </p>
             </div>
 
-            <div>
+            <!-- <div>
               <img width="200" src="../../assets/img/review.png" />
               <p style="font-size: 12px" class="text-gray-100">
                 This page will close automatically in
                 <span class="text-green-6DB249">{{ timerCounts }}s</span>
               </p>
-            </div>
+            </div> -->
 
             <v-col cols="12" class="pa-0">
               <div
@@ -36,8 +35,8 @@
                   text-caption text-gray-100
                 "
               >
-                Already have an account?
-                <router-link class="pl-2" to="/login"> Sign In</router-link>
+                <!-- Already have an account?
+                 <router-link class="pl-2" to="/login"> Sign In</router-link> -->
               </div>
             </v-col>
           </v-card>

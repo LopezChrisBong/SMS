@@ -15,99 +15,6 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field
-                    readonly
-                    v-model="verifyModel.name"
-                    :rules="[formRules.required]"
-                    dense
-                    required
-                    label="Name"
-                    class="rounded-lg"
-                    color="#6DB249"
-                  ></v-text-field>
-                </v-col>
-
-                <v-col cols="12" class="pa-0 pt-2 px-4">
-                  <v-autocomplete
-                    v-model="verifyModel.empStatusID"
-                    :rules="[formRules.required]"
-                    dense
-                    class="rounded-lg"
-                    item-text="description"
-                    item-value="id"
-                    label="Employment Status"
-                    color="#6DB249"
-                    :items="empStatusList"
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <v-col cols="12" class="pa-0 pt-2 px-4">
-                  <v-autocomplete
-                    v-model="verifyModel.positionID"
-                    :rules="[formRules.required]"
-                    dense
-                    class="rounded-lg"
-                    item-text="description"
-                    item-value="id"
-                    label="Position"
-                    color="#6DB249"
-                    :items="positionList"
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <v-col
-                  cols="12"
-                  class="pa-0 pt-2 px-4"
-                  v-if="
-                    verifyModel.positionID == 2 || verifyModel.positionID == 3
-                  "
-                >
-                  <v-autocomplete
-                    v-model="verifyModel.instituteID"
-                    :rules="
-                      verifyModel.positionID == 2 || verifyModel.positionID == 3
-                        ? [formRules.required]
-                        : []
-                    "
-                    dense
-                    class="rounded-lg"
-                    item-text="name"
-                    item-value="id"
-                    label="Institute"
-                    color="#6DB249"
-                    :items="instituteList"
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <!-- <v-col cols="12" class="pa-0 pt-2 px-4">
-                  <v-autocomplete
-                    v-model="verifyModel.designationID"
-                    :rules="[]"
-                    dense
-                    class="rounded-lg"
-                    item-text="description"
-                    item-value="id"
-                    label="Designation"
-                    color="#6DB249"
-                    :items="designationList"
-                  >
-                  </v-autocomplete>
-                </v-col> -->
-                <v-col cols="12" class="pa-0 pt-2 px-4">
-                  <v-autocomplete
-                    v-model="verifyModel.officeID"
-                    :rules="[formRules.required]"
-                    dense
-                    class="rounded-lg"
-                    item-text="name"
-                    item-value="id"
-                    label="Office"
-                    color="#6DB249"
-                    :items="officeList"
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <v-col cols="12">
                   <v-autocomplete
                     v-model="verifyModel.usertypeID"
                     :rules="[formRules.required]"
@@ -121,32 +28,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col cols="12">
-                  <v-autocomplete
-                    v-model="verifyModel.user_roleID"
-                    dense
-                    :rules="[formRules.required]"
-                    class="rounded-lg"
-                    item-text="description"
-                    item-value="id"
-                    label="User role"
-                    color="#93CB5B"
-                    :items="userRoleList"
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model="verifyModel.empID"
-                    :rules="[formRules.required]"
-                    dense
-                    required
-                    label="Employee ID"
-                    class="rounded-lg"
-                    color="#6DB249"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
+                <!-- <v-col cols="12">
                   <v-menu
                     ref="dateHiredMenu"
                     :close-on-content-click="false"
@@ -157,7 +39,7 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
-                        label="Date hired"
+                        label="Date Approved"
                         dense
                         v-model="verifyModel.date_hired"
                         :rules="[formRules.required]"
@@ -188,7 +70,7 @@
                       </v-btn>
                     </v-date-picker>
                   </v-menu>
-                </v-col>
+                </v-col> -->
 
                 <v-col cols="12">
                   <v-autocomplete
@@ -254,13 +136,7 @@ export default {
         name: null,
         empID: null,
         date_hired: null,
-        positionID: null,
-        empStatusID: null,
-        designationID: null,
-        officeID: null,
         usertypeID: null,
-        user_roleID: null,
-        instituteID: null,
         assignedModuleID: null,
       },
       userRoleList: [],
@@ -286,32 +162,15 @@ export default {
         this.dialog = true;
         this.initialize();
         this.$refs.UserVerifyFormref.resetValidation();
-        console.log(data);
         if (data.id) {
+          console.log("Love", data.user_usertypeID);
           this.verifyModel.id = data.id;
           this.verifyModel.userID = data.user_id;
           this.verifyModel.name = data.name;
           this.verifyModel.empID = data.emp_empID;
-          this.verifyModel.positionID = data.emp_positionID.toString();
-          this.verifyModel.empStatusID = data.emp_empStatusID;
-          this.verifyModel.designationID = data.emp_designationID;
-          this.verifyModel.officeID = data.emp_officeID;
-          this.verifyModel.instituteID = data.emp_instituteID;
-          this.verifyModel.usertypeID = data.user_usertypeID.toString();
-          this.verifyModel.user_roleID = data.user_user_roleID;
+          this.verifyModel.usertypeID = data.user_usertypeID;
           this.verifyModel.assignedModuleID = data.user_assignedModuleID;
-          this.verifyModel.date_hired = data.emp_date_hired;
-          // this.verifyModel.userID = data.userID;
-          // this.verifyModel.name = data.fname + " " + data.lname;
-          // this.verifyModel.empID = data.employee.empID;
-          // this.verifyModel.positionID = data.employee.positionID.toString();
-          // this.verifyModel.empStatusID = data.employee.empStatusID;
-          // this.verifyModel.designationID = data.employee.designationID;
-          // this.verifyModel.officeID = data.employee.officeID;
-          // this.verifyModel.instituteID = data.employee.instituteID;
-          // this.verifyModel.usertypeID = data.user.usertypeID.toString();
-          // this.verifyModel.user_roleID = data.user.user_roleID;
-          // this.verifyModel.assignedModuleID = data.user.assignedModuleID;
+          // this.verifyModel.date_hired = data.emp_date_hired;
         }
       },
       deep: true,
@@ -319,24 +178,19 @@ export default {
   },
   methods: {
     initialize() {
-      this.getOffices();
-      this.getPositions();
-      this.getDesignations();
-      this.getEmpStatus();
-      this.getInstitutes();
       this.getUserType();
-      this.getUseRoles();
       this.getAssignedModules();
     },
     getUserType() {
       this.axiosCall("/user-type/getAllUsertype", "GET").then((res) => {
         if (res.data) {
+          console.log("UserList", res.data);
           this.usertypeList = res.data;
         }
       });
     },
     closeD() {
-      this.eventHub.$emit("closeAccountsVerificationDialog", false);
+      this.eventHub.$emit("closeAccountsVerificationDialog", true);
       this.dialog = false;
     },
     accept() {
@@ -345,13 +199,13 @@ export default {
           id: this.verifyModel.id,
           userID: this.verifyModel.userID,
           positionID: this.verifyModel.positionID,
-          empID: this.verifyModel.empID,
-          date_hired: this.verifyModel.date_hired,
-          officeID: this.verifyModel.officeID,
-          designationID: this.verifyModel.designationID,
-          empStatusID: this.verifyModel.empStatusID,
+          // empID: this.verifyModel.empID,
+          // date_hired: this.verifyModel.date_hired,
+          // officeID: this.verifyModel.officeID,
+          // designationID: this.verifyModel.designationID,
+          // empStatusID: this.verifyModel.empStatusID,
           usertypeID: this.verifyModel.usertypeID,
-          user_roleID: this.verifyModel.user_roleID,
+          // user_roleID: this.verifyModel.user_roleID,
           assignedModuleID: this.verifyModel.assignedModuleID,
           update_type: this.action == "Verify" ? 1 : 2,
         };
@@ -379,36 +233,6 @@ export default {
       }
     },
 
-    getOffices() {
-      this.axiosCall("/offices", "GET").then((res) => {
-        this.officeList = res.data;
-      });
-    },
-    getPositions() {
-      this.axiosCall("/positions", "GET").then((res) => {
-        this.positionList = res.data;
-      });
-    },
-    getDesignations() {
-      this.axiosCall("/designations", "GET").then((res) => {
-        this.designationList = res.data;
-      });
-    },
-    getEmpStatus() {
-      this.axiosCall("/employment-status", "GET").then((res) => {
-        this.empStatusList = res.data;
-      });
-    },
-    getInstitutes() {
-      this.axiosCall("/institutes", "GET").then((res) => {
-        this.instituteList = res.data;
-      });
-    },
-    getUseRoles() {
-      this.axiosCall("/user-role", "GET").then((res) => {
-        this.userRoleList = res.data;
-      });
-    },
     getAssignedModules() {
       this.axiosCall("/assigned-modules", "GET").then((res) => {
         this.assignedModulesList = res.data;

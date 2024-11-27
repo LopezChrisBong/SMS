@@ -66,7 +66,6 @@ export class AssignedModulesService {
   }
 
   async asOIC(user: any) {
-    console.log(user)
     let userModID = user.userdetail.user.assignedModuleID;
     //admin
     if (userModID == 1) {
@@ -89,8 +88,6 @@ export class AssignedModulesService {
       let toadd = JSON.parse(oicmods.assign_mods);
 
       main.splice(main.length - 1, 0, toadd[0]);
-
-      console.log(main);
       return { assign_mods: JSON.stringify(main) };
     }
     //admin staff
@@ -129,7 +126,6 @@ export class AssignedModulesService {
       .getOne();
 
     let select = JSON.parse(am.selected_modules);
-    console.log(select);
     if (am.selected_modules != '[]') {
       let sm = await this.dataSource
         .createQueryBuilder(SysModule, 'sysmod')
@@ -164,7 +160,6 @@ export class AssignedModulesService {
       let mods = JSON.parse(updateAssignedModuleDto.assign_mods);
 
       for (let i = 0; i < mods.length; i++) {
-        // console.log('mods', mods[i]);
         let modsEl = mods[i];
         selectedmods.push(modsEl.id);
         if (modsEl.subLink) {

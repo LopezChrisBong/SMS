@@ -53,14 +53,165 @@ export class UserDetailsService {
       ])
       .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
       .where('user.isValidated = 1')
+      .andWhere('user.id != 2') //security user ID
       .andWhere('user.isAdminApproved = 0')
       .getRawMany();
-
-      console.log(data)
     return data;
   }
 
-  
+  async getAllVerifiedUser() {
+    let data = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        'UD.id as id',
+        'UD.fname as fname',
+        'UD.mname as mname',
+        'UD.lname as lname',
+      ])
+      .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
+      .where('user.isValidated = 1')
+      .andWhere('user.id != 2') //security user ID
+      .andWhere('user.isAdminApproved = 1')
+      .getRawMany();
+
+    return data;
+
+  }
+
+  async updateVerifiedUser(updateVU: UpdateVerifiedUser) {
+    
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      if (updateVU.user_roleID == 5) {
+        return {
+          msg: 'Request cannot be granted! You cannot add new superadmin.',
+          status: HttpStatus.BAD_REQUEST,
+        };
+      } else {
+        await queryRunner.manager.update(Users, updateVU.userID, {
+          isAdminApproved: true,
+          usertypeID: updateVU.usertypeID,
+          user_roleID: updateVU.user_roleID == null ? 3 : updateVU.user_roleID,
+          assignedModuleID: updateVU.assignedModuleID,
+        });
+
+
+
+        await queryRunner.commitTransaction();
+        return {
+          msg: updateVU.update_type == 1 ? 'User verified.' : 'User updated.',
+          status: HttpStatus.OK,
+        };
+      }
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      return {
+        msg: error,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async findAll() {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    const toReturn = await queryRunner.query(
+      'SELECT * FROM user_detail left join users on user_detail.userID = users.id where users.isAdminApproved != "false" order by lname ASC',
+    );
+    await queryRunner.release();
+    return toReturn;
+  }
+  async getUserProfileImg(curr_user: any) {
+    const a = await this.userdetailsRepository
+      .createQueryBuilder('ud')
+      .select(['ud.profile_img as profile_img'])
+      .where('ud.id = :id', { id: curr_user.userdetail.id })
+      .getRawOne();
+
+    if (a.profile_img != null) {
+      return a;
+    } else {
+      return { profile_img: 'img_avatar.png' };
+    }
+  }
+
+ async getPersonalInfo(user: any) {
+    
+    const id = user.userdetail.id;
+    return await this.dataSource
+      .createQueryBuilder(UserDetail, 'ud')
+      .select([
+        'ud.fname as fname',
+        'ud.mname as mname',
+        'ud.lname as lname',
+        'ud.suffix as suffix',
+        'ud.profile_img as profile_img',
+      ])
+      .leftJoin(Users, 'u', 'u.id = ud.userID')
+      .leftJoin(UserType, 'ut', 'u.usertypeID = ut.id')
+      .where('ud.id = :id', { id })
+      .getRawOne();
+  }
+
+  async uploadProfileImg(filename: string, user: any) {
+    // console.log(user.user[0].id)
+    try {
+      const imgupload = await this.userdetailsRepository.update(
+        user.userdetail.id,
+        { profile_img: filename },
+      );
+
+      if (imgupload.affected == 1) {
+        return {
+          msg: 'Saving successful',
+          status: HttpStatus.OK,
+        };
+      } else {
+        return {
+          msg: 'Saving failed',
+          status: HttpStatus.BAD_REQUEST,
+        };
+      }
+    } catch (error) {
+      return {
+        msg: error,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
+
+  async updateUserDetail(user: any, updateUserDetailDto: UpdateUserDetailDto) {
+    try {
+      const upd = await this.userdetailsRepository.update(user.userdetail.id, {
+        fname: updateUserDetailDto.fname,
+        mname: updateUserDetailDto.mname,
+        lname: updateUserDetailDto.lname,
+        suffix: updateUserDetailDto.suffix,
+      });
+
+      if (upd.affected == 1) {
+        return {
+          msg: 'Update successful.',
+          status: HttpStatus.OK,
+        };
+      } else {
+        return {
+          msg: 'Update failed.',
+          status: HttpStatus.BAD_REQUEST,
+        };
+      }
+    } catch (error) {
+      return {
+        msg: error,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
 
 
 }
