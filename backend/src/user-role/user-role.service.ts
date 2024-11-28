@@ -15,11 +15,12 @@ export class UserRoleService {
     return 'This action adds a new userRole';
   }
 
-  findAll() {
-    return this.userRoleRep.find();
+ async findAll() {
+    let data = await this.userRoleRep.find();
     // .createQueryBuilder('ur')
     // .where('ur.id != 5')
     // .getMany();
+    return data
   }
 
   findOne(id: number) {

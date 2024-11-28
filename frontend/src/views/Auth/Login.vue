@@ -7,6 +7,12 @@
             <v-form ref="Formref">
               <v-row class="mx-5 pt-6">
                 <v-col cols="12" class="pa-0 mb-2">
+                  <div class="text-h5" color="#123E4D" align="center">
+                    <b>Asuncion National High School</b>
+                  </div>
+                  <div class="text-h5" color="#123E4D" align="center">
+                    <b> School Managemen System</b>
+                  </div>
                   <div style="margin:0 auto; width:45%" class="pa-2">
                     <v-img
                       src="../../assets/img/AsuncionNationalHighSchool.png"

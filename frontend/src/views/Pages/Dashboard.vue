@@ -6,7 +6,7 @@
           <v-card class="card-style">
             <v-row>
               <v-col cols="12" class="pt-16">
-                <PieChart :data="maleFemaleData" />
+                <PieChart :data="TeachingNonTeaching" />
               </v-col>
               <v-col cols="12 ">
                 <v-divider></v-divider>
@@ -23,14 +23,14 @@
           <v-card class="card-style">
             <v-row>
               <v-col cols="12" class="pt-16">
-                <PieChart :data="maleFemaleData" />
+                <PieChart1 :data="maleFemale" />
               </v-col>
               <v-col cols="12 ">
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
                   class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
-                  >Teaching Employee/ Non-Teaching Employee
+                  >Male Employee / Female Employee
                 </v-list-item-title>
               </v-col>
             </v-row>
@@ -46,10 +46,12 @@
 <script>
 import ViewSetDirectHeadDialog from "../../components/Dialogs/Views/ViewSetDirectHeadDialog.vue";
 import PieChart from "../../components/Charts/NewCharts/Pie.vue";
+import PieChart1 from "../../components/Charts/NewCharts/Bar.vue";
 export default {
   components: {
     ViewSetDirectHeadDialog,
     PieChart,
+    PieChart1,
   },
   data: () => ({
     mini: false,
@@ -61,13 +63,16 @@ export default {
     completedWorks: null,
     maleCnt: 0,
     femaleCnt: 0,
+    maleFemale: {},
     datas: {},
-    maleFemaleData: {},
+    TeachingNonTeaching: {},
     label: [],
     top_clients: [],
     today: null,
     activeCalendar: null,
     tracked: {},
+    teaching: null,
+    nonTeaching: null,
     isCalendarFocus: false,
     bdays: [],
     colors: ["#1867c0", "#fb8c00", "#000000"],
@@ -229,23 +234,42 @@ export default {
     //   );
     // },
 
-    // getMaleFemaleCount() {
-    //   this.axiosCall("/user-details/getMaleFemaleCount", "GET").then(
-    //     (res) => {
-    //       if (res.data) {
-    //         this.maleCnt = res.data.male;
-    //         this.femaleCnt = res.data.female;
-    //         this.maleFemaleData = {
-    //           label: ["Male", "Female"],
-    //           data: [res.data.male, res.data.female],
-    //         };
-    //       }
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // },
+    getMaleFemaleCount() {
+      this.axiosCall("/user-details/getMaleFemaleCount", "GET").then(
+        (res) => {
+          console.log(res.data.female);
+          if (res.data) {
+            this.maleCnt = res.data.male;
+            this.femaleCnt = res.data.female;
+            this.maleFemale = {
+              label: ["Male", "Female"],
+              data: [res.data.male, res.data.female],
+            };
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+
+    getTeachingNonTeachingCount() {
+      this.axiosCall("/user-details/getTeachingNon", "GET").then(
+        (res) => {
+          if (res.data) {
+            this.nonTeaching = res.data.nonTeaching;
+            this.teaching = res.data.teaching;
+            this.TeachingNonTeaching = {
+              label: ["Non-Teaching", "Teaching"],
+              data: [res.data.nonTeaching, res.data.teaching],
+            };
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
   created() {
     if (this.$store.state.expiryDate < Date.now()) {
@@ -259,6 +283,8 @@ export default {
 
   mounted() {
     this.initialize();
+    this.getTeachingNonTeachingCount();
+    this.getMaleFemaleCount();
   },
 };
 </script>

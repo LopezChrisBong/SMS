@@ -166,9 +166,9 @@
         <v-row>
           <!-- Sidebar -->
           <v-col
-            :cols="$vuetify.breakpoint.smAndUp ? '3' : '0'"
+            :cols="$vuetify.breakpoint.smAndUp ? '2' : '0'"
             class="pa-3"
-            style="border-right: 1px solid #ddd; "
+            style="border-right: 1px solid #ddd; position: fixed;"
             v-if="$vuetify.breakpoint.smAndUp"
           >
             <v-list nav dense class="sidebar mt-2">
@@ -234,9 +234,16 @@
               </div>
             </v-list>
           </v-col>
-
+        </v-row>
+        <v-row>
           <!-- Feed -->
-          <v-col :cols="$vuetify.breakpoint.smAndUp ? '9' : '12'" class="pa-3">
+          <v-col
+            :cols="$vuetify.breakpoint.smAndUp ? '2' : '0'"
+            class="pa-3"
+            v-if="$vuetify.breakpoint.smAndUp"
+          >
+          </v-col>
+          <v-col :cols="$vuetify.breakpoint.smAndUp ? '10' : '12'" class="pa-3">
             <div class=" fill-height pb-6" style="background-color:white; ">
               <div class="d-flex justify-space-between py-4 px-4  ">
                 <!-- <div>
