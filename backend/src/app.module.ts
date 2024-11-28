@@ -16,6 +16,7 @@ import { PdfGeneratorModule } from './pdf-generator/pdf-generator.module';
 import { MailModule } from './mail/mail.module';
 import { SysModulesModule } from './sys-modules/sys-modules.module';
 import { AssignedModulesModule } from './assigned-modules/assigned-modules.module';
+import { UserRoleModule } from './user-role/user-role.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { AssignedModulesModule } from './assigned-modules/assigned-modules.modul
     MailModule,
     SysModulesModule,
     AssignedModulesModule,
-    UserDetailsModule
+    UserDetailsModule,
+    UserRoleModule
   ],
 
   controllers: [AppController],

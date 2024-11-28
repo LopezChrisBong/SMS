@@ -200,4 +200,18 @@ export class UserDetailsController {
     );
   }
 
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
+  @Get('getTeachingNon')
+  getTeachingNon(@Headers() headers) {
+    return this.userDetailsService.getTeachingNon();
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
+  @Get('getMaleFemaleCount')
+  getMaleFemaleCount(@Headers() headers) {
+    return this.userDetailsService.getMaleFemaleCount();
+  }
+
 }

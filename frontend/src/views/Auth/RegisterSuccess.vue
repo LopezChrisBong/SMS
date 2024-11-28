@@ -5,9 +5,9 @@
         <v-col align="center" cols="12" md="6">
           <v-card max-width="400" class="rounded-card">
             <div class="justify-center pa-4">
-              <h3 style="color: #519043; width: 70%" class="mb-1">
+              <h3 style="color: #5A67DA; width: 70%" class="mb-1">
                 You have successfully registered your account on
-                <span style="color: #ffb400">SMS</span>
+                <span style="color: #5A67DA">SMS</span>
               </h3>
               <p
                 class="text-caption text-gray-100"
@@ -17,13 +17,13 @@
               </p>
             </div>
 
-            <!-- <div>
-              <img width="200" src="../../assets/img/review.png" />
+            <div>
+              <!-- <img width="200" src="../../assets/img/review.png" /> -->
               <p style="font-size: 12px" class="text-gray-100">
                 This page will close automatically in
                 <span class="text-green-6DB249">{{ timerCounts }}s</span>
               </p>
-            </div> -->
+            </div>
 
             <v-col cols="12" class="pa-0">
               <div
@@ -73,6 +73,7 @@ export default {
 <style scoped>
 .content {
   /* background: url("../../assets/img/new_bg.png"); */
+  background-color: #5a67da;
   background-position: center;
   position: fixed;
   top: 0;

@@ -219,5 +219,70 @@ export class UserDetailsService {
     }
   }
 
+  async getTeachingNon() {
+    const nonTeaching = await this.userdetailsRepository
+      .createQueryBuilder('ud')
+      // .leftJoin(Employee, 'e', 'ud.id = e.user_detailID')
+      .leftJoin(Users, 'u', 'u.id = ud.userID')
+      // .where('e.isActive = :isActive', { isActive: true })
+      .andWhere("u.user_roleID = 1")
+      .andWhere('u.isValidated = 1')
+      .andWhere('u.isAdminApproved = 1')
+      .andWhere('ud.id != 2') //security userID
+      .getCount();
+
+      
+    const teaching = await this.userdetailsRepository
+      .createQueryBuilder('ud')
+      // .leftJoin(Employee, 'e', 'ud.id = e.user_detailID')
+      .leftJoin(Users, 'u', 'u.id = ud.userID')
+      // .where('e.isActive = :isActive', { isActive: true })
+      .andWhere("u.user_roleID = 2")
+      .andWhere('u.isValidated = 1')
+      .andWhere('u.isAdminApproved = 1')
+      .andWhere('ud.id != 2') //security userID
+      .getCount();
+
+      console.log(nonTeaching,teaching);
+
+    return {
+      nonTeaching,
+      teaching,
+    };
+  }
+
+
+  async getMaleFemaleCount() {
+    const male = await this.userdetailsRepository
+      .createQueryBuilder('ud')
+      // .leftJoin(Employee, 'e', 'ud.id = e.user_detailID')
+      .leftJoin(Users, 'u', 'u.id = ud.userID')
+      // .where('e.isActive = :isActive', { isActive: true })
+      .andWhere("ud.sex = 'Male'")
+      .andWhere('u.isValidated = 1')
+      .andWhere('u.isAdminApproved = 1')
+      .andWhere('ud.id != 2') //security userID
+      .getCount();
+    const female = await this.userdetailsRepository
+      .createQueryBuilder('ud')
+      // .leftJoin(Employee, 'e', 'ud.id = e.user_detailID')
+      .leftJoin(Users, 'u', 'u.id = ud.userID')
+      // .where('e.isActive = :isActive', { isActive: true })
+      .andWhere("ud.sex = 'Female'")
+      .andWhere('u.isValidated = 1')
+      .andWhere('u.isAdminApproved = 1')
+      .andWhere('ud.id != 2') //security userID
+      .getCount();
+
+      console.log( male,
+        female,)
+
+    return {
+      male,
+      female,
+    };
+  }
+
+
 
 }

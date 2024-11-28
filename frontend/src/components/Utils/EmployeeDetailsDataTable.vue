@@ -36,15 +36,20 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <!-- <template v-slot:[`item.lname`]="{ item }">
-          {{
-            item.mname
-              ? item.lname + ", " + item.fname + " " + item.mname[0] + "."
-              : item.lname + ", " + item.fname
-          }}
-        </template> -->
-        <template v-slot:[`item.date_hired`]="{ item }">
+        <template v-slot:[`item.lname`]="{ item }">
+          <span class="text-uppercase">
+            {{
+              item.mname
+                ? item.lname + ", " + item.fname + " " + item.mname[0] + "."
+                : item.lname + ", " + item.fname
+            }}</span
+          >
+        </template>
+        <!-- <template v-slot:[`item.date_hired`]="{ item }">
           {{ item.date_hired ? formatDate(item.date_hired) : "" }}
+        </template> -->
+        <template v-slot:[`item.user_roleID`]="{ item }">
+          {{ item.user_roleID == 1 ? "Non-Teaching" : "Teaching" }}
         </template>
         <template v-slot:[`item.isActive`]="{ item }">
           <v-chip
@@ -223,10 +228,9 @@ export default {
     toPrint: null,
     headers: [
       { text: "Lastname", value: "lname", align: "start" },
-      { text: "First Name", value: "fname", align: "center" },
-      { text: "Middle Name", value: "mname", align: "center" },
       { text: "Sex", value: "sex", align: "center" },
       { text: "Mobile No.", value: "mobile_no", align: "center" },
+      { text: "User Role", value: "user_roleID", align: "center" },
       {
         text: "Actions",
         value: "actions",

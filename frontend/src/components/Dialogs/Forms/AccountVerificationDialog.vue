@@ -28,49 +28,20 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <!-- <v-col cols="12">
-                  <v-menu
-                    ref="dateHiredMenu"
-                    :close-on-content-click="false"
-                    :return-value.sync="verifyModel.date_hired"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="verifyModel.user_roleID"
+                    dense
+                    :rules="[formRules.required]"
+                    class="rounded-lg"
+                    item-text="description"
+                    item-value="id"
+                    label="User role"
+                    color="#93CB5B"
+                    :items="userRoleList"
                   >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                        label="Date Approved"
-                        dense
-                        v-model="verifyModel.date_hired"
-                        :rules="[formRules.required]"
-                        chips
-                        readonly
-                        small-chips
-                        color="#6DB249"
-                        v-bind="attrs"
-                        v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="verifyModel.date_hired"
-                      no-title
-                      color="#6DB249"
-                      scrollable
-                    >
-                      <v-spacer></v-spacer>
-
-                      <v-btn
-                        text
-                        color="#6DB249"
-                        @click="
-                          $refs.dateHiredMenu.save(verifyModel.date_hired)
-                        "
-                      >
-                        OK
-                      </v-btn>
-                    </v-date-picker>
-                  </v-menu>
-                </v-col> -->
+                  </v-autocomplete>
+                </v-col>
 
                 <v-col cols="12">
                   <v-autocomplete
@@ -138,14 +109,10 @@ export default {
         date_hired: null,
         usertypeID: null,
         assignedModuleID: null,
+        user_roleID: null,
       },
       userRoleList: [],
       usertypeList: [],
-      officeList: [],
-      designationList: [],
-      positionList: [],
-      empStatusList: [],
-      instituteList: [],
       assignedModulesList: [],
       fadeAwayMessage: {
         show: false,
@@ -163,12 +130,13 @@ export default {
         this.initialize();
         this.$refs.UserVerifyFormref.resetValidation();
         if (data.id) {
-          console.log("Love", data.user_usertypeID);
+          console.log("Love", data.user_user_roleID);
           this.verifyModel.id = data.id;
           this.verifyModel.userID = data.user_id;
           this.verifyModel.name = data.name;
           this.verifyModel.empID = data.emp_empID;
-          this.verifyModel.usertypeID = data.user_usertypeID;
+          this.verifyModel.usertypeID = data.user_usertypeID.toString();
+          this.verifyModel.user_roleID = data.user_user_roleID;
           this.verifyModel.assignedModuleID = data.user_assignedModuleID;
           // this.verifyModel.date_hired = data.emp_date_hired;
         }
@@ -180,6 +148,7 @@ export default {
     initialize() {
       this.getUserType();
       this.getAssignedModules();
+      this.getUseRoles();
     },
     getUserType() {
       this.axiosCall("/user-type/getAllUsertype", "GET").then((res) => {
@@ -205,7 +174,7 @@ export default {
           // designationID: this.verifyModel.designationID,
           // empStatusID: this.verifyModel.empStatusID,
           usertypeID: this.verifyModel.usertypeID,
-          // user_roleID: this.verifyModel.user_roleID,
+          user_roleID: this.verifyModel.user_roleID,
           assignedModuleID: this.verifyModel.assignedModuleID,
           update_type: this.action == "Verify" ? 1 : 2,
         };
@@ -236,6 +205,11 @@ export default {
     getAssignedModules() {
       this.axiosCall("/assigned-modules", "GET").then((res) => {
         this.assignedModulesList = res.data;
+      });
+    },
+    getUseRoles() {
+      this.axiosCall("/user-role", "GET").then((res) => {
+        this.userRoleList = res.data;
       });
     },
   },
