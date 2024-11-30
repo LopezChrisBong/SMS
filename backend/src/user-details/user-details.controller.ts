@@ -214,4 +214,8 @@ export class UserDetailsController {
     return this.userDetailsService.getMaleFemaleCount();
   }
 
+  
+
+
+
 }
