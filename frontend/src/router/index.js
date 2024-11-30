@@ -82,6 +82,12 @@ import IPCRQualityUtil from "../views/Pages/IPCRQualityUtil.vue";
 import IPCREmployeeSupportFunction from "../views/Pages/IPCREmployeeSupportFunction.vue";
 import OPCR from "../views/Pages/OPCR.vue";
 import IPCRTimelinessUtil from "../views/Pages/IPCRTimelinessUtil.vue";
+import EnrollStudents from "../views/Pages/EnrollStudents.vue";
+import Student_verify from "../views/Pages/student_verify.vue";
+import CreateSubject from "../views/Pages/CreateSubject.vue";
+import AddRoomsSection from "../views/Pages/AddRoomsSection.vue";
+import AddTracks from "../views/Pages/addTracks.vue";
+import AddStrands from "../views/Pages/AddStrands.vue";
 
 Vue.use(VueRouter);
 
@@ -133,6 +139,54 @@ const routes = [
         meta: { title: "Dashboard", authRequired: true },
       },
       {
+        path: "create-subject",
+        component: CreateSubject,
+        meta: { title: "Create Subject", authRequired: true },
+      },
+      {
+        path: "add-rooms",
+        component: AddRoomsSection,
+        meta: { title: "Add Rooms", authRequired: true },
+      },
+      {
+        path: "add-tracks",
+        component: AddTracks,
+        meta: { title: "Add Tracks", authRequired: true },
+      },
+      {
+        path: "add-strands",
+        component: AddStrands,
+        meta: { title: "Add Strands", authRequired: true },
+      },
+
+      {
+        path: "acc_verify",
+        component: AccountVerification,
+        meta: { title: "Account Verification", authRequired: true },
+      },
+      {
+        path: "student_verify",
+        component: Student_verify,
+        meta: { title: "Verify Student", authRequired: true },
+      },
+      {
+        path: "user-type",
+        component: UserType,
+        meta: { title: "Utilities - Type of Users", authRequired: true },
+      },
+      {
+        path: "profile",
+        component: Profile,
+        meta: { title: "My Profile", authRequired: true },
+      },
+      
+      {
+        path: "enroll-student",
+        component: EnrollStudents,
+        meta: { title: "Enroll Students", authRequired: true },
+      },
+
+      {
         path: "jobposting",
         component: JobPosting,
         meta: { title: "Job Posting", authRequired: true },
@@ -152,16 +206,7 @@ const routes = [
         component: EmployeePDS,
         meta: { title: "Employee PDS", authRequired: true },
       },
-      {
-        path: "user-type",
-        component: UserType,
-        meta: { title: "Utilities - Type of Users", authRequired: true },
-      },
-      {
-        path: "profile",
-        component: Profile,
-        meta: { title: "My Profile", authRequired: true },
-      },
+   
       {
         path: "locators",
         component: Locators,
@@ -197,11 +242,7 @@ const routes = [
         component: Institutes,
         meta: { title: "Utilities - Institutes", authRequired: true },
       },
-      {
-        path: "acc_verify",
-        component: AccountVerification,
-        meta: { title: "Account Verification", authRequired: true },
-      },
+   
       {
         path: "employee-details",
         component: EmployeeDetails,
@@ -222,6 +263,7 @@ const routes = [
         component: MyPDS,
         meta: { title: "My PDS", authRequired: true },
       },
+    
       {
         path: "my-leave",
         component: MyLeave,
@@ -486,6 +528,46 @@ const routes = [
         meta: { title: "Dashboard", authRequired: true },
       },
       {
+        path: "student_verify",
+        component: Student_verify,
+        meta: { title: "Verify Student", authRequired: true },
+      },
+      {
+        path: "enroll-student",
+        component: EnrollStudents,
+        meta: { title: "Enroll Students", authRequired: true },
+      },
+      {
+        path: "user-type",
+        component: UserType,
+        meta: { title: "Utilities - Type of Users", authRequired: true },
+      },
+      {
+        path: "profile",
+        component: Profile,
+        meta: { title: "My Profile", authRequired: true },
+      },
+      {
+        path: "user-modules",
+        component: UserModules,
+        meta: { title: "User Modules", authRequired: true },
+      },
+      {
+        path: "modules-list",
+        component: ModulesList,
+        meta: { title: "List of Modules", authRequired: true },
+      },
+      {
+        path: "acc_verify",
+        component: AccountVerification,
+        meta: { title: "Account Verification", authRequired: true },
+      },
+
+
+      
+
+
+      {
         path: "jobposting",
         component: JobPosting,
         meta: { title: "Job Posting", authRequired: true },
@@ -500,16 +582,7 @@ const routes = [
         component: EmployeePDS,
         meta: { title: "Employee PDS", authRequired: true },
       },
-      {
-        path: "user-type",
-        component: UserType,
-        meta: { title: "Utilities - Type of Users", authRequired: true },
-      },
-      {
-        path: "profile",
-        component: Profile,
-        meta: { title: "My Profile", authRequired: true },
-      },
+   
       {
         path: "locators",
         component: Locators,
@@ -545,11 +618,7 @@ const routes = [
         component: Institutes,
         meta: { title: "Utilities - Institutes", authRequired: true },
       },
-      {
-        path: "acc_verify",
-        component: AccountVerification,
-        meta: { title: "Account Verification", authRequired: true },
-      },
+  
       {
         path: "employee-details",
         component: EmployeeDetails,
@@ -570,6 +639,7 @@ const routes = [
         component: MyPDS,
         meta: { title: "My PDS", authRequired: true },
       },
+   
       {
         path: "my-leave",
         component: MyLeave,
@@ -624,16 +694,7 @@ const routes = [
         component: TOApproval,
         meta: { title: "Travel Orders Approval", authRequired: true },
       },
-      {
-        path: "user-modules",
-        component: UserModules,
-        meta: { title: "User Modules", authRequired: true },
-      },
-      {
-        path: "modules-list",
-        component: ModulesList,
-        meta: { title: "List of Modules", authRequired: true },
-      },
+    
       {
         path: "ildp-calendar",
         component: IldpCalendar,
@@ -849,6 +910,17 @@ const routes = [
         component: Profile,
         meta: { title: "My Profile", authRequired: true },
       },
+      
+      {
+        path: "student_verify",
+        component: Student_verify,
+        meta: { title: "Verify Student", authRequired: true },
+      },
+      {
+        path: "enroll-student",
+        component: EnrollStudents,
+        meta: { title: "Enroll Students", authRequired: true },
+      },
       {
         path: "locators",
         component: Locators,
@@ -859,10 +931,16 @@ const routes = [
         component: MyPDS,
         meta: { title: "My PDS", authRequired: true },
       },
+     
       {
         path: "my-leave",
         component: MyLeave,
         meta: { title: "My Leave", authRequired: true },
+      },
+      {
+        path: "locators",
+        component: Locators,
+        meta: { title: "Locator Slips to Verify", authRequired: true },
       },
       {
         path: "my-locator-slip",
