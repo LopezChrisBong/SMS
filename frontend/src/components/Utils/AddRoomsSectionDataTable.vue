@@ -1,15 +1,15 @@
 <template>
   <div>
     <v-row class="mx-2">
-      <v-col cols="12" md="6" class="flex-items">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+      <v-col cols="12" md="8" class="flex-items">
+        <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="12" md="6" class="d-flex justify-space-between">
+      <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
           v-model="search"
           outlined
@@ -21,30 +21,30 @@
           color="#239FAB"
           dense
         ></v-text-field>
-        <!-- <v-btn
+        <v-btn
           class="white--text ml-2 rounded-lg"
-          color="#519043"
+          :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
         >
           <v-icon left> mdi-plus-box-outline </v-icon>
           Add New
-        </v-btn> -->
-        <v-btn
-          :class="tab == 3 ? '' : 'd-none'"
-          class="white--text ml-2 rounded-lg"
-          color="#519043"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
-          @click="printJobApplicants()"
-        >
-          <v-icon left> mdi-printer-outline </v-icon>
-          Print
         </v-btn>
+        <!-- <v-btn
+              :class="tab == 3 ? '' : 'd-none'"
+              class="white--text ml-2 rounded-lg"
+              color="#147452"
+              v-if="this.$store.state.user.user.isAdminApproved == 1"
+              @click="printJobApplicants()"
+            >
+              <v-icon left> mdi-printer-outline </v-icon>
+              Print
+            </v-btn> -->
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
-        :headers="tab == 3 ? headers1 : headers"
+        :headers="headers"
         :items="data"
         :items-per-page="10"
         :search="search"
@@ -52,120 +52,28 @@
         :loading="loading"
         @pagination="pagination"
         hide-default-footer
+        :rows="items"
       >
-        <template v-slot:[`item.ctType`]="{ item }">
-          {{
-            item.ctType == 1
-              ? "Academic Year"
-              : item.ctType == 2
-              ? "Calendar Year"
-              : ""
-          }}
-        </template>
-        <template v-slot:[`item.SY`]="{ item }">
-          {{
-            item.cyFrom && item.cyTo
-              ? formatDate(item.cyFrom) + " - " + formatDate(item.cyTo)
-              : ""
-          }}
-        </template>
-
-        <template v-slot:[`item.effectivityDate`]="{ item }">
-          {{ formatDate(item.effectivityDate) }}
-        </template>
-
-        <template v-slot:[`item.sem`]="{ item }">
-          {{
-            item.ctType == 1
-              ? item.sem == 1
-                ? "First Semester"
-                : item.sem == 2
-                ? "Second Semester"
-                : "Summer"
-              : "N/A"
-          }}
-        </template>
-
-        <template v-slot:[`item.isActive`]="{ item }">
-          <v-chip
-            class="white--text"
-            :color="item.isActive == 1 ? '#519043' : 'grey'"
-            x-small
-          >
-            {{ item.isActive == 1 ? "Active" : "Inactive" }}
-          </v-chip>
-        </template>
-
-        <template v-slot:[`item.status`]="{ item }">
-          <v-chip
-            :color="
-              item.status == 1 ? 'grey' : item.status == 2 ? '#519043' : 'red'
-            "
-            class="ma-2 white--text"
-            x-small
-          >
-            {{
-              item.status == 1
-                ? "For Approval"
-                : item.status == 2
-                ? "Approved"
-                : "Pending"
-            }}
-          </v-chip>
-        </template>
-        <template v-slot:[`item.education`]="{ item }">
-          <div
-            class="text-caption"
-            v-if="item.education != null && item.education != ''"
-          >
-            {{ item.education }}
-          </div>
-          <div
-            class="text-caption"
-            v-else
-            v-html="item.job_posting_content"
-          ></div>
-        </template>
-        <!-- <template v-slot:[`item.switch`]="{ item }">
-              <v-switch
-                v-if="item.status == 2"
-                :value="true"
-                :input-value="item.isActive == 1 ? true : false"
-                @change="switchItem(item)"
-                color="#519043"
-              ></v-switch>
-            </template> -->
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap">
+          <div class="text-no-wrap" style="padding: 4px;">
             <v-btn
               x-small
               color="blue"
-              class="mx-1"
-              v-if="item.status != 2"
+              class="my-2 mx-2"
               outlined
               @click="editItem(item)"
-              :class="tab == 2 ? 'd-none' : ''"
             >
               <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
             <v-btn
               x-small
-              color="green"
-              class="mx-1"
+              color="red"
+              class="my-2"
               outlined
-              @click="viewItem(item)"
+              @click="confirmDelete(item)"
             >
-              <v-icon size="14">mdi-eye-outline</v-icon>View
+              <v-icon size="14">mdi-delete-off</v-icon>Delete
             </v-btn>
-            <!-- <v-btn
-                x-small
-                color="#C62828"
-                class="white--text mx-1"
-                :class="tab == 3 ? '' : 'd-none'"
-                @click="confirmDelete(item)"
-              >
-                <v-icon size="14">mdi-trash-can-outline</v-icon> Delete
-              </v-btn> -->
           </div>
         </template>
       </v-data-table>
@@ -177,7 +85,7 @@
           <v-select
             dense
             outlined
-            color="#519043"
+            color="#147452"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -207,9 +115,10 @@
       </v-col>
     </v-row>
 
-    <MyJobPosting :data="coreTimeData" :action="action" />
+    <MyJobPosting :data="coreTimeData" :action="action" :grade="gradeName" />
     <MyJobApplication :data="designationData" :action="action" />
     <ApplicantOfJobDialog :data="applicantData" :action="action" />
+    <ShortListedtagging :data="taggingData" :action="action" />
 
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
@@ -226,14 +135,14 @@
         </div>
 
         <!-- <v-card-title class="text-h5">
-              Are you sure you want to proceed?
-            </v-card-title> -->
+                Are you sure you want to proceed?
+              </v-card-title> -->
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" outlined @click="confirmDialog = false">
             Close
           </v-btn>
-          <v-btn color="green" class="white--text" @click="deleteItem()">
+          <v-btn color="#147452" class="white--text" @click="deleteItem()">
             Confirm
           </v-btn>
         </v-card-actions>
@@ -267,40 +176,6 @@
                 >
                 </v-autocomplete>
               </v-col>
-              <!-- <v-col cols="4">
-                  <v-autocomplete
-                    label="Item No."
-                    v-model="jobitem"
-                    :rules="[formRules.required]"
-                    @change="handleAllChanges"
-                    dense
-                    class="rounded-lg"
-                    item-text="type"
-                    item-value="id"
-                    color="#93CB5B"
-                    :items="jobitemsList"
-                    :disabled="toPrint == 'All' ? true : false"
-                  >
-                  </v-autocomplete>
-                </v-col>
-  
-                <v-col cols="3">
-                  <v-autocomplete
-                    label="Month"
-                    v-model="selectedMonth"
-                    @change="handleAllChanges"
-                    dense
-                    class="rounded-lg"
-                    item-text="name"
-                    item-value="id"
-                    color="#93CB5B"
-                    :items="monthsList"
-                    :disabled="
-                      jobitem == 'All' ? true : toPrint == 'All' ? true : false
-                    "
-                  >
-                  </v-autocomplete>
-                </v-col> -->
               <v-col cols="1">
                 <v-autocomplete
                   label="Year"
@@ -315,20 +190,12 @@
                 </v-autocomplete>
               </v-col>
             </v-row>
-            <v-card-title>
-              <!-- <v-text-field
-                    v-model="search"
-                    append-icon="mdi-magnify"
-                    label="Search"
-                    single-line
-                    hide-details
-                  ></v-text-field> -->
-            </v-card-title>
-            <v-data-table :headers="headers3" :items="printData">
-              <template v-slot:[`item.birth`]="{ item }">
-                {{ formatDate(item.birth) }}
-              </template>
-            </v-data-table>
+            <v-card-title> </v-card-title>
+            <!-- <v-data-table :headers="headers3" :items="printData">
+                <template v-slot:[`item.birth`]="{ item }">
+                  {{ formatDate(item.birth) }}
+                </template>
+              </v-data-table> -->
           </v-form>
         </v-card-text>
 
@@ -337,10 +204,6 @@
           <v-btn color="red" outlined @click="JobPostPrint = false">
             <v-icon>mdi-close-circle-outline</v-icon>
             Cancel
-          </v-btn>
-          <v-btn color="#519043" class="white--text" @click="printApplicants()">
-            <v-icon class="mr-1">mdi-printer</v-icon>
-            Print
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -367,71 +230,31 @@ export default {
     MyJobApplication: () =>
       import("../../components/Dialogs/Forms/MyJobApplicationDialog.vue"),
     MyJobPosting: () =>
-      import("../../components/Dialogs/Forms/JobPostinDialog.vue"),
+      import("../../components/Dialogs/Forms/AddRoomSectionDialog.vue"),
+    ShortListedtagging: () =>
+      import("../../components/Dialogs/Forms/ShortListedtaggingDialog.vue"),
   },
   data: () => ({
     search: "",
+    taggingData: null,
     fullname: null,
     applicantData: null,
     headers: [
       {
-        text: "Name",
-        value: "fullname",
+        text: "Room Name",
+        value: "room_section",
         align: "start",
-        valign: "center",
-      },
-      {
-        text: "Position",
-        value: "position",
-        align: "center",
-        valign: "center",
+        valign: "start",
         sortable: false,
       },
 
       {
-        text: "Email",
-        value: "email",
+        text: "Grade Level",
+        value: "grade_level",
         align: "center",
         valign: "center",
         sortable: false,
       },
-      {
-        text: "Gender",
-        value: "gender",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Address",
-        value: "address",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Phone no.",
-        value: "phone_number",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-
-      {
-        text: "Religion",
-        value: "relegion",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-
-      // {
-      //   text: "Special Case",
-      //   value: "special_case",
-      //   align: "right",
-      //   valign: "center",
-      //   sortable: false,
-      // },
 
       {
         text: "Action",
@@ -441,66 +264,9 @@ export default {
         sortable: false,
       },
     ],
-    headers3: [
-      {
-        text: "Fullname",
-        value: "fullname",
-        align: "start",
-        valign: "center",
-      },
-      {
-        text: "Position",
-        value: "position",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
 
-      {
-        text: "Email",
-        value: "email",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Phone no.",
-        value: "phone_number",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Gender",
-        value: "gender",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Birth Date",
-        value: "birth",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Address",
-        value: "address",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-
-      {
-        text: "Religion",
-        value: "relegion",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-    ],
     data: [],
+    gradeName: null,
     printData: [],
     verified: [],
     perPageChoices: [
@@ -515,9 +281,12 @@ export default {
     activeTab: { id: 1, name: "Active-Jobs" },
     tab: 1,
     tabList: [
-      { id: 1, name: "Hired Applicant" },
-      { id: 2, name: "Declined Applicant" },
-      //   { id: 3, name: "Applicants" },
+      { id: 1, name: "Grade 7" },
+      { id: 2, name: "Grade 8" },
+      { id: 3, name: "Grade 9" },
+      { id: 4, name: "Grade 10" },
+      { id: 5, name: "Grade 11" },
+      { id: 6, name: "Grade 12" },
     ],
     coreTimeData: null,
     designationData: null,
@@ -569,7 +338,7 @@ export default {
     // this.eventHub.$on("closeMyJobApplicationDialog", () => {
     //   this.initialize();
     // });
-    this.eventHub.$on("closeJobPostinDialog", () => {
+    this.eventHub.$on("closeAddSubjectDialog", () => {
       this.initialize();
     });
     this.eventHub.$on("closeApplicantJobList", () => {
@@ -578,6 +347,10 @@ export default {
     this.eventHub.$on("closeMyJobApplicationDialog", () => {
       this.initialize();
     });
+    this.eventHub.$on("closeShortListDialog", () => {
+      this.initialize();
+    });
+
     // this.eventHub.$on("closeMyDesignationDialog", () => {
     //   this.initialize();
     // });
@@ -585,9 +358,10 @@ export default {
 
   beforeDestroy() {
     // this.eventHub.$off("closeMyJobApplicationDialog");
-    this.eventHub.$off("closeJobPostinDialog");
+    this.eventHub.$off("closeAddSubjectDialog");
     this.eventHub.$off("closeApplicantJobList");
     this.eventHub.$off("closeMyJobApplicationDialog");
+    this.eventHub.$off("closeShortListDialog");
 
     // this.eventHub.$off("closeMyDesignationDialog");
   },
@@ -622,31 +396,24 @@ export default {
     // },
   },
   methods: {
-    printApplicants() {
+    tag(item) {
+      this.taggingData = item;
+      this.action = "Tag";
+    },
+    printApplicants(item) {
+      console.log("Item Print Report", item.id);
       let data = this.printData;
-      if (data.length == 0) {
-        console.log("Walay Data");
-        this.fadeAwayMessage.show = true;
-        this.fadeAwayMessage.type = "Error";
-        this.fadeAwayMessage.header = "System Message";
-        this.fadeAwayMessage.message =
-          "There is no data to print, Please select filter with data.";
-      } else {
-        console.log("Print Data", data);
-        window.open(
-          process.env.VUE_APP_SERVER +
-            "/pdf-generator/generateJobApplicant/" +
-            this.toPrint +
-            "/" +
-            this.jobitem +
-            "/" +
-            this.selectedMonth +
-            "/" +
-            this.selectedYear +
-            "",
-          "_blank" // <- This is what makes it open in a new window.
-        );
-      }
+      let filter = this.$store.getters.getFilterSelected;
+      console.log("Print Data", data);
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/generateJobApplicant/" +
+          item.id +
+          "/" +
+          filter +
+          "",
+        "_blank" // <- This is what makes it open in a new window.
+      );
     },
     handleAllChanges() {
       // Logic to handle changes for all three selects
@@ -686,7 +453,8 @@ export default {
         let arr = [];
         let jobitem = [];
         for (let index = 0; index < res.data.length; index++) {
-          const element = res.data[index].position_title;
+          // const element = res.data[index].position_title;
+          const element = res.data[index];
           const items = res.data[index].plantilla_item;
           jobitem.push(items);
           arr.push(element);
@@ -713,6 +481,7 @@ export default {
     },
     printJobApplicants() {
       this.JobPostPrint = true;
+
       this.handleAllChanges();
     },
     pagination(data) {
@@ -721,26 +490,63 @@ export default {
 
     initialize() {
       // this.handleAllChanges();
-
       this.loading = true;
       let filter = this.$store.getters.getFilterSelected;
       console.log("Filted", filter);
+
       if (this.tab == 1) {
-        this.axiosCall(
-          "/job-applicant/getAllHiredApplicant/" + filter,
-          "GET"
-        ).then((res) => {
+        this.gradeName = "Grade 7";
+        this.axiosCall("/rooms-section/" + "Grade 7", "GET").then((res) => {
           if (res) {
-            //   console.log("Love", res.data);
+            console.log("Love", res.data);
             this.data = res.data;
             this.loading = false;
           }
         });
       } else if (this.tab == 2) {
-        this.axiosCall(
-          "/job-applicant/getAllDeclinedApplicant/" + filter,
-          "GET"
-        ).then((res) => {
+        this.gradeName = "Grade 8";
+
+        this.axiosCall("/rooms-section/" + "Grade 8", "GET").then((res) => {
+          if (res) {
+            console.log("Love", res.data);
+            this.data = res.data;
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 3) {
+        this.gradeName = "Grade 9";
+
+        this.axiosCall("/rooms-section/" + "Grade 9", "GET").then((res) => {
+          if (res) {
+            console.log("Love", res.data);
+            this.data = res.data;
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 4) {
+        this.gradeName = "Grade 10";
+
+        this.axiosCall("/rooms-section/" + "Grade 10", "GET").then((res) => {
+          if (res) {
+            console.log("Love", res.data);
+            this.data = res.data;
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 5) {
+        this.gradeName = "Grade 11";
+
+        this.axiosCall("/rooms-section/" + "Grade 11", "GET").then((res) => {
+          if (res) {
+            console.log("Love", res.data);
+            this.data = res.data;
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 6) {
+        this.gradeName = "Grade 12";
+
+        this.axiosCall("/rooms-section/" + "Grade 12", "GET").then((res) => {
           if (res) {
             console.log("Love", res.data);
             this.data = res.data;
@@ -748,16 +554,6 @@ export default {
           }
         });
       }
-      // else {
-      //   this.axiosCall("/job-applicant/" + filter, "GET").then((res) => {
-      //     if (res) {
-      //       console.log("ewss", res.data);
-      //       this.data = res.data;
-      //       this.loading = false;
-      //       this.fullname = res.data.firstname + " " + res.data.lastname;
-      //     }
-      //   });
-      // }
     },
 
     switchItem(item) {
@@ -828,21 +624,39 @@ export default {
       // }
     },
     add() {
-      this.designationData = [{ id: null }];
-      this.action = "Add";
+      if (this.tab == 3) {
+        this.designationData = [{ id: null }];
+        this.action = "Add";
+      } else {
+        this.coreTimeData = [{ id: null }];
+        this.action = "Add";
+      }
     },
     editItem(item) {
-      this.designationData = item;
+      console.log(this.tab, item);
+      this.coreTimeData = item;
       this.action = "Update";
     },
-
+    viewApplicant(item) {
+      this.applicantData = item;
+      this.action = 1;
+    },
+    viewHiredApplicant(item) {
+      this.applicantData = item;
+      this.action = 2;
+    },
     viewItem(item) {
-      this.designationData = item;
-      this.action = "View";
+      if (this.tab == 1) {
+        this.coreTimeData = item;
+        this.action = "View";
+      } else {
+        this.designationData = item;
+        this.action = "View";
+      }
     },
 
     deleteItem() {
-      this.axiosCall("/job-applicant/" + this.deleteData.id, "DELETE").then(
+      this.axiosCall("/rooms-section/" + this.deleteData.id, "DELETE").then(
         (res) => {
           if (res.data.status == 200) {
             this.dialog = false;

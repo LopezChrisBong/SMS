@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="6" class="flex-items">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -21,30 +21,31 @@
           color="#239FAB"
           dense
         ></v-text-field>
-        <!-- <v-btn
+        <v-btn
+          :class="tab == 3 ? 'd-none' : ''"
           class="white--text ml-2 rounded-lg"
-          color="#519043"
+          :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
         >
           <v-icon left> mdi-plus-box-outline </v-icon>
           Add New
-        </v-btn> -->
-        <v-btn
-          :class="tab == 3 ? '' : 'd-none'"
-          class="white--text ml-2 rounded-lg"
-          color="#519043"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
-          @click="printJobApplicants()"
-        >
-          <v-icon left> mdi-printer-outline </v-icon>
-          Print
         </v-btn>
+        <!-- <v-btn
+            :class="tab == 3 ? '' : 'd-none'"
+            class="white--text ml-2 rounded-lg"
+            color="#147452"
+            v-if="this.$store.state.user.user.isAdminApproved == 1"
+            @click="printJobApplicants()"
+          >
+            <v-icon left> mdi-printer-outline </v-icon>
+            Print
+          </v-btn> -->
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
-        :headers="tab == 3 ? headers1 : headers"
+        :headers="headers"
         :items="data"
         :items-per-page="10"
         :search="search"
@@ -89,7 +90,7 @@
         <template v-slot:[`item.isActive`]="{ item }">
           <v-chip
             class="white--text"
-            :color="item.isActive == 1 ? '#519043' : 'grey'"
+            :color="item.isActive == 1 ? '#147452' : 'grey'"
             x-small
           >
             {{ item.isActive == 1 ? "Active" : "Inactive" }}
@@ -99,7 +100,7 @@
         <template v-slot:[`item.status`]="{ item }">
           <v-chip
             :color="
-              item.status == 1 ? 'grey' : item.status == 2 ? '#519043' : 'red'
+              item.status == 1 ? 'grey' : item.status == 2 ? '#147452' : 'red'
             "
             class="ma-2 white--text"
             x-small
@@ -132,31 +133,79 @@
                 :value="true"
                 :input-value="item.isActive == 1 ? true : false"
                 @change="switchItem(item)"
-                color="#519043"
+                color="#147452"
               ></v-switch>
             </template> -->
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap">
+          <div class="text-no-wrap" style="padding: 4px;">
+            <!-- <v-btn
+              x-small
+              color="#147452"
+              class="my-2"
+              :class="tab == 2 ? 'd-none' : ''"
+              outlined
+              block
+              @click="viewHiredApplicant(item)"
+            >
+              <v-icon size="14">mdi-eye-outline</v-icon> Load
+            </v-btn> -->
+            <!-- <v-btn
+              x-small
+              color="red"
+              class="my-2"
+              :class="tab == 2 ? 'd-none' : ''"
+              outlined
+              block
+              @click="tag(item)"
+            >
+              <v-icon size="14">mdi-tag-multiple-outline</v-icon>Tag
+            </v-btn> -->
+
+            <!-- <v-btn
+              x-small
+              color="orange"
+              class="my-2"
+              :class="tab == 2 ? 'd-none' : ''"
+              outlined
+              block
+              @click="viewApplicant(item)"
+            >
+              <v-icon size="14">mdi-eye-outline</v-icon> Applicant
+            </v-btn> -->
             <v-btn
               x-small
               color="blue"
-              class="mx-1"
-              v-if="item.status != 2"
+              class="my-2"
               outlined
               @click="editItem(item)"
-              :class="tab == 2 ? 'd-none' : ''"
             >
               <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
-            <v-btn
+            <!-- <v-btn
               x-small
-              color="green"
-              class="mx-1"
+              color="blue"
+              class="my-2"
+              :class="tab == 2 ? '' : 'd-none'"
+              v-if="item.status != 2"
               outlined
+              block
+              @click="printApplicants(item)"
+            >
+              <v-icon size="14">mdi-printer-outline</v-icon>Print
+            </v-btn> -->
+            <!-- <v-btn
+              x-small
+              color="#147452"
+              class="my-2"
+              :class="
+                tab == 2 ? 'd-none' : ''
+              "
+              outlined
+              block
               @click="viewItem(item)"
             >
               <v-icon size="14">mdi-eye-outline</v-icon>View
-            </v-btn>
+            </v-btn> -->
             <!-- <v-btn
                 x-small
                 color="#C62828"
@@ -177,7 +226,7 @@
           <v-select
             dense
             outlined
-            color="#519043"
+            color="#147452"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -210,6 +259,7 @@
     <MyJobPosting :data="coreTimeData" :action="action" />
     <MyJobApplication :data="designationData" :action="action" />
     <ApplicantOfJobDialog :data="applicantData" :action="action" />
+    <ShortListedtagging :data="taggingData" :action="action" />
 
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
@@ -233,7 +283,7 @@
           <v-btn color="red" outlined @click="confirmDialog = false">
             Close
           </v-btn>
-          <v-btn color="green" class="white--text" @click="deleteItem()">
+          <v-btn color="#147452" class="white--text" @click="deleteItem()">
             Confirm
           </v-btn>
         </v-card-actions>
@@ -267,40 +317,6 @@
                 >
                 </v-autocomplete>
               </v-col>
-              <!-- <v-col cols="4">
-                  <v-autocomplete
-                    label="Item No."
-                    v-model="jobitem"
-                    :rules="[formRules.required]"
-                    @change="handleAllChanges"
-                    dense
-                    class="rounded-lg"
-                    item-text="type"
-                    item-value="id"
-                    color="#93CB5B"
-                    :items="jobitemsList"
-                    :disabled="toPrint == 'All' ? true : false"
-                  >
-                  </v-autocomplete>
-                </v-col>
-  
-                <v-col cols="3">
-                  <v-autocomplete
-                    label="Month"
-                    v-model="selectedMonth"
-                    @change="handleAllChanges"
-                    dense
-                    class="rounded-lg"
-                    item-text="name"
-                    item-value="id"
-                    color="#93CB5B"
-                    :items="monthsList"
-                    :disabled="
-                      jobitem == 'All' ? true : toPrint == 'All' ? true : false
-                    "
-                  >
-                  </v-autocomplete>
-                </v-col> -->
               <v-col cols="1">
                 <v-autocomplete
                   label="Year"
@@ -315,20 +331,12 @@
                 </v-autocomplete>
               </v-col>
             </v-row>
-            <v-card-title>
-              <!-- <v-text-field
-                    v-model="search"
-                    append-icon="mdi-magnify"
-                    label="Search"
-                    single-line
-                    hide-details
-                  ></v-text-field> -->
-            </v-card-title>
-            <v-data-table :headers="headers3" :items="printData">
+            <v-card-title> </v-card-title>
+            <!-- <v-data-table :headers="headers3" :items="printData">
               <template v-slot:[`item.birth`]="{ item }">
                 {{ formatDate(item.birth) }}
               </template>
-            </v-data-table>
+            </v-data-table> -->
           </v-form>
         </v-card-text>
 
@@ -337,10 +345,6 @@
           <v-btn color="red" outlined @click="JobPostPrint = false">
             <v-icon>mdi-close-circle-outline</v-icon>
             Cancel
-          </v-btn>
-          <v-btn color="#519043" class="white--text" @click="printApplicants()">
-            <v-icon class="mr-1">mdi-printer</v-icon>
-            Print
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -367,71 +371,38 @@ export default {
     MyJobApplication: () =>
       import("../../components/Dialogs/Forms/MyJobApplicationDialog.vue"),
     MyJobPosting: () =>
-      import("../../components/Dialogs/Forms/JobPostinDialog.vue"),
+      import("../../components/Dialogs/Forms/CreateSubjectDialog.vue"),
+    ShortListedtagging: () =>
+      import("../../components/Dialogs/Forms/ShortListedtaggingDialog.vue"),
   },
   data: () => ({
     search: "",
+    taggingData: null,
     fullname: null,
     applicantData: null,
     headers: [
       {
-        text: "Name",
-        value: "fullname",
+        text: "Subject Title",
+        value: "subject_title",
         align: "start",
         valign: "center",
       },
+
       {
-        text: "Position",
-        value: "position",
+        text: "Grade Level",
+        value: "grade_level",
         align: "center",
         valign: "center",
         sortable: false,
       },
 
       {
-        text: "Email",
-        value: "email",
+        text: "Senior / Junior",
+        value: "seniorJunior",
         align: "center",
         valign: "center",
         sortable: false,
       },
-      {
-        text: "Gender",
-        value: "gender",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Address",
-        value: "address",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Phone no.",
-        value: "phone_number",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-
-      {
-        text: "Religion",
-        value: "relegion",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-
-      // {
-      //   text: "Special Case",
-      //   value: "special_case",
-      //   align: "right",
-      //   valign: "center",
-      //   sortable: false,
-      // },
 
       {
         text: "Action",
@@ -441,65 +412,7 @@ export default {
         sortable: false,
       },
     ],
-    headers3: [
-      {
-        text: "Fullname",
-        value: "fullname",
-        align: "start",
-        valign: "center",
-      },
-      {
-        text: "Position",
-        value: "position",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
 
-      {
-        text: "Email",
-        value: "email",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Phone no.",
-        value: "phone_number",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Gender",
-        value: "gender",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Birth Date",
-        value: "birth",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Address",
-        value: "address",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-
-      {
-        text: "Religion",
-        value: "relegion",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-    ],
     data: [],
     printData: [],
     verified: [],
@@ -515,8 +428,8 @@ export default {
     activeTab: { id: 1, name: "Active-Jobs" },
     tab: 1,
     tabList: [
-      { id: 1, name: "Hired Applicant" },
-      { id: 2, name: "Declined Applicant" },
+      { id: 1, name: "Active-Subjects" },
+      { id: 2, name: "Not Active-Subjects" },
       //   { id: 3, name: "Applicants" },
     ],
     coreTimeData: null,
@@ -569,7 +482,7 @@ export default {
     // this.eventHub.$on("closeMyJobApplicationDialog", () => {
     //   this.initialize();
     // });
-    this.eventHub.$on("closeJobPostinDialog", () => {
+    this.eventHub.$on("closeAddSubjectDialog", () => {
       this.initialize();
     });
     this.eventHub.$on("closeApplicantJobList", () => {
@@ -578,6 +491,10 @@ export default {
     this.eventHub.$on("closeMyJobApplicationDialog", () => {
       this.initialize();
     });
+    this.eventHub.$on("closeShortListDialog", () => {
+      this.initialize();
+    });
+
     // this.eventHub.$on("closeMyDesignationDialog", () => {
     //   this.initialize();
     // });
@@ -585,9 +502,10 @@ export default {
 
   beforeDestroy() {
     // this.eventHub.$off("closeMyJobApplicationDialog");
-    this.eventHub.$off("closeJobPostinDialog");
+    this.eventHub.$off("closeAddSubjectDialog");
     this.eventHub.$off("closeApplicantJobList");
     this.eventHub.$off("closeMyJobApplicationDialog");
+    this.eventHub.$off("closeShortListDialog");
 
     // this.eventHub.$off("closeMyDesignationDialog");
   },
@@ -622,31 +540,24 @@ export default {
     // },
   },
   methods: {
-    printApplicants() {
+    tag(item) {
+      this.taggingData = item;
+      this.action = "Tag";
+    },
+    printApplicants(item) {
+      console.log("Item Print Report", item.id);
       let data = this.printData;
-      if (data.length == 0) {
-        console.log("Walay Data");
-        this.fadeAwayMessage.show = true;
-        this.fadeAwayMessage.type = "Error";
-        this.fadeAwayMessage.header = "System Message";
-        this.fadeAwayMessage.message =
-          "There is no data to print, Please select filter with data.";
-      } else {
-        console.log("Print Data", data);
-        window.open(
-          process.env.VUE_APP_SERVER +
-            "/pdf-generator/generateJobApplicant/" +
-            this.toPrint +
-            "/" +
-            this.jobitem +
-            "/" +
-            this.selectedMonth +
-            "/" +
-            this.selectedYear +
-            "",
-          "_blank" // <- This is what makes it open in a new window.
-        );
-      }
+      let filter = this.$store.getters.getFilterSelected;
+      console.log("Print Data", data);
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/generateJobApplicant/" +
+          item.id +
+          "/" +
+          filter +
+          "",
+        "_blank" // <- This is what makes it open in a new window.
+      );
     },
     handleAllChanges() {
       // Logic to handle changes for all three selects
@@ -686,7 +597,8 @@ export default {
         let arr = [];
         let jobitem = [];
         for (let index = 0; index < res.data.length; index++) {
-          const element = res.data[index].position_title;
+          // const element = res.data[index].position_title;
+          const element = res.data[index];
           const items = res.data[index].plantilla_item;
           jobitem.push(items);
           arr.push(element);
@@ -713,6 +625,7 @@ export default {
     },
     printJobApplicants() {
       this.JobPostPrint = true;
+
       this.handleAllChanges();
     },
     pagination(data) {
@@ -721,43 +634,30 @@ export default {
 
     initialize() {
       // this.handleAllChanges();
-
       this.loading = true;
-      let filter = this.$store.getters.getFilterSelected;
-      console.log("Filted", filter);
+      let d = new Date();
+      let yr = d.getFullYear();
       if (this.tab == 1) {
-        this.axiosCall(
-          "/job-applicant/getAllHiredApplicant/" + filter,
-          "GET"
-        ).then((res) => {
-          if (res) {
-            //   console.log("Love", res.data);
-            this.data = res.data;
-            this.loading = false;
+        this.axiosCall("/subjects/CreateSubject/active/" + yr, "GET").then(
+          (res) => {
+            if (res) {
+              console.log("Love", res.data);
+              this.data = res.data;
+              this.loading = false;
+            }
           }
-        });
+        );
       } else if (this.tab == 2) {
-        this.axiosCall(
-          "/job-applicant/getAllDeclinedApplicant/" + filter,
-          "GET"
-        ).then((res) => {
-          if (res) {
-            console.log("Love", res.data);
-            this.data = res.data;
-            this.loading = false;
+        this.axiosCall("/subjects/CreateSubject/notActive/" + yr, "GET").then(
+          (res) => {
+            if (res) {
+              console.log("Love", res.data);
+              this.data = res.data;
+              this.loading = false;
+            }
           }
-        });
+        );
       }
-      // else {
-      //   this.axiosCall("/job-applicant/" + filter, "GET").then((res) => {
-      //     if (res) {
-      //       console.log("ewss", res.data);
-      //       this.data = res.data;
-      //       this.loading = false;
-      //       this.fullname = res.data.firstname + " " + res.data.lastname;
-      //     }
-      //   });
-      // }
     },
 
     switchItem(item) {
@@ -828,17 +728,35 @@ export default {
       // }
     },
     add() {
-      this.designationData = [{ id: null }];
-      this.action = "Add";
+      if (this.tab == 3) {
+        this.designationData = [{ id: null }];
+        this.action = "Add";
+      } else {
+        this.coreTimeData = [{ id: null }];
+        this.action = "Add";
+      }
     },
     editItem(item) {
-      this.designationData = item;
+      console.log(this.tab, item);
+      this.coreTimeData = item;
       this.action = "Update";
     },
-
+    viewApplicant(item) {
+      this.applicantData = item;
+      this.action = 1;
+    },
+    viewHiredApplicant(item) {
+      this.applicantData = item;
+      this.action = 2;
+    },
     viewItem(item) {
-      this.designationData = item;
-      this.action = "View";
+      if (this.tab == 1) {
+        this.coreTimeData = item;
+        this.action = "View";
+      } else {
+        this.designationData = item;
+        this.action = "View";
+      }
     },
 
     deleteItem() {

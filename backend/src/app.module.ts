@@ -17,6 +17,9 @@ import { MailModule } from './mail/mail.module';
 import { SysModulesModule } from './sys-modules/sys-modules.module';
 import { AssignedModulesModule } from './assigned-modules/assigned-modules.module';
 import { UserRoleModule } from './user-role/user-role.module';
+import { EnrollStudentModule } from './enroll-student/enroll-student.module';
+import { SubjectsModule } from './subjects/subjects.module';
+import { RoomsSectionModule } from './rooms-section/rooms-section.module';
 
 @Module({
   imports: [
@@ -46,7 +49,10 @@ import { UserRoleModule } from './user-role/user-role.module';
     SysModulesModule,
     AssignedModulesModule,
     UserDetailsModule,
-    UserRoleModule
+    UserRoleModule,
+    EnrollStudentModule,
+    SubjectsModule,
+    RoomsSectionModule
   ],
 
   controllers: [AppController],
