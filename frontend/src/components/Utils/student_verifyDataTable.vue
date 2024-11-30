@@ -1,4 +1,4 @@
-<template>
+e<template>
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
@@ -223,7 +223,7 @@ export default {
       this.activeTab = { id: 1, name: "For Verification" };
       this.axiosCall("/enroll-student/EnrollStudent", "GET").then((res) => {
         if (res) {
-          // console.log(res.data);
+          console.log(res.data);
           let data = res.data;
           data.forEach((element, i) => {
             data[i].name = this.toTitleCase(element.name);

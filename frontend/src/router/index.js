@@ -88,6 +88,8 @@ import CreateSubject from "../views/Pages/CreateSubject.vue";
 import AddRoomsSection from "../views/Pages/AddRoomsSection.vue";
 import AddTracks from "../views/Pages/addTracks.vue";
 import AddStrands from "../views/Pages/AddStrands.vue";
+import StudentEnroll from "../views/Auth/StudentEnroll.vue";
+import StudentEnrollSuccess from "../views/Auth/StudentEnrollSuccess.vue";
 
 Vue.use(VueRouter);
 
@@ -115,9 +117,19 @@ const routes = [
         meta: { authRequired: false },
       },
       {
+        path: "enroll-success",
+        component: StudentEnrollSuccess,
+        meta: { authRequired: false },
+      },
+      {
         path: "forgot-pw",
         component: ResetPassword,
         meta: { authRequired: false },
+      },
+      {
+        path: "student-enroll",
+        component: StudentEnroll,
+        meta: {authRequired: false },
       },
     ],
   },

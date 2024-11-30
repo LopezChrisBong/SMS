@@ -1,9 +1,9 @@
 <template>
   <div class="mx-2">
     <!-- <div
-    class="pl-2 pt-2 pr-2 mx-2 fill-height"
-    style="background-color: white; overflow-y: hidden; overflow-x: hidden"
-  > -->
+      class="pl-2 pt-2 pr-2 mx-2 fill-height"
+      style="background-color: white; overflow-y: hidden; overflow-x: hidden"
+    > -->
     <v-card class="">
       <v-form ref="myPdsForm">
         <v-row class="mb-2">
@@ -43,7 +43,6 @@
                 ></v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="seniorJuniorList"
                     label="Junior High / Senior High"
                     color="#6DB249"
@@ -53,7 +52,6 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="semesterList"
                     v-if="formdata.seniorJunior == 'Senior High'"
                     :rules="
@@ -69,22 +67,21 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <!-- <v-text-field
-                    :disabled="!isUpdate"
-                    v-model="transfer.track"
-                    v-if="formdata.seniorJunior == 'Senior High'"
-                    :rules="
-                      formdata.seniorJunior == 'Senior High'
-                        ? [formRules.required]
-                        : []
-                    "
-                    dense
-                    class="rounded-lg"
-                    label="Track"
-                    color="#6DB249"
-                  >
-                  </v-text-field> -->
+                      
+                      v-model="transfer.track"
+                      v-if="formdata.seniorJunior == 'Senior High'"
+                      :rules="
+                        formdata.seniorJunior == 'Senior High'
+                          ? [formRules.required]
+                          : []
+                      "
+                      dense
+                      class="rounded-lg"
+                      label="Track"
+                      color="#6DB249"
+                    >
+                    </v-text-field> -->
                   <v-select
-                    :disabled="!isUpdate"
                     :items="trackList"
                     v-if="formdata.seniorJunior == 'Senior High'"
                     :rules="
@@ -103,7 +100,6 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="strandList"
                     v-if="formdata.seniorJunior == 'Senior High'"
                     :rules="
@@ -123,7 +119,6 @@
               <v-row>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.fname"
                     :rules="[formRules.required]"
                     dense
@@ -135,7 +130,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.mname"
                     dense
                     class="rounded-lg"
@@ -146,7 +140,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.lname"
                     :rules="[formRules.required]"
                     dense
@@ -158,7 +151,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.suffix"
                     dense
                     class="rounded-lg"
@@ -181,7 +173,6 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
-                        :disabled="!isUpdate"
                         dense
                         v-model="formdata.bdate"
                         :rules="[formRules.required]"
@@ -214,7 +205,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.birth_place"
                     dense
                     class="rounded-lg"
@@ -225,7 +215,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="sexItem"
                     label="Sex"
                     color="#6DB249"
@@ -235,7 +224,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="cvl_statusItem"
                     label="Civil Status"
                     color="#6DB249"
@@ -243,7 +231,6 @@
                     v-model="formdata.civil_status"
                   ></v-select>
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-if="formdata.civil_status == 'Others'"
                     v-model="formdata.civil_status1"
                     dense
@@ -257,7 +244,6 @@
               <v-row>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.height"
                     :rules="[formRules.hgtInMtrFormat]"
                     dense
@@ -269,7 +255,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.weight"
                     :rules="[formRules.numberRequired]"
                     dense
@@ -281,7 +266,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.blood_type"
                     :rules="[]"
                     dense
@@ -293,7 +277,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="dualCtznItem"
                     label="Citizenship (Filipino)"
                     dense
@@ -306,7 +289,6 @@
               <v-row>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="dualCtznItem"
                     label="IP's Member"
                     color="#6DB249"
@@ -314,7 +296,6 @@
                     v-model="formdata.is_IP"
                   ></v-select>
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-if="formdata.is_IP == 'Yes'"
                     v-model="formdata.ip_Name"
                     :rules="formdata.is_IP == 'Yes' ? [formRules.required] : []"
@@ -329,7 +310,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="dualCtznItem"
                     label="4P's Beneficiary"
                     color="#6DB249"
@@ -337,7 +317,6 @@
                     v-model="formdata.fourPs"
                   ></v-select>
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-if="formdata.fourPs == 'Yes'"
                     v-model="formdata.fourpis"
                     :rules="
@@ -354,7 +333,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.mobile_no"
                     :rules="[formRules.required]"
                     dense
@@ -366,7 +344,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.email"
                     dense
                     class="rounded-lg"
@@ -383,7 +360,6 @@
                 ></v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="dualCtznItem"
                     label="Yes / No:"
                     color="#6DB249"
@@ -394,7 +370,6 @@
 
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="transfer.disability_desc"
                     v-if="formdata.disability == 'Yes'"
                     :rules="
@@ -418,7 +393,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.residential_house_no"
                     :rules="[formRules.required]"
                     dense
@@ -431,7 +405,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.residential_street"
                     :rules="[formRules.required]"
                     dense
@@ -444,7 +417,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.residential_subd"
                     :rules="[formRules.required]"
                     dense
@@ -457,7 +429,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.residential_brgy"
                     :rules="[formRules.required]"
                     dense
@@ -470,7 +441,6 @@
 
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.residential_city"
                     :rules="[formRules.required]"
                     dense
@@ -483,7 +453,6 @@
 
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.residential_prov"
                     :rules="[formRules.required]"
                     dense
@@ -495,7 +464,6 @@
                 </v-col>
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.residential_zip"
                     :rules="[formRules.required]"
                     dense
@@ -511,7 +479,6 @@
                 <v-col cols="12" sm="12" md="12" lg="12" xl="12">
                   <strong>Permanent Address</strong>
                   <v-checkbox
-                    :disabled="!isUpdate"
                     v-model="computedSameAddress"
                     label="Is Same Address"
                     dense
@@ -520,7 +487,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.permanent_house_no"
                     :rules="[formRules.required]"
                     dense
@@ -533,7 +499,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.permanent_street"
                     :rules="[formRules.required]"
                     dense
@@ -546,7 +511,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.permanent_subd"
                     :rules="[formRules.required]"
                     dense
@@ -559,7 +523,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.permanent_brgy"
                     :rules="[formRules.required]"
                     dense
@@ -572,7 +535,6 @@
 
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.permanent_city"
                     :rules="[formRules.required]"
                     dense
@@ -585,7 +547,6 @@
 
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.permanent_prov"
                     :rules="[formRules.required]"
                     dense
@@ -598,7 +559,6 @@
 
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="formdata.permanent_zip"
                     :rules="[formRules.required]"
                     dense
@@ -616,7 +576,6 @@
                 ></v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.father_fname"
                     dense
                     class="rounded-lg"
@@ -627,7 +586,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.father_mname"
                     dense
                     class="rounded-lg"
@@ -638,7 +596,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.father_lname"
                     dense
                     class="rounded-lg"
@@ -649,7 +606,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.father_number"
                     dense
                     class="rounded-lg"
@@ -666,7 +622,6 @@
                 ></v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.mother_fname"
                     dense
                     class="rounded-lg"
@@ -677,7 +632,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.mother_mname"
                     dense
                     class="rounded-lg"
@@ -688,7 +642,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.mother_lname"
                     dense
                     class="rounded-lg"
@@ -699,7 +652,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.mother_number"
                     dense
                     class="rounded-lg"
@@ -714,17 +666,16 @@
                 <v-col cols="12"
                   ><strong>Legal Guardian's Name</strong>
                   <!-- <v-checkbox
-                    :disabled="!isUpdate"
-                    v-model="computedNoSpouse"
-                    label="No Spouse"
-                    dense
-                  ></v-checkbox
-                  > -->
+                      
+                      v-model="computedNoSpouse"
+                      label="No Spouse"
+                      dense
+                    ></v-checkbox
+                    > -->
                   <v-divider></v-divider
                 ></v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.guardian_fname"
                     :rules="[formRules.required]"
                     dense
@@ -736,7 +687,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.guardian_mname"
                     :rules="[formRules.required]"
                     dense
@@ -748,7 +698,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.guardian_lname"
                     :rules="[formRules.required]"
                     dense
@@ -760,7 +709,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="family_background.guardian_number"
                     :rules="[formRules.required]"
                     dense
@@ -775,17 +723,16 @@
                 <v-col cols="12"
                   ><strong class="mb-4">If Transfered Student</strong>
                   <!-- <v-checkbox
-                    :disabled="!isUpdate"
-                    v-model="computedNoSpouse"
-                    label="No Spouse"
-                    dense
-                  ></v-checkbox
-                  > -->
+                      
+                      v-model="computedNoSpouse"
+                      label="No Spouse"
+                      dense
+                    ></v-checkbox
+                    > -->
                   <v-divider></v-divider
                 ></v-col>
                 <v-col cols="12">
                   <v-select
-                    :disabled="!isUpdate"
                     :items="dualCtznItem"
                     label="Tranfered"
                     color="#6DB249"
@@ -796,7 +743,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="transfer.last_grade_completed"
                     v-if="formdata.transfered == 'Yes'"
                     :rules="
@@ -811,7 +757,6 @@
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="transfer.last_year_completed"
                     v-if="formdata.transfered == 'Yes'"
                     :rules="
@@ -827,7 +772,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="transfer.last_school_attended"
                     v-if="formdata.transfered == 'Yes'"
                     :rules="
@@ -843,7 +787,6 @@
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
-                    :disabled="!isUpdate"
                     v-model="transfer.last_school_ID"
                     v-if="formdata.transfered == 'Yes'"
                     :rules="
@@ -945,6 +888,7 @@
 
 <script>
 export default {
+  name: "Enroll",
   components: {},
   data: () => ({
     sheet: false,
@@ -1243,6 +1187,7 @@ export default {
           this.fadeAwayMessage.header = "System Message Enrollment";
           this.fadeAwayMessage.message = res.data.msg;
           this.initialize();
+          this.$router.push("/enroll-success");
         } else {
           this.fadeAwayMessage.show = true;
           this.fadeAwayMessage.type = "error";
