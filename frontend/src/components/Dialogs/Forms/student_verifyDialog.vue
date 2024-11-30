@@ -88,7 +88,7 @@
                   </v-autocomplete>
                 </v-col>
                 <v-col cols="12">
-                  <v-autocomplete
+                  <v-text-field
                     v-model="verifyModel.year_to"
                     :rules="[formRules.required]"
                     dense
@@ -98,10 +98,8 @@
                     item-value="id"
                     label="Year To:"
                     color="#93CB5B"
-                    :items="year_fromList"
-                    @change="onChangeDateFrom($event)"
                   >
-                  </v-autocomplete>
+                  </v-text-field>
                 </v-col>
                 <v-col cols="12">
                   <v-autocomplete
@@ -111,7 +109,7 @@
                     class="rounded-lg"
                     item-text="description"
                     item-value="id"
-                    label="Year To:"
+                    label="Grade Level:"
                     color="#93CB5B"
                     :items="
                       seniorJunior == 'Junior High' ? juniorList : seniorList
@@ -197,16 +195,10 @@ export default {
         this.initialize();
         this.$refs.UserVerifyFormref.resetValidation();
         if (data.id) {
-          console.log("Love", data);
+          console.log("Love", data.year_from);
           this.verifyModel.id = data.id;
-          this.verifyModel.userID = data.user_id;
           this.seniorJunior = data.seniorJunior;
-          this.verifyModel.name = data.name;
-          this.verifyModel.empID = data.emp_empID;
-          this.verifyModel.usertypeID = data.user_usertypeID.toString();
-          this.verifyModel.user_roleID = data.user_user_roleID;
-          this.verifyModel.assignedModuleID = data.user_assignedModuleID;
-          this.verifyModel.grade_level = data.grade_level;
+          this.verifyModel.grade_level = data.grade_level.toString();
           this.verifyModel.lrn = data.lrn == false ? "No" : "Yes";
           this.verifyModel.good_moral = data.good_moral == false ? "No" : "Yes";
           this.verifyModel.birth_certificate =

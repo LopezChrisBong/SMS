@@ -21,7 +21,6 @@ export class RoomsSectionService {
 
   async create(createRoomsSectionDto: CreateRoomsSectionDto) {
 
-    console.log(createRoomsSectionDto)
       try {
         let data = this.dataSource.manager.create(RoomsSection,{
           room_section: createRoomsSectionDto.room_section,
@@ -42,7 +41,6 @@ export class RoomsSectionService {
     
   async addTrack(createAddTrackDto: CreateAddTrackDto) {
 
-    console.log(createAddTrackDto)
       try {
         let data = this.dataSource.manager.create(AddTracks,{
           tracks_name: createAddTrackDto.tracks_name,
@@ -60,7 +58,6 @@ export class RoomsSectionService {
 
     async addStrand(createAddStrandDto: CreateAddStrandDto) {
 
-      console.log(createAddStrandDto)
         try {
           let data = this.dataSource.manager.create(AddStrand,{
             strand_name: createAddStrandDto.strand_name,
@@ -107,7 +104,6 @@ export class RoomsSectionService {
       'SELECT * FROM add_strand left join add_tracks on add_strand.trackId = add_tracks.id  order by strand_name ASC',
     );
     await queryRunner.release();
-    console.log(toReturn)
     return toReturn;
   }
 
@@ -118,7 +114,6 @@ export class RoomsSectionService {
       'SELECT * FROM add_strand where trackId = '+id+' order by strand_name ASC',
     );
     await queryRunner.release();
-    console.log(toReturn)
     return toReturn;
   }
 
@@ -128,8 +123,6 @@ export class RoomsSectionService {
   }
 
   update(id: number, updateRoomsSectionDto: UpdateRoomsSectionDto) {
-
-    console.log(updateRoomsSectionDto)
 
 try {
     this.dataSource.manager.update(RoomsSection,id,{
@@ -148,9 +141,6 @@ try {
 
 
   updateTrack(id: number, updateAddTrackDto: UpdateAddTrackDto) {
-
-    console.log(updateAddTrackDto)
-
 try {
     this.dataSource.manager.update(AddTracks,id,{
     tracks_name:updateAddTrackDto.tracks_name,
@@ -166,9 +156,6 @@ try {
   }
 
   updateStrand(id: number, updateAddStrandDto: UpdateAddStrandDto) {
-
-    console.log(updateAddStrandDto)
-
 try {
     this.dataSource.manager.update(AddStrand,id,{
     strand_name:updateAddStrandDto.strand_name,
