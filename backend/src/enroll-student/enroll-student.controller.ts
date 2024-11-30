@@ -9,8 +9,8 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class EnrollStudentController {
   constructor(private readonly enrollStudentService: EnrollStudentService) {}
 
-  @UseGuards(JWTAuthGuard)
-  @ApiBearerAuth()
+  // @UseGuards(JWTAuthGuard)
+  // @ApiBearerAuth()
   @Post()
   create(@Body() createEnrollStudentDto: CreateEnrollStudentDto) {
     return this.enrollStudentService.create(createEnrollStudentDto);

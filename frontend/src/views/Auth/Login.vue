@@ -71,7 +71,7 @@
 
                 <v-col cols="12" class="mt-5 ">
                   <div
-                    style="font-size:14px; margin-top:15px"
+                    style="font-size:14px; "
                     class="d-flex justify-center  text-gray-100"
                   >
                     Don't have an account yet?
@@ -93,6 +93,20 @@
                       >Forgot password?</span
                     >
                   </div> -->
+                </v-col>
+                <v-col cols="12" class="">
+                  <div
+                    style="font-size:14px;"
+                    class="d-flex justify-center  text-gray-100"
+                  >
+                    Do you want to enroll?
+                    <b
+                      style="color: #147452"
+                      @click="doEnroll()"
+                      class="enrollLink ml-2"
+                      >Enroll Now</b
+                    >
+                  </div>
                 </v-col>
                 <!-- <v-col cols="12" class="py-8  ">
                   <div style="width:60%;margin:-10px auto" class="pa-2">
@@ -172,6 +186,9 @@ export default {
     },
     doRegister() {
       this.$router.push("/register");
+    },
+    doEnroll() {
+      this.$router.push("/student-enroll");
     },
     doForgotPassword() {
       this.$router.push("/forgot-pw");
