@@ -158,6 +158,15 @@ export class CreateEnrollStudentDto {
       last_school_ID: string;
 
       @ApiProperty()
+      track: string;
+
+      @ApiProperty()
+      semester: string;
+
+      @ApiProperty()
+      strand: string;
+
+      @ApiProperty()
       disabilty: boolean;
 
       @ApiProperty()
