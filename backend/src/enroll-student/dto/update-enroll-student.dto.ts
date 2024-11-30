@@ -166,6 +166,15 @@ export class UpdateEnrollStudentDto extends PartialType(CreateEnrollStudentDto) 
     grade_level: string;
 
     @ApiProperty()
+    track: string;
+
+    @ApiProperty()
+    semester: string;
+
+    @ApiProperty()
+    strand: string;
+
+    @ApiProperty()
       lrn: boolean;
 
       @ApiProperty()

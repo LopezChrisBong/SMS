@@ -118,6 +118,28 @@ export class EnrollStudent {
         ip_Name: string;
 
         @Column({
+          nullable: true,
+          type: 'varchar',
+          length: 255,
+        })
+        track: string;
+
+      @Column({
+        nullable: true,
+        type: 'varchar',
+        length: 255,
+      })
+      semester: string;
+
+    @Column({
+      nullable: true,
+      type: 'varchar',
+      length: 255,
+    })
+      strand: string;
+      
+
+        @Column({
             type: 'tinyint',
             nullable: false,
           })
