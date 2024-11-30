@@ -1269,7 +1269,7 @@ export default {
         if (res.data.status == 201) {
           this.fadeAwayMessage.show = true;
           this.fadeAwayMessage.type = "success";
-          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.header = "System Message Enrollment";
           this.fadeAwayMessage.message = res.data.msg;
           this.initialize();
           window.location.reload();
