@@ -1027,6 +1027,9 @@ export default {
       last_year_completed: null,
       last_school_attended: null,
       last_school_ID: null,
+      track: null,
+      semester: null,
+      strand: null,
     },
     family_background: {
       id: null,
@@ -1136,13 +1139,6 @@ export default {
     },
   },
   methods: {
-    loadRemarks(id) {
-      this.axiosCall("/remarks/" + id + "/PDS", "GET").then((res) => {
-        if (res.data) {
-          this.remarksData = res.data;
-        }
-      });
-    },
     prependData(val, arr) {
       var dumpArr = arr.slice();
       dumpArr.unshift(val);
@@ -1264,18 +1260,19 @@ export default {
         last_year_completed: this.transfer.last_year_completed,
         last_school_attended: this.transfer.last_school_attended,
         last_school_ID: this.transfer.last_school_ID,
+        track: this.transfer.track,
+        semester: this.transfer.track,
+        strand: this.transfer.track,
       };
       console.log(data);
       this.axiosCall("/enroll-student", "POST", data).then((res) => {
         if (res.data.status == 201) {
           this.fadeAwayMessage.show = true;
           this.fadeAwayMessage.type = "success";
-          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.header = "System Message Enrollment";
           this.fadeAwayMessage.message = res.data.msg;
-          this.isUpdate = false;
           this.initialize();
-          this.getInPDSUpdateActive();
-          this.isUpdateAllowed = false;
+          window.location.reload();
         } else {
           this.fadeAwayMessage.show = true;
           this.fadeAwayMessage.type = "error";
