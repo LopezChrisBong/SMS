@@ -624,13 +624,8 @@ export default {
       // }
     },
     add() {
-      if (this.tab == 3) {
-        this.designationData = [{ id: null }];
-        this.action = "Add";
-      } else {
-        this.coreTimeData = [{ id: null }];
-        this.action = "Add";
-      }
+      this.coreTimeData = [{ id: null }];
+      this.action = "Add";
     },
     editItem(item) {
       console.log(this.tab, item);
