@@ -90,6 +90,7 @@ import AddTracks from "../views/Pages/addTracks.vue";
 import AddStrands from "../views/Pages/AddStrands.vue";
 import StudentEnroll from "../views/Auth/StudentEnroll.vue";
 import StudentEnrollSuccess from "../views/Auth/StudentEnrollSuccess.vue";
+import ClassroomProgramm from "../views/Pages/ClassroomProgramm.vue";
 
 Vue.use(VueRouter);
 
@@ -196,18 +197,34 @@ const routes = [
         path: "enroll-student",
         component: EnrollStudents,
         meta: { title: "Enroll Students", authRequired: true },
+      },    
+      {
+        path: "modules-list",
+        component: ModulesList,
+        meta: { title: "List of Modules", authRequired: true },
       },
+
+      {
+        path: "user-modules",
+        component: UserModules,
+        meta: { title: "User Modules", authRequired: true },
+      },
+
+      {
+        path: "classroom-programm",
+        component: ClassroomProgramm,
+        meta: { title: "Classroom Programm", authRequired: true },
+      },
+
+
+      
 
       {
         path: "jobposting",
         component: JobPosting,
         meta: { title: "Job Posting", authRequired: true },
       },
-      {
-        path: "modules-list",
-        component: ModulesList,
-        meta: { title: "List of Modules", authRequired: true },
-      },
+  
       {
         path: "employee-hired",
         component: EmployeeHired,
@@ -324,11 +341,7 @@ const routes = [
         component: TOApproval,
         meta: { title: "Travel Orders Approval", authRequired: true },
       },
-      {
-        path: "user-modules",
-        component: UserModules,
-        meta: { title: "User Modules", authRequired: true },
-      },
+  
       {
         path: "ildp-calendar",
         component: IldpCalendar,

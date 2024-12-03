@@ -1,6 +1,7 @@
 
 import { AssignedModule } from 'src/assigned-modules/entities/assigned-module.entity';
 import { Users } from 'src/auth/entities/auth.entity';
+import { Availability } from 'src/enroll-student/entities/availability.entity';
 import { EnrollStudent } from 'src/enroll-student/entities/enroll-student.entity';
 import { AddStrand } from 'src/rooms-section/entities/add-strand.entity';
 import { AddTracks } from 'src/rooms-section/entities/add-tracks.entity';
@@ -22,7 +23,8 @@ const entities = [
   Subject,
   RoomsSection,
   AddTracks,
-  AddStrand
+  AddStrand,
+  Availability
 ];
 
 export {
@@ -36,7 +38,8 @@ export {
   Subject,
   RoomsSection,
   AddTracks,
-  AddStrand
+  AddStrand,
+  Availability
 };
 
 export default entities;

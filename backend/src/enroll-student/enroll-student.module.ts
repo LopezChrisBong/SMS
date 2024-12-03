@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { EnrollStudentService } from './enroll-student.service';
 import { EnrollStudentController } from './enroll-student.controller';
-import { EnrollStudent } from 'src/entities';
+import { Availability, EnrollStudent } from 'src/entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EnrollStudent])],
+  imports: [TypeOrmModule.forFeature([EnrollStudent, Availability])],
   controllers: [EnrollStudentController],
   providers: [EnrollStudentService]
 })

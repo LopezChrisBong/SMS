@@ -79,6 +79,27 @@ export class UserDetailsService {
 
   }
 
+  async TeachingRole() {
+    let data = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        'UD.id as id',
+        'UD.fname as fname',
+        'UD.mname as mname',
+        'UD.lname as lname',
+      ])
+      .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
+      .where('user.isValidated = 1')
+      .andWhere('user.id != 2') //security user ID
+      .andWhere('user.isAdminApproved = 1')
+      .andWhere('user.user_roleID = 2')
+      .getRawMany();
+
+    return data;
+
+  }
+
   async updateVerifiedUser(updateVU: UpdateVerifiedUser) {
     
     const queryRunner = this.dataSource.createQueryRunner();
@@ -282,6 +303,9 @@ export class UserDetailsService {
       female,
     };
   }
+
+
+
 
 
   

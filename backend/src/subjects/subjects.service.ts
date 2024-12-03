@@ -39,6 +39,20 @@ export class SubjectsService {
 
   }
 
+  async getSpicificSubject(year:string, grade: string){
+    let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
+    .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
+    .andWhere('posted_year = :year', {
+      year: year,
+    })
+    .andWhere('grade_level = :grade', {
+      grade: grade,
+    })
+    .orderBy('created_at', 'DESC')
+    .getMany()
+    return data
+  }
+
   async activeSubject(year:string){
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
     .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')

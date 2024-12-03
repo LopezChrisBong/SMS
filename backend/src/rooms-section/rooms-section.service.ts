@@ -87,6 +87,19 @@ export class RoomsSectionService {
     return data
   }
 
+  async findSectionName(gradeLevel:string, section:number) {
+    let data = await this.dataSource.manager
+    .createQueryBuilder(RoomsSection, 'UD')
+    .select([
+      "*"
+    ])
+    .where('UD.grade_level = "'+gradeLevel+'"')
+    .where('UD.id = "'+section+'"')
+    .getRawMany();
+
+    return data
+  }
+
   async Alltracks() {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();

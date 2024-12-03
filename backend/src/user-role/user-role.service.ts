@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CreateUserRoleDto } from './dto/create-user-role.dto';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { UserRole } from './entities/user-role.entity';
@@ -8,6 +8,7 @@ import { UserRole } from './entities/user-role.entity';
 @Injectable()
 export class UserRoleService {
   constructor(
+    private dataSource: DataSource,
     @InjectRepository(UserRole)
     private readonly userRoleRep: Repository<UserRole>,
   ) {}

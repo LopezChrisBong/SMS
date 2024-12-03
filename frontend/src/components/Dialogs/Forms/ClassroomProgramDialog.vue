@@ -1,0 +1,393 @@
+<template>
+  <div>
+    <v-dialog v-model="dialog" eager scrollable max-width="900px">
+      <v-form ref="UserVerifyFormref" @submit.prevent>
+        <v-card>
+          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+            <span
+              >{{ action }} {{ grade }} {{ className }} Classroom Program
+              Schedule
+            </span>
+            <v-spacer></v-spacer>
+            <v-btn icon dark @click="closeD()">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+
+          <v-card-text style="max-height: 700px" class="my-4">
+            <v-container>
+              <v-row>
+                <v-col cols="11" sm="5">
+                  <v-dialog
+                    ref="dialog1"
+                    v-model="modal1"
+                    :return-value.sync="time"
+                    persistent
+                    width="290px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="time_slot_from"
+                        label="Select time from:"
+                        prepend-icon="mdi-clock-time-four-outline"
+                        readonly
+                        v-bind="attrs"
+                        :rules="[formRules.required]"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-time-picker
+                      v-if="modal1"
+                      v-model="time_slot_from"
+                      full-width
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="modal1 = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.dialog1.save(time_slot_from)"
+                      >
+                        OK
+                      </v-btn>
+                    </v-time-picker>
+                  </v-dialog>
+                </v-col>
+                <v-spacer></v-spacer>
+                <v-col cols="11" sm="5">
+                  <v-dialog
+                    ref="dialog2"
+                    v-model="modal2"
+                    :return-value.sync="time"
+                    persistent
+                    width="290px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="time_slot_to"
+                        label="Select time to:"
+                        prepend-icon="mdi-clock-time-four-outline"
+                        readonly
+                        v-bind="attrs"
+                        :rules="[formRules.required]"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-time-picker
+                      v-if="modal2"
+                      v-model="time_slot_to"
+                      full-width
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="modal2 = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.dialog2.save(time_slot_to)"
+                      >
+                        OK
+                      </v-btn>
+                    </v-time-picker>
+                  </v-dialog>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-autocomplete
+                    v-model="day"
+                    :rules="[formRules.required]"
+                    dense
+                    class="rounded-lg"
+                    item-text="name"
+                    item-value="name"
+                    label="Select Day"
+                    color="#93CB5B"
+                    :items="dayList"
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-autocomplete
+                    v-model="subject"
+                    dense
+                    :rules="[formRules.required]"
+                    class="rounded-lg"
+                    item-text="subject_title"
+                    item-value="id"
+                    label="Subject Title Name"
+                    color="#93CB5B"
+                    :items="subjectList"
+                  >
+                  </v-autocomplete>
+                </v-col>
+
+                <!-- <v-col cols="12" md="6">
+                  <v-autocomplete
+                    v-model="class_room"
+                    :rules="[formRules.required]"
+                    dense
+                    class="rounded-lg"
+                    item-text="room_section"
+                    item-value="id"
+                    label="Classroom to assign"
+                    color="#93CB5B"
+                    :items="classroomList"
+                  >
+                  </v-autocomplete>
+                </v-col> -->
+
+                <v-col cols="12" md="12">
+                  <v-autocomplete
+                    v-model="teacher"
+                    :rules="[formRules.required]"
+                    dense
+                    class="rounded-lg"
+                    item-text="name"
+                    item-value="id"
+                    label="Teacher to assign"
+                    color="#93CB5B"
+                    :items="TeachersList"
+                  >
+                  </v-autocomplete>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-divider></v-divider>
+
+          <v-card-actions class="pa-5">
+            <v-spacer></v-spacer>
+            <v-btn color="red" outlined @click="closeD()">
+              <v-icon>mdi-close-circle-outline</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
+              :color="$vuetify.theme.themes.light.submitBtns"
+              class="white--text"
+              @click="accept()"
+            >
+              <v-icon>mdi-check-circle</v-icon>
+              {{ action == "Add" ? "Add" : "Update" }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
+
+    <fade-away-message-component
+      displayType="variation2"
+      v-model="fadeAwayMessage.show"
+      :message="fadeAwayMessage.message"
+      :header="fadeAwayMessage.header"
+      :top="fadeAwayMessage.top"
+      :type="fadeAwayMessage.type"
+    ></fade-away-message-component>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    data: null,
+    action: null,
+    grade: null,
+    section: null,
+  },
+  data() {
+    return {
+      dialog: false,
+      verifyModel: {
+        id: null,
+        userID: null,
+        name: null,
+        empID: null,
+        date_hired: null,
+        usertypeID: null,
+        assignedModuleID: null,
+        user_roleID: null,
+      },
+      className: [],
+      class_room: null,
+      teacher: null,
+      TeachersList: [],
+      subject: null,
+      subjectList: [],
+      day: "Monday",
+      dayList: [
+        { id: 1, name: "Monday" },
+        { id: 2, name: "Tuesday" },
+        { id: 3, name: "Wednesday" },
+        { id: 4, name: "Thursday" },
+        { id: 5, name: "Friday" },
+        { id: 6, name: "Saturday" },
+      ],
+      time_slot_from: null,
+      time_slot_to: null,
+      modal1: false,
+      modal2: false,
+      classroomList: [],
+      assignedModulesList: [],
+      fadeAwayMessage: {
+        show: false,
+        type: "success",
+        header: "Successfully Added!",
+        message: "",
+        top: 10,
+      },
+    };
+  },
+  watch: {
+    data: {
+      handler(data) {
+        this.dialog = true;
+        this.initialize();
+        this.$refs.UserVerifyFormref.resetValidation();
+        if (data.id) {
+          console.log("Love", data.user_user_roleID);
+          this.verifyModel.id = data.id;
+          this.verifyModel.userID = data.user_id;
+          this.verifyModel.name = data.name;
+          this.verifyModel.empID = data.emp_empID;
+          this.verifyModel.usertypeID = data.user_usertypeID.toString();
+          this.verifyModel.user_roleID = data.user_user_roleID;
+          this.verifyModel.assignedModuleID = data.user_assignedModuleID;
+          // this.verifyModel.date_hired = data.emp_date_hired;
+        }
+      },
+      deep: true,
+    },
+  },
+  methods: {
+    initialize() {
+      this.getUserType();
+      this.getAllActiveSubjects();
+      this.getClassroom();
+      this.getRoleTeachers();
+    },
+    getUserType() {
+      this.axiosCall("/user-type/getAllUsertype", "GET").then((res) => {
+        if (res.data) {
+          console.log("UserList", res.data);
+          this.usertypeList = res.data;
+        }
+      });
+    },
+    closeD() {
+      this.eventHub.$emit("closeAddScheduleDialog", true);
+      this.teacher = null;
+      this.subject = null;
+      this.section = null;
+      this.time_slot_from = null;
+      this.time_slot_to = null;
+      this.day = null;
+      this.grade = null;
+      this.dialog = false;
+    },
+    accept() {
+      if (this.$refs.UserVerifyFormref.validate()) {
+        let hours = this.calculateHoursDifference(
+          this.time_slot_from,
+          this.time_slot_to
+        );
+        if (hours < 1) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "Please select time range above or equal to 1 hour!";
+        } else {
+          if (this.action == "Add") {
+            let data = {
+              teacherID: this.teacher,
+              subjectId: this.subject,
+              roomId: this.section,
+              times_slot_from: this.time_slot_from,
+              times_slot_to: this.time_slot_to,
+              day: this.day,
+              grade_level: this.grade,
+              hours: hours,
+            };
+            this.axiosCall("/enroll-student/addSchedule", "POST", data).then(
+              (res) => {
+                if (res.data.status == 201) {
+                  this.dialog = false;
+                  this.fadeAwayMessage.show = true;
+                  this.fadeAwayMessage.type = "success";
+                  this.fadeAwayMessage.header = "System Message";
+                  this.fadeAwayMessage.message = res.data.msg;
+                  this.closeD();
+                } else if (res.data.status == 500) {
+                  this.dialog = false;
+                  this.fadeAwayMessage.show = true;
+                  this.fadeAwayMessage.type = "error";
+                  this.fadeAwayMessage.header = "System Message";
+                  this.fadeAwayMessage.message = res.data.msg;
+                  this.$refs.PositionFormref.reset();
+                  this.closeD();
+                }
+              }
+            );
+          }
+        }
+      }
+    },
+
+    calculateHoursDifference(startTime, endTime) {
+      // Helper function to convert time to minutes
+      const timeToMinutes = (time) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        return hours * 60 + minutes;
+      };
+
+      // Convert both times to minutes
+      const startMinutes = timeToMinutes(startTime);
+      const endMinutes = timeToMinutes(endTime);
+
+      // Calculate the difference in minutes
+      const differenceMinutes = endMinutes - startMinutes;
+
+      // Convert minutes to hours (decimal format)
+      const differenceHours = differenceMinutes / 60;
+
+      return differenceHours;
+    },
+
+    getAllActiveSubjects() {
+      let d = new Date();
+      let yr = d.getFullYear();
+      this.axiosCall(
+        "/subjects/getSpicificSubject/" + yr + "/" + this.grade,
+        "GET"
+      ).then((res) => {
+        if (res) {
+          console.log("Subject List", res.data);
+          this.subjectList = res.data;
+        }
+      });
+    },
+
+    getClassroom() {
+      //   let grade = this.grade.toString();
+      this.axiosCall(
+        "/rooms-section/" + this.grade + "/" + this.section,
+        "GET"
+      ).then((res) => {
+        console.log("ClassName", res.data[0].room_section);
+        this.className = res.data[0].room_section;
+      });
+    },
+
+    getRoleTeachers() {
+      this.axiosCall(
+        "/user-details/getAllVerifiedUser/TeachingRole",
+        "GET"
+      ).then((res) => {
+        console.log("Teacher Role", res.data);
+        this.TeachersList = res.data;
+      });
+    },
+  },
+};
+</script>

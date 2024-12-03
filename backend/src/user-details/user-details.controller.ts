@@ -72,6 +72,11 @@ export class UserDetailsController {
     return this.userDetailsService.getAllVerifiedUser();
   }
 
+  @Get('getAllVerifiedUser/TeachingRole')
+  TeachingRole() {
+    return this.userDetailsService.TeachingRole();
+  }
+
   // @UseGuards(JWTAuthGuard)
   // @ApiBearerAuth()
   @Post('updateVerifiedUser')
