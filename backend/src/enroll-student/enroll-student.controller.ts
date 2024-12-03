@@ -4,6 +4,7 @@ import { CreateEnrollStudentDto } from './dto/create-enroll-student.dto';
 import { UpdateEnrollStudentDto } from './dto/update-enroll-student.dto';
 import { JWTAuthGuard } from 'src/auth/utils/jwt-auth-guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { CreateAvailabilityDto } from './dto/create-availability.dto';
 
 @Controller('enroll-student')
 export class EnrollStudentController {
@@ -14,6 +15,11 @@ export class EnrollStudentController {
   @Post()
   create(@Body() createEnrollStudentDto: CreateEnrollStudentDto) {
     return this.enrollStudentService.create(createEnrollStudentDto);
+  }
+
+  @Post('AddSchedule')
+  AddSchedule(@Body() createAvailabilityDto: CreateAvailabilityDto) {
+    return this.enrollStudentService.AddSchedule(createAvailabilityDto);
   }
 
     // @UseGuards(JWTAuthGuard)
@@ -36,6 +42,11 @@ export class EnrollStudentController {
   @Get('EnrolledStudent')
   EnrolledStudent() {
     return this.enrollStudentService.EnrolledStudent();
+  }
+
+  @Get('getClassProgramm/:grade/:section')
+  getMyCoreTime(@Param('grade') grade: string,@Param('section') section: string,) {
+    return this.enrollStudentService.getClassProgramm(grade, +section);
   }
 
 

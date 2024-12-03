@@ -1,12 +1,12 @@
 <template>
-  <div class="mx-2">
+  <div class="ma-12 ">
     <!-- <div
       class="pl-2 pt-2 pr-2 mx-2 fill-height"
       style="background-color: white; overflow-y: hidden; overflow-x: hidden"
     > -->
     <v-card class="">
       <v-form ref="myPdsForm">
-        <v-row class="mb-2">
+        <!-- <v-row class="mb-2">
           <v-col cols="12" sm="6" md="6" lg="6" xl="6">
             <br />
             <p class="text-subtitle-2 ml-6">
@@ -32,7 +32,7 @@
               >
             </v-tabs>
           </v-col>
-        </v-row>
+        </v-row> -->
         <v-row>
           <v-col class="mt-2 px-8" cols="12">
             <div v-if="tab.id == 1">

@@ -33,6 +33,12 @@ export class RoomsSectionController {
     return this.roomsSectionService.findAll(gradeLevel);
   }
 
+  @Get(':gradeLevel/:section')
+  findSectionName(@Param('gradeLevel') gradeLevel: string,@Param('section') section: string) {
+    return this.roomsSectionService.findSectionName(gradeLevel,+section);
+  }
+
+
   
   @Get('Alltracks/Data')
   Alltracks() {

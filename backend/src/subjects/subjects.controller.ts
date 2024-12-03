@@ -17,6 +17,11 @@ export class SubjectsController {
     return this.subjectsService.activeSubject(year);
   }
 
+  @Get('getSpicificSubject/:year/:grade')
+  getSpicificSubject(@Param('year') year: string,@Param('grade') grade: string) {
+    return this.subjectsService.getSpicificSubject(year,grade);
+  }
+
   @Get('CreateSubject/notActive/:year')
   notActiveSubject(@Param('year') year: string) {
     return this.subjectsService.notActiveSubject(year);

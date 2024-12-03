@@ -1,21 +1,23 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEnrollStudentDto } from './dto/create-enroll-student.dto';
 import { UpdateEnrollStudentDto } from './dto/update-enroll-student.dto';
-import { EnrollStudent } from 'src/entities';
-import { DataSource, Repository } from 'typeorm';
+import { Availability, EnrollStudent, RoomsSection, Subject, UserDetail } from 'src/entities';
+import { Brackets, DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateAvailabilityDto } from './dto/create-availability.dto';
 
 @Injectable()
 export class EnrollStudentService {
   constructor(
     @InjectRepository(EnrollStudent)
     private readonly enrollStudentRepository: Repository<EnrollStudent>,
+    @InjectRepository(Availability)
+    private readonly availabilityRepository: Repository<Availability>,
     private dataSource: DataSource,
   ) {}
   
 
   async create(createEnrollStudentDto: CreateEnrollStudentDto) {
-   console.log('Enroll',createEnrollStudentDto)
    try {
     let applyStudent = this.enrollStudentRepository.create(createEnrollStudentDto);
     await this.enrollStudentRepository.save(applyStudent);
@@ -29,6 +31,68 @@ export class EnrollStudentService {
       status: HttpStatus.BAD_REQUEST,
     };
   }
+  }
+
+  async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
+    try {
+      // Check for conflicts
+      const conflict = await this.checkConflict(createAvailabilityDto);
+  
+      if (conflict) {
+        console.log('Conflict')
+        // return {
+        //   msg: 'Conflict detected. Schedule cannot be added.',
+        //   status: HttpStatus.CONFLICT,
+        //   conflictDetails: conflict,
+        // };
+      }
+      else{
+          console.log('Save')
+      }
+    
+  
+      // Save the schedule
+      // const newSchedule = this.availabilityRepository.create(createAvailabilityDto);
+      // await this.availabilityRepository.save(newSchedule);
+  
+      // return {
+      //   msg: 'Schedule added successfully.',
+      //   status: HttpStatus.CREATED,
+      // };
+    } catch (error) {
+      console.error('Error adding schedule:', error);
+      return {
+        msg: 'Failed to add schedule.',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
+  
+  async checkConflict(data: CreateAvailabilityDto): Promise<any> {
+    try {
+      const conflicts = await this.availabilityRepository
+        .createQueryBuilder('availability')
+        .where('availability.teacherID = :teacherID', { teacherID: data.teacherID })
+        .andWhere('availability.day = :day', { day: data.day })
+        .andWhere('availability.roomId = :roomId', { roomId: data.roomId })
+        .andWhere('availability.subjectId = :subjectId', { subjectId: data.subjectId })
+        .andWhere(
+          new Brackets((qb) => {
+            qb.where(':from BETWEEN availability.times_slot_from AND availability.times_slot_to', { from: data.times_slot_from })
+              .orWhere(':to BETWEEN availability.times_slot_from AND availability.times_slot_to', { to: data.times_slot_to })
+              .orWhere(
+                'availability.times_slot_from BETWEEN :from AND :to',
+                { from: data.times_slot_from, to: data.times_slot_to }
+              );
+          })
+        )
+        .getMany();
+  
+      return conflicts.length > 0 ? conflicts : null;
+    } catch (error) {
+      console.error('Error checking conflict:', error);
+      throw error;
+    }
   }
 
   async EnrollStudent() {
@@ -206,6 +270,18 @@ export class EnrollStudentService {
       await queryRunner.release();
     }
   
+}
+
+async getClassProgramm(grade: string , section : number ) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    const toReturn = await queryRunner.query(
+      '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" order by t1.day ASC' ,      
+    );
+    await queryRunner.release();
+    return toReturn;
+
+
 }
 
 
