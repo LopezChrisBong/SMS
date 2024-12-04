@@ -265,13 +265,13 @@ export default {
           this.axiosCall("/rooms-section", "POST", data).then((res) => {
             console.log(res.data);
             // alert("Successfully Added");
-            this.closeD();
+
             if (res.data.status == 201) {
               this.fadeAwayMessage.show = true;
               this.fadeAwayMessage.type = "success";
               this.fadeAwayMessage.header = "System Message";
               this.fadeAwayMessage.message = "Successfully Added Subject!";
-
+              this.closeD();
               // location.reload();
             } else if (res.data.status == 400) {
               this.fadeAwayMessage.show = true;
@@ -298,12 +298,11 @@ export default {
             (res) => {
               console.log(res.data);
               if (res.data.status == 201) {
-                this.closeD();
                 this.fadeAwayMessage.show = true;
                 this.fadeAwayMessage.type = "success";
                 this.fadeAwayMessage.header = "System Message";
                 this.fadeAwayMessage.message = "Successfully updated subject!";
-
+                this.closeD();
                 // location.reload();
               } else if (res.data.status == 400) {
                 this.fadeAwayMessage.show = true;

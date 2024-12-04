@@ -11,7 +11,7 @@
                     >
                     <v-spacer></v-spacer>
                   </v-toolbar> -->
-          <JobPostingDataTable />
+          <addTracksDataTable />
         </v-col>
       </v-row>
     </v-card>
@@ -21,7 +21,7 @@
 <script>
 export default {
   components: {
-    JobPostingDataTable: () =>
+    addTracksDataTable: () =>
       import("../../components/Utils/addTracksDataTable.vue"),
   },
   created() {

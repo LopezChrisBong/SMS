@@ -42,7 +42,18 @@ e<template>
             <v-icon size="14">{{
               tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
             }}</v-icon>
-            {{ tab == 1 ? "Verify" : "View" }}
+            {{ tab == 1 ? "Verify" : "Update" }}
+          </v-btn>
+
+          <v-btn
+            class="mx-2"
+            x-small
+            color="green"
+            outlined
+            @click="viewItem(item)"
+          >
+            <v-icon size="14">mdi-eye</v-icon>
+            View
           </v-btn>
         </template>
       </v-data-table>
@@ -86,6 +97,12 @@ e<template>
 
     <AccountVerificationDialog
       :data="updateData"
+      :action="action"
+      v-on:reloadTable="initialize"
+    />
+
+    <ViewAccountVerificationDialog
+      :data="viewData"
       :action="action"
       v-on:reloadTable="initialize"
     />
@@ -137,6 +154,10 @@ export default {
   components: {
     AccountVerificationDialog: () =>
       import("../../components/Dialogs/Forms/student_verifyDialog.vue"),
+    ViewAccountVerificationDialog: () =>
+      import(
+        "../../components/Dialogs/Views/ViewStudentVerificationDialog.vue"
+      ),
   },
   data: () => ({
     search: "",
@@ -170,6 +191,7 @@ export default {
     totalCount: 0,
     deleteData: null,
     updateData: null,
+    viewData: null,
     loading: false,
     options: {},
     action: null,
@@ -194,9 +216,17 @@ export default {
         this.getVerifiedUsers();
       }
     });
+    this.eventHub.$on("closeAccountsVerificatioDataDialog", () => {
+      if (this.tab == 1) {
+        this.initialize();
+      } else if (this.tab == 2) {
+        this.getVerifiedUsers();
+      }
+    });
   },
   beforeDestroy() {
     this.eventHub.$off("closeAccountsVerificationDialog");
+    this.eventHub.$off("closeAccountsVerificatioDataDialog");
   },
 
   watch: {
@@ -271,6 +301,17 @@ export default {
         this.updateData = item;
         this.action = this.tab == 1 ? "Verify" : "Update";
       }, 100);
+    },
+
+    viewItem(item) {
+      console.log(item);
+      if (this.tab == 1) {
+        this.viewData = item;
+        this.action = "View";
+      } else {
+        this.viewData = item;
+        this.action = "Update";
+      }
     },
     // confirmDelete() {
     //   this.axiosCall("/request-type/" + this.deleteData.id, "DELETE").then(

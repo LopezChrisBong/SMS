@@ -1,38 +1,38 @@
 <template>
   <div class="ma-12 ">
     <!-- <div
-      class="pl-2 pt-2 pr-2 mx-2 fill-height"
-      style="background-color: white; overflow-y: hidden; overflow-x: hidden"
-    > -->
+        class="pl-2 pt-2 pr-2 mx-2 fill-height"
+        style="background-color: white; overflow-y: hidden; overflow-x: hidden"
+      > -->
     <v-card class="">
       <v-form ref="myPdsForm">
         <!-- <v-row class="mb-2">
-          <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-            <br />
-            <p class="text-subtitle-2 ml-6">
-              Palihog ug butang N/A pag dili applicable sa inyong impormasiyon!
-            </p>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" class="px-6 pb-8">
-            <v-tabs
-              v-model="activeTab"
-              :center-active="true"
-              show-arrows
-              color="#43A047"
-              height="40"
-              class="mt-n8 rounded-lg"
-            >
-              <v-tab
-                v-for="tab in tabList"
-                :key="tab.id"
-                @click="changeTab(tab)"
-                >{{ tab.name }}</v-tab
+            <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+              <br />
+              <p class="text-subtitle-2 ml-6">
+                Palihog ug butang N/A pag dili applicable sa inyong impormasiyon!
+              </p>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" class="px-6 pb-8">
+              <v-tabs
+                v-model="activeTab"
+                :center-active="true"
+                show-arrows
+                color="#43A047"
+                height="40"
+                class="mt-n8 rounded-lg"
               >
-            </v-tabs>
-          </v-col>
-        </v-row> -->
+                <v-tab
+                  v-for="tab in tabList"
+                  :key="tab.id"
+                  @click="changeTab(tab)"
+                  >{{ tab.name }}</v-tab
+                >
+              </v-tabs>
+            </v-col>
+          </v-row> -->
         <v-row>
           <v-col class="mt-2 px-8" cols="12">
             <div v-if="tab.id == 1">
@@ -67,20 +67,20 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <!-- <v-text-field
-                      
-                      v-model="transfer.track"
-                      v-if="formdata.seniorJunior == 'Senior High'"
-                      :rules="
-                        formdata.seniorJunior == 'Senior High'
-                          ? [formRules.required]
-                          : []
-                      "
-                      dense
-                      class="rounded-lg"
-                      label="Track"
-                      color="#6DB249"
-                    >
-                    </v-text-field> -->
+                        
+                        v-model="transfer.track"
+                        v-if="formdata.seniorJunior == 'Senior High'"
+                        :rules="
+                          formdata.seniorJunior == 'Senior High'
+                            ? [formRules.required]
+                            : []
+                        "
+                        dense
+                        class="rounded-lg"
+                        label="Track"
+                        color="#6DB249"
+                      >
+                      </v-text-field> -->
                   <v-select
                     :items="trackList"
                     v-if="formdata.seniorJunior == 'Senior High'"
@@ -666,12 +666,12 @@
                 <v-col cols="12"
                   ><strong>Legal Guardian's Name</strong>
                   <!-- <v-checkbox
-                      
-                      v-model="computedNoSpouse"
-                      label="No Spouse"
-                      dense
-                    ></v-checkbox
-                    > -->
+                        
+                        v-model="computedNoSpouse"
+                        label="No Spouse"
+                        dense
+                      ></v-checkbox
+                      > -->
                   <v-divider></v-divider
                 ></v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
@@ -723,12 +723,12 @@
                 <v-col cols="12"
                   ><strong class="mb-4">If Transfered Student</strong>
                   <!-- <v-checkbox
-                      
-                      v-model="computedNoSpouse"
-                      label="No Spouse"
-                      dense
-                    ></v-checkbox
-                    > -->
+                        
+                        v-model="computedNoSpouse"
+                        label="No Spouse"
+                        dense
+                      ></v-checkbox
+                      > -->
                   <v-divider></v-divider
                 ></v-col>
                 <v-col cols="12">
@@ -821,6 +821,7 @@
       </v-form>
     </v-card>
 
+    <AccountVerificationDialog :data="updateData" :action="action" />
     <!-- saving confirmation -->
     <v-dialog v-model="confirmDialog" persistent max-width="390">
       <v-card color="white">
@@ -888,8 +889,15 @@
 
 <script>
 export default {
+  props: {
+    data: null,
+    action: null,
+  },
+  components: {
+    AccountVerificationDialog: () =>
+      import("../../components/Dialogs/Forms/student_verifyDialog.vue"),
+  },
   name: "Enroll",
-  components: {},
   data: () => ({
     sheet: false,
     viewRemarks: false,
@@ -1140,7 +1148,7 @@ export default {
         disability: this.formdata.disability == "No" ? false : true,
         disability_desc: this.formdata.disability_desc,
         blood_type: this.formdata.blood_type,
-        isFilipino: this.formdata.isFilipino == "Yes" ? "Filipino" : null,
+        citizenship: this.formdata.isFilipino == "Yes" ? "Filipino" : null,
         mobile_no: this.formdata.mobile_no,
         residential_zip: this.formdata.residential_zip,
         residential_house_no: this.formdata.residential_house_no,
