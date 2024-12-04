@@ -26,4 +26,7 @@ export class CreateAvailabilityDto {
     @ApiProperty()
     hours:string;
 
+    @ApiProperty()
+    school_yearId:number;
+
 }

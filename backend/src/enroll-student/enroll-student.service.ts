@@ -6,6 +6,9 @@ import { Brackets, DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAvailabilityDto } from './dto/create-availability.dto';
 import { UpdateAvailabilityDto } from './dto/update-availability.dto';
+import { CreateSchoolYearDto } from './dto/create-school-year.dto';
+import { SchoolYear } from './entities/scholl-year.entity';
+import { UpdateSchoolYearDto } from './dto/update-school-year.dto';
 
 @Injectable()
 export class EnrollStudentService {
@@ -14,6 +17,8 @@ export class EnrollStudentService {
     private readonly enrollStudentRepository: Repository<EnrollStudent>,
     @InjectRepository(Availability)
     private readonly availabilityRepository: Repository<Availability>,
+    @InjectRepository(SchoolYear)
+    private readonly schooyearRepository: Repository<SchoolYear>,
     private dataSource: DataSource,
   ) {}
   
@@ -33,6 +38,22 @@ export class EnrollStudentService {
     };
   }
   }
+
+  async addSchoolYear(createSchoolYearDto: CreateSchoolYearDto) {
+    try {
+     let addYear = this.schooyearRepository.create(createSchoolYearDto);
+     await this.schooyearRepository.save(addYear);
+     return {
+       msg: 'Saved successfully.',
+       status: HttpStatus.CREATED,
+     };
+   } catch (error) {
+     return {
+       msg: 'Saving failed',
+       status: HttpStatus.BAD_REQUEST,
+     };
+   }
+   }
 
   async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
     try {
@@ -245,7 +266,7 @@ export class EnrollStudentService {
     return data;
   }
 
-  async FacultySchedule() {
+  async FacultySchedule(filter:number) {
     let data = await this.dataSource.manager
       .createQueryBuilder(Availability, 'A')
       .select([
@@ -263,14 +284,25 @@ export class EnrollStudentService {
       .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
+      .where('school_yearId = "'+filter+'"')
       .groupBy('times_slot_from,times_slot_to,teacherID')
       .orderBy('teacherID')
       .getRawMany();
     return data;
   }
 
-  async MySchedule(user:any) {
-    console.log(user)
+  async getSchoolYear() {
+    let data = await this.dataSource.manager
+      .createQueryBuilder(SchoolYear, 'A')
+      .select([
+        "*",
+        "CONCAT(school_year_from, ' - ', school_year_to) AS school_year"
+      ])
+      .getRawMany();
+    return data;
+  }
+
+  async MySchedule(user:any, filter:number) {
     let data = await this.dataSource.manager
       .createQueryBuilder(Availability, 'A')
       .select([
@@ -289,6 +321,7 @@ export class EnrollStudentService {
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
       .where('teacherID = "'+user.userdetail.id+'"')
+      .andWhere('school_yearId = "'+filter+'"')
       .groupBy('times_slot_from,times_slot_to,teacherID')
       .orderBy('teacherID')
       .getRawMany();
@@ -330,11 +363,11 @@ export class EnrollStudentService {
   
 }
 
-async getClassProgramm(grade: string , section : number ) {
+async getClassProgramm(grade: string , section : number, filter:number ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     const toReturn = await queryRunner.query(
-      '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name ,t1.id as availId,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" order by t1.day ASC' ,      
+      '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name ,t1.id as availId,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" and t1.school_yearId ="'+filter+'" order by t1.day ASC' ,      
     );
     await queryRunner.release();
     return toReturn;
@@ -415,6 +448,39 @@ async updateClassProgram(id: number,
   await queryRunner.release();
 }
 }
+
+
+async updateSchoolYear(id: number,
+  updateSchoolYearDto: UpdateSchoolYearDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+  try {
+
+    // update the schedule
+    await queryRunner.manager.update(SchoolYear, id, {
+      school_year_from: updateSchoolYearDto.school_year_from,
+      school_year_to: updateSchoolYearDto.school_year_to,
+      // isActive: updateMyCoreTimeDto.isActive,
+    });
+
+
+  await queryRunner.commitTransaction();
+  return {
+    msg: 'School year updated successfully!',
+    status: HttpStatus.OK,
+  };
+} catch (error) {
+  await queryRunner.rollbackTransaction();
+  return {
+    msg: 'Update failed!' + error,
+    status: HttpStatus.BAD_REQUEST,
+  };
+} finally {
+  await queryRunner.release();
+}
+}
+
 
 async checkConflictUpdate(data: any){
   try {
