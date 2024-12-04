@@ -345,6 +345,9 @@ export default {
       }
       return this.data.filter((item) => item.roomId === this.section);
     },
+    filterYear() {
+      return this.$store.getters.getFilterSelected;
+    },
   },
 
   mounted() {
@@ -370,6 +373,15 @@ export default {
       },
       deep: true,
     },
+    filterYear: {
+      handler(newData, oldData) {
+        if (oldData != newData) {
+          console.log(oldData, newData);
+          this.getClassroom(this.section);
+        }
+      },
+      deep: true,
+    },
   },
 
   methods: {
@@ -378,18 +390,23 @@ export default {
     },
 
     initialize() {
+      this.getClassListed();
+      this.getClassroom(this.section);
+    },
+
+    getClassListed() {
       this.loading = true;
       this.axiosCall("/rooms-section/" + this.activeTab.name, "GET").then(
         (res) => {
           console.log("Classroom List", res.data);
           this.sectionList = res.data;
           this.section = res.data[0].id;
-          this.getClassroom(this.section);
         }
       );
     },
-
     getClassroom(section) {
+      this.loading = true;
+      let filter = this.$store.getters.getFilterSelected;
       let grade =
         this.tab == 1
           ? "Grade 7"
@@ -403,11 +420,15 @@ export default {
           ? "Grade 11"
           : "Grade 12";
       this.axiosCall(
-        "/enroll-student/getClassProgramm/" + grade + "/" + section,
+        "/enroll-student/getClassProgramm/" +
+          grade +
+          "/" +
+          section +
+          "/" +
+          filter,
         "GET"
       ).then((res) => {
         if (res) {
-          console.log("Program", res.data);
           this.data = res.data;
           this.loading = false;
         }

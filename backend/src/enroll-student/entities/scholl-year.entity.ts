@@ -1,38 +1,16 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
-export class Availability {
+export class SchoolYear {
 
     @PrimaryGeneratedColumn({ type: 'int' })
     id: number
 
-    @Column({ type: "int" })
-    teacherID: number
-
-    @Column({ type: "int" })
-    subjectId: number
-
-    @Column({ type: "int" })
-    roomId: number
+    @Column({ type: "varchar" })
+    school_year_from: string
 
     @Column({ type: "varchar" })
-    day: string
-
-    @Column({ type: "varchar" })
-    grade_level: string
-
-    @Column({ type: "varchar" })
-    times_slot_from: string
-
-    @Column({ type: "varchar" })
-    times_slot_to: string
-
-    @Column({ type: "varchar" })
-    hours: string
-
-    @Column({ type: "int" })
-    school_yearId: number
-
+    school_year_to: string
 
     @CreateDateColumn({
       nullable: false,

@@ -362,12 +362,15 @@ export default {
     initialize() {
       // this.handleAllChanges();
       this.loading = true;
-      this.axiosCall("/enroll-student/FacultySchedule", "GET").then((res) => {
-        if (res) {
-          this.data = res.data;
-          this.loading = false;
+      let filter = this.$store.getters.getFilterSelected;
+      this.axiosCall("/enroll-student/FacultySchedule/" + filter, "GET").then(
+        (res) => {
+          if (res) {
+            this.data = res.data;
+            this.loading = false;
+          }
         }
-      });
+      );
     },
 
     changeTab(tab) {
