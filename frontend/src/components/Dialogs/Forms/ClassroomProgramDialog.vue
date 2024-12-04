@@ -281,6 +281,7 @@ export default {
     },
     accept() {
       if (this.$refs.UserVerifyFormref.validate()) {
+        let filter = this.$store.getters.getFilterSelected;
         let hours = this.calculateHoursDifference(
           this.time_slot_from,
           this.time_slot_to
@@ -332,6 +333,7 @@ export default {
               times_slot_to: this.time_slot_to,
               day: this.day,
               grade_level: this.grade,
+              school_yearId: filter,
               hours: hours,
             };
             this.axiosCall(
