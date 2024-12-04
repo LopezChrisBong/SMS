@@ -246,17 +246,19 @@
           <v-col :cols="$vuetify.breakpoint.smAndUp ? '10' : '12'" class="pa-3">
             <div class=" fill-height pb-6" style="background-color:white; ">
               <div class="d-flex justify-space-between py-4 px-4  ">
-                <!-- <div>
-            <v-select
-              label="Year"
-              color="#519043"
-              @change="changeFilter()"
-              outlined
-              v-model="selectedFiter"
-              dense
-              :items="filterYears"
-            ></v-select>
-          </div> -->
+                <div>
+                  <v-select
+                    label="School Year"
+                    color="#519043"
+                    @change="changeFilter()"
+                    outlined
+                    v-model="selectedFiter"
+                    dense
+                    item-text="school_year"
+                    item-value="id"
+                    :items="schooYearList"
+                  ></v-select>
+                </div>
                 <strong class="text-gray-100">{{ $route.meta.title }}</strong>
               </div>
               <router-view v-on:reloadProfile="loadImg" />
@@ -307,13 +309,18 @@ export default {
       interval: null,
       loading: false,
       options: [],
+      schooYearList: [],
       sidebarOpen: true,
+      selectedFiter: null,
     };
   },
 
   mounted() {
     // console.log("is OIC", this.isOIC);
     // this.loadUserRoles();
+    // alert(this.$router.history.current.path);
+
+    this.getSchoolYear();
     if (this.$store.state.expiryDate < Date.now()) {
       this.$store.dispatch("setUser", null);
       this.$store.dispatch("setIsAuthenticated", 0);
@@ -422,16 +429,27 @@ export default {
 
       this.$emit("closeNav");
     },
+    changeFilter() {
+      this.$store.commit("setFilterSelected", this.selectedFiter);
+    },
 
-    getModules(usertypeID) {
-      this.axiosCall("/usertype-module/usertype/" + usertypeID, "GET").then(
-        (res) => {
-          if (res) {
-            // this.modules = res.data;
-            // console.log(res.data);
-          }
+    // getModules(usertypeID) {
+    //   this.axiosCall("/usertype-module/usertype/" + usertypeID, "GET").then(
+    //     (res) => {
+    //       if (res) {
+    //         // this.modules = res.data;
+    //         // console.log(res.data);
+    //       }
+    //     }
+    //   );
+    // },
+    getSchoolYear() {
+      this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
+        if (res) {
+          this.schooYearList = res.data;
+          this.selectedFiter = res.data[0];
         }
-      );
+      });
     },
 
     // loadUserRoles() {

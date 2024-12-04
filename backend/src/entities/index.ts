@@ -3,6 +3,7 @@ import { AssignedModule } from 'src/assigned-modules/entities/assigned-module.en
 import { Users } from 'src/auth/entities/auth.entity';
 import { Availability } from 'src/enroll-student/entities/availability.entity';
 import { EnrollStudent } from 'src/enroll-student/entities/enroll-student.entity';
+import { SchoolYear } from 'src/enroll-student/entities/scholl-year.entity';
 import { AddStrand } from 'src/rooms-section/entities/add-strand.entity';
 import { AddTracks } from 'src/rooms-section/entities/add-tracks.entity';
 import { RoomsSection } from 'src/rooms-section/entities/rooms-section.entity';
@@ -24,7 +25,8 @@ const entities = [
   RoomsSection,
   AddTracks,
   AddStrand,
-  Availability
+  Availability,
+  SchoolYear
 ];
 
 export {
@@ -39,7 +41,8 @@ export {
   RoomsSection,
   AddTracks,
   AddStrand,
-  Availability
+  Availability,
+  SchoolYear
 };
 
 export default entities;

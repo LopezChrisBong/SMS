@@ -3,10 +3,10 @@
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
         <!-- <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
-              <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-                tab.name
-              }}</v-tab>
-            </v-tabs> -->
+            <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
+              tab.name
+            }}</v-tab>
+          </v-tabs> -->
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
@@ -21,23 +21,25 @@
           color="#239FAB"
           dense
         ></v-text-field>
-        <!-- <v-btn
-            class="white--text ml-2 rounded-lg"
-            :color="$vuetify.theme.themes.light.submitBtns"
-            v-if="this.$store.state.user.user.isAdminApproved == 1"
-            @click="add()"
-          >
-            <v-icon left> mdi-plus-box-outline </v-icon>
-            Add New
-          </v-btn> -->
         <v-btn
           class="white--text ml-2 rounded-lg"
-          color="#147452"
-          @click="print()"
+          :color="$vuetify.theme.themes.light.submitBtns"
+          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          @click="add()"
         >
-          <v-icon left> mdi-printer-outline </v-icon>
-          Print
+          <v-icon left> mdi-plus-box-outline </v-icon>
+          Add New
         </v-btn>
+        <!-- <v-btn
+                    :class="tab == 3 ? '' : 'd-none'"
+                    class="white--text ml-2 rounded-lg"
+                    color="#147452"
+                    v-if="this.$store.state.user.user.isAdminApproved == 1"
+                    @click="printJobApplicants()"
+                  >
+                    <v-icon left> mdi-printer-outline </v-icon>
+                    Print
+                  </v-btn> -->
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
@@ -58,9 +60,9 @@
               color="blue"
               class="my-2 mx-2"
               outlined
-              @click="print(item)"
+              @click="editItem(item)"
             >
-              <v-icon size="14">mdi-printer-outline</v-icon>Print
+              <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
             <!-- <v-btn
                   x-small
@@ -112,7 +114,12 @@
       </v-col>
     </v-row>
 
-    <AddTrackDialog :data="coreTimeData" :action="action" :grade="gradeName" />
+    <AddSchoolYearDialog
+      :data="coreTimeData"
+      :action="action"
+      :grade="gradeName"
+    />
+
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
         <div class="pa-4 #3a3b3a--text">
@@ -142,6 +149,50 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog fullscreen scrollable persistent v-model="JobPostPrint">
+      <v-card>
+        <v-card-title dark class="dialog-header">
+          <span>Type of Report</span>
+          <v-spacer></v-spacer>
+          <v-btn icon dark @click="JobPostPrint = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-form ref="PrintFormref">
+            <v-row class="mt-4">
+              <v-col cols="1">
+                <v-autocomplete
+                  label="Year"
+                  v-model="selectedYear"
+                  :rules="[formRules.required]"
+                  dense
+                  class="rounded-lg"
+                  color="#93CB5B"
+                  :items="yearList"
+                >
+                </v-autocomplete>
+              </v-col>
+            </v-row>
+            <v-card-title> </v-card-title>
+            <!-- <v-data-table :headers="headers3" :items="printData">
+                      <template v-slot:[`item.birth`]="{ item }">
+                        {{ formatDate(item.birth) }}
+                      </template>
+                    </v-data-table> -->
+          </v-form>
+        </v-card-text>
+
+        <v-card-actions class="pa-5">
+          <v-spacer></v-spacer>
+          <v-btn color="red" outlined @click="JobPostPrint = false">
+            <v-icon>mdi-close-circle-outline</v-icon>
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -158,8 +209,8 @@ export default {
   components: {
     // CoreTimeDesignationDialog: () =>
     //   import("../../components/Dialogs/Forms/CoreTimeDesignationDialog.vue"),
-    AddTrackDialog: () =>
-      import("../../components/Dialogs/Forms/AddTrackDialog.vue"),
+    AddSchoolYearDialog: () =>
+      import("../../components/Dialogs/Forms/AddSchoolYearDialog.vue"),
   },
   data: () => ({
     search: "",
@@ -168,59 +219,26 @@ export default {
     applicantData: null,
     headers: [
       {
-        text: "Time",
-        value: "time",
+        text: "School Year",
+        value: "school_year",
         align: "start",
         valign: "start",
         sortable: false,
       },
+
       {
-        text: "Faculty Name",
-        value: "name",
-        align: "start",
-        valign: "start",
-        sortable: false,
-      },
-      {
-        text: "Monday",
-        value: "Monday",
+        text: "From:",
+        value: "school_year_from",
         align: "center",
         valign: "center",
         sortable: false,
       },
+
       {
-        text: "Tuesday",
-        value: "Tuesday",
+        text: "To:",
+        value: "school_year_to",
         align: "center",
         valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Wednesday",
-        value: "Wednesday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Thursday",
-        value: "Thursday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Friday",
-        value: "Friday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Saturday",
-        value: "Saturday",
-        align: "end",
-        valign: "end",
         sortable: false,
       },
 
@@ -246,9 +264,9 @@ export default {
       { text: "250", value: 250 },
       { text: "500", value: 500 },
     ],
-    activeTab: { id: 1, name: "Tracks" },
+    activeTab: { id: 1, name: "School Year" },
     tab: 1,
-    tabList: [{ id: 1, name: "Tracks" }],
+    tabList: [{ id: 1, name: "School Year" }],
     coreTimeData: null,
     designationData: null,
     totalCount: 0,
@@ -258,7 +276,6 @@ export default {
     options: {},
     action: null,
     toPrint: null,
-    reportTypeList: [],
     jobitem: null,
     jobitemsList: [],
     selectedYear: null,
@@ -294,10 +311,12 @@ export default {
   }),
 
   mounted() {
+    this.loadYear();
+
     // this.eventHub.$on("closeMyJobApplicationDialog", () => {
     //   this.initialize();
     // });
-    this.eventHub.$on("closeAddTrackDialog", () => {
+    this.eventHub.$on("closeAddSchoolYearDialog", () => {
       this.initialize();
     });
 
@@ -308,7 +327,7 @@ export default {
 
   beforeDestroy() {
     // this.eventHub.$off("closeMyJobApplicationDialog");
-    this.eventHub.$off("closeAddTrackDialog");
+    this.eventHub.$off("closeAddSchoolYearDialog");
 
     // this.eventHub.$off("closeMyDesignationDialog");
   },
@@ -348,27 +367,32 @@ export default {
       this.action = "Tag";
     },
 
+    loadYear() {
+      let curYear;
+      var d = new Date();
+      curYear = d.getFullYear();
+      for (let i = curYear; i >= 2020; i--) {
+        this.yearList.push(i);
+      }
+    },
     printJobApplicants() {
       this.JobPostPrint = true;
-
-      // this.handleAllChanges();
     },
     pagination(data) {
       this.paginationData = data;
     },
 
     initialize() {
-      // this.handleAllChanges();
       this.loading = true;
-      let filter = this.$store.getters.getFilterSelected;
-      this.axiosCall("/enroll-student/MySchedule/" + filter, "GET").then(
-        (res) => {
+
+      if (this.tab == 1) {
+        this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
           if (res) {
             this.data = res.data;
             this.loading = false;
           }
-        }
-      );
+        });
+      }
     },
 
     changeTab(tab) {
@@ -392,32 +416,49 @@ export default {
       this.coreTimeData = item;
       this.action = "Update";
     },
+    viewApplicant(item) {
+      this.applicantData = item;
+      this.action = 1;
+    },
+    viewHiredApplicant(item) {
+      this.applicantData = item;
+      this.action = 2;
+    },
+    viewItem(item) {
+      if (this.tab == 1) {
+        this.coreTimeData = item;
+        this.action = "View";
+      } else {
+        this.designationData = item;
+        this.action = "View";
+      }
+    },
 
-    // deleteItem() {
-    //   this.axiosCall("/rooms-section/" + this.deleteData.id, "DELETE").then(
-    //     (res) => {
-    //       if (res.data.status == 200) {
-    //         this.dialog = false;
-    //         this.fadeAwayMessage.show = true;
-    //         this.fadeAwayMessage.type = "success";
-    //         this.fadeAwayMessage.header = "System Message";
-    //         this.fadeAwayMessage.message = res.data.msg;
-    //         this.confirmDialog = false;
-    //         this.initialize();
-    //       } else if (res.data.status == 400) {
-    //         this.confirmDialog = false;
-    //         this.fadeAwayMessage.show = true;
-    //         this.fadeAwayMessage.type = "error";
-    //         this.fadeAwayMessage.header = "System Message";
-    //         this.fadeAwayMessage.message = res.data.msg;
-    //       }
-    //     }
-    //   );
-    // },
-    // confirmDelete(item) {
-    //   this.confirmDialog = true;
-    //   this.deleteData = item;
-    // },
+    deleteItem() {
+      this.axiosCall("/rooms-section/" + this.deleteData.id, "DELETE").then(
+        (res) => {
+          if (res.data.status == 200) {
+            this.dialog = false;
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "success";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = res.data.msg;
+            this.confirmDialog = false;
+            this.initialize();
+          } else if (res.data.status == 400) {
+            this.confirmDialog = false;
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "error";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = res.data.msg;
+          }
+        }
+      );
+    },
+    confirmDelete(item) {
+      this.confirmDialog = true;
+      this.deleteData = item;
+    },
   },
 };
 </script>

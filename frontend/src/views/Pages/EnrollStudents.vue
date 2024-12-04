@@ -962,7 +962,7 @@ export default {
     empData: [],
     tab: { id: 1, name: "Personal Information" },
     activeTab: { id: 1, name: "Personal Information" },
-    tabList: [{ id: 1, name: "Learner Information" }],
+    tabList: [{ id: 1, name: "Personal Information" }],
     sexItem: ["Male", "Female"],
     cvl_statusItem: ["Single", "Married", "Widowed", "Separated", "Others"],
     dualCtznItem: ["Yes", "No"],

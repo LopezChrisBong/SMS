@@ -8,6 +8,8 @@ import { CreateAvailabilityDto } from './dto/create-availability.dto';
 import { UpdateAddStrandDto } from 'src/rooms-section/dto/update-add-strand.dto';
 import { currentUser } from 'src/shared/jwtDecode';
 import { UpdateAvailabilityDto } from './dto/update-availability.dto';
+import { CreateSchoolYearDto } from './dto/create-school-year.dto';
+import { UpdateSchoolYearDto } from './dto/update-school-year.dto';
 
 @Controller('enroll-student')
 export class EnrollStudentController {
@@ -32,6 +34,11 @@ export class EnrollStudentController {
     return this.enrollStudentService.updateEnrolledStudent(updateVS);
   }
 
+  @Post('addSchoolYear')
+  addSchoolYear(@Body() createSchoolYearDto: CreateSchoolYearDto) {
+    return this.enrollStudentService.addSchoolYear(createSchoolYearDto);
+  }
+
 
 
 
@@ -48,20 +55,25 @@ export class EnrollStudentController {
   }
 
 
-  @Get('FacultySchedule')
-  FacultySchedule() {
-    return this.enrollStudentService.FacultySchedule();
+  @Get('FacultySchedule/:filter')
+  FacultySchedule(@Param('filter') filter: string,) {
+    return this.enrollStudentService.FacultySchedule(+filter);
   }
 
-  @Get('MySchedule')
-  MySchedule(@Headers() headers,) {
+    @Get('getSchoolYear')
+    getSchoolYear() {
+    return this.enrollStudentService.getSchoolYear();
+  }
+
+  @Get('MySchedule/:filter')
+  MySchedule(@Headers() headers,@Param('filter') filter: string,) {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
-    return this.enrollStudentService.MySchedule(curr_user);
+    return this.enrollStudentService.MySchedule(curr_user,+filter);
   }
-  @Get('getClassProgramm/:grade/:section')
-  getMyCoreTime(@Param('grade') grade: string,@Param('section') section: string,) {
-    return this.enrollStudentService.getClassProgramm(grade, +section);
+  @Get('getClassProgramm/:grade/:section/:filter')
+  getMyCoreTime(@Param('grade') grade: string,@Param('section') section: string,@Param('filter') filter: string,) {
+    return this.enrollStudentService.getClassProgramm(grade, +section,+filter);
   }
 
 
@@ -74,6 +86,18 @@ export class EnrollStudentController {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
     return this.enrollStudentService.updateClassProgram(+id, updateAvailabilityDto, curr_user);
+  }
+
+  
+  @Patch('updateSchoolYear/:id')
+  updateSchoolYear(
+    @Param('id') id: string,
+    @Body() updateSchoolYearDto: UpdateSchoolYearDto,
+    // @Headers() headers,
+  ) {
+    // var head_str = headers.authorization;
+    // const curr_user = currentUser(head_str);
+    return this.enrollStudentService.updateSchoolYear(+id, updateSchoolYearDto);
   }
 
 

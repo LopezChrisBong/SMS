@@ -93,6 +93,7 @@ import StudentEnrollSuccess from "../views/Auth/StudentEnrollSuccess.vue";
 import ClassroomProgramm from "../views/Pages/ClassroomProgramm.vue";
 import AvailableFaculty from "../views/Pages/AvailableFaculty.vue";
 import MyScheduledProgram from "../views/Pages/MyScheduledProgram.vue";
+import AddSchoolYear from "../views/Pages/AddSchoolYear.vue";
 
 Vue.use(VueRouter);
 
@@ -228,6 +229,11 @@ const routes = [
         path: "my-scheduled-program",
         component: MyScheduledProgram,
         meta: { title: "My Schedule List", authRequired: true },
+      },
+      {
+        path: "add-school-year",
+        component: AddSchoolYear,
+        meta: { title: "Add School Year", authRequired: true },
       },
 
       

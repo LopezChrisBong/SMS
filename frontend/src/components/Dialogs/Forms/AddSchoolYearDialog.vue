@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="dialog" persistent eager scrollable max-width="600px">
-      <v-form ref="AddSubjectDialog" @submit.prevent>
+      <v-form ref="AddSchoolYear" @submit.prevent>
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
             <span>{{ action }} School Year</span>
@@ -15,30 +15,34 @@
             <v-container>
               <v-row>
                 <v-col cols="12" md="12">
-                  <v-text-field
-                    class="rounded-lg"
-                    v-model="strand_name"
-                    label="Strand Name"
-                    hide-details
-                    outlined
-                    color="#93CB5B"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="12">
                   <v-autocomplete
-                    v-model="trackId"
+                    v-model="school_year_from"
                     :rules="[formRules.required]"
                     dense
                     outlined
-                    label="Track"
                     class="rounded-lg"
-                    item-text="tracks_name"
+                    item-text="description"
                     item-value="id"
+                    label="Year From"
                     color="#93CB5B"
-                    :items="trackList"
+                    :items="year_fromList"
+                    @change="onChangeDateFrom($event)"
                   >
                   </v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-text-field
+                    v-model="school_year_to"
+                    dense
+                    outlined
+                    readonly
+                    label="School Year To:"
+                    class="rounded-lg"
+                    item-text="description"
+                    item-value="id"
+                    color="#93CB5B"
+                  >
+                  </v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -105,6 +109,7 @@ export default {
       tracks_name: null,
       strand_name: null,
       trackList: [],
+      year_fromList: [],
       dateFrom: null,
       dateTo: null,
       room_section: null,
@@ -121,6 +126,8 @@ export default {
       schedList: [],
       schedTimeList: [],
       tempSelectedDays: [],
+      school_year_to: null,
+      school_year_from: null,
       dialog: false,
       timePicker1: null,
       timePicker2: null,
@@ -148,13 +155,16 @@ export default {
       handler(data) {
         this.dialog = true;
         if (data.id) {
+          console.log("School Year", data);
           this.initialize();
           this.updateID = data.id;
-          this.strand_name = data.strand_name;
-          this.trackId = data.trackId.toString();
+          this.school_year_from = data.school_year_from;
+          this.school_year_to = data.school_year_to;
         } else {
-          this.$refs.AddSubjectDialog.reset();
+          this.$refs.AddSchoolYear.reset();
           this.initialize();
+          this.school_year_from = data.school_year_from;
+          this.school_year_to = data.school_year_to;
         }
       },
       deep: true,
@@ -164,6 +174,7 @@ export default {
   methods: {
     initialize() {
       this.getTrackList();
+      this.loadYearFrom();
     },
 
     closeD() {
@@ -171,63 +182,75 @@ export default {
       this.confirmSubmit.type = null;
       this.confirmSubmit.error = false;
       this.confirmSubmit.msg = null;
-      this.eventHub.$emit("closeAddStrandDialog", false);
+      this.eventHub.$emit("closeAddSchoolYearDialog", false);
       this.dialog = false;
+    },
+    loadYearFrom() {
+      let d = new Date();
+
+      let yr = d.getFullYear();
+
+      for (let i = yr; i < yr + 10; i++) {
+        this.year_fromList.push(i);
+      }
+    },
+    onChangeDateFrom(data) {
+      this.school_year_to = data + 1;
     },
 
     checkConflict(type) {
       if (type == "ADD") {
         let data = {
-          strand_name: this.strand_name,
-          trackId: this.trackId,
+          school_year_from: this.school_year_from,
+          school_year_to: this.school_year_to,
         };
         // console.log(data);
-        this.axiosCall("/rooms-section/addStrand", "POST", data).then((res) => {
-          console.log(res.data);
-          // alert("Successfully Added");
-          this.closeD();
-          if (res.data.status == 201) {
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "success";
-            this.fadeAwayMessage.header = "System Message";
-            this.fadeAwayMessage.message = "Successfully Added Subject!";
-
-            // location.reload();
-          } else if (res.data.status == 400) {
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "error";
-            this.fadeAwayMessage.header = "System Message";
-            this.fadeAwayMessage.message = res.data.msg;
+        this.axiosCall("/enroll-student/addSchoolYear", "POST", data).then(
+          (res) => {
+            console.log(res.data);
+            // alert("Successfully Added");
+            this.closeD();
+            if (res.data.status == 201) {
+              this.fadeAwayMessage.show = true;
+              this.fadeAwayMessage.type = "success";
+              this.fadeAwayMessage.header = "System Message";
+              this.fadeAwayMessage.message = "Successfully Added Subject!";
+            } else if (res.data.status == 400) {
+              this.fadeAwayMessage.show = true;
+              this.fadeAwayMessage.type = "error";
+              this.fadeAwayMessage.header = "System Message";
+              this.fadeAwayMessage.message = res.data.msg;
+            }
+            location.reload();
           }
-        });
+        );
       } else if (type == "UPDATE") {
         // alert("UPDATED");
 
         let data = {
-          strand_name: this.strand_name,
-          trackId: this.trackId,
+          school_year_from: this.school_year_from,
+          school_year_to: this.school_year_to,
         };
         console.log(data);
         this.axiosCall(
-          "/rooms-section/updateStrand/" + this.updateID,
+          "/enroll-student/updateSchoolYear/" + this.updateID,
           "PATCH",
           data
         ).then((res) => {
           console.log(res.data);
-          if (res.data.status == 201) {
+          if (res.data.status == 200) {
             this.closeD();
             this.fadeAwayMessage.show = true;
             this.fadeAwayMessage.type = "success";
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = "Successfully updated subject!";
-
-            // location.reload();
           } else if (res.data.status == 400) {
             this.fadeAwayMessage.show = true;
             this.fadeAwayMessage.type = "error";
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
+          location.reload();
         });
       }
     },
