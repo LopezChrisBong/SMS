@@ -91,6 +91,8 @@ import AddStrands from "../views/Pages/AddStrands.vue";
 import StudentEnroll from "../views/Auth/StudentEnroll.vue";
 import StudentEnrollSuccess from "../views/Auth/StudentEnrollSuccess.vue";
 import ClassroomProgramm from "../views/Pages/ClassroomProgramm.vue";
+import AvailableFaculty from "../views/Pages/AvailableFaculty.vue";
+import MyScheduledProgram from "../views/Pages/MyScheduledProgram.vue";
 
 Vue.use(VueRouter);
 
@@ -216,6 +218,17 @@ const routes = [
         meta: { title: "Classroom Programm", authRequired: true },
       },
 
+      {
+        path: "faculty-schedule",
+        component: AvailableFaculty,
+        meta: { title: "Faculty Schedule List", authRequired: true },
+      },
+
+      {
+        path: "my-scheduled-program",
+        component: MyScheduledProgram,
+        meta: { title: "My Schedule List", authRequired: true },
+      },
 
       
 
@@ -587,7 +600,11 @@ const routes = [
         component: AccountVerification,
         meta: { title: "Account Verification", authRequired: true },
       },
-
+      {
+        path: "my-scheduled-program",
+        component: MyScheduledProgram,
+        meta: { title: "My Schedule List", authRequired: true },
+      },
 
       
 
@@ -946,6 +963,14 @@ const routes = [
         component: EnrollStudents,
         meta: { title: "Enroll Students", authRequired: true },
       },
+      {
+        path: "my-scheduled-program",
+        component: MyScheduledProgram,
+        meta: { title: "My Schedule List", authRequired: true },
+      },
+
+
+
       {
         path: "locators",
         component: Locators,

@@ -139,7 +139,7 @@
             >
               <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
-            <v-btn
+            <!-- <v-btn
               x-small
               color="grey"
               class="mx-1"
@@ -147,7 +147,7 @@
               @click="viewItem(item)"
             >
               <v-icon size="14">mdi-eye-outline</v-icon>View
-            </v-btn>
+            </v-btn> -->
             <v-btn
               x-small
               color="#C62828"
@@ -197,13 +197,13 @@
       </v-col>
     </v-row>
 
-    <MyCoreTimeDialog
+    <ClassroomProgramDialog
       :data="coreTimeData"
       :action="action"
       :grade="grade"
       :section="section"
     />
-    <MyDesignationDialog :data="designationData" :action="action" />
+    <!-- <MyDesignationDialog :data="designationData" :action="action" /> -->
 
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
@@ -211,10 +211,7 @@
           <div class="text-h6 mb-1">WARNING!</div>
           <div class="text-body-1 mb-1">
             <p style="text-align: justify">
-              <v-icon class="mt-n2" color="white">mdi-alert</v-icon> &nbsp; Are
-              you sure you want to delete this information?<br /><br />
-              Please note that
-              <b>this action is irreversible.</b>
+              <b>This action is irreversible.</b>
             </p>
           </div>
         </div>
@@ -225,10 +222,10 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" outlined @click="confirmDialog = false">
-            Close
+            Close to Cancel
           </v-btn>
           <v-btn color="green" class="white--text" @click="deleteItem()">
-            Confirm
+            Confirm Delete
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -248,9 +245,9 @@ export default {
   components: {
     // CoreTimeDesignationDialog: () =>
     //   import("../../components/Dialogs/Forms/CoreTimeDesignationDialog.vue"),
-    MyDesignationDialog: () =>
-      import("../../components/Dialogs/Forms/MyDesignationDialog.vue"),
-    MyCoreTimeDialog: () =>
+    // MyDesignationDialog: () =>
+    //   import("../../components/Dialogs/Forms/MyDesignationDialog.vue"),
+    ClassroomProgramDialog: () =>
       import("../../components/Dialogs/Forms/ClassroomProgramDialog.vue"),
   },
   data: () => ({
@@ -261,12 +258,14 @@ export default {
         value: "time",
         align: "start",
         valign: "start",
+        sortable: false,
       },
       {
         text: "Faculty Name",
         value: "name",
         align: "center",
         valign: "center",
+        sortable: false,
       },
 
       {
@@ -305,6 +304,7 @@ export default {
       { text: "250", value: 250 },
       { text: "500", value: 500 },
     ],
+    grade: null,
     activeTab: { id: 1, name: "Grade 7" },
     tab: 1,
     tabList: [
@@ -351,13 +351,13 @@ export default {
     this.eventHub.$on("closeAddScheduleDialog", () => {
       this.getClassroom(this.section);
     });
-    this.eventHub.$on("closeMyDesignationDialog", () => {
-      this.initialize();
-    });
+    // this.eventHub.$on("closeMyDesignationDialog", () => {
+    //   this.initialize();
+    // });
   },
   beforeDestroy() {
     this.eventHub.$off("closeAddScheduleDialog");
-    this.eventHub.$off("closeMyDesignationDialog");
+    // this.eventHub.$off("closeMyDesignationDialog");
   },
 
   watch: {
@@ -459,7 +459,6 @@ export default {
         );
       }
     },
-
     // getVerifiedUsers() {
     //   this.loading = true;
 
@@ -519,45 +518,67 @@ export default {
       }
     },
     editItem(item) {
+      console.log("Update", item);
+
       if (this.tab == 1) {
         this.coreTimeData = item;
         this.action = "Update";
-      } else {
-        this.designationData = item;
+        this.grade = "Grade 7";
+        this.section;
+      } else if (this.tab == 2) {
+        this.coreTimeData = item;
         this.action = "Update";
+        this.grade = "Grade 8";
+        this.section;
+      } else if (this.tab == 3) {
+        this.coreTimeData = item;
+        this.action = "Update";
+        this.grade = "Grade 9";
+        this.section;
+      } else if (this.tab == 4) {
+        this.coreTimeData = item;
+        this.action = "Update";
+        this.grade = "Grade 10";
+        this.section;
+      } else if (this.tab == 5) {
+        this.coreTimeData = item;
+        this.action = "Update";
+        this.grade = "Grade 11";
+        this.section;
+      } else if (this.tab == 6) {
+        this.coreTimeData = item;
+        this.action = "Update";
+        this.grade = "Grade 12";
+        this.section;
       }
     },
 
     viewItem(item) {
-      if (this.tab == 1) {
-        this.coreTimeData = item;
-        this.action = "View";
-      } else {
-        this.designationData = item;
-        this.action = "View";
-      }
+      this.coreTimeData = item;
+      this.action = "View";
     },
 
     deleteItem() {
-      this.axiosCall("/my-core-time/" + this.deleteData.id, "DELETE").then(
-        (res) => {
-          if (res.data.status == 200) {
-            this.dialog = false;
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "success";
-            this.fadeAwayMessage.header = "System Message";
-            this.fadeAwayMessage.message = res.data.msg;
-            this.confirmDialog = false;
-            this.initialize();
-          } else if (res.data.status == 400) {
-            this.confirmDialog = false;
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "error";
-            this.fadeAwayMessage.header = "System Message";
-            this.fadeAwayMessage.message = res.data.msg;
-          }
+      this.axiosCall(
+        "/enroll-student/deleteAvailabilitySchedule" + this.deleteData.availId,
+        "DELETE"
+      ).then((res) => {
+        if (res.data.status == 200) {
+          this.dialog = false;
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "success";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = res.data.msg;
+          this.confirmDialog = false;
+          this.initialize();
+        } else if (res.data.status == 400) {
+          this.confirmDialog = false;
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = res.data.msg;
         }
-      );
+      });
     },
     confirmDelete(item) {
       this.confirmDialog = true;

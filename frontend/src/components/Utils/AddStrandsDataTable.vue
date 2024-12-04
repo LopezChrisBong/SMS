@@ -2,11 +2,11 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
-        <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
+        <!-- <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
-        </v-tabs>
+        </v-tabs> -->
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
@@ -114,10 +114,7 @@
       </v-col>
     </v-row>
 
-    <MyJobPosting :data="coreTimeData" :action="action" :grade="gradeName" />
-    <MyJobApplication :data="designationData" :action="action" />
-    <ApplicantOfJobDialog :data="applicantData" :action="action" />
-    <ShortListedtagging :data="taggingData" :action="action" />
+    <AddStrandDialog :data="coreTimeData" :action="action" :grade="gradeName" />
 
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
@@ -208,14 +205,8 @@ export default {
   components: {
     // CoreTimeDesignationDialog: () =>
     //   import("../../components/Dialogs/Forms/CoreTimeDesignationDialog.vue"),
-    ApplicantOfJobDialog: () =>
-      import("../../components/Dialogs/Forms/ApplicantOfJobDialog.vue"),
-    MyJobApplication: () =>
-      import("../../components/Dialogs/Forms/MyJobApplicationDialog.vue"),
-    MyJobPosting: () =>
+    AddStrandDialog: () =>
       import("../../components/Dialogs/Forms/AddStrandDialog.vue"),
-    ShortListedtagging: () =>
-      import("../../components/Dialogs/Forms/ShortListedtaggingDialog.vue"),
   },
   data: () => ({
     search: "",
@@ -315,15 +306,6 @@ export default {
     this.eventHub.$on("closeAddStrandDialog", () => {
       this.initialize();
     });
-    this.eventHub.$on("closeApplicantJobList", () => {
-      this.initialize();
-    });
-    this.eventHub.$on("closeMyJobApplicationDialog", () => {
-      this.initialize();
-    });
-    this.eventHub.$on("closeShortListDialog", () => {
-      this.initialize();
-    });
 
     // this.eventHub.$on("closeMyDesignationDialog", () => {
     //   this.initialize();
@@ -333,9 +315,6 @@ export default {
   beforeDestroy() {
     // this.eventHub.$off("closeMyJobApplicationDialog");
     this.eventHub.$off("closeAddStrandDialog");
-    this.eventHub.$off("closeApplicantJobList");
-    this.eventHub.$off("closeMyJobApplicationDialog");
-    this.eventHub.$off("closeShortListDialog");
 
     // this.eventHub.$off("closeMyDesignationDialog");
   },
@@ -394,13 +373,15 @@ export default {
       this.loading = true;
 
       if (this.tab == 1) {
-        this.axiosCall("/rooms-section/AllStrand/Data", "GET").then((res) => {
-          if (res) {
-            console.log("All Strand", res.data);
-            this.data = res.data;
-            this.loading = false;
+        this.axiosCall("/rooms-section/AllStrand/Data/strand", "GET").then(
+          (res) => {
+            if (res) {
+              console.log("All Strand", res.data);
+              this.data = res.data;
+              this.loading = false;
+            }
           }
-        });
+        );
       }
     },
 

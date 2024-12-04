@@ -115,10 +115,15 @@
       </v-col>
     </v-row>
 
-    <MyJobPosting :data="coreTimeData" :action="action" :grade="gradeName" />
-    <MyJobApplication :data="designationData" :action="action" />
+    <AddRoomSectionDialog
+      :data="coreTimeData"
+      :action="action"
+      :grade="gradeName"
+      v-on:reloadTable="initialize"
+    />
+    <!-- <MyJobApplication :data="designationData" :action="action" />
     <ApplicantOfJobDialog :data="applicantData" :action="action" />
-    <ShortListedtagging :data="taggingData" :action="action" />
+    <ShortListedtagging :data="taggingData" :action="action" /> -->
 
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
@@ -225,14 +230,14 @@ export default {
   components: {
     // CoreTimeDesignationDialog: () =>
     //   import("../../components/Dialogs/Forms/CoreTimeDesignationDialog.vue"),
-    ApplicantOfJobDialog: () =>
-      import("../../components/Dialogs/Forms/ApplicantOfJobDialog.vue"),
-    MyJobApplication: () =>
-      import("../../components/Dialogs/Forms/MyJobApplicationDialog.vue"),
-    MyJobPosting: () =>
+    // ApplicantOfJobDialog: () =>
+    //   import("../../components/Dialogs/Forms/ApplicantOfJobDialog.vue"),
+    // MyJobApplication: () =>
+    //   import("../../components/Dialogs/Forms/MyJobApplicationDialog.vue"),
+    AddRoomSectionDialog: () =>
       import("../../components/Dialogs/Forms/AddRoomSectionDialog.vue"),
-    ShortListedtagging: () =>
-      import("../../components/Dialogs/Forms/ShortListedtaggingDialog.vue"),
+    // ShortListedtagging: () =>
+    //   import("../../components/Dialogs/Forms/ShortListedtaggingDialog.vue"),
   },
   data: () => ({
     search: "",
@@ -248,19 +253,19 @@ export default {
         sortable: false,
       },
 
-      {
-        text: "Grade Level",
-        value: "grade_level",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
+      // {
+      //   text: "Grade Level",
+      //   value: "grade_level",
+      //   align: "center",
+      //   valign: "center",
+      //   sortable: false,
+      // },
 
       {
         text: "Action",
         value: "action",
-        align: "center",
-        valign: "center",
+        align: "end",
+        valign: "end",
         sortable: false,
       },
     ],
@@ -333,23 +338,22 @@ export default {
   }),
 
   mounted() {
-    this.loadYear();
-
     // this.eventHub.$on("closeMyJobApplicationDialog", () => {
     //   this.initialize();
     // });
+
     this.eventHub.$on("closeAddSubjectDialog", () => {
       this.initialize();
     });
-    this.eventHub.$on("closeApplicantJobList", () => {
-      this.initialize();
-    });
-    this.eventHub.$on("closeMyJobApplicationDialog", () => {
-      this.initialize();
-    });
-    this.eventHub.$on("closeShortListDialog", () => {
-      this.initialize();
-    });
+    // this.eventHub.$on("closeApplicantJobList", () => {
+    //   this.initialize();
+    // });
+    // this.eventHub.$on("closeMyJobApplicationDialog", () => {
+    //   this.initialize();
+    // });
+    // this.eventHub.$on("closeShortListDialog", () => {
+    //   this.initialize();
+    // });
 
     // this.eventHub.$on("closeMyDesignationDialog", () => {
     //   this.initialize();
@@ -359,9 +363,9 @@ export default {
   beforeDestroy() {
     // this.eventHub.$off("closeMyJobApplicationDialog");
     this.eventHub.$off("closeAddSubjectDialog");
-    this.eventHub.$off("closeApplicantJobList");
-    this.eventHub.$off("closeMyJobApplicationDialog");
-    this.eventHub.$off("closeShortListDialog");
+    // this.eventHub.$off("closeApplicantJobList");
+    // this.eventHub.$off("closeMyJobApplicationDialog");
+    // this.eventHub.$off("closeShortListDialog");
 
     // this.eventHub.$off("closeMyDesignationDialog");
   },
@@ -373,28 +377,28 @@ export default {
       },
       deep: true,
     },
-    filterYear: {
-      handler(newData, oldData) {
-        if (oldData != newData) {
-          this.initialize();
-        }
-      },
-      deep: true,
-    },
-  },
-  computed: {
-    filterYear() {
-      return this.$store.getters.getFilterSelected;
-    },
-
-    // filterPrintData() {
-    //   return this.paginate(
-    //     this.data.filter((data) =>
-    //       data.employee.toLowerCase().match(this.search.toLowerCase())
-    //     )
-    //   );
+    // filterYear: {
+    //   handler(newData, oldData) {
+    //     if (oldData != newData) {
+    //       this.initialize();
+    //     }
+    //   },
+    //   deep: true,
     // },
   },
+  // computed: {
+  //   filterYear() {
+  //     return this.$store.getters.getFilterSelected;
+  //   },
+
+  //   // filterPrintData() {
+  //   //   return this.paginate(
+  //   //     this.data.filter((data) =>
+  //   //       data.employee.toLowerCase().match(this.search.toLowerCase())
+  //   //     )
+  //   //   );
+  //   // },
+  // },
   methods: {
     tag(item) {
       this.taggingData = item;
@@ -470,15 +474,6 @@ export default {
         this.jobitemsList = jobitem;
       });
     },
-
-    loadYear() {
-      let curYear;
-      var d = new Date();
-      curYear = d.getFullYear();
-      for (let i = curYear; i >= 2020; i--) {
-        this.yearList.push(i);
-      }
-    },
     printJobApplicants() {
       this.JobPostPrint = true;
 
@@ -491,8 +486,8 @@ export default {
     initialize() {
       // this.handleAllChanges();
       this.loading = true;
-      let filter = this.$store.getters.getFilterSelected;
-      console.log("Filted", filter);
+      // let filter = this.$store.getters.getFilterSelected;
+      // console.log("Filted", filter);
 
       if (this.tab == 1) {
         this.gradeName = "Grade 7";
@@ -553,48 +548,6 @@ export default {
             this.loading = false;
           }
         });
-      }
-    },
-
-    switchItem(item) {
-      if (this.tab == 1) {
-        this.axiosCall("/my-core-time/toggleActive/" + item.id, "PATCH").then(
-          (res) => {
-            if (res) {
-              if (res.data.status == 200) {
-                this.fadeAwayMessage.show = true;
-                this.fadeAwayMessage.type = "success";
-                this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = res.data.msg;
-                this.initialize();
-              } else {
-                this.fadeAwayMessage.show = true;
-                this.fadeAwayMessage.type = "error";
-                this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = res.data.msg;
-              }
-            }
-          }
-        );
-      } else if (this.tab == 2) {
-        this.axiosCall("/my-designation/toggleActive/" + item.id, "PATCH").then(
-          (res) => {
-            if (res) {
-              if (res.data.status == 200) {
-                this.fadeAwayMessage.show = true;
-                this.fadeAwayMessage.type = "success";
-                this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = res.data.msg;
-                this.initialize();
-              } else {
-                this.fadeAwayMessage.show = true;
-                this.fadeAwayMessage.type = "error";
-                this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = res.data.msg;
-              }
-            }
-          }
-        );
       }
     },
 

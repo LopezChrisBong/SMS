@@ -3,10 +3,10 @@
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
         <!-- <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
-          <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
-          }}</v-tab>
-        </v-tabs> -->
+              <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
+                tab.name
+              }}</v-tab>
+            </v-tabs> -->
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
@@ -21,25 +21,23 @@
           color="#239FAB"
           dense
         ></v-text-field>
+        <!-- <v-btn
+            class="white--text ml-2 rounded-lg"
+            :color="$vuetify.theme.themes.light.submitBtns"
+            v-if="this.$store.state.user.user.isAdminApproved == 1"
+            @click="add()"
+          >
+            <v-icon left> mdi-plus-box-outline </v-icon>
+            Add New
+          </v-btn> -->
         <v-btn
           class="white--text ml-2 rounded-lg"
-          :color="$vuetify.theme.themes.light.submitBtns"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
-          @click="add()"
+          color="#147452"
+          @click="print()"
         >
-          <v-icon left> mdi-plus-box-outline </v-icon>
-          Add New
+          <v-icon left> mdi-printer-outline </v-icon>
+          Print
         </v-btn>
-        <!-- <v-btn
-                :class="tab == 3 ? '' : 'd-none'"
-                class="white--text ml-2 rounded-lg"
-                color="#147452"
-                v-if="this.$store.state.user.user.isAdminApproved == 1"
-                @click="printJobApplicants()"
-              >
-                <v-icon left> mdi-printer-outline </v-icon>
-                Print
-              </v-btn> -->
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
@@ -60,19 +58,19 @@
               color="blue"
               class="my-2 mx-2"
               outlined
-              @click="editItem(item)"
+              @click="print(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Update
+              <v-icon size="14">mdi-printer-outline</v-icon>Print
             </v-btn>
             <!-- <v-btn
-              x-small
-              color="red"
-              class="my-2"
-              outlined
-              @click="confirmDelete(item)"
-            >
-              <v-icon size="14">mdi-delete-off</v-icon>Delete
-            </v-btn> -->
+                  x-small
+                  color="red"
+                  class="my-2"
+                  outlined
+                  @click="confirmDelete(item)"
+                >
+                  <v-icon size="14">mdi-delete-off</v-icon>Delete
+                </v-btn> -->
           </div>
         </template>
       </v-data-table>
@@ -130,8 +128,8 @@
         </div>
 
         <!-- <v-card-title class="text-h5">
-                  Are you sure you want to proceed?
-                </v-card-title> -->
+                      Are you sure you want to proceed?
+                    </v-card-title> -->
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" outlined @click="confirmDialog = false">
@@ -170,20 +168,69 @@ export default {
     applicantData: null,
     headers: [
       {
-        text: "Track Name",
-        value: "tracks_name",
+        text: "Time",
+        value: "time",
         align: "start",
         valign: "start",
         sortable: false,
       },
-
       {
-        text: "Action",
-        value: "action",
+        text: "Faculty Name",
+        value: "name",
+        align: "start",
+        valign: "start",
+        sortable: false,
+      },
+      {
+        text: "Monday",
+        value: "Monday",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+      {
+        text: "Tuesday",
+        value: "Tuesday",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+      {
+        text: "Wednesday",
+        value: "Wednesday",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+      {
+        text: "Thursday",
+        value: "Thursday",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+      {
+        text: "Friday",
+        value: "Friday",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+      {
+        text: "Saturday",
+        value: "Saturday",
         align: "end",
         valign: "end",
         sortable: false,
       },
+
+      //   {
+      //     text: "Action",
+      //     value: "action",
+      //     align: "end",
+      //     valign: "end",
+      //     sortable: false,
+      //   },
     ],
 
     data: [],
@@ -313,14 +360,12 @@ export default {
     initialize() {
       // this.handleAllChanges();
       this.loading = true;
-      this.axiosCall("/rooms-section/getAlltracks/Data/tracks", "GET").then(
-        (res) => {
-          if (res) {
-            this.data = res.data;
-            this.loading = false;
-          }
+      this.axiosCall("/enroll-student/MySchedule", "GET").then((res) => {
+        if (res) {
+          this.data = res.data;
+          this.loading = false;
         }
-      );
+      });
     },
 
     changeTab(tab) {

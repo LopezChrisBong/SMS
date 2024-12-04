@@ -100,7 +100,8 @@ export class RoomsSectionService {
     return data
   }
 
-  async Alltracks() {
+  async getAlltracks() {
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     const toReturn = await queryRunner.query(

@@ -4,14 +4,14 @@
       <v-row>
         <v-col cols="12">
           <!-- <v-toolbar flat class="rounded-xl mb-4">
-              <v-toolbar-title
-                ><strong class="text-gray-100">{{
-                  $route.meta.title
-                }}</strong></v-toolbar-title
-              >
-              <v-spacer></v-spacer>
-            </v-toolbar> -->
-          <ClassroomProgramDataTable />
+                      <v-toolbar-title
+                        ><strong class="text-gray-100">{{
+                          $route.meta.title
+                        }}</strong></v-toolbar-title
+                      >
+                      <v-spacer></v-spacer>
+                    </v-toolbar> -->
+          <AvailableFacultyDataTable />
         </v-col>
       </v-row>
     </v-card>
@@ -21,8 +21,8 @@
 <script>
 export default {
   components: {
-    ClassroomProgramDataTable: () =>
-      import("../../components/Utils/ClassroomProgramDataTable.vue"),
+    AvailableFacultyDataTable: () =>
+      import("../../components/Utils/AvailableFacultyDataTable.vue"),
   },
   created() {
     // console.log("created");

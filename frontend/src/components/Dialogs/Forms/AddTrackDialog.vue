@@ -137,6 +137,8 @@ export default {
         } else {
           this.$refs.AddSubjectDialog.reset();
           this.initialize();
+          this.updateID = data.id;
+          this.track_name = data.tracks_name;
         }
       },
       deep: true,
@@ -211,7 +213,7 @@ export default {
           this.fadeAwayMessage.message = "Please fill all fields";
         } else {
           let data = {
-            track_name: this.track_name,
+            tracks_name: this.track_name,
           };
           console.log(data);
           this.axiosCall(

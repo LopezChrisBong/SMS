@@ -5,8 +5,8 @@
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
             <span
-              >{{ action }} {{ grade }} {{ className }} Classroom Program
-              Schedule
+              >{{ action }} {{ grade }} {{ className }} {{ teacher }} Classroom
+              Program Schedule
             </span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -21,7 +21,7 @@
                   <v-dialog
                     ref="dialog1"
                     v-model="modal1"
-                    :return-value.sync="time"
+                    :return-value.sync="time_slot_from"
                     persistent
                     width="290px"
                   >
@@ -39,6 +39,7 @@
                     <v-time-picker
                       v-if="modal1"
                       v-model="time_slot_from"
+                      :readonly="action == 'Update' ? readonly : !readonly"
                       full-width
                     >
                       <v-spacer></v-spacer>
@@ -60,7 +61,7 @@
                   <v-dialog
                     ref="dialog2"
                     v-model="modal2"
-                    :return-value.sync="time"
+                    :return-value.sync="time_slot_to"
                     persistent
                     width="290px"
                   >
@@ -78,6 +79,7 @@
                     <v-time-picker
                       v-if="modal2"
                       v-model="time_slot_to"
+                      :readonly="action == 'Update' ? readonly : !readonly"
                       full-width
                     >
                       <v-spacer></v-spacer>
@@ -198,16 +200,7 @@ export default {
   data() {
     return {
       dialog: false,
-      verifyModel: {
-        id: null,
-        userID: null,
-        name: null,
-        empID: null,
-        date_hired: null,
-        usertypeID: null,
-        assignedModuleID: null,
-        user_roleID: null,
-      },
+      readonly: true,
       className: [],
       class_room: null,
       teacher: null,
@@ -215,6 +208,7 @@ export default {
       subject: null,
       subjectList: [],
       day: "Monday",
+      id: null,
       dayList: [
         { id: 1, name: "Monday" },
         { id: 2, name: "Tuesday" },
@@ -245,15 +239,15 @@ export default {
         this.initialize();
         this.$refs.UserVerifyFormref.resetValidation();
         if (data.id) {
-          console.log("Love", data.user_user_roleID);
-          this.verifyModel.id = data.id;
-          this.verifyModel.userID = data.user_id;
-          this.verifyModel.name = data.name;
-          this.verifyModel.empID = data.emp_empID;
-          this.verifyModel.usertypeID = data.user_usertypeID.toString();
-          this.verifyModel.user_roleID = data.user_user_roleID;
-          this.verifyModel.assignedModuleID = data.user_assignedModuleID;
-          // this.verifyModel.date_hired = data.emp_date_hired;
+          console.log("Love", data);
+          this.id = data.availId;
+          this.time_slot_from = data.times_slot_from;
+          this.time_slot_to = data.times_slot_to;
+          this.teacher = data.teacherID.toString();
+          this.day = data.day;
+          this.subject = data.subjectId;
+
+          // this.verifyModel.usertypeID = data.user_usertypeID.toString();
         }
       },
       deep: true,
@@ -318,17 +312,46 @@ export default {
                   this.fadeAwayMessage.header = "System Message";
                   this.fadeAwayMessage.message = res.data.msg;
                   this.closeD();
-                } else if (res.data.status == 500) {
+                } else {
                   this.dialog = false;
                   this.fadeAwayMessage.show = true;
                   this.fadeAwayMessage.type = "error";
                   this.fadeAwayMessage.header = "System Message";
                   this.fadeAwayMessage.message = res.data.msg;
-                  this.$refs.PositionFormref.reset();
+                  this.$refs.UserVerifyFormref.reset();
                   this.closeD();
                 }
               }
             );
+          } else if (this.action == "Update") {
+            let data = {
+              teacherID: this.teacher,
+              subjectId: this.subject,
+              roomId: this.section,
+              times_slot_from: this.time_slot_from,
+              times_slot_to: this.time_slot_to,
+              day: this.day,
+              grade_level: this.grade,
+              hours: hours,
+            };
+            this.axiosCall(
+              "/enroll-student/updateClassProgram/" + this.id,
+              "PATCH",
+              data
+            ).then((res) => {
+              if (res.data.status == 200) {
+                this.fadeAwayMessage.show = true;
+                this.fadeAwayMessage.type = "success";
+                this.fadeAwayMessage.header = "System Message";
+                this.fadeAwayMessage.message = res.data.msg;
+                this.closeD();
+              } else {
+                this.fadeAwayMessage.show = true;
+                this.fadeAwayMessage.type = "error";
+                this.fadeAwayMessage.header = "System Message";
+                this.fadeAwayMessage.message = res.data.msg;
+              }
+            });
           }
         }
       }

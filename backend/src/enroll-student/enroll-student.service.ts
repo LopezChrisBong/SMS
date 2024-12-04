@@ -5,6 +5,7 @@ import { Availability, EnrollStudent, RoomsSection, Subject, UserDetail } from '
 import { Brackets, DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAvailabilityDto } from './dto/create-availability.dto';
+import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 
 @Injectable()
 export class EnrollStudentService {
@@ -39,26 +40,20 @@ export class EnrollStudentService {
       const conflict = await this.checkConflict(createAvailabilityDto);
   
       if (conflict) {
-        console.log('Conflict')
-        // return {
-        //   msg: 'Conflict detected. Schedule cannot be added.',
-        //   status: HttpStatus.CONFLICT,
-        //   conflictDetails: conflict,
-        // };
+        return {
+          msg: 'Conflict detected. Schedule cannot be added.',
+          status: HttpStatus.CONFLICT,
+          conflictDetails: conflict,
+        };
       }
-      else{
-          console.log('Save')
-      }
-    
-  
       // Save the schedule
-      // const newSchedule = this.availabilityRepository.create(createAvailabilityDto);
-      // await this.availabilityRepository.save(newSchedule);
+      const newSchedule = this.availabilityRepository.create(createAvailabilityDto);
+      await this.availabilityRepository.save(newSchedule);
   
-      // return {
-      //   msg: 'Schedule added successfully.',
-      //   status: HttpStatus.CREATED,
-      // };
+      return {
+        msg: 'Schedule added successfully.',
+        status: HttpStatus.CREATED,
+      };
     } catch (error) {
       console.error('Error adding schedule:', error);
       return {
@@ -68,22 +63,36 @@ export class EnrollStudentService {
     }
   }
   
+
+
   async checkConflict(data: CreateAvailabilityDto): Promise<any> {
     try {
       const conflicts = await this.availabilityRepository
         .createQueryBuilder('availability')
-        .where('availability.teacherID = :teacherID', { teacherID: data.teacherID })
-        .andWhere('availability.day = :day', { day: data.day })
-        .andWhere('availability.roomId = :roomId', { roomId: data.roomId })
-        .andWhere('availability.subjectId = :subjectId', { subjectId: data.subjectId })
+        .where('availability.day = :day', { day: data.day })
         .andWhere(
           new Brackets((qb) => {
-            qb.where(':from BETWEEN availability.times_slot_from AND availability.times_slot_to', { from: data.times_slot_from })
-              .orWhere(':to BETWEEN availability.times_slot_from AND availability.times_slot_to', { to: data.times_slot_to })
-              .orWhere(
-                'availability.times_slot_from BETWEEN :from AND :to',
-                { from: data.times_slot_from, to: data.times_slot_to }
-              );
+
+            // Dili mag repeat ang subject in the same room per day
+            qb.where('availability.roomId = :roomId AND availability.subjectId = :subjectId', {
+              roomId: data.roomId,
+              subjectId: data.subjectId,
+            });
+  
+            // No overlapping of time slots in the same room per day
+            qb.orWhere(
+              'availability.roomId = :roomId AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+              { roomId: data.roomId, from: data.times_slot_from, to: data.times_slot_to }
+            );
+  
+            // No duplicate subjects across different faculty or rooms per day
+            qb.orWhere('availability.subjectId = :subjectId', { subjectId: data.subjectId });
+  
+            // Dapat walay conflicts ang faculty in time slots per room per day
+            qb.orWhere(
+              'availability.teacherID = :teacherID AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+              { teacherID: data.teacherID, from: data.times_slot_from, to: data.times_slot_to }
+            );
           })
         )
         .getMany();
@@ -94,7 +103,6 @@ export class EnrollStudentService {
       throw error;
     }
   }
-
   async EnrollStudent() {
     let data = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
@@ -237,6 +245,56 @@ export class EnrollStudentService {
     return data;
   }
 
+  async FacultySchedule() {
+    let data = await this.dataSource.manager
+      .createQueryBuilder(Availability, 'A')
+      .select([
+        "A.id as id",
+        "CONCAT(times_slot_from, ' - ', times_slot_to) AS time",
+        "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,'. ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
+        "MAX(CASE WHEN day = 'Monday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ', room.room_section) END) AS Monday",
+        "MAX(CASE WHEN day = 'Tuesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Tuesday",
+        "MAX(CASE WHEN day = 'Wednesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Wednesday",
+        "MAX(CASE WHEN day = 'Thursday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Thursday",
+        "MAX(CASE WHEN day = 'Friday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Friday",
+        "MAX(CASE WHEN day = 'Saturday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Saturday"
+
+      ])
+      .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
+      .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
+      .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
+      .groupBy('times_slot_from,times_slot_to,teacherID')
+      .orderBy('teacherID')
+      .getRawMany();
+    return data;
+  }
+
+  async MySchedule(user:any) {
+    console.log(user)
+    let data = await this.dataSource.manager
+      .createQueryBuilder(Availability, 'A')
+      .select([
+        "A.id as id",
+        "CONCAT(times_slot_from, ' - ', times_slot_to) AS time",
+        "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,'. ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
+        "MAX(CASE WHEN day = 'Monday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ', room.room_section) END) AS Monday",
+        "MAX(CASE WHEN day = 'Tuesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Tuesday",
+        "MAX(CASE WHEN day = 'Wednesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Wednesday",
+        "MAX(CASE WHEN day = 'Thursday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Thursday",
+        "MAX(CASE WHEN day = 'Friday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Friday",
+        "MAX(CASE WHEN day = 'Saturday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Saturday"
+
+      ])
+      .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
+      .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
+      .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
+      .where('teacherID = "'+user.userdetail.id+'"')
+      .groupBy('times_slot_from,times_slot_to,teacherID')
+      .orderBy('teacherID')
+      .getRawMany();
+    return data;
+  }
+
   async updateEnrolledStudent(updateVS: UpdateEnrollStudentDto) {
     
     const queryRunner = this.dataSource.createQueryRunner();
@@ -276,12 +334,125 @@ async getClassProgramm(grade: string , section : number ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     const toReturn = await queryRunner.query(
-      '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" order by t1.day ASC' ,      
+      '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name ,t1.id as availId,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" order by t1.day ASC' ,      
     );
     await queryRunner.release();
     return toReturn;
 
 
+}
+
+
+
+async remove(id: number) {
+  let queryRunner = this.dataSource.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+  try {
+    await queryRunner.manager.delete(Availability, id);
+
+    await queryRunner.commitTransaction();
+    return {
+      msg: 'Successfully deleted!',
+      status: HttpStatus.OK,
+    };
+  } catch (error) {
+    await queryRunner.rollbackTransaction();
+    return {
+      msg: 'Deleting data failed!',
+      status: HttpStatus.BAD_REQUEST,
+    };
+  } finally {
+    await queryRunner.release();
+  }
+}
+
+async updateClassProgram(id: number,
+  updateAvailabilityDto: UpdateAvailabilityDto,
+  user: any,) {
+    let data = updateAvailabilityDto
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+  try {
+    // Check for conflicts
+    const conflict = await this.checkConflictUpdate(data);
+
+    if (conflict) {
+      return {
+        msg: 'Conflict detected. Schedule cannot be updated.',
+        status: HttpStatus.CONFLICT,
+        conflictDetails: conflict,
+      };
+    }
+
+    // update the schedule
+    await queryRunner.manager.update(Availability, id, {
+      teacherID: updateAvailabilityDto.teacherID,
+      subjectId: updateAvailabilityDto.subjectId,
+      roomId: updateAvailabilityDto.roomId,
+      times_slot_from: updateAvailabilityDto.times_slot_from,
+      times_slot_to: updateAvailabilityDto.times_slot_to,
+      day: updateAvailabilityDto.day,
+      hours: updateAvailabilityDto.hours,
+      grade_level: updateAvailabilityDto.grade_level,
+      // isActive: updateMyCoreTimeDto.isActive,
+    });
+
+
+  await queryRunner.commitTransaction();
+  return {
+    msg: 'Schedule updated successfully!',
+    status: HttpStatus.OK,
+  };
+} catch (error) {
+  await queryRunner.rollbackTransaction();
+  return {
+    msg: 'Update failed!' + error,
+    status: HttpStatus.BAD_REQUEST,
+  };
+} finally {
+  await queryRunner.release();
+}
+}
+
+async checkConflictUpdate(data: any){
+  try {
+    const conflicts = await this.availabilityRepository
+    .createQueryBuilder('availability')
+    .where('availability.day = :day', { day: data.day })
+    .andWhere(
+      new Brackets((qb) => {
+
+        // Dili mag repeat ang subject in the same room per day
+        qb.where('availability.roomId = :roomId AND availability.subjectId = :subjectId', {
+          roomId: data.roomId,
+          subjectId: data.subjectId,
+        });
+
+        // No overlapping of time slots in the same room per day
+        qb.orWhere(
+          'availability.roomId = :roomId AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+          { roomId: data.roomId, from: data.times_slot_from, to: data.times_slot_to }
+        );
+
+        // No duplicate subjects across different faculty or rooms per day
+        qb.orWhere('availability.subjectId = :subjectId', { subjectId: data.subjectId });
+
+        // Dapat walay conflicts ang faculty in time slots per room per day
+        qb.orWhere(
+          'availability.teacherID = :teacherID AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+          { teacherID: data.teacherID, from: data.times_slot_from, to: data.times_slot_to }
+        );
+      })
+    )
+    .getMany();
+
+    return conflicts.length > 0 ? conflicts : null;
+  } catch (error) {
+    console.error('Error checking conflict:', error);
+    throw error;
+  }
 }
 
 
