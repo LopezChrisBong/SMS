@@ -8,7 +8,7 @@
             <v-row align="center" class="fill-height">
               <v-col align-self="start" cols="12">
                 <v-avatar
-                  class="mt-4 mb-4"
+                  class="mt-1 mb-1"
                   size="185"
                   style="border: 2px solid; border-color: #a9a9a9"
                 >

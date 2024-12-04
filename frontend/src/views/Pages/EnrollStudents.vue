@@ -1196,7 +1196,7 @@ export default {
         disability: this.formdata.disability == "No" ? false : true,
         disability_desc: this.formdata.disability_desc,
         blood_type: this.formdata.blood_type,
-        citizenship: this.formdata.isFilipino == "Yes" ? "Filipino" : null,
+        isFilipino: this.formdata.isFilipino == "Yes" ? "Filipino" : null,
         mobile_no: this.formdata.mobile_no,
         residential_zip: this.formdata.residential_zip,
         residential_house_no: this.formdata.residential_house_no,
@@ -1253,13 +1253,15 @@ export default {
     },
 
     getAllTracks() {
-      this.axiosCall("/rooms-section/Alltracks/Data", "GET").then((res) => {
-        if (res) {
-          console.log("Tracks", res.data);
-          this.trackList = res.data;
-          this.loading = false;
+      this.axiosCall("/rooms-section/getAlltracks/Data/tracks", "GET").then(
+        (res) => {
+          if (res) {
+            console.log("Tracks", res.data);
+            this.trackList = res.data;
+            this.loading = false;
+          }
         }
-      });
+      );
     },
   },
 };

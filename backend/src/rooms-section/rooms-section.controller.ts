@@ -40,12 +40,13 @@ export class RoomsSectionController {
 
 
   
-  @Get('Alltracks/Data')
-  Alltracks() {
-    return this.roomsSectionService.Alltracks();
+  @Get('getAlltracks/Data/tracks')
+  getAlltracks() {
+
+    return this.roomsSectionService.getAlltracks();
   }
 
-  @Get('AllStrand/Data')
+  @Get('AllStrand/Data/strand')
   AllStrand() {
     return this.roomsSectionService.AllStrand();
   }

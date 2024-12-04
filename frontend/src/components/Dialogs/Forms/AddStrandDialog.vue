@@ -233,9 +233,11 @@ export default {
     },
 
     async getTrackList() {
-      this.axiosCall("/rooms-section/Alltracks/Data", "GET").then((res) => {
-        this.trackList = res.data;
-      });
+      this.axiosCall("/rooms-section/getAlltracks/Data/tracks", "GET").then(
+        (res) => {
+          this.trackList = res.data;
+        }
+      );
     },
   },
 };
