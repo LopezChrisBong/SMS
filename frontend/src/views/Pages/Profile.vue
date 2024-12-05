@@ -153,18 +153,105 @@
                         color="#6DB249"
                       ></v-text-field>
                     </v-col>
+                    <v-col cols="6" sm="6" v-if="readonly == false">
+                      <v-menu
+                        ref="menu"
+                        :close-on-content-click="false"
+                        :return-value.sync="data.hired"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                        :readonly="readonly"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            dense
+                            v-model="data.hired"
+                            :readonly="readonly"
+                            chips
+                            small-chips
+                            color="#6DB249"
+                            label="Date Hired"
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          color="#6DB249"
+                          v-model="data.hired"
+                          no-title
+                          scrollable
+                          :readonly="readonly"
+                        >
+                          <v-spacer></v-spacer>
+
+                          <v-btn
+                            text
+                            color="#6DB249"
+                            @click="$refs.menu.save(data.hired)"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-menu>
+                    </v-col>
+                    <v-col cols="6" md="6" v-if="readonly == true">
+                      <v-text-field
+                        v-model="totalYears"
+                        :readonly="readonly"
+                        label="Total years on service"
+                        dense
+                        color="#6DB249"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6" md="6">
+                      <v-text-field
+                        v-model="data.education"
+                        :readonly="readonly"
+                        label="Highest Education Attainment"
+                        dense
+                        color="#6DB249"
+                      ></v-text-field>
+                    </v-col>
                   </v-row>
                 </v-form>
                 <v-card-actions v-if="readonly == true" class="pa-5">
                   <v-spacer></v-spacer>
-                  <v-btn
-                    color="#519043"
-                    class="white--text"
-                    @click="readonly = false"
+                  <v-row
+                    align="center"
+                    :justify="$vuetify.breakpoint.smAndDown ? 'center' : 'end'"
                   >
-                    <v-icon>mdi-pencil</v-icon>
-                    Edit
-                  </v-btn>
+                    <v-col cols="auto">
+                      <v-btn
+                        size="x-small"
+                        color="#519043"
+                        class="white--text"
+                        @click="addSubject(data)"
+                      >
+                        Subjects
+                      </v-btn>
+                    </v-col>
+                    <!-- <v-col cols="auto">
+                      <v-btn
+                        size="x-small"
+                        color="#519043"
+                        class="white--text"
+                        @click="addGradeLevel(data)"
+                      >
+                        Grade
+                      </v-btn>
+                    </v-col> -->
+
+                    <v-col cols="auto"
+                      ><v-btn
+                        color="#519043"
+                        class="white--text"
+                        @click="readonly = false"
+                      >
+                        Edit
+                      </v-btn>
+                    </v-col>
+                  </v-row>
                 </v-card-actions>
 
                 <v-card-actions v-if="readonly == false" class="pa-5">
@@ -291,6 +378,16 @@
         </v-col>
         <!-- </v-card> -->
       </v-row>
+      <TeacherSubjectAddingDialog
+        :data="taggingData"
+        :action="action"
+        :filter="filter"
+      />
+      <TeacherGradeAddingDialog
+        :data="tagGrade"
+        :action="action"
+        :filter="filter"
+      />
     </v-card>
     <fade-away-message-component
       displayType="variation2"
@@ -304,15 +401,28 @@
 </template>
 <script>
 export default {
+  components: {
+    TeacherSubjectAddingDialog: () =>
+      import("../../components/Dialogs/Forms/TeacherSubjectAddingDialog.vue"),
+    TeacherGradeAddingDialog: () =>
+      import("../../components/Dialogs/Forms/TeacherGradeAddingDialog.vue"),
+  },
   data() {
     return {
+      action: null,
+      taggingData: null,
       isSelecting: false,
       selectFile: null,
       previewImg: null,
+      tagGrade: null,
       tab: null,
       // items: ["Personal Information", "Login Info"],
       items: ["Personal Information"],
+      totalYears: null,
+      filter: null,
       data: {
+        id: null,
+        name: null,
         fname: null,
         mname: null,
         lname: null,
@@ -320,6 +430,8 @@ export default {
         sex: null,
         mobile_no: null,
         profile_img: null,
+        hired: null,
+        education: null,
       },
       oldPass: null,
       password: null,
@@ -338,15 +450,84 @@ export default {
       credentialReadonly: true,
     };
   },
+  mounted() {
+    this.eventHub.$on("closeaddSubjectDialog", () => {
+      this.initialize();
+    });
+  },
+  beforeDestroy() {
+    this.eventHub.$off("closeaddSubjectDialog");
+  },
+  computed: {
+    filterYear() {
+      return this.$store.getters.getFilterSelected;
+    },
+
+    watch: {
+      // options: {
+      //   handler() {
+      //     this.initialize();
+      //   },
+      //   deep: true,
+      // },
+      filterYear: {
+        handler(newData, oldData) {
+          if (oldData != newData) {
+            this.initialize();
+          }
+        },
+        deep: true,
+      },
+    },
+  },
 
   methods: {
+    addSubject(item) {
+      let filter = this.$store.getters.getFilterSelected;
+      this.taggingData = item;
+      this.action = "View";
+      this.filter = filter;
+    },
+    addGradeLevel(item) {
+      let filter = this.$store.getters.getFilterSelected;
+      this.tagGrade = item;
+      this.action = "View";
+      this.filter = filter;
+    },
+
+    totalYearService() {
+      let d = new Date();
+      let yr = d.getFullYear();
+      // const year = this.data.hired.getFullYear();
+      const yearService = (date) => {
+        const [years, months, day] = date.split("-").map(Number);
+        console.log(months, day);
+        return years;
+      };
+
+      // Convert both times to minutes
+      const yearFrom = yearService(this.data.hired);
+      // const currentDate = timeToMinutes(endTime);
+
+      // Calculate the difference in minutes
+      const differenceYear = yr - yearFrom;
+
+      // Convert minutes to hours (decimal format)
+      // const difference = differenceYear / 12;
+
+      this.totalYears = differenceYear;
+    },
     initialize() {
       this.axiosCall("/user-details/getPersonalInfo", "GET").then((res) => {
         if (res.data) {
+          this.data.id = res.data.id;
+          this.data.name = res.data.lname + ", " + res.data.fname;
           this.data.fname = res.data.fname;
           this.data.mname = res.data.mname;
           this.data.lname = res.data.lname;
           this.data.suffix = res.data.suffix;
+          this.data.hired = res.data.hired;
+          this.data.education = res.data.education;
           this.data.sex = res.data.sex;
           this.data.mobile_no = res.data.mobile_no;
           this.data.profile_img = res.data.profile_img
@@ -355,6 +536,7 @@ export default {
               res.data.profile_img
             : process.env.VUE_APP_SERVER +
               "/user-details/getProfileImg/img_avatar.png";
+          this.totalYearService();
         }
       });
     },
@@ -439,6 +621,7 @@ export default {
   },
   created() {
     this.initialize();
+    this.totalYearService();
     // console.log("created");
     if (this.$store.state.expiryDate < Date.now()) {
       this.$store.dispatch("setUser", null);

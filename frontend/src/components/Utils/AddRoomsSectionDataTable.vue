@@ -10,6 +10,16 @@
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
+        <!--   <v-btn
+          v-else
+          class="white--text ml-2 rounded-lg"
+          color="green"
+          @click="Print()"
+        >
+          <v-icon left> mdi-printer </v-icon>
+          Print
+        </v-btn> -->
+
         <v-text-field
           v-model="search"
           outlined
@@ -18,9 +28,20 @@
           single-line
           hide-details
           class="rounded-lg"
+          :class="generatedCount == 0 ? 'd-none' : ''"
           color="#239FAB"
           dense
         ></v-text-field>
+        <v-btn
+          class="white--text ml-2 rounded-lg"
+          :class="generatedCount == 0 ? '' : 'd-none'"
+          :color="$vuetify.theme.themes.light.submitBtns"
+          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          @click="generateClassRecord()"
+        >
+          <v-icon left> mdi-database-check-outline </v-icon>
+          Generate Class Record
+        </v-btn>
         <v-btn
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
@@ -52,10 +73,29 @@
         :loading="loading"
         @pagination="pagination"
         hide-default-footer
-        :rows="items"
       >
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
+            <v-btn
+              x-small
+              color="blue"
+              :class="generatedCount == 0 ? 'd-none' : ''"
+              class="my-2 mx-2"
+              outlined
+              @click="addStudent(item)"
+            >
+              <v-icon size="14">mdi-pencil-outline</v-icon>Students
+            </v-btn>
+            <v-btn
+              x-small
+              color="blue"
+              :class="generatedCount == 0 ? 'd-none' : ''"
+              class="my-2 mx-2"
+              outlined
+              @click="printClassList(item)"
+            >
+              <v-icon size="14">mdi-pencil-outline</v-icon>Print
+            </v-btn>
             <v-btn
               x-small
               color="blue"
@@ -68,8 +108,8 @@
             <v-btn
               x-small
               color="red"
-              class="my-2"
               outlined
+              class="my-2 mx-2"
               @click="confirmDelete(item)"
             >
               <v-icon size="14">mdi-delete-off</v-icon>Delete
@@ -122,8 +162,14 @@
       v-on:reloadTable="initialize"
     />
     <!-- <MyJobApplication :data="designationData" :action="action" />
-    <ApplicantOfJobDialog :data="applicantData" :action="action" />
-    <ShortListedtagging :data="taggingData" :action="action" /> -->
+    <ApplicantOfJobDialog :data="applicantData" :action="action" />-->
+    <ClassRoomGeneratedListDialog
+      :data="taggingData"
+      :action="action"
+      :grade="gradeName"
+      :filter="passfilter"
+      v-on:reloadTable="initialize"
+    />
 
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
@@ -154,66 +200,6 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog fullscreen scrollable persistent v-model="JobPostPrint">
-      <v-card>
-        <v-card-title dark class="dialog-header">
-          <span>Type of Report</span>
-          <v-spacer></v-spacer>
-          <v-btn icon dark @click="JobPostPrint = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-form ref="PrintFormref">
-            <v-row class="mt-4">
-              <v-col cols="4">
-                <v-autocomplete
-                  label="Position"
-                  v-model="toPrint"
-                  :rules="[formRules.required]"
-                  @change="handleAllChanges"
-                  dense
-                  class="rounded-lg"
-                  item-text="type"
-                  item-value="id"
-                  color="#93CB5B"
-                  :items="reportTypeList"
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="1">
-                <v-autocomplete
-                  label="Year"
-                  v-model="selectedYear"
-                  :rules="[formRules.required]"
-                  @change="handleAllChanges"
-                  dense
-                  class="rounded-lg"
-                  color="#93CB5B"
-                  :items="yearList"
-                >
-                </v-autocomplete>
-              </v-col>
-            </v-row>
-            <v-card-title> </v-card-title>
-            <!-- <v-data-table :headers="headers3" :items="printData">
-                <template v-slot:[`item.birth`]="{ item }">
-                  {{ formatDate(item.birth) }}
-                </template>
-              </v-data-table> -->
-          </v-form>
-        </v-card-text>
-
-        <v-card-actions class="pa-5">
-          <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="JobPostPrint = false">
-            <v-icon>mdi-close-circle-outline</v-icon>
-            Cancel
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -236,8 +222,8 @@ export default {
     //   import("../../components/Dialogs/Forms/MyJobApplicationDialog.vue"),
     AddRoomSectionDialog: () =>
       import("../../components/Dialogs/Forms/AddRoomSectionDialog.vue"),
-    // ShortListedtagging: () =>
-    //   import("../../components/Dialogs/Forms/ShortListedtaggingDialog.vue"),
+    ClassRoomGeneratedListDialog: () =>
+      import("../../components/Dialogs/Forms/ClassRoomGeneratedListDialog.vue"),
   },
   data: () => ({
     search: "",
@@ -312,6 +298,9 @@ export default {
     work_dates_menu: false,
     confirmDialog: false,
     JobPostPrint: false,
+    generatedCount: null,
+    conflict: null,
+    passfilter: null,
     fadeAwayMessage: {
       show: false,
       type: "success",
@@ -345,9 +334,9 @@ export default {
     this.eventHub.$on("closeAddSubjectDialog", () => {
       this.initialize();
     });
-    // this.eventHub.$on("closeApplicantJobList", () => {
-    //   this.initialize();
-    // });
+    this.eventHub.$on("closeaddStudentClassRoomDialog", () => {
+      this.initialize();
+    });
     // this.eventHub.$on("closeMyJobApplicationDialog", () => {
     //   this.initialize();
     // });
@@ -361,7 +350,7 @@ export default {
   },
 
   beforeDestroy() {
-    // this.eventHub.$off("closeMyJobApplicationDialog");
+    this.eventHub.$off("closeaddStudentClassRoomDialog");
     this.eventHub.$off("closeAddSubjectDialog");
     // this.eventHub.$off("closeApplicantJobList");
     // this.eventHub.$off("closeMyJobApplicationDialog");
@@ -374,117 +363,35 @@ export default {
     options: {
       handler() {
         this.initialize();
+        this.getAlreadyGeanerate();
       },
       deep: true,
     },
-    // filterYear: {
-    //   handler(newData, oldData) {
-    //     if (oldData != newData) {
-    //       this.initialize();
-    //     }
-    //   },
-    //   deep: true,
-    // },
-  },
-  // computed: {
-  //   filterYear() {
-  //     return this.$store.getters.getFilterSelected;
-  //   },
-
-  //   // filterPrintData() {
-  //   //   return this.paginate(
-  //   //     this.data.filter((data) =>
-  //   //       data.employee.toLowerCase().match(this.search.toLowerCase())
-  //   //     )
-  //   //   );
-  //   // },
-  // },
-  methods: {
-    tag(item) {
-      this.taggingData = item;
-      this.action = "Tag";
-    },
-    printApplicants(item) {
-      console.log("Item Print Report", item.id);
-      let data = this.printData;
-      let filter = this.$store.getters.getFilterSelected;
-      console.log("Print Data", data);
-      window.open(
-        process.env.VUE_APP_SERVER +
-          "/pdf-generator/generateJobApplicant/" +
-          item.id +
-          "/" +
-          filter +
-          "",
-        "_blank" // <- This is what makes it open in a new window.
-      );
-    },
-    handleAllChanges() {
-      // Logic to handle changes for all three selects
-      // let output = `Selected value A: ${this.toPrint}, Selected value B: ${this.selectedMonth}, Selected value C: ${this.selectedYear}`;
-      console.log("Job Item", this.jobitem);
-      if (this.toPrint == "All") {
-        console.log("initial position", this.toPrint);
-        this.axiosCall("/job-applicant/" + this.selectedYear, "GET").then(
-          (res) => {
-            if (res) {
-              this.printData = res.data;
-            }
-          }
-        );
-      } else {
-        this.axiosCall(
-          "/job-applicant/findToPrint/" +
-            this.toPrint +
-            "/" +
-            this.jobitem +
-            "/" +
-            this.selectedMonth +
-            "/" +
-            this.selectedYear +
-            "",
-          "GET"
-        ).then((res) => {
-          console.log("onchangeData", res.data);
-          this.printData = res.data;
-        });
-      }
-
-      // console.log("three onchange", output);
-    },
-    getAllposition() {
-      this.axiosCall("/job-posting", "GET").then((res) => {
-        let arr = [];
-        let jobitem = [];
-        for (let index = 0; index < res.data.length; index++) {
-          // const element = res.data[index].position_title;
-          const element = res.data[index];
-          const items = res.data[index].plantilla_item;
-          jobitem.push(items);
-          arr.push(element);
+    filterYear: {
+      handler(newData, oldData) {
+        if (oldData != newData) {
+          this.initialize();
+          this.getAlreadyGeanerate();
         }
-        console.log("JobPosted", arr);
-        arr.unshift("All");
-        jobitem.unshift("All");
-        this.toPrint = arr[0];
-        this.jobitem = jobitem[0];
-        this.selectedMonth = this.monthsList[0].id;
-        this.selectedYear = this.yearList[0];
-        this.reportTypeList = arr;
-        this.jobitemsList = jobitem;
-      });
+      },
+      deep: true,
     },
-    printJobApplicants() {
-      this.JobPostPrint = true;
-
-      this.handleAllChanges();
-    },
-    pagination(data) {
-      this.paginationData = data;
+  },
+  computed: {
+    filterYear() {
+      return this.$store.getters.getFilterSelected;
     },
 
+    //   // filterPrintData() {
+    //   //   return this.paginate(
+    //   //     this.data.filter((data) =>
+    //   //       data.employee.toLowerCase().match(this.search.toLowerCase())
+    //   //     )
+    //   //   );
+    //   // },
+  },
+  methods: {
     initialize() {
-      // this.handleAllChanges();
       this.loading = true;
       // let filter = this.$store.getters.getFilterSelected;
       // console.log("Filted", filter);
@@ -551,18 +458,201 @@ export default {
       }
     },
 
-    // getVerifiedUsers() {
-    //   this.loading = true;
+    generateClassRecord() {
+      let filter = this.$store.getters.getFilterSelected;
+      this.axiosCall(
+        "/enroll-student/getSchoolYear/toGenerate/" +
+          this.gradeName +
+          "/" +
+          filter,
+        "GET"
+      ).then((res) => {
+        if (res) {
+          this.conflict = res.data[0].conflict;
 
-    //   this.axiosCall("/user-details/getAllVerifiedUser", "GET").then((res) => {
-    //     if (res) {
-    //       this.data = [];
+          if (this.conflict == 0) {
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "error";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message =
+              "No Student Enrolled in this School Year or Grade Level";
+          } else {
+            if (this.tab == 1) {
+              this.gradeName = "Grade 7";
+              this.axiosCall(
+                "/rooms-section/generateClassRecord/byGrade/level/" +
+                  this.gradeName +
+                  "/" +
+                  filter,
+                "POST"
+              ).then((res) => {
+                if (res) {
+                  if (res.data.status == 201) {
+                    this.dialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "success";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                    this.confirmDialog = false;
+                    this.initialize();
+                  } else if (res.data.status == 400) {
+                    this.confirmDialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "error";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                  }
+                }
+              });
+            } else if (this.tab == 2) {
+              this.gradeName = "Grade 8";
 
-    //       this.data = res.data;
-    //       this.loading = false;
-    //     }
-    //   });
-    // },
+              this.axiosCall(
+                "/rooms-section/generateClassRecord/byGrade/level/" +
+                  this.gradeName +
+                  "/" +
+                  filter,
+                "POST"
+              ).then((res) => {
+                if (res) {
+                  if (res.data.status == 201) {
+                    this.dialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "success";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                    this.confirmDialog = false;
+                    this.initialize();
+                  } else if (res.data.status == 400) {
+                    this.confirmDialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "error";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                  }
+                }
+              });
+            } else if (this.tab == 3) {
+              this.gradeName = "Grade 9";
+
+              this.axiosCall(
+                "/rooms-section/generateClassRecord/byGrade/level/" +
+                  this.gradeName +
+                  "/" +
+                  filter,
+                "POST"
+              ).then((res) => {
+                if (res) {
+                  if (res.data.status == 201) {
+                    this.dialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "success";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                    this.confirmDialog = false;
+                    this.initialize();
+                  } else if (res.data.status == 400) {
+                    this.confirmDialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "error";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                  }
+                }
+              });
+            } else if (this.tab == 4) {
+              this.gradeName = "Grade 10";
+
+              this.axiosCall(
+                "/rooms-section/generateClassRecord/byGrade/level/" +
+                  this.gradeName +
+                  "/" +
+                  filter,
+                "POST"
+              ).then((res) => {
+                if (res) {
+                  if (res.data.status == 201) {
+                    this.dialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "success";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                    this.confirmDialog = false;
+                    this.initialize();
+                  } else if (res.data.status == 400) {
+                    this.confirmDialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "error";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                  }
+                }
+              });
+            } else if (this.tab == 5) {
+              this.gradeName = "Grade 11";
+
+              this.axiosCall(
+                "/rooms-section/generateClassRecord/byGrade/level/" +
+                  this.gradeName +
+                  "/" +
+                  filter,
+                "POST"
+              ).then((res) => {
+                if (res) {
+                  if (res.data.status == 201) {
+                    this.dialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "success";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                    this.confirmDialog = false;
+                    this.initialize();
+                  } else if (res.data.status == 400) {
+                    this.confirmDialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "error";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                  }
+                }
+              });
+            } else if (this.tab == 6) {
+              this.gradeName = "Grade 12";
+
+              this.axiosCall(
+                "/rooms-section/generateClassRecord/byGrade/level/" +
+                  this.gradeName +
+                  "/" +
+                  filter,
+                "POST"
+              ).then((res) => {
+                if (res) {
+                  if (res.data.status == 201) {
+                    this.dialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "success";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                    this.confirmDialog = false;
+                    this.initialize();
+                  } else if (res.data.status == 400) {
+                    this.confirmDialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "error";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                  }
+                }
+              });
+            }
+          }
+        }
+      });
+    },
+
+    pagination(data) {
+      this.paginationData = data;
+    },
 
     changeTab(tab) {
       this.activeTab = tab;
@@ -571,19 +661,117 @@ export default {
 
       this.tab = tab.id;
       this.initialize();
+      this.getAlreadyGeanerate();
       // } else if (tab.id == 2) {
       //   this.getVerifiedUsers();
       //   this.tab = tab.id;
       // }
     },
+
+    getAlreadyGeanerate() {
+      let filter = this.$store.getters.getFilterSelected;
+
+      if (this.tab == 1) {
+        this.gradeName = "Grade 7";
+        this.axiosCall(
+          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            this.generatedCount = res.data[0].count_gen;
+            console.log(this.generatedCount);
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 2) {
+        this.gradeName = "Grade 8";
+
+        this.axiosCall(
+          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            this.generatedCount = res.data[0].count_gen;
+            console.log(this.generatedCount);
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 3) {
+        this.gradeName = "Grade 9";
+
+        this.axiosCall(
+          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            this.generatedCount = res.data[0].count_gen;
+            console.log(this.generatedCount);
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 4) {
+        this.gradeName = "Grade 10";
+
+        this.axiosCall(
+          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            this.generatedCount = res.data[0].count_gen;
+            console.log(this.generatedCount);
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 5) {
+        this.gradeName = "Grade 11";
+
+        this.axiosCall(
+          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            this.generatedCount = res.data[0].count_gen;
+            console.log(this.generatedCount);
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 6) {
+        this.gradeName = "Grade 12";
+
+        this.axiosCall(
+          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            this.generatedCount = res.data[0].count_gen;
+            console.log(this.generatedCount);
+            this.loading = false;
+          }
+        });
+      }
+    },
+
     add() {
       this.coreTimeData = [{ id: null }];
       this.action = "Add";
     },
     editItem(item) {
-      console.log(this.tab, item);
       this.coreTimeData = item;
       this.action = "Update";
+    },
+    printClassList(item) {
+      console.log(item);
+      this.fadeAwayMessage.show = true;
+      this.fadeAwayMessage.type = "info";
+      this.fadeAwayMessage.header = "System Message";
+      this.fadeAwayMessage.message = "This Feature is to be followed";
+    },
+
+    addStudent(item) {
+      let filter = this.$store.getters.getFilterSelected;
+      this.taggingData = item;
+      this.action = "View";
+      this.passfilter = filter;
     },
     viewApplicant(item) {
       this.applicantData = item;

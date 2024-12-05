@@ -2,43 +2,46 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
+import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
 
 @Controller('subjects')
 export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
 
-  @Post()
+  @Post('')
   create(@Body() createSubjectDto: CreateSubjectDto) {
     return this.subjectsService.create(createSubjectDto);
   }
 
-  @Get('CreateSubject/active/:year')
-  activeSubject(@Param('year') year: string) {
-    return this.subjectsService.activeSubject(year);
+  @Post('addTeachersSubject')
+  addTeachersSubject(@Body() createTeacherSubjectDto: CreateTeacherSubjectDto) {
+    return this.subjectsService.addTeachersSubject(createTeacherSubjectDto);
   }
 
-  @Get('getSpicificSubject/:year/:grade')
-  getSpicificSubject(@Param('year') year: string,@Param('grade') grade: string) {
-    return this.subjectsService.getSpicificSubject(year,grade);
+  @Get('CreateSubject/active/:filter')
+  activeSubject(@Param('filter') filter: string) {
+    return this.subjectsService.activeSubject(+filter);
+  }
+  
+
+  @Get('CreateSubject/notActive/:filter')
+  notActiveSubject(@Param('filter') filter: string) {
+    return this.subjectsService.notActiveSubject(+filter);
+  }
+  @Get('getSubjectTaagged/:id')
+  getSubjectTaagged(@Param('id') id: string) {
+    return this.subjectsService.getSubjectTaagged(+id);
+  }
+  
+
+  @Get('getSpicificSubject/:filter/:grade')
+  getSpicificSubject(@Param('filter') filter: string,@Param('grade') grade: string) {
+    return this.subjectsService.getSpicificSubject(+filter,grade);
   }
 
-  @Get('CreateSubject/notActive/:year')
-  notActiveSubject(@Param('year') year: string) {
-    return this.subjectsService.notActiveSubject(year);
-  }
-
-  @Get()
-  findAll() {
-    return this.subjectsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.subjectsService.findOne(+id);
-  }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
+  update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto,) {
     return this.subjectsService.update(+id, updateSubjectDto);
   }
 

@@ -34,12 +34,12 @@ export class EnrollStudentController {
     return this.enrollStudentService.updateEnrolledStudent(updateVS);
   }
 
+  
+
   @Post('addSchoolYear')
   addSchoolYear(@Body() createSchoolYearDto: CreateSchoolYearDto) {
     return this.enrollStudentService.addSchoolYear(createSchoolYearDto);
   }
-
-
 
 
    // @UseGuards(JWTAuthGuard)
@@ -54,6 +54,13 @@ export class EnrollStudentController {
     return this.enrollStudentService.EnrolledStudent();
   }
 
+  @Get('AddClassStudent/EnrolledStudent/:grade')
+  AddClassStudent(@Param('grade') grade: string,) {
+    return this.enrollStudentService.AddClassStudent(grade);
+  }
+
+
+
 
   @Get('FacultySchedule/:filter')
   FacultySchedule(@Param('filter') filter: string,) {
@@ -64,6 +71,12 @@ export class EnrollStudentController {
     getSchoolYear() {
     return this.enrollStudentService.getSchoolYear();
   }
+
+  @Get('getSchoolYear/toGenerate/:grade/:filter')
+  getSchoolYearGenerate(@Param('grade') grade: string,@Param('filter') filter: string,) {
+  return this.enrollStudentService.getSchoolYearGenerate(grade,+filter);
+}
+
 
   @Get('MySchedule/:filter')
   MySchedule(@Headers() headers,@Param('filter') filter: string,) {

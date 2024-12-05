@@ -74,32 +74,17 @@
 
                 <v-col cols="12">
                   <v-autocomplete
-                    v-model="verifyModel.year_from"
+                    v-model="verifyModel.schoo_yearId"
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    item-text="description"
+                    item-text="school_year"
                     item-value="id"
-                    label="Year From"
+                    label="School Year"
                     color="#93CB5B"
                     :items="year_fromList"
-                    @change="onChangeDateFrom($event)"
                   >
                   </v-autocomplete>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model="verifyModel.year_to"
-                    :rules="[formRules.required]"
-                    dense
-                    readonly
-                    class="rounded-lg"
-                    item-text="description"
-                    item-value="id"
-                    label="Year To:"
-                    color="#93CB5B"
-                  >
-                  </v-text-field>
                 </v-col>
                 <v-col cols="12">
                   <v-autocomplete
@@ -168,8 +153,7 @@ export default {
         good_moral: "No",
         birth_certificate: "No",
         form137a: "No",
-        year_from: null,
-        year_to: null,
+        schoo_year: null,
       },
       seniorJunior: null,
       passedList: ["Yes", "No"],
@@ -217,21 +201,22 @@ export default {
       this.getUserType();
       this.getAssignedModules();
       this.getUseRoles();
-      this.loadYearFrom();
+      // this.loadYearFrom();
+      this.getSchoolYear();
     },
 
-    loadYearFrom() {
-      let d = new Date();
+    // loadYearFrom() {
+    //   let d = new Date();
 
-      let yr = d.getFullYear();
+    //   let yr = d.getFullYear();
 
-      for (let i = yr; i < yr + 10; i++) {
-        this.year_fromList.push(i);
-      }
-    },
-    onChangeDateFrom(data) {
-      this.verifyModel.year_to = data + 1;
-    },
+    //   for (let i = yr; i < yr + 10; i++) {
+    //     this.year_fromList.push(i);
+    //   }
+    // },
+    // onChangeDateFrom(data) {
+    //   this.verifyModel.year_to = data + 1;
+    // },
     getUserType() {
       this.axiosCall("/user-type/getAllUsertype", "GET").then((res) => {
         if (res.data) {
@@ -254,8 +239,7 @@ export default {
           birth_certificate:
             this.verifyModel.birth_certificate == "No" ? false : true,
           form137a: this.verifyModel.form137a == "No" ? false : true,
-          year_from: this.verifyModel.year_from,
-          year_to: this.verifyModel.year_to,
+          schoo_yearId: this.verifyModel.schoo_yearId,
           update_type: this.action == "Verify" ? 1 : 2,
           statusEnrolled: true,
         };
@@ -293,6 +277,15 @@ export default {
     getUseRoles() {
       this.axiosCall("/user-role", "GET").then((res) => {
         this.userRoleList = res.data;
+      });
+    },
+
+    getSchoolYear() {
+      this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
+        if (res) {
+          this.year_fromList = res.data;
+          this.verifyModel.schoo_yearId = res.data[0].id;
+        }
       });
     },
   },

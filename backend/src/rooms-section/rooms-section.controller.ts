@@ -6,6 +6,8 @@ import { CreateAddTrackDto } from './dto/create-add-track.dto';
 import { UpdateAddTrackDto } from './dto/update-add-track.dto';
 import { CreateAddStrandDto } from './dto/create-add-strand.dto';
 import { UpdateAddStrandDto } from './dto/update-add-strand.dto';
+import { CreateStudentListDto } from './dto/create-student-list.dto';
+import { CreateAddStudentRoomDto } from './dto/create-add-student-room.dto';
 
 @Controller('rooms-section')
 export class RoomsSectionController {
@@ -26,6 +28,17 @@ export class RoomsSectionController {
     return this.roomsSectionService.addStrand(createAddStrandDto);
   }
 
+  @Post('generateClassRecord/byGrade/level/:grade/:filter')
+  generateClassRecord(@Param('grade') grade: string,@Param('filter') filter: string) {
+    return this.roomsSectionService.generateClassRecord(grade, +filter);
+  }
+
+  @Post('addStudentClassRoom')
+  addStudentClassRoom(@Body() createAddStudentRoomDto: CreateAddStudentRoomDto) {
+    return this.roomsSectionService.addStudentClassRoom(createAddStudentRoomDto);
+  }
+
+
 
   
   @Get(':gradeLevel')
@@ -45,6 +58,22 @@ export class RoomsSectionController {
 
     return this.roomsSectionService.getAlltracks();
   }
+
+  @Get('getCountGen/:grade/:filter')
+  getCountGen(@Param('grade') grade: string,@Param('filter') filter: string) {
+
+    return this.roomsSectionService.getCountGen(grade, +filter);
+  }
+
+  @Get('getRoomClassList/:id/:grade/:filter')
+  getRoomClassList(@Param('id') id: string,@Param('grade') grade: string,@Param('filter') filter: string) {
+
+    return this.roomsSectionService.getRoomClassList(+id, grade, +filter);
+  }
+
+
+ 
+
 
   @Get('AllStrand/Data/strand')
   AllStrand() {

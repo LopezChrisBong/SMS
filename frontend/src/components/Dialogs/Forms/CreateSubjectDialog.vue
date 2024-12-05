@@ -169,6 +169,7 @@ export default {
   props: {
     data: null,
     action: null,
+    filter: null,
   },
   data() {
     return {
@@ -359,6 +360,7 @@ export default {
             seniorJunior: this.seniorJunior,
             date_from: this.dateFrom,
             date_to: this.dateTo,
+            school_yearId: this.filter,
           };
           // console.log(data);
           this.axiosCall("/subjects", "POST", data).then((res) => {
@@ -397,6 +399,7 @@ export default {
             seniorJunior: this.seniorJunior,
             date_from: this.dateFrom,
             date_to: this.dateTo,
+            school_yearId: this.filter,
           };
           console.log(data);
           this.axiosCall("/subjects/" + this.updateID, "PATCH", data).then(

@@ -56,6 +56,20 @@ export class UserDetail {
   @Column({
     nullable: true,
     type: 'varchar',
+    length: 10,
+  })
+  hired: string;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    length: 255,
+  })
+  education: string;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
     length: 255,
   })
   birth_place: string;

@@ -359,7 +359,7 @@ export default {
 
     initialize() {
       // this.handleAllChanges();
-      this.loading = true;
+      this.loading = false;
       let filter = this.$store.getters.getFilterSelected;
       this.axiosCall("/enroll-student/MySchedule/" + filter, "GET").then(
         (res) => {
