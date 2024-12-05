@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="5" class="d-flex">
-        <!-- <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <!-- <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -31,13 +31,13 @@
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="6" class="d-flex justify-end">
-        <v-btn @click="getDTR()" color="#519043" class="white--text mx-1">
+        <v-btn @click="getDTR()" color="#5a67da" class="white--text mx-1">
           Select
         </v-btn>
         <v-btn
           v-if="dtrData.length > 0"
           @click="printDTR()"
-          color="#519043"
+          color="#5a67da"
           class="white--text mx-1"
         >
           Print
@@ -499,7 +499,7 @@
             :value="options.itemsPerPage"
             style="max-width: 90px"
             class="rounded-lg"
-            color="#519043"
+            color="#5a67da"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >
@@ -517,7 +517,7 @@
           v-model="options.page"
           class="rounded-lg"
           :total-visible="7"
-          color="#519043"
+          color="#5a67da"
           :length="paginationData.pageCount"
         >
         </v-pagination>

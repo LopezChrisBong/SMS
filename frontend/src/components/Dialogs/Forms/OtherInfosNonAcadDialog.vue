@@ -48,7 +48,7 @@
               Cancel
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="addOtherInfoNonAcad()"
             >
@@ -71,7 +71,7 @@
               Cancel
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateOtherInfoNonAcad()"
             >

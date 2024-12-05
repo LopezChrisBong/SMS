@@ -22,7 +22,7 @@
           <v-form class="mt-5" ref="MyLeaveFormref" @submit.prevent>
             <v-row>
               <v-col cols="12" class="pa-0">
-                <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+                <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
                   <v-tab
                     v-for="tab in tabList"
                     :key="tab.id"
@@ -50,7 +50,7 @@
                   <div class="text-h5">
                     Employee/s to add CTO
                   </div>
-                  <v-btn @click="addCTO()" color="#519043" class="white--text">
+                  <v-btn @click="addCTO()" color="#5a67da" class="white--text">
                     <v-icon>mdi-plus</v-icon>
                     add
                   </v-btn>
@@ -72,7 +72,7 @@
                         @click="editCTO(item, i)"
                         class="mx-1"
                         x-small
-                        color="#519043"
+                        color="#5a67da"
                         outlined
                       >
                         edit </v-btn
@@ -109,7 +109,7 @@
                   <div class="text-h5">
                     Employee/s to Service Credits
                   </div>
-                  <v-btn @click="addSR()" color="#519043" class="white--text">
+                  <v-btn @click="addSR()" color="#5a67da" class="white--text">
                     <v-icon>mdi-plus</v-icon>
                     add
                   </v-btn>
@@ -131,7 +131,7 @@
                         @click="editCTO(item, i)"
                         class="mx-1"
                         x-small
-                        color="#519043"
+                        color="#5a67da"
                         outlined
                       >
                         edit </v-btn
@@ -177,7 +177,7 @@
                   <tr v-for="(item, i) in spl_employeeList" :key="i">
                     <td>{{ item.name }}</td>
                     <td align="center">
-                      <v-icon color="#519043" v-if="item.SPL">mdi-check</v-icon
+                      <v-icon color="#5a67da" v-if="item.SPL">mdi-check</v-icon
                       ><v-icon color="red" v-if="!item.SPL">mdi-close</v-icon>
                     </td>
                   </tr>

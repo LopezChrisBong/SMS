@@ -31,7 +31,7 @@
                 single-line
                 hide-details
                 class="mx-1 rounded-lg"
-                color="#519043"
+                color="#5a67da"
                 dense
               ></v-text-field>
               <v-btn
@@ -66,7 +66,7 @@
                       @click="convert(item, index)"
                       class="mx-1"
                       x-small
-                      color="#519043"
+                      color="#5a67da"
                       outlined
                     >
                       Convert
@@ -130,7 +130,7 @@
                   :value="options.itemsPerPage"
                   style="max-width: 90px"
                   class="rounded-lg"
-                  color="#519043"
+                  color="#5a67da"
                   @change="options.itemsPerPage = parseInt($event, 10)"
                   :items="perPageChoices"
                 >
@@ -148,7 +148,7 @@
                 v-model="options.page"
                 class="rounded-lg"
                 :total-visible="7"
-                color="#519043"
+                color="#5a67da"
                 :length="paginationData.pageCount"
               >
               </v-pagination>
@@ -287,7 +287,7 @@
             </v-btn>
             <!-- <v-btn
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
             >
               Update

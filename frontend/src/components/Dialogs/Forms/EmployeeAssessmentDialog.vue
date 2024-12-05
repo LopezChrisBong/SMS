@@ -401,7 +401,7 @@
                       >
                         <v-btn
                           @click="editPC(item, i)"
-                          color="#519043"
+                          color="#5a67da"
                           class="mx-1"
                           x-small
                           outlined
@@ -422,7 +422,7 @@
                 <v-col cols="12" class="mt-2 mb-2">
                   <v-btn
                     v-if="tab != 3"
-                    color="#519043"
+                    color="#5a67da"
                     @click="addPC()"
                     right
                     class="white--text"
@@ -448,7 +448,7 @@
                     dense
                     :readonly="tab == 3"
                     placeholder="Type here..."
-                    color="#519043"
+                    color="#5a67da"
                     v-model="comment_sgt"
                   ></v-textarea>
                 </v-col>
@@ -461,7 +461,7 @@
             <v-spacer></v-spacer>
 
             <v-btn
-              color="#519043"
+              color="#5a67da"
               v-if="tab == 1"
               class="white--text"
               @click="save()"
@@ -471,7 +471,7 @@
             </v-btn>
 
             <v-btn
-              color="#519043"
+              color="#5a67da"
               v-if="tab == 2"
               class="white--text"
               @click="update()"
@@ -502,7 +502,7 @@
                     :rules="[formRules.required]"
                     v-model="pcHeader"
                     dense
-                    color="#519043"
+                    color="#5a67da"
                     outlined
                     label="Performance Category Header"
                   ></v-text-field>
@@ -512,7 +512,7 @@
                     name="input-7-4"
                     outlined
                     dense
-                    color="#519043"
+                    color="#5a67da"
                     :rules="[formRules.required]"
                     label="Performance Category Details"
                     v-model="pcDetails"

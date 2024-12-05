@@ -233,7 +233,7 @@
               <v-menu top>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    color="#519043"
+                    color="#5a67da"
                     fab
                     dark
                     left
@@ -260,7 +260,7 @@
                         v-for="item in remarksData"
                         :key="item.id"
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -285,7 +285,7 @@
                     <v-timeline dense v-if="remarksData.length == 0">
                       <v-timeline-item
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -303,7 +303,7 @@
             <v-spacer></v-spacer>
 
             <v-btn
-              color="#519043"
+              color="#5a67da"
               @click="confirmActionBtn('receiveAndArchive')"
               v-if="
                 isSignatoryApproved && isHrReceived == 0 && travel_subtype == 1
@@ -315,7 +315,7 @@
             </v-btn>
 
             <v-btn
-              color="#519043"
+              color="#5a67da"
               @click="confirmActionBtn('receive')"
               v-if="
                 isSignatoryApproved && isHrReceived == 0 && travel_subtype == 2
@@ -336,7 +336,7 @@
               Pending
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               @click="confirmActionBtn('archive')"
               v-if="isHrReceived == 1 && tab == 2"
               class="white--text"

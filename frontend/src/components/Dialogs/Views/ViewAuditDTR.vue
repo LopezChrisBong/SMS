@@ -451,7 +451,7 @@
             outlined
             :loading="isLoading"
             :disabled="isLoading"
-            color="#519043"
+            color="#5a67da"
             @click="printDTR()"
             >Print</v-btn
           > -->

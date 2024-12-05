@@ -209,13 +209,13 @@
               <v-col cols="12">
                 <div class="d-flex">
                   <div
-                    style="border : 1px solid #519043; width:30%; background-color:#519043; "
+                    style="border : 1px solid #5a67da; width:30%; background-color:#5a67da; "
                     class="text-center white--text"
                   >
                     Learning and Development Activity
                   </div>
                   <div
-                    style="border : 1px solid #519043; width:70%; background-color:#519043;"
+                    style="border : 1px solid #5a67da; width:70%; background-color:#5a67da;"
                     class="text-center white--text"
                   >
                     (Indicate Target Completion Dates for Advanced Studies &
@@ -368,7 +368,7 @@
             </v-btn> -->
 
             <!-- <v-btn
-              color="#519043"
+              color="#5a67da"
               v-if="toApproveType == 'ProgHead'"
               class="white--text"
               @click="ProgHeadApprovalBtn()"
@@ -378,7 +378,7 @@
             </v-btn> -->
 
             <v-btn
-              color="#519043"
+              color="#5a67da"
               @click="DeanDirApprovalBtn()"
               v-if="toApproveType == 'Dean/Dir'"
               class="white--text"
@@ -387,7 +387,7 @@
               Approve
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               v-if="toApproveType == 'VP'"
               class="white--text"
               @click="VPApprovalBtn()"
@@ -396,7 +396,7 @@
               Approve
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               @click="PresidentApprovalBtn()"
               v-if="toApproveType == 'President'"
               class="white--text"
@@ -747,7 +747,7 @@ export default {
   text-align: center;
 }
 .tableBg {
-  background-color: #519043;
+  background-color: #5a67da;
   color: white;
 }
 </style>

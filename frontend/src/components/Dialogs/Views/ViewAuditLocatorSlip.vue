@@ -150,7 +150,7 @@
           <v-menu top>
             <template v-slot:activator="{ on }">
               <v-btn
-                color="#519043"
+                color="#5a67da"
                 fab
                 dark
                 left
@@ -176,7 +176,7 @@
                   <v-timeline-item
                     v-for="item in remarksData"
                     :key="item.id"
-                    color="#519043"
+                    color="#5a67da"
                     icon="mdi-comment-processing-outline"
                     fill-dot
                   >
@@ -203,7 +203,7 @@
                 </v-timeline>
                 <v-timeline dense v-if="remarksData.length == 0">
                   <v-timeline-item
-                    color="#519043"
+                    color="#5a67da"
                     icon="mdi-comment-processing-outline"
                     fill-dot
                   >

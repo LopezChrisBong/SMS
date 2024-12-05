@@ -66,7 +66,7 @@
             :value="options.itemsPerPage"
             style="max-width: 90px"
             class="rounded-lg"
-            color="#519043"
+            color="#5a67da"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >

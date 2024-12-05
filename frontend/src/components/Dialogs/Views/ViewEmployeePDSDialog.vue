@@ -20,7 +20,7 @@
             v-model="dumpTab"
             :center-active="true"
             show-arrows
-            color="#519043"
+            color="#5a67da"
             height="40"
             class="mb-n4 elevation-4 rounded-lg"
           >
@@ -1157,7 +1157,7 @@
                     <v-btn
                       depressed
                       elevation="4"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       v-if="isUpdate && isUpdateAllowed"
                       @click="addOtherInfoSkill()"
@@ -1203,7 +1203,7 @@
                     <v-btn
                       depressed
                       elevation="4"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       v-if="isUpdate && isUpdateAllowed"
                       @click="addOtherInfoNonAcad()"
@@ -1250,7 +1250,7 @@
                     <v-btn
                       depressed
                       elevation="4"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       v-if="isUpdate && isUpdateAllowed"
                       @click="addOtherInfoAssocMembership()"
@@ -1855,7 +1855,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="updateDetails()"
             v-if="data.id"
@@ -1864,7 +1864,7 @@
             Update Details
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="confirmAdd()"
             v-if="!data.id"
@@ -1877,7 +1877,7 @@
           <v-menu top v-if="data.id && statusType == 3">
             <template v-slot:activator="{ on }">
               <v-btn
-                color="#519043"
+                color="#5a67da"
                 fab
                 dark
                 left
@@ -1903,7 +1903,7 @@
                   <v-timeline-item
                     v-for="item in remarksData"
                     :key="item.id"
-                    color="#519043"
+                    color="#5a67da"
                     icon="mdi-comment-processing-outline"
                     fill-dot
                   >
@@ -1929,7 +1929,7 @@
                 </v-timeline>
                 <v-timeline dense v-if="remarksData.length == 0">
                   <v-timeline-item
-                    color="#519043"
+                    color="#5a67da"
                     icon="mdi-comment-processing-outline"
                     fill-dot
                   >
@@ -1958,7 +1958,7 @@
             Pending
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="openDialog('approve')"
             v-if="data.id && statusType == 1"
@@ -2023,7 +2023,7 @@
             label="Leave a remarks/comments"
             outlined
             dense
-            color="#519043"
+            color="#5a67da"
             variant="solo-inverted"
           ></v-textarea>
 
@@ -2033,7 +2033,7 @@
             label="Leave a remarks/comments"
             outlined
             dense
-            color="#519043"
+            color="#5a67da"
             variant="solo-inverted"
           ></v-textarea> -->
         </v-card-text>
@@ -2095,7 +2095,7 @@
             v-model="editRemarksValue"
             outlined
             dense
-            color="#519043"
+            color="#5a67da"
             variant="solo-inverted"
           ></v-textarea>
         </v-card-text>
@@ -2135,7 +2135,7 @@
               v-model="remarkMsgGlobal"
               outlined
               dense
-              color="#519043"
+              color="#5a67da"
               variant="solo-inverted"
             ></v-textarea>
           </v-form>

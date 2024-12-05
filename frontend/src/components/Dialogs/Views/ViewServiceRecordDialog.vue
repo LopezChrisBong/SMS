@@ -176,7 +176,7 @@
 
                       <td>
                         <v-btn @click="editItem(i, item)"
-                          ><v-icon color="#519043">mdi-pencil</v-icon></v-btn
+                          ><v-icon color="#5a67da">mdi-pencil</v-icon></v-btn
                         >
                       </td>
                     </tr>
@@ -247,7 +247,7 @@
         <v-card-actions class="pa-5">
           <v-spacer></v-spacer>
           <!-- <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="saveServiceRecord()"
           >
@@ -255,7 +255,7 @@
             Save
           </v-btn> -->
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="printServiceRecord()"
           >

@@ -113,7 +113,7 @@
                 <v-col cols="6" class="d-flex justify-end">
                   <v-btn
                     v-if="action != 'View'"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     @click="addAttachment()"
                   >
@@ -146,7 +146,7 @@
                   <div class="elevation-2 rounded-lg ">
                     <div
                       class="d-flex justify-space-between  elevation-1 px-2 py-2 white--text"
-                      style="background-color:#519043"
+                      style="background-color:#5a67da"
                     >
                       <h3
                         class="text-subtitle-2 text-center"
@@ -223,7 +223,7 @@
                     :rules="[formRules.required]"
                     outlined
                     dense
-                    color="#519043"
+                    color="#5a67da"
                   ></v-text-field>
                 </v-col>
                 <v-col
@@ -232,7 +232,7 @@
                   v-if="action != 'View'"
                 >
                   <v-btn
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     @click="addNewData()"
                   >
@@ -253,7 +253,7 @@
                           <v-btn
                             x-small
                             outlined
-                            color="#519043"
+                            color="#5a67da"
                             @click="editData(1, index)"
                             >Edit</v-btn
                           >
@@ -284,7 +284,7 @@
                           <v-btn
                             x-small
                             outlined
-                            color="#519043"
+                            color="#5a67da"
                             @click="editData(2, index)"
                             >Edit</v-btn
                           >
@@ -314,7 +314,7 @@
                           <v-btn
                             x-small
                             outlined
-                            color="#519043"
+                            color="#5a67da"
                             @click="editData(3, index)"
                             >Edit</v-btn
                           >
@@ -347,7 +347,7 @@
                           <v-btn
                             x-small
                             outlined
-                            color="#519043"
+                            color="#5a67da"
                             @click="editData(4, index)"
                             >Edit</v-btn
                           >
@@ -989,7 +989,7 @@
                     <div class="text-h6 mt-6">
                       <v-btn
                         v-if="action == 'Add' || action == 'Update'"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addAttachment()"
                       >
@@ -1000,7 +1000,7 @@
                   <div class="elevation-2 rounded-lg mt-2">
                     <div
                       class="d-flex justify-space-between  elevation-1 px-2 py-2 white--text"
-                      style="background-color:#519043"
+                      style="background-color:#5a67da"
                     >
                       <h3
                         class="text-subtitle-2 text-center"
@@ -1116,7 +1116,7 @@
                         v-for="item in remarksData"
                         :key="item.id"
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -1141,7 +1141,7 @@
                     <v-timeline dense v-if="remarksData.length == 0">
                       <v-timeline-item
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >

@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="6" class="pa-0">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -23,7 +23,7 @@
         ></v-text-field>
         <!-- <v-btn
           class="white--text ml-2 rounded-lg"
-          color="#519043"
+          color="#5a67da"
           @click="add()"
         >
           <v-icon left> mdi-plus-box-outline </v-icon>
@@ -63,7 +63,7 @@
             For Approval
           </v-chip>
           <v-icon
-            color="#519043"
+            color="#5a67da"
             v-if="item.is_recommending_approval_approved == 2"
             >mdi-check-bold</v-icon
           >
@@ -79,7 +79,7 @@
           <v-chip v-if="item.is_finance_dir_approved == 1" class="ma-2" x-small>
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.is_finance_dir_approved == 2"
+          <v-icon color="#5a67da" v-if="item.is_finance_dir_approved == 2"
             >mdi-check-bold</v-icon
           >
 
@@ -92,7 +92,7 @@
           <v-chip v-if="item.is_president_approved == 1" class="ma-2" x-small>
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.is_president_approved == 2"
+          <v-icon color="#5a67da" v-if="item.is_president_approved == 2"
             >mdi-check-bold</v-icon
           >
 
@@ -121,7 +121,7 @@
           <v-select
             dense
             outlined
-            color="#519043"
+            color="#5a67da"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"

@@ -308,7 +308,7 @@
             Close
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="(tab == 1 || tab == 2) && action == 'Add'"
             @click="add()"
@@ -317,7 +317,7 @@
             Send Request
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="tab == 1 && action == 'Update'"
             @click="edit()"

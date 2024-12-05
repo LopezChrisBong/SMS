@@ -11,7 +11,7 @@
         hide-default-footer
       >
         <template v-slot:[`item.hasEsign`]="{ item }">
-          <v-icon color="#519043" v-if="item.hasEsign" large
+          <v-icon color="#5a67da" v-if="item.hasEsign" large
             >mdi-check-bold</v-icon
           >
           <v-icon color="red" v-if="!item.hasEsign" large>mdi-alpha-x</v-icon>

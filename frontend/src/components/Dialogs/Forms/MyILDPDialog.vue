@@ -135,13 +135,13 @@
                 <div class="elevation-4 rounded-lg">
                   <div class="d-flex ">
                     <div
-                      style="border : 1px solid #519043; width:30%; background-color:#519043; "
+                      style="border : 1px solid #5a67da; width:30%; background-color:#5a67da; "
                       class="text-center white--text rounded-tl-lg"
                     >
                       Learning and Development Activity
                     </div>
                     <div
-                      style="border : 1px solid #519043; width:70%; background-color:#519043;"
+                      style="border : 1px solid #5a67da; width:70%; background-color:#5a67da;"
                       class="text-center white--text  rounded-tr-lg"
                     >
                       (Indicate Target Completion Dates for Advanced Studies &
@@ -462,7 +462,7 @@
           </v-btn>
           <v-btn
             v-if="action == 'Add'"
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="add()"
           >
@@ -472,7 +472,7 @@
 
           <v-btn
             v-if="action == 'Update' && isHrReceived == 0"
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="update()"
           >
@@ -559,7 +559,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Add'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="addILPD()"
             >
@@ -567,7 +567,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateData()"
             >

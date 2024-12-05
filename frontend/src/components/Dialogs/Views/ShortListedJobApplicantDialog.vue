@@ -46,7 +46,7 @@
                   x-small
                   class="white--text ml-2 rounded-lg"
                   :class="action == 1 ? '' : 'd-none'"
-                  color="#519043"
+                  color="#5a67da"
                   @click="hireApplicant(item)"
                 >
                   <v-icon left> mdi-plus-box-outline </v-icon>
@@ -74,7 +74,7 @@
               Cancel
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               v-if="action == 'Add'"
               @click="addnew()"
@@ -83,7 +83,7 @@
               Add
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               v-if="action == 'Update'"
               @click="update()"

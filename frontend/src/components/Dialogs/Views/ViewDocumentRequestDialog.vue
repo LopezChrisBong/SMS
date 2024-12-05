@@ -185,7 +185,7 @@
               Pending
             </v-btn> -->
 
-            <v-btn color="#519043" @click="preview()" class="white--text">
+            <v-btn color="#5a67da" @click="preview()" class="white--text">
               Preview and Edit
             </v-btn>
           </v-card-actions>

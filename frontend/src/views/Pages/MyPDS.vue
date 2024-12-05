@@ -50,7 +50,7 @@
               dense
               v-if="isAllowPrint"
               outlined
-              color="#519043"
+              color="#5a67da"
               @click="print(false)"
             >
               <v-icon left> mdi-printer-outline</v-icon>
@@ -62,14 +62,14 @@
               dense
               v-if="isAllowPrint"
               outlined
-              color="#519043"
+              color="#5a67da"
               @click="print(true)"
             >
               <v-icon left> mdi-printer-outline</v-icon>
               print with picture
             </v-btn> -->
             <v-btn
-              color="#519043"
+              color="#5a67da"
               @click="sheet = !sheet"
               dense
               class="mx-2 white--text"
@@ -107,7 +107,7 @@
                     <v-timeline-item
                       v-for="item in remarksData"
                       :key="item.id"
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -129,7 +129,7 @@
                   </v-timeline>
                   <v-timeline dense v-if="remarksData.length == 0">
                     <v-timeline-item
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -146,7 +146,7 @@
               :class="$vuetify.breakpoint.xs ? 'mt-4' : ''"
               class="white--text rounded-lg mx-2"
               dense
-              color="#519043"
+              color="#5a67da"
               :disabled="!isUpdateAllowed"
               v-if="!isUpdate"
               @click="isUpdate = true"
@@ -158,7 +158,7 @@
               :class="$vuetify.breakpoint.xs ? 'mt-4' : ''"
               class="white--text rounded-lg mx-2"
               dense
-              color="#519043"
+              color="#5a67da"
               v-if="isUpdate"
               @click="confirmSave()"
             >
@@ -954,7 +954,7 @@
                   <v-btn
                     depressed
                     elevation="4"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     v-if="isUpdate && isUpdateAllowed"
                     @click="addChild()"
@@ -1010,7 +1010,7 @@
                     v-if="isUpdate && isUpdateAllowed"
                     depressed
                     elevation="4"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     @click="addEducBg()"
                   >
@@ -1071,7 +1071,7 @@
                     depressed
                     elevation="4"
                     v-if="isUpdate && isUpdateAllowed"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     @click="addCSElig()"
                   >
@@ -1137,7 +1137,7 @@
                   <v-btn
                     depressed
                     elevation="4"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     v-if="isUpdate && isUpdateAllowed"
                     @click="addWorkExp()"
@@ -1216,7 +1216,7 @@
                   <v-btn
                     depressed
                     elevation="4"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     v-if="isUpdate && isUpdateAllowed"
                     @click="addVolWork()"
@@ -1272,7 +1272,7 @@
                   <v-btn
                     depressed
                     elevation="4"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     v-if="isUpdate && isUpdateAllowed"
                     @click="addLND()"
@@ -1332,7 +1332,7 @@
                   <v-btn
                     depressed
                     elevation="4"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     v-if="isUpdate && isUpdateAllowed"
                     @click="addOtherInfo()"
@@ -1346,7 +1346,7 @@
                     <v-btn
                       depressed
                       elevation="4"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       v-if="isUpdate && isUpdateAllowed"
                       @click="addOtherInfoSkill()"
@@ -1392,7 +1392,7 @@
                     <v-btn
                       depressed
                       elevation="4"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       v-if="isUpdate && isUpdateAllowed"
                       @click="addOtherInfoNonAcad()"
@@ -1438,7 +1438,7 @@
                     <v-btn
                       depressed
                       elevation="4"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       v-if="isUpdate && isUpdateAllowed"
                       @click="addOtherInfoAssocMembership()"
@@ -1972,7 +1972,7 @@
                   <v-btn
                     depressed
                     elevation="4"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     v-if="isUpdate && isUpdateAllowed"
                     :disabled="computedRefences == 3"
@@ -2131,7 +2131,7 @@
           <div class="d-flex justify-space-between">
             <div>
               <v-btn
-                color="#519043"
+                color="#5a67da"
                 outlined
                 dense
                 class="mx-2"
@@ -2147,7 +2147,7 @@
                 dense
                 v-if="isAllowPrint"
                 outlined
-                color="#519043"
+                color="#5a67da"
                 @click="print(false)"
               >
                 <v-icon left> mdi-printer-outline</v-icon>
@@ -2159,7 +2159,7 @@
                 dense
                 v-if="isAllowPrint"
                 outlined
-                color="#519043"
+                color="#5a67da"
                 @click="print(true)"
               >
                 <v-icon left> mdi-printer-outline</v-icon>
@@ -2172,7 +2172,7 @@
                 :class="$vuetify.breakpoint.xs ? 'mt-4' : ''"
                 class="white--text rounded-lg mx-2"
                 dense
-                color="#519043"
+                color="#5a67da"
                 :disabled="!isUpdateAllowed || status != 0"
                 v-if="!isUpdate"
                 @click="submitDialog = true"
@@ -2184,7 +2184,7 @@
                 :class="$vuetify.breakpoint.xs ? 'mt-4' : ''"
                 class="white--text rounded-lg mx-2"
                 dense
-                color="#519043"
+                color="#5a67da"
                 :disabled="!isUpdateAllowed || (status != 0 && status != 3)"
                 v-if="!isUpdate"
                 @click="
@@ -2199,7 +2199,7 @@
                 :class="$vuetify.breakpoint.xs ? 'mt-4' : ''"
                 class="white--text rounded-lg mx-2"
                 dense
-                color="#519043"
+                color="#5a67da"
                 v-if="isUpdate"
                 @click="confirmSave()"
               >
@@ -3932,7 +3932,7 @@ export default {
 }
 
 thead th {
-  background-color: #519043 !important;
+  background-color: #5a67da !important;
   color: white !important;
 }
 thead th:first-child {

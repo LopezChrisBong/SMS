@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="pa-0">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -19,7 +19,7 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#519043"
+          color="#5a67da"
           dense
         ></v-text-field>
         <v-btn
@@ -44,7 +44,7 @@
           <v-divider></v-divider>
           <div
             class="text-body-2 pa-2 white--text rounded-b-lg"
-            style="background-color:#519043"
+            style="background-color:#5a67da"
           >
             Vacation Leave
           </div>
@@ -63,7 +63,7 @@
 
           <div
             class="text-body-2 pa-2 white--text rounded-b-lg"
-            style="background-color:#519043"
+            style="background-color:#5a67da"
           >
             Sick Leave
           </div>
@@ -82,7 +82,7 @@
 
           <div
             class="text-body-2 pa-2 white--text rounded-b-lg"
-            style="background-color:#519043"
+            style="background-color:#5a67da"
           >
             CTO (In Hours)
           </div>
@@ -102,7 +102,7 @@
 
           <div
             class="text-body-2 pa-2 white--text rounded-b-lg"
-            style="background-color:#519043"
+            style="background-color:#5a67da"
           >
             SPL
           </div>
@@ -122,7 +122,7 @@
 
           <div
             class="text-body-2 pa-2 white--text rounded-b-lg"
-            style="background-color:#519043"
+            style="background-color:#5a67da"
           >
             FL
           </div>
@@ -163,7 +163,7 @@
           </v-chip>
 
           <v-icon
-            color="#519043"
+            color="#5a67da"
             v-if="item.hr_status == 2 && item.certifying_hr_status == 2"
             >mdi-check</v-icon
           >
@@ -198,7 +198,7 @@
               >
                 For Approval
               </v-chip>
-              <v-icon color="#519043" v-if="item.recommending_status == 1"
+              <v-icon color="#5a67da" v-if="item.recommending_status == 1"
                 >mdi-check</v-icon
               >
 
@@ -230,7 +230,7 @@
               >
                 For Approval
               </v-chip>
-              <v-icon color="#519043" v-if="item.recommending_status == 1"
+              <v-icon color="#5a67da" v-if="item.recommending_status == 1"
                 >mdi-check</v-icon
               >
 
@@ -255,7 +255,7 @@
           >
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.is_final_approval_disapproved == 0"
+          <v-icon color="#5a67da" v-if="item.is_final_approval_disapproved == 0"
             >mdi-check</v-icon
           >
 
@@ -325,7 +325,7 @@
             :value="options.itemsPerPage"
             style="max-width: 90px"
             class="rounded-lg"
-            color="#519043"
+            color="#5a67da"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >

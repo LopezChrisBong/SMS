@@ -27,7 +27,7 @@
                 <!-- <v-select
                   class=" mt-2"
                   label="Year"
-                  color="#519043"
+                  color="#5a67da"
                   dense
                   @change="filterPlantillaEmployees()"
                   outlined
@@ -58,12 +58,12 @@
                 single-line
                 hide-details
                 class="mx-1 rounded-lg"
-                color="#519043"
+                color="#5a67da"
                 dense
               ></v-text-field>
               <v-btn
                 @click="addData()"
-                color="#519043"
+                color="#5a67da"
                 class="mx-1 white--text"
               >
                 <v-icon>mdi-plus</v-icon>
@@ -91,7 +91,7 @@
                   @click="edit(item, index)"
                   class="mx-1"
                   x-small
-                  color="#519043"
+                  color="#5a67da"
                   outlined
                 >
                   edit </v-btn
@@ -122,7 +122,7 @@
                   :value="options.itemsPerPage"
                   style="max-width: 90px"
                   class="rounded-lg"
-                  color="#519043"
+                  color="#5a67da"
                   @change="options.itemsPerPage = parseInt($event, 10)"
                   :items="perPageChoices"
                 >

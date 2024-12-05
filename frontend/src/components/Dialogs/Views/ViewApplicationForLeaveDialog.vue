@@ -585,7 +585,7 @@
                             @click="viewEmpLeave()"
                             small
                             outlined
-                            color="#519043"
+                            color="#5a67da"
                             >view used leave</v-btn
                           >
                         </div>
@@ -762,7 +762,7 @@
             <v-menu top>
               <template v-slot:activator="{ on }">
                 <v-btn
-                  color="#519043"
+                  color="#5a67da"
                   fab
                   dark
                   left
@@ -789,7 +789,7 @@
                       v-for="item in remarksData"
                       :key="item.id"
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -814,7 +814,7 @@
                   <v-timeline dense v-if="remarksData.length == 0">
                     <v-timeline-item
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -837,7 +837,7 @@
             </v-btn>
             <v-btn
               v-if="tab == 1"
-              color="#519043"
+              color="#5a67da"
               class="white--text mx-1"
               @click="certify()"
             >
@@ -846,7 +846,7 @@
             </v-btn>
           </div>
 
-          <!-- <v-btn color="#519043" class="white--text">
+          <!-- <v-btn color="#5a67da" class="white--text">
             <v-icon>mdi-printer</v-icon>
             Print
           </v-btn> -->

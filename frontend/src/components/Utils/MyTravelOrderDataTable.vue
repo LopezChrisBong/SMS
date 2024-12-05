@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="6" class="flex-items">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -67,7 +67,7 @@
               <v-chip v-if="i.approveStatus == 1" class="ma-2" x-small>
                 For Approval
               </v-chip>
-              <v-icon color="#519043" v-if="i.approveStatus == 2"
+              <v-icon color="#5a67da" v-if="i.approveStatus == 2"
                 >mdi-check-bold</v-icon
               >
 
@@ -82,7 +82,7 @@
           <v-chip v-if="item.is_finance_dir_approved == 1" class="ma-2" x-small>
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.is_finance_dir_approved == 2"
+          <v-icon color="#5a67da" v-if="item.is_finance_dir_approved == 2"
             >mdi-check-bold</v-icon
           >
 
@@ -95,7 +95,7 @@
           <v-chip v-if="item.is_president_approved == 1" class="ma-2" x-small>
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.is_president_approved == 2"
+          <v-icon color="#5a67da" v-if="item.is_president_approved == 2"
             >mdi-check-bold</v-icon
           >
 
@@ -110,7 +110,7 @@
           <v-chip
             v-if="item.isHrReceived == 1"
             class="ma-2 white--text"
-            color="#519043"
+            color="#5a67da"
             x-small
           >
             Received
@@ -128,7 +128,7 @@
             </v-chip>
           </div>
           <div v-if="item.isArchived == 1">
-            <v-chip class="ma-2  white--text" color="#519043" x-small>
+            <v-chip class="ma-2  white--text" color="#5a67da" x-small>
               Archived
             </v-chip>
           </div>
@@ -149,7 +149,7 @@
                 getTarStatus(item.tar) == 'For Approval'
                   ? ''
                   : getTarStatus(item.tar) == 'Approved'
-                  ? '#519043'
+                  ? '#5a67da'
                   : getTarStatus(item.tar) == 'Pending'
                   ? 'red'
                   : ''
@@ -426,7 +426,7 @@
           <v-select
             dense
             outlined
-            color="#519043"
+            color="#5a67da"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -510,7 +510,7 @@
           <v-btn color="red" outlined @click="cancelTravelOrderDialog = false">
             Close
           </v-btn>
-          <v-btn color="#519043" class="white--text" @click="confirmCancel()">
+          <v-btn color="#5a67da" class="white--text" @click="confirmCancel()">
             Confirm
           </v-btn>
         </v-card-actions>

@@ -13,7 +13,7 @@
           <!-- <v-btn
               class="white--text rounded-lg mt-3"
               dense
-              color="#519043"
+              color="#5a67da"
               @click="dispatch()"
             >
               <v-icon left> mdi-plus-box-outline </v-icon>

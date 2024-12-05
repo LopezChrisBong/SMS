@@ -48,7 +48,7 @@
                 </v-stepper>
               </v-col>
               <v-col cols="8" class="flex-items mt-2">
-                <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+                <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
                   <v-tab
                     v-for="tab in tabList"
                     :key="tab.id"
@@ -455,7 +455,7 @@
             Pending
           </v-btn>
 
-          <v-btn color="#519043" class="white--text">
+          <v-btn color="#5a67da" class="white--text">
             Approve
           </v-btn>
         </v-card-actions>

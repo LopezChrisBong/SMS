@@ -288,7 +288,7 @@
                   <div class="elevation-2 rounded-lg ">
                     <div
                       class="d-flex justify-space-between  elevation-1 px-2 py-2 white--text"
-                      style="background-color:#519043"
+                      style="background-color:#5a67da"
                     >
                       <h3
                         class="text-subtitle-2 text-center"
@@ -348,7 +348,7 @@
             <v-fab-transition>
               <v-menu top>
                 <template v-slot:activator="{ on }">
-                  <v-btn left color="#519043" outlined v-on="on">
+                  <v-btn left color="#5a67da" outlined v-on="on">
                     Remarks
                   </v-btn>
                 </template>
@@ -366,7 +366,7 @@
                         v-for="item in remarksData"
                         :key="item.id"
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -391,7 +391,7 @@
                     <v-timeline dense v-if="remarksData.length == 0">
                       <v-timeline-item
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -415,7 +415,7 @@
             <v-btn
               v-if="tab == 1"
               @click="confirmApproval()"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
             >
               <v-icon>mdi-check-circle</v-icon>
@@ -452,7 +452,7 @@
           </v-btn>
           <v-btn
             @click="RecommendingApprovalBtn()"
-            color="#519043"
+            color="#5a67da"
             v-if="toApproveType == 'recommending'"
             class="white--text"
           >
@@ -460,7 +460,7 @@
             CONFIRM
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             @click="FinDirApprovalBtn()"
             v-if="toApproveType == 'finDir'"
             class="white--text"
@@ -469,7 +469,7 @@
             CONFIRM
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             @click="PresidentApprovalBtn()"
             v-if="toApproveType == 'president'"
             class="white--text"
@@ -494,7 +494,7 @@
               outlined
               :rules="[formRules.required]"
               dense
-              color="#519043"
+              color="#5a67da"
               v-model="pendingMsg"
               placeholder="Type here...."
               rows="5"

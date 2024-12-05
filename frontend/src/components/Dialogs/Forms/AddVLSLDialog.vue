@@ -34,7 +34,7 @@
                   dense
                   outlined
                   class="rounded-lg mt-5"
-                  color="#519043"
+                  color="#5a67da"
                   :items="monthsArr"
                 >
                 </v-autocomplete>
@@ -49,7 +49,7 @@
                 single-line
                 hide-details
                 class="rounded-lg"
-                color="#519043"
+                color="#5a67da"
                 dense
               ></v-text-field>
             </v-col>
@@ -115,7 +115,7 @@
                   :value="options.itemsPerPage"
                   style="max-width: 90px"
                   class="rounded-lg"
-                  color="#519043"
+                  color="#5a67da"
                   @change="options.itemsPerPage = parseInt($event, 10)"
                   :items="perPageChoices"
                 >
@@ -133,7 +133,7 @@
                 v-model="options.page"
                 class="rounded-lg"
                 :total-visible="7"
-                color="#519043"
+                color="#5a67da"
                 :length="paginationData.pageCount"
               >
               </v-pagination>

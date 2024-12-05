@@ -76,7 +76,7 @@
           <v-card-actions class="py-2 px-5">
             <v-spacer></v-spacer>
 
-            <v-btn color="#519043" class="white--text" @click="save()">
+            <v-btn color="#5a67da" class="white--text" @click="save()">
               <v-icon>mdi-check-circle</v-icon>
               Confirm
             </v-btn>

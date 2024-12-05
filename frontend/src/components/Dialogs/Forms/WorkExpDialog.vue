@@ -322,7 +322,7 @@
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
-            <v-btn color="#519043" class="white--text" @click="addWorkExp()">
+            <v-btn color="#5a67da" class="white--text" @click="addWorkExp()">
               <v-icon>mdi-check-circle</v-icon>
               Save Details
             </v-btn>
@@ -334,7 +334,7 @@
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
-            <v-btn color="#519043" class="white--text" @click="updateWorkExp()">
+            <v-btn color="#5a67da" class="white--text" @click="updateWorkExp()">
               <v-icon>mdi-check-circle</v-icon>
               Update Details
             </v-btn>

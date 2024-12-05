@@ -16,7 +16,7 @@
           dense
         ></v-text-field>
 
-        <v-btn color="#519043" class="white--text ml-2" @click="addSchedule()">
+        <v-btn color="#5a67da" class="white--text ml-2" @click="addSchedule()">
           <v-icon class="mr-2">mdi-check-circle</v-icon>
           Add
         </v-btn>

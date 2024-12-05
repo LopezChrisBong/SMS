@@ -21,7 +21,7 @@
         ></v-text-field>
         <v-btn
           class="white--text ml-2 rounded-lg"
-          color="#519043"
+          color="#5a67da"
           @click="add()"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
         >
@@ -52,7 +52,7 @@
           >
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.prog_head_approval_status == 2"
+          <v-icon color="#5a67da" v-if="item.prog_head_approval_status == 2"
             >mdi-check-bold</v-icon
           >
         </template> -->
@@ -60,7 +60,7 @@
           <v-chip v-if="item.dean_approval_status == 1" class="ma-2" x-small>
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.dean_approval_status == 2"
+          <v-icon color="#5a67da" v-if="item.dean_approval_status == 2"
             >mdi-check-bold</v-icon
           >
         </template>
@@ -68,7 +68,7 @@
           <v-chip v-if="item.vp_approval_status == 1" class="ma-2" x-small>
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.vp_approval_status == 2"
+          <v-icon color="#5a67da" v-if="item.vp_approval_status == 2"
             >mdi-check-bold</v-icon
           >
         </template>
@@ -80,7 +80,7 @@
           >
             For Approval
           </v-chip>
-          <v-icon color="#519043" v-if="item.president_approval_status == 2"
+          <v-icon color="#5a67da" v-if="item.president_approval_status == 2"
             >mdi-check-bold</v-icon
           >
         </template>
@@ -90,13 +90,13 @@
           </v-chip>
           <v-chip
             v-if="item.is_hr_received == 1"
-            color="#519043"
+            color="#5a67da"
             class="ma-2 white--text"
             x-small
           >
             Received
           </v-chip>
-          <!-- <v-icon color="#519043" v-if="item.is_hr_received == 1"
+          <!-- <v-icon color="#5a67da" v-if="item.is_hr_received == 1"
             >mdi-check-bold</v-icon
           > -->
         </template>

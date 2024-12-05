@@ -53,7 +53,7 @@
           v-model="options.page"
           class="rounded-lg"
           :total-visible="7"
-          color="#519043"
+          color="#5a67da"
           :length="paginationData.pageCount"
         >
         </v-pagination>

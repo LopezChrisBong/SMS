@@ -18,7 +18,7 @@
           <v-tabs
             v-model="activeTab"
             class="elevation-2 mb-n7 elevation-4 rounded-lg"
-            color="#519043"
+            color="#5a67da"
             centered
           >
             <v-tab
@@ -332,7 +332,7 @@
               </v-col>
               <v-col cols="12">
                 <div v-if="action != 'View'" class="d-flex justify-end">
-                  <v-btn color="#519043" class="white--text" @click="addChild()"
+                  <v-btn color="#5a67da" class="white--text" @click="addChild()"
                     >Add</v-btn
                   >
                 </div>
@@ -393,7 +393,7 @@
                     <div class="text-h6">A. Real Properties</div>
                     <v-btn
                       v-if="action != 'View'"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       @click="addAssetA()"
                       >Add
@@ -557,7 +557,7 @@
                     <div class="text-h6">B. Personal Properties</div>
                     <v-btn
                       v-if="action != 'View'"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       @click="addAssetB()"
                       >Add
@@ -663,7 +663,7 @@
                   <div class="d-flex justify-end mb-2 ">
                     <v-btn
                       v-if="action != 'View'"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       @click="addLiabilities()"
                       >Add
@@ -811,7 +811,7 @@
                     <v-btn
                       v-if="action != 'View'"
                       :disabled="hasBIFC == 1"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       @click="addBIFC()"
                       >Add
@@ -926,7 +926,7 @@
                     <v-btn
                       v-if="action != 'View'"
                       :disabled="hasRelativeInGov == 1"
-                      color="#519043"
+                      color="#5a67da"
                       class="white--text"
                       @click="addRelativeInGov()"
                       >Add
@@ -1247,7 +1247,7 @@
           <v-fab-transition v-if="action != 'Add'">
             <v-menu top>
               <template v-slot:activator="{ on }">
-                <v-btn color="#519043" left outlined v-on="on">
+                <v-btn color="#5a67da" left outlined v-on="on">
                   Remarks
                 </v-btn>
               </template>
@@ -1268,7 +1268,7 @@
                       v-for="item in remarksData"
                       :key="item.id"
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -1293,7 +1293,7 @@
                   <v-timeline dense v-if="remarksData.length == 0">
                     <v-timeline-item
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -1315,7 +1315,7 @@
           </v-btn>
           <v-btn
             v-if="action == 'Add'"
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="saveSALN()"
           >
@@ -1325,7 +1325,7 @@
 
           <v-btn
             v-if="action == 'Update'"
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="update()"
           >
@@ -1434,7 +1434,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Add'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="saveChild()"
             >
@@ -1442,7 +1442,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateChild()"
             >
@@ -1583,7 +1583,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Add'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="saveAssetA()"
             >
@@ -1591,7 +1591,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateAssetA()"
             >
@@ -1670,7 +1670,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Add'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="saveAssetB()"
             >
@@ -1678,7 +1678,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateAssetB()"
             >
@@ -1757,7 +1757,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Add'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="saveLiabilities()"
             >
@@ -1765,7 +1765,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateLiability()"
             >
@@ -1887,7 +1887,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Add'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="saveBIFC()"
             >
@@ -1895,7 +1895,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateBifc()"
             >
@@ -1989,7 +1989,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Add'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="saveRelativeInGov()"
             >
@@ -1997,7 +1997,7 @@
             </v-btn>
             <v-btn
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateRelativeInGov()"
             >
@@ -3234,7 +3234,7 @@ table {
 }
 
 .th {
-  background-color: #519043;
+  background-color: #5a67da;
   color: white !important;
   border-color: white;
   padding: 1px;

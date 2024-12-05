@@ -48,7 +48,7 @@
                 </v-stepper>
               </v-col>
               <v-col cols="8" class="flex-items mt-2">
-                <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+                <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
                   <!-- <v-tab
                     v-for="tab in tabList"
                     :key="tab.id"
@@ -62,7 +62,7 @@
                 <v-btn
                   @click="AddFunction()"
                   class="white--text rounded-lg"
-                  color="#519043"
+                  color="#5a67da"
                 >
                   Add
                 </v-btn>
@@ -126,7 +126,7 @@
           <v-fab-transition v-if="isSubmitted">
             <v-menu top>
               <template v-slot:activator="{ on }">
-                <v-btn color="#519043" left outlined v-on="on">
+                <v-btn color="#5a67da" left outlined v-on="on">
                   Remarks
                 </v-btn>
               </template>
@@ -144,7 +144,7 @@
                       v-for="item in remarksData"
                       :key="item.id"
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -169,7 +169,7 @@
                   <v-timeline dense v-if="remarksData.length == 0">
                     <v-timeline-item
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -191,7 +191,7 @@
             Close
           </v-btn>
 
-          <!-- <v-btn color="#519043" class="white--text" @click="submitTarget()">
+          <!-- <v-btn color="#5a67da" class="white--text" @click="submitTarget()">
             <v-icon>mdi-check-circle</v-icon>
             Submit
           </v-btn> -->

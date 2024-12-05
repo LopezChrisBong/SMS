@@ -30,7 +30,7 @@
                 single-line
                 hide-details
                 class="rounded-lg"
-                color="#519043"
+                color="#5a67da"
                 dense
               ></v-text-field>
             </v-col>
@@ -48,7 +48,7 @@
               hide-default-footer
             >
               <template v-slot:[`item.SPL`]="{ item }">
-                <v-icon color="#519043" v-if="item.SPL">mdi-check</v-icon
+                <v-icon color="#5a67da" v-if="item.SPL">mdi-check</v-icon
                 ><v-icon color="red" v-if="!item.SPL">mdi-close</v-icon>
               </template>
             </v-data-table>
@@ -68,7 +68,7 @@
                   :value="options.itemsPerPage"
                   style="max-width: 90px"
                   class="rounded-lg"
-                  color="#519043"
+                  color="#5a67da"
                   @change="options.itemsPerPage = parseInt($event, 10)"
                   :items="perPageChoices"
                 >
@@ -107,7 +107,7 @@
             <v-icon>mdi-close-circle-outline</v-icon>
             Cancel
           </v-btn>
-          <v-btn color="#519043" class="white--text" @click="submitSPL()">
+          <v-btn color="#5a67da" class="white--text" @click="submitSPL()">
             <v-icon>mdi-check-circle</v-icon>
             SUBMIT
           </v-btn>

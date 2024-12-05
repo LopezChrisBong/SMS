@@ -17,7 +17,7 @@
     </div>
     <v-row class="mx-2">
       <v-col cols="12" md="6" class="pa-0">
-        <!-- <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <!-- <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -67,7 +67,7 @@
         <template v-slot:[`item.status`]="{ item }">
           <v-chip
             :color="
-              item.status == 1 ? 'grey' : item.status == 2 ? '#519043' : 'red'
+              item.status == 1 ? 'grey' : item.status == 2 ? '#5a67da' : 'red'
             "
             class="ma-2 white--text"
             x-small
@@ -109,7 +109,7 @@
               v-if="item.status == 2"
               x-small
               outlined
-              color="#519043"
+              color="#5a67da"
               @click="printItem(item)"
             >
               <v-icon size="14">mdi-printer</v-icon>
@@ -141,7 +141,7 @@
             :value="options.itemsPerPage"
             style="max-width: 90px"
             class="rounded-lg"
-            color="#519043"
+            color="#5a67da"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >

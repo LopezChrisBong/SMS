@@ -51,7 +51,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             v-if="action == 'Add'"
             class="white--text"
             @click="add()"
@@ -60,7 +60,7 @@
             Save Details
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             v-if="action == 'Update'"
             class="white--text"
             @click="update()"

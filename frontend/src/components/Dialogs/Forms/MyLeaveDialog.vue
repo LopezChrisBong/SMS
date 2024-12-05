@@ -263,7 +263,7 @@
                 <div class="elevation-2 rounded-lg ">
                   <div
                     class="d-flex justify-space-between  elevation-1 px-2 py-2 white--text"
-                    style="background-color:#519043"
+                    style="background-color:#5a67da"
                   >
                     <h3 class="text-subtitle-2 text-center" style="width:35%;">
                       Description
@@ -558,7 +558,7 @@
             <v-menu top>
               <template v-slot:activator="{ on }">
                 <v-btn
-                  color="#519043"
+                  color="#5a67da"
                   fab
                   dark
                   left
@@ -585,7 +585,7 @@
                       v-for="item in remarksData"
                       :key="item.id"
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -610,7 +610,7 @@
                   <v-timeline dense v-if="remarksData.length == 0">
                     <v-timeline-item
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -639,7 +639,7 @@
           </v-btn>
           <v-btn
             v-if="action == 'Apply'"
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="alertUser()"
           >
@@ -656,7 +656,7 @@
                   hr_status == 1 ||
                   hr_status == 3)
             "
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="alertUser()"
           >

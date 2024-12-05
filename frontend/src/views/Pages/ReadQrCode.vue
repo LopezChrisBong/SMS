@@ -21,7 +21,7 @@
                 <v-btn
                   @click="reset()"
                   :disabled="!hasSelected"
-                  color="#519043"
+                  color="#5a67da"
                   class="white--text"
                 >
                   <v-icon>mdi-backup-restore</v-icon>
@@ -31,9 +31,9 @@
                   :color="
                     hasSelected
                       ? isIn == true && isOut == false
-                        ? '#519043'
+                        ? '#5a67da'
                         : 'grey'
-                      : '#519043'
+                      : '#5a67da'
                   "
                   class="white--text"
                   :disabled="isOut == true && isIn == false"
@@ -46,9 +46,9 @@
                   :color="
                     hasSelected
                       ? isOut == true && isIn == false
-                        ? '#519043'
+                        ? '#5a67da'
                         : 'grey'
-                      : '#519043'
+                      : '#5a67da'
                   "
                   class="white--text"
                   :disabled="isIn == true && isOut == false"
@@ -147,7 +147,7 @@
                 v-model="locator_type"
                 :checked="locator_type == 1 ? true : false"
                 label="PERSONAL TRANSACTION"
-                color="#519043"
+                color="#5a67da"
                 :value="1"
               ></v-checkbox>
             </v-col>
@@ -156,7 +156,7 @@
                 v-model="locator_type"
                 :checked="locator_type == 2 ? true : false"
                 label="OFFICIAL TIME"
-                color="#519043"
+                color="#5a67da"
                 :value="2"
               ></v-checkbox> -->
             </v-col>
@@ -165,7 +165,7 @@
                 v-model="locator_type"
                 :checked="locator_type == 3 ? true : false"
                 label="OFFICIAL BUSINESS"
-                color="#519043"
+                color="#5a67da"
                 :value="3"
               ></v-checkbox>
             </v-col>
@@ -570,7 +570,7 @@ export default {
   width: 50px;
   height: 50px;
 
-  border-color: #519043; /* or whatever colour */
+  border-color: #5a67da; /* or whatever colour */
   border-style: solid; /* or whatever style */
   border-width: thick;
 

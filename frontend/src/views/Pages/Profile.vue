@@ -19,7 +19,7 @@
                   <v-btn
                     variant="outlined"
                     v-if="!readonly"
-                    color="#519043"
+                    color="blue"
                     style="border-radius: 100%"
                     height="40px"
                     width="40px"
@@ -224,7 +224,7 @@
                     <v-col cols="auto">
                       <v-btn
                         size="x-small"
-                        color="#519043"
+                        color="blue"
                         class="white--text"
                         @click="addSubject(data)"
                       >
@@ -234,7 +234,7 @@
                     <!-- <v-col cols="auto">
                       <v-btn
                         size="x-small"
-                        color="#519043"
+                        color="blue"
                         class="white--text"
                         @click="addGradeLevel(data)"
                       >
@@ -244,7 +244,7 @@
 
                     <v-col cols="auto"
                       ><v-btn
-                        color="#519043"
+                        color="blue"
                         class="white--text"
                         @click="readonly = false"
                       >
@@ -269,7 +269,7 @@
                     Cancel
                   </v-btn>
                   <v-btn
-                    color="#519043"
+                    color="blue"
                     class="white--text"
                     @click="updateProfile()"
                   >
@@ -341,7 +341,7 @@
                   >
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="#519043"
+                      color="blue"
                       class="white--text"
                       @click="credentialReadonly = false"
                     >
@@ -363,7 +363,7 @@
                       Cancel
                     </v-btn>
                     <v-btn
-                      color="#519043"
+                      color="blue"
                       class="white--text"
                       @click="updateCredential()"
                     >
