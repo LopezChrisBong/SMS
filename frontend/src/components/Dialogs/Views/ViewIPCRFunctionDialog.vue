@@ -48,7 +48,7 @@
                 </v-stepper>
               </v-col>
               <v-col cols="8" class="flex-items mt-2">
-                <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+                <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
                   <v-tab
                     v-for="tab in tabList"
                     :key="tab.id"
@@ -63,7 +63,7 @@
                   v-if="shouldSubmit()"
                   @click="tab != 3 ? AddFunction() : AddSupportFunction()"
                   class="white--text rounded-lg"
-                  color="#519043"
+                  color="#5a67da"
                 >
                   Add
                 </v-btn>
@@ -86,7 +86,7 @@
                       <div class="d-flex align-center justify-center">
                         <div class="text-caption">E -</div>
                         <div class="align-self-center">
-                          <v-icon color="#519043" v-if="item.eff_is_rated"
+                          <v-icon color="#5a67da" v-if="item.eff_is_rated"
                             >mdi-check</v-icon
                           >
                           <v-chip x-small class="pa-1" v-if="!item.eff_is_rated"
@@ -97,7 +97,7 @@
                       <div class="d-flex align-center justify-center">
                         <div class="text-caption">Q -</div>
                         <div class="align-self-center">
-                          <v-icon color="#519043" v-if="item.qly_is_rated"
+                          <v-icon color="#5a67da" v-if="item.qly_is_rated"
                             >mdi-check</v-icon
                           >
                           <v-chip x-small class="pa-1" v-if="!item.qly_is_rated"
@@ -109,7 +109,7 @@
                         <div class="text-caption">T -</div>
                         <div class="align-self-center">
                           <v-icon
-                            color="#519043"
+                            color="#5a67da"
                             v-if="item.timeliness_is_rated"
                             >mdi-check</v-icon
                           >
@@ -137,7 +137,7 @@
                       x-small
                       @click="edit(item)"
                       outlined
-                      color="#519043"
+                      color="#5a67da"
                       >Update</v-btn
                     >
                     <v-btn
@@ -177,7 +177,7 @@
           <v-fab-transition v-if="isSubmitted">
             <v-menu top>
               <template v-slot:activator="{ on }">
-                <v-btn color="#519043" left outlined v-on="on">
+                <v-btn color="#5a67da" left outlined v-on="on">
                   Remarks
                 </v-btn>
               </template>
@@ -195,7 +195,7 @@
                       v-for="item in remarksData"
                       :key="item.id"
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -220,7 +220,7 @@
                   <v-timeline dense v-if="remarksData.length == 0">
                     <v-timeline-item
                       small
-                      color="#519043"
+                      color="#5a67da"
                       icon="mdi-comment-processing-outline"
                       fill-dot
                     >
@@ -244,7 +244,7 @@
 
           <v-btn
             v-if="shouldSubmit()"
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="submitTarget()"
           >

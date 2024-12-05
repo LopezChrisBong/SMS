@@ -48,7 +48,7 @@
                 </v-stepper>
               </v-col>
               <v-col cols="8" class="flex-items mt-2">
-                <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+                <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
                   <v-tab
                     v-for="tab in tabList"
                     :key="tab.id"
@@ -82,7 +82,7 @@
                       <div class="d-flex align-center justify-center">
                         <div class="text-caption">E -</div>
                         <div class="align-self-center">
-                          <v-icon color="#519043" v-if="item.eff_is_rated"
+                          <v-icon color="#5a67da" v-if="item.eff_is_rated"
                             >mdi-check</v-icon
                           >
                           <v-chip x-small class="pa-1" v-if="!item.eff_is_rated"
@@ -93,7 +93,7 @@
                       <div class="d-flex align-center justify-center">
                         <div class="text-caption">Q -</div>
                         <div class="align-self-center">
-                          <v-icon color="#519043" v-if="item.qly_is_rated"
+                          <v-icon color="#5a67da" v-if="item.qly_is_rated"
                             >mdi-check</v-icon
                           >
                           <v-chip x-small class="pa-1" v-if="!item.qly_is_rated"
@@ -105,7 +105,7 @@
                         <div class="text-caption">T -</div>
                         <div class="align-self-center">
                           <v-icon
-                            color="#519043"
+                            color="#5a67da"
                             v-if="item.timeliness_is_rated"
                             >mdi-check</v-icon
                           >
@@ -132,7 +132,7 @@
             pending
           </v-btn>
 
-          <v-btn color="#519043" class="white--text" @click="approve()">
+          <v-btn color="#5a67da" class="white--text" @click="approve()">
             approve
           </v-btn>
         </v-card-actions>

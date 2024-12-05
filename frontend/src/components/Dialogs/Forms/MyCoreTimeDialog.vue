@@ -17,7 +17,7 @@
                 <v-col class="d-flex justify-end">
                   <v-btn
                     class="white--text ml-2 rounded-lg"
-                    color="#519043"
+                    color="#5a67da"
                     @click="addSched()"
                     v-if="action != 'View'"
                   >
@@ -262,7 +262,7 @@
             <v-fab-transition v-if="action != 'Add'">
               <v-menu top>
                 <template v-slot:activator="{ on }">
-                  <v-btn color="#519043" left outlined v-on="on">
+                  <v-btn color="#5a67da" left outlined v-on="on">
                     Remarks
                   </v-btn>
                 </template>
@@ -280,7 +280,7 @@
                         v-for="item in remarksData"
                         :key="item.id"
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -305,7 +305,7 @@
                     <v-timeline dense v-if="remarksData.length == 0">
                       <v-timeline-item
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -326,7 +326,7 @@
               Cancel
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               v-if="action == 'Add'"
               @click="checkConflict('ADD')"
@@ -335,7 +335,7 @@
               Add
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               v-if="action == 'Update'"
               @click="checkConflict('UPDATE')"
@@ -404,7 +404,7 @@
                     <span class="text-body-1">Time Schedule/s</span>
                     <v-btn
                       v-if="schedTimeList.length < 2"
-                      color="#519043"
+                      color="#5a67da"
                       @click="addSchedTime()"
                       small
                       outlined
@@ -447,7 +447,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="schedAction == 'Add'"
             @click="saveSched()"
@@ -456,7 +456,7 @@
             Add
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="schedAction == 'Update'"
             @click="updateSched()"
@@ -585,7 +585,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="schedTimeAction == 'Add'"
             @click="saveSchedTime()"
@@ -594,7 +594,7 @@
             Add
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="schedTimeAction == 'Update'"
             @click="updateSchedTime()"

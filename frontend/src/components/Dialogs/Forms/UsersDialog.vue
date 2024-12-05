@@ -84,7 +84,7 @@
             <v-icon>mdi-close-circle-outline</v-icon>
             Cancel
           </v-btn>
-          <v-btn color="#519043" class="white--text" @click="updateUserType()">
+          <v-btn color="#5a67da" class="white--text" @click="updateUserType()">
             <v-icon>mdi-check-circle</v-icon>
             Update Details
           </v-btn>

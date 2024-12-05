@@ -228,13 +228,13 @@
                 <div class="elevation-4 rounded-lg">
                   <div class="d-flex">
                     <div
-                      style="border : 1px solid #519043; width:30%; background-color:#519043; "
+                      style="border : 1px solid #5a67da; width:30%; background-color:#5a67da; "
                       class="text-center white--text rounded-tl-lg"
                     >
                       Learning and Development Activity
                     </div>
                     <div
-                      style="border : 1px solid #519043; width:70%; background-color:#519043;"
+                      style="border : 1px solid #5a67da; width:70%; background-color:#5a67da;"
                       class="text-center white--text rounded-tr-lg"
                     >
                       (Indicate Target Completion Dates for Advanced Studies &
@@ -387,7 +387,7 @@
               Pending
             </v-btn> -->
 
-            <v-btn color="#519043" @click="receive()" class="white--text">
+            <v-btn color="#5a67da" @click="receive()" class="white--text">
               <v-icon>mdi-check-circle</v-icon>
               Receive
             </v-btn>

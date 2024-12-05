@@ -172,7 +172,7 @@
           <v-btn
             :loading="isLoading"
             :disabled="isLoading"
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="addSchedule()"
           >
@@ -197,7 +197,7 @@
           <v-btn
             :loading="isLoading"
             :disabled="isLoading"
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="updateUserType()"
           >

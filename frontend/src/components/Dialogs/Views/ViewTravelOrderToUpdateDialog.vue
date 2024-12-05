@@ -189,7 +189,7 @@
                 <!-- <v-col cols="6" class="d-flex justify-end">
                   <v-btn
                     v-if="action != 'View'"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     @click="openAttachment()"
                   >
@@ -222,7 +222,7 @@
                   <div class="elevation-2 rounded-lg ">
                     <div
                       class="d-flex justify-space-between  elevation-1 px-2 py-2 white--text"
-                      style="background-color:#519043"
+                      style="background-color:#5a67da"
                     >
                       <h3
                         class="text-subtitle-2 text-center"
@@ -282,7 +282,7 @@
               <v-menu top>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    color="#519043"
+                    color="#5a67da"
                     fab
                     dark
                     left
@@ -309,7 +309,7 @@
                         v-for="item in remarksData"
                         :key="item.id"
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -337,7 +337,7 @@
             </v-btn>
             <!-- <v-btn
               v-if="action == 'Add'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="add()"
             >
@@ -347,7 +347,7 @@
             <!-- update button for not pending TO -->
             <v-btn
               v-if="action == 'Update' && TOModel.isPending == false"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="update()"
             >
@@ -358,7 +358,7 @@
             <!-- update button for pending TO -->
             <!-- <v-btn
               v-if="action == 'Update' && TOModel.isPending == true"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="update_pending()"
             >

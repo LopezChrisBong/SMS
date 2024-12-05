@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="pa-0">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -19,7 +19,7 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#519043"
+          color="#5a67da"
           dense
         ></v-text-field>
       </v-col>
@@ -90,7 +90,7 @@
             :value="options.itemsPerPage"
             style="max-width: 90px"
             class="rounded-lg"
-            color="#519043"
+            color="#5a67da"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >

@@ -220,7 +220,7 @@
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
-            <v-btn color="#519043" class="white--text" @click="addEducBG()">
+            <v-btn color="#5a67da" class="white--text" @click="addEducBG()">
               <v-icon>mdi-check-circle</v-icon>
               Save Details
             </v-btn>
@@ -232,7 +232,7 @@
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
-            <v-btn color="#519043" class="white--text" @click="updateEducBG()">
+            <v-btn color="#5a67da" class="white--text" @click="updateEducBG()">
               <v-icon>mdi-check-circle</v-icon>
               Update Details
             </v-btn>

@@ -12,7 +12,7 @@
             <v-spacer></v-spacer>
             <v-btn
               class="white--text rounded-lg"
-              color="#519043"
+              color="#5a67da"
               @click="add()"
             >
               <v-icon left> mdi-plus-box-outline </v-icon>

@@ -20,7 +20,7 @@
             v-model="dumpTab"
             :center-active="true"
             show-arrows
-            color="#519043"
+            color="#5a67da"
             height="40"
             class="mb-n7 elevation-4 rounded-lg"
           >
@@ -686,7 +686,7 @@
                       <v-btn
                         depressed
                         elevation="4"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addChild()"
                       >
@@ -816,7 +816,7 @@
                       <v-btn
                         depressed
                         elevation="4"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addEducBg()"
                       >
@@ -853,7 +853,7 @@
                       <v-btn
                         depressed
                         elevation="4"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addCSElig()"
                       >
@@ -889,7 +889,7 @@
                       <v-btn
                         depressed
                         elevation="4"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addWorkExp()"
                       >
@@ -940,7 +940,7 @@
                       <v-btn
                         depressed
                         elevation="4"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addVolWork()"
                       >
@@ -976,7 +976,7 @@
                       <v-btn
                         depressed
                         elevation="4"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addLND()"
                       >
@@ -1012,7 +1012,7 @@
                       <v-btn
                         depressed
                         elevation="4"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addOtherInfo()"
                       >
@@ -1532,7 +1532,7 @@
                       <v-btn
                         depressed
                         elevation="4"
-                        color="#519043"
+                        color="#5a67da"
                         class="white--text"
                         @click="addReferences()"
                       >
@@ -1613,7 +1613,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="updateDetails()"
             v-if="data.id"
@@ -1622,7 +1622,7 @@
             Update Details
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="confirmAdd()"
             v-if="!data.id"
@@ -1638,7 +1638,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="approve()"
             v-if="data.id"
@@ -1783,7 +1783,8 @@ export default {
       ],
       csEligTableHeaders: [
         {
-          text: "Career service/ RA 1080 (Board/Bar) Under Special Laws/CSEE Barangay Eligibility / Driver's License",
+          text:
+            "Career service/ RA 1080 (Board/Bar) Under Special Laws/CSEE Barangay Eligibility / Driver's License",
           value: "eligibility_type",
         },
         {
@@ -1901,7 +1902,8 @@ export default {
       ],
       lndTableHeaders: [
         {
-          text: "Title of Learning and Development Intervention/Training Programs",
+          text:
+            "Title of Learning and Development Intervention/Training Programs",
           value: "title",
           color: "#828282",
           align: "center",

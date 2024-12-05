@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab
             :disabled="loading"
             v-for="tab in tabList"
@@ -28,7 +28,7 @@
         ></v-text-field>
         <!-- <v-btn
           class="white--text ml-2 rounded-lg"
-          color="#519043"
+          color="#5a67da"
           @click="add()"
         >
           <v-icon left> mdi-plus-box-outline </v-icon>
@@ -73,7 +73,7 @@
           <v-select
             dense
             outlined
-            color="#519043"
+            color="#5a67da"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"

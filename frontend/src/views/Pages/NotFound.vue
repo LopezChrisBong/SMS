@@ -10,7 +10,7 @@
         rounded="xl"
         size="x-large"
         class="elevation-12"
-        color="#519043"
+        color="#5a67da"
         style="color:white"
         >go back to homepage</v-btn
       >

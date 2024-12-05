@@ -60,7 +60,7 @@
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
-            <v-btn color="#519043" class="white--text" @click="addReferences()">
+            <v-btn color="#5a67da" class="white--text" @click="addReferences()">
               <v-icon>mdi-check-circle</v-icon>
               Save Details
             </v-btn>
@@ -73,7 +73,7 @@
               Cancel
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="updateReferences()"
             >

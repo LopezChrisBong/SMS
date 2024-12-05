@@ -524,7 +524,7 @@
                   >
                     <span class="text-body-1">Time Schedule/s</span>
                     <v-btn
-                      color="#519043"
+                      color="#5a67da"
                       @click="addSchedTime()"
                       small
                       outlined

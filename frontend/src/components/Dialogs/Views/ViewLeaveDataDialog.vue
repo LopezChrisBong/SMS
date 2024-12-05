@@ -759,11 +759,11 @@
             <v-icon size="14">mdi-printer</v-icon>
             print</v-btn
           >
-          <!-- <v-btn color="#519043" class="white--text" @click="save()">
+          <!-- <v-btn color="#5a67da" class="white--text" @click="save()">
             <v-icon>mdi-check</v-icon>
             Submit
           </v-btn> -->
-          <!-- <v-btn color="#519043" class="white--text">
+          <!-- <v-btn color="#5a67da" class="white--text">
             <v-icon>mdi-printer</v-icon>
             Print
           </v-btn> -->

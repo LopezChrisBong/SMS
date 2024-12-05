@@ -69,7 +69,7 @@
         <v-spacer></v-spacer>
 
         <v-btn
-          color="#519043"
+          color="#5a67da"
           class="white--text"
           @click="save()"
           v-if="hasEdited"
@@ -109,7 +109,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             @click="
               confirmDialog = true;

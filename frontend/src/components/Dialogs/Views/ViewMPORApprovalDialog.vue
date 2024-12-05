@@ -25,7 +25,7 @@
             <v-card>
               <v-row>
                 <v-col cols="8" class="flex-items mt-2">
-                  <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+                  <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
                     <v-tab
                       v-for="tab in tabList"
                       :key="tab.id"
@@ -338,7 +338,7 @@
             </v-btn>
             <v-btn
               v-if="action == 'approval'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="approve()"
               :disabled="isloading"

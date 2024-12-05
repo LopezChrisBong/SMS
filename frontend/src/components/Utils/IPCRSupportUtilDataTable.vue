@@ -43,7 +43,7 @@
             <div class="d-flex align-center justify-center">
               <div class="text-caption">E -</div>
               <div class="align-self-center">
-                <v-icon color="#519043" v-if="item.eff_is_rated"
+                <v-icon color="#5a67da" v-if="item.eff_is_rated"
                   >mdi-check</v-icon
                 >
                 <v-chip x-small class="pa-1" v-if="!item.eff_is_rated"
@@ -54,7 +54,7 @@
             <div class="d-flex align-center justify-center">
               <div class="text-caption">Q -</div>
               <div class="align-self-center">
-                <v-icon color="#519043" v-if="item.qly_is_rated"
+                <v-icon color="#5a67da" v-if="item.qly_is_rated"
                   >mdi-check</v-icon
                 >
                 <v-chip x-small class="pa-1" v-if="!item.qly_is_rated"
@@ -65,7 +65,7 @@
             <div class="d-flex align-center justify-center">
               <div class="text-caption">T -</div>
               <div class="align-self-center">
-                <v-icon color="#519043" v-if="item.timeliness_is_rated"
+                <v-icon color="#5a67da" v-if="item.timeliness_is_rated"
                   >mdi-check</v-icon
                 >
                 <v-chip x-small class="pa-1" v-if="!item.timeliness_is_rated"
@@ -104,7 +104,7 @@
           <v-select
             dense
             outlined
-            color="#519043"
+            color="#5a67da"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"

@@ -5,7 +5,7 @@
         <v-tabs
           v-model="activeTab"
           show-arrows
-          color="#519043"
+          color="#5a67da"
           align-tabs="left"
         >
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
@@ -29,7 +29,7 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#519043"
+          color="#5a67da"
           dense
         ></v-text-field>
         <v-text-field
@@ -42,7 +42,7 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#519043"
+          color="#5a67da"
           dense
         ></v-text-field>
       </v-col>
@@ -147,7 +147,7 @@
             :value="options.itemsPerPage"
             style="max-width: 90px"
             class="rounded-lg"
-            color="#519043"
+            color="#5a67da"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >
@@ -190,7 +190,7 @@
           v-model="options.page"
           class="rounded-lg"
           :total-visible="7"
-          color="#519043"
+          color="#5a67da"
           :length="paginationData1.pageCount"
         >
         </v-pagination>
@@ -720,7 +720,7 @@ export default {
 }
 .box:hover {
   cursor: pointer;
-  background-color: #519043;
+  background-color: #5a67da;
   color: white;
 }
 </style>

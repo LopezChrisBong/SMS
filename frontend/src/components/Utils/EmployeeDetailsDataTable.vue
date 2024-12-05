@@ -15,11 +15,11 @@
           dense
         ></v-text-field>
 
-        <!-- <v-btn color="#519043" outlined class="ml-2" @click="viewPrintOption()">
+        <!-- <v-btn color="#5a67da" outlined class="ml-2" @click="viewPrintOption()">
           <v-icon class="mr-1">mdi-printer</v-icon>
           Print
         </v-btn> -->
-        <!-- <v-btn color="#519043" outlined class="ml-2" @click="printEmpCount()">
+        <!-- <v-btn color="#5a67da" outlined class="ml-2" @click="printEmpCount()">
           <v-icon class="mr-1">mdi-printer</v-icon>
           Print Employee Count
         </v-btn> -->

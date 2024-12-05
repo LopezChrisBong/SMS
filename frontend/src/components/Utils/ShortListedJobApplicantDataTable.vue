@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="6" class="flex-items">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -24,7 +24,7 @@
         <!-- <v-btn
           :class="tab == 3 ? 'd-none' : ''"
           class="white--text ml-2 rounded-lg"
-          color="#519043"
+          color="#5a67da"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
         >
@@ -34,7 +34,7 @@
         <!-- <v-btn
             :class="tab == 3 ? '' : 'd-none'"
             class="white--text ml-2 rounded-lg"
-            color="#519043"
+            color="#5a67da"
             v-if="this.$store.state.user.user.isAdminApproved == 1"
             @click="printJobApplicants()"
           >
@@ -90,7 +90,7 @@
         <template v-slot:[`item.isActive`]="{ item }">
           <v-chip
             class="white--text"
-            :color="item.isActive == 1 ? '#519043' : 'grey'"
+            :color="item.isActive == 1 ? '#5a67da' : 'grey'"
             x-small
           >
             {{ item.isActive == 1 ? "Active" : "Inactive" }}
@@ -100,7 +100,7 @@
         <template v-slot:[`item.status`]="{ item }">
           <v-chip
             :color="
-              item.status == 1 ? 'grey' : item.status == 2 ? '#519043' : 'red'
+              item.status == 1 ? 'grey' : item.status == 2 ? '#5a67da' : 'red'
             "
             class="ma-2 white--text"
             x-small
@@ -133,7 +133,7 @@
                 :value="true"
                 :input-value="item.isActive == 1 ? true : false"
                 @change="switchItem(item)"
-                color="#519043"
+                color="#5a67da"
               ></v-switch>
             </template> -->
         <template v-slot:[`item.action`]="{ item }">
@@ -159,7 +159,7 @@
           <v-select
             dense
             outlined
-            color="#519043"
+            color="#5a67da"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -182,7 +182,7 @@
           v-model="options.page"
           class="rounded-lg"
           :total-visible="7"
-          color="#519043"
+          color="#5a67da"
           :length="paginationData.pageCount"
         >
         </v-pagination>
@@ -316,7 +316,7 @@
             <v-icon>mdi-close-circle-outline</v-icon>
             Cancel
           </v-btn>
-          <!-- <v-btn color="#519043" class="white--text" @click="printApplicants()">
+          <!-- <v-btn color="#5a67da" class="white--text" @click="printApplicants()">
               <v-icon class="mr-1">mdi-printer</v-icon>
               Print
             </v-btn> -->

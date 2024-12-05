@@ -18,7 +18,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
 
-        <v-btn color="#519043" class="white--text" @click="printQRCode()">
+        <v-btn color="#5a67da" class="white--text" @click="printQRCode()">
           <v-icon>mdi-printer</v-icon>
           Print
         </v-btn>

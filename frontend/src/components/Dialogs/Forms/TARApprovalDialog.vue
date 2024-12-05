@@ -116,7 +116,7 @@
                 <v-col cols="6" class="d-flex justify-end">
                   <v-btn
                     v-if="action != 'View'"
-                    color="#519043"
+                    color="#5a67da"
                     class="white--text"
                     @click="addAttachment()"
                   >
@@ -149,7 +149,7 @@
                   <div class="elevation-2 rounded-lg ">
                     <div
                       class="d-flex justify-space-between  elevation-1 px-2 py-2 white--text"
-                      style="background-color:#519043"
+                      style="background-color:#5a67da"
                     >
                       <h3
                         class="text-subtitle-2 text-center"
@@ -224,7 +224,7 @@
                     readonly
                     outlined
                     dense
-                    color="#519043"
+                    color="#5a67da"
                   ></v-text-field>
                 </v-col>
 
@@ -865,7 +865,7 @@
                   <div class="elevation-2 rounded-lg mt-2">
                     <div
                       class="d-flex justify-space-between  elevation-1 px-2 py-2 white--text"
-                      style="background-color:#519043"
+                      style="background-color:#5a67da"
                     >
                       <h3
                         class="text-subtitle-2 text-center"
@@ -906,7 +906,7 @@
                       <div class=" text-center" style="width:30%;">
                         <v-btn
                           icon
-                          color="#519043"
+                          color="#5a67da"
                           @click="viewFile(file.filename)"
                           ><v-icon>mdi-eye-outline</v-icon></v-btn
                         >
@@ -924,7 +924,7 @@
               <v-menu top>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    color="#519043"
+                    color="#5a67da"
                     fab
                     dark
                     left
@@ -951,7 +951,7 @@
                         v-for="item in remarksData"
                         :key="item.id"
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -976,7 +976,7 @@
                     <v-timeline dense v-if="remarksData.length == 0">
                       <v-timeline-item
                         small
-                        color="#519043"
+                        color="#5a67da"
                         icon="mdi-comment-processing-outline"
                         fill-dot
                       >
@@ -1007,7 +1007,7 @@
             </v-btn>
             <v-btn
               v-if="action == 'Approve'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="save()"
             >

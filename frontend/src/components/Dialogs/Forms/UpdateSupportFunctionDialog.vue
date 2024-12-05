@@ -87,7 +87,7 @@
 
             <v-btn
               v-if="action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="save()"
               :disabled="isSubmitLoading"

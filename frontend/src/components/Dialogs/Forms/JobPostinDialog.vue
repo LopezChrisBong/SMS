@@ -362,7 +362,7 @@
               Cancel
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               v-if="action == 'Add'"
               @click="checkConflict('ADD')"
@@ -371,7 +371,7 @@
               Add
             </v-btn>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               v-if="action == 'Update'"
               @click="checkConflict('UPDATE')"
@@ -440,7 +440,7 @@
                     <span class="text-body-1">Time Schedule/s</span>
                     <v-btn
                       v-if="schedTimeList.length < 2"
-                      color="#519043"
+                      color="#5a67da"
                       @click="addSchedTime()"
                       small
                       outlined
@@ -483,7 +483,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="schedAction == 'Add'"
             @click="saveSched()"
@@ -492,7 +492,7 @@
             Add
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="schedAction == 'Update'"
             @click="updateSched()"
@@ -635,7 +635,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="schedTimeAction == 'Add'"
             @click="saveSchedTime()"
@@ -644,7 +644,7 @@
             Add
           </v-btn>
           <v-btn
-            color="#519043"
+            color="#5a67da"
             class="white--text"
             v-if="schedTimeAction == 'Update'"
             @click="updateSchedTime()"

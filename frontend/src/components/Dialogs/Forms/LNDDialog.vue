@@ -179,7 +179,7 @@
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
-            <v-btn color="#519043" class="white--text" @click="addLND()">
+            <v-btn color="#5a67da" class="white--text" @click="addLND()">
               <v-icon>mdi-check-circle</v-icon>
               Save Details
             </v-btn>
@@ -191,7 +191,7 @@
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
-            <v-btn color="#519043" class="white--text" @click="updateMyLND()">
+            <v-btn color="#5a67da" class="white--text" @click="updateMyLND()">
               <v-icon>mdi-check-circle</v-icon>
               Update Details
             </v-btn>

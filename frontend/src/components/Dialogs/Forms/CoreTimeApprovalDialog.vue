@@ -162,7 +162,7 @@
               outlined
               :rules="[formRules.required]"
               dense
-              color="#519043"
+              color="#5a67da"
               v-model="pendingMsg"
               placeholder="Type here...."
               rows="5"

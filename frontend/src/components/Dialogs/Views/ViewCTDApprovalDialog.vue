@@ -104,7 +104,7 @@
           <v-card-actions class="pa-5" v-if="action == 'for_approval'">
             <v-spacer></v-spacer>
             <v-btn
-              color="#519043"
+              color="#5a67da"
               class="white--text"
               @click="confirmDialogBtn('approve')"
             >

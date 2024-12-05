@@ -59,12 +59,12 @@
                 single-line
                 hide-details
                 class="mx-1 rounded-lg"
-                color="#519043"
+                color="#5a67da"
                 dense
               ></v-text-field>
               <v-btn
                 @click="addData()"
-                color="#519043"
+                color="#5a67da"
                 class="mx-1 white--text"
               >
                 <v-icon>mdi-plus</v-icon>
@@ -93,7 +93,7 @@
                     @click="edit(item, index)"
                     class="mx-1"
                     x-small
-                    color="#519043"
+                    color="#5a67da"
                     outlined
                   >
                     edit </v-btn
@@ -124,7 +124,7 @@
                     :value="options.itemsPerPage"
                     style="max-width: 90px"
                     class="rounded-lg"
-                    color="#519043"
+                    color="#5a67da"
                     @change="options.itemsPerPage = parseInt($event, 10)"
                     :items="perPageChoices"
                   >
@@ -277,7 +277,7 @@
             <v-btn
               v-if="internal_action == 'Add'"
               @click="save()"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
             >
               Add
@@ -285,7 +285,7 @@
             <v-btn
               @click="update()"
               v-if="internal_action == 'Update'"
-              color="#519043"
+              color="#5a67da"
               class="white--text"
             >
               Update

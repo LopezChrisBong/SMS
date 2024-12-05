@@ -2,7 +2,7 @@ e<template>
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
-        <v-tabs v-model="activeTab" color="#519043" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -18,7 +18,7 @@ e<template>
           single-line
           hide-details
           class="rounded-lg"
-          color="#519043"
+          color="#5a67da"
           dense
         ></v-text-field>
       </v-col>
@@ -65,7 +65,7 @@ e<template>
           <v-select
             dense
             outlined
-            color="#519043"
+            color="#5a67da"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"

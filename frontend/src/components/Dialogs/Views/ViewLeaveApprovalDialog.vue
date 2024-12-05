@@ -603,7 +603,7 @@
                           @click="viewEmpLeave()"
                           small
                           outlined
-                          color="#519043"
+                          color="#5a67da"
                           >view used leave</v-btn
                         >
                       </div>
@@ -1032,11 +1032,11 @@
 
         <v-card-actions class="pa-5" v-if="tab == 1">
           <v-spacer></v-spacer>
-          <v-btn color="#519043" class="white--text" @click="save()">
+          <v-btn color="#5a67da" class="white--text" @click="save()">
             <v-icon>mdi-check</v-icon>
             Submit
           </v-btn>
-          <!-- <v-btn color="#519043" class="white--text">
+          <!-- <v-btn color="#5a67da" class="white--text">
             <v-icon>mdi-printer</v-icon>
             Print
           </v-btn> -->

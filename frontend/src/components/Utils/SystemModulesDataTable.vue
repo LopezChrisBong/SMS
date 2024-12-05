@@ -17,7 +17,7 @@
         ></v-text-field>
         <v-btn
           class="white--text ml-2 rounded-lg"
-          color="#519043"
+          color="#5a67da"
           @click="addOffice()"
         >
           <v-icon left> mdi-plus-box-outline </v-icon>
