@@ -5,8 +5,8 @@
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
             <span
-              >{{ action }} {{ grade }} {{ className }} {{ teacher }} Classroom
-              Program Schedule
+              >{{ action }} {{ grade }} {{ className }} Classroom Program
+              Schedule
             </span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -112,6 +112,20 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-autocomplete
+                    v-model="teacher"
+                    :rules="[formRules.required]"
+                    dense
+                    class="rounded-lg"
+                    item-text="name"
+                    item-value="id"
+                    label="Teacher to assign"
+                    color="#93CB5B"
+                    :items="TeachersList"
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-autocomplete
                     v-model="subject"
                     dense
                     :rules="[formRules.required]"
@@ -139,21 +153,6 @@
                   >
                   </v-autocomplete>
                 </v-col> -->
-
-                <v-col cols="12" md="12">
-                  <v-autocomplete
-                    v-model="teacher"
-                    :rules="[formRules.required]"
-                    dense
-                    class="rounded-lg"
-                    item-text="name"
-                    item-value="id"
-                    label="Teacher to assign"
-                    color="#93CB5B"
-                    :items="TeachersList"
-                  >
-                  </v-autocomplete>
-                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -196,6 +195,7 @@ export default {
     action: null,
     grade: null,
     section: null,
+    filter: null,
   },
   data() {
     return {
@@ -380,10 +380,8 @@ export default {
     },
 
     getAllActiveSubjects() {
-      let d = new Date();
-      let yr = d.getFullYear();
       this.axiosCall(
-        "/subjects/getSpicificSubject/" + yr + "/" + this.grade,
+        "/subjects/getSpicificSubject/" + this.filter + "/" + this.grade,
         "GET"
       ).then((res) => {
         if (res) {

@@ -4,6 +4,8 @@ import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { DataSource, Repository } from 'typeorm';
 import { Subject } from './entities/subject.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
+import { TeacherSubject } from 'src/entities';
 
 @Injectable()
 export class SubjectsService {
@@ -15,8 +17,7 @@ export class SubjectsService {
 
  async create(createSubjectDto: CreateSubjectDto) {
   console.log(createSubjectDto)
-    let posted_year = new Date().getFullYear();
-    var date_year = posted_year.toString()
+    
     try {
       let data = this.dataSource.manager.create(Subject,{
         subject_title: createSubjectDto.subject_title,
@@ -24,7 +25,7 @@ export class SubjectsService {
       grade_level:createSubjectDto.grade_level,
       date_from:createSubjectDto.date_from,
       date_to:createSubjectDto.date_to,
-      posted_year:date_year
+      school_yearId:createSubjectDto.school_yearId
       })
 
       await this.dataSource.manager.save(data)
@@ -39,11 +40,11 @@ export class SubjectsService {
 
   }
 
-  async getSpicificSubject(year:string, grade: string){
+  async getSpicificSubject(filter:number, grade: string){
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
     .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
-    .andWhere('posted_year = :year', {
-      year: year,
+    .andWhere('school_yearId = :school_yearId', {
+      school_yearId: filter,
     })
     .andWhere('grade_level = :grade', {
       grade: grade,
@@ -53,22 +54,24 @@ export class SubjectsService {
     return data
   }
 
-  async activeSubject(year:string){
+  async activeSubject(filter:number){
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
     .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
-    .andWhere('posted_year = :year', {
-      year: year,
+    .andWhere('sub.school_yearId = :school_yearId', {
+      school_yearId: filter,
     })
     .orderBy('created_at', 'DESC')
     .getMany()
     return data
   }
 
-  async notActiveSubject(year:string){
+  
+
+  async notActiveSubject(filter:number){
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'JP')
     .where('JP.id NOT IN (SELECT id FROM subject where Date(NOW()) between Date(date_from) and Date(date_to))')
-    .andWhere('posted_year = :year', {
-      year: year,
+    .andWhere('school_yearId = :school_yearId', {
+      school_yearId: filter,
     })
     .orderBy('created_at', 'DESC')
     .getMany()
@@ -78,23 +81,56 @@ export class SubjectsService {
 
 
 
-  
+  async addTeachersSubject(createTeacherSubjectDto: CreateTeacherSubjectDto) {
 
-  findAll() {
-    return `This action returns all subjects`;
+    try {
+      let subjectList = JSON.parse(createTeacherSubjectDto.subject_list)
+      let removeSubjects = JSON.parse(createTeacherSubjectDto.removed_subjects)
+      console.log(subjectList, removeSubjects.length,createTeacherSubjectDto.userID)
+      if(removeSubjects.length>0){
+        for (let i = 0; i < removeSubjects.length; i++) {
+        
+          await this.dataSource.manager.delete(TeacherSubject, removeSubjects[i].subjectListId)
+        }
+      }
+
+      for (let i = 0; i < subjectList.length; i++) {
+        if(!subjectList[i].subjectListId){
+          let addStudent = this.dataSource.manager.create(TeacherSubject, {
+            teachersId:createTeacherSubjectDto.userID,
+            subjectId:subjectList[i].id,
+        })
+       
+        await this.dataSource.manager.save(addStudent)
+        }
+      }
+      return{
+        msg:'Saved successfully!',
+        status: HttpStatus.CREATED
+      }
+
+    } catch (error) {
+      return{
+        msg:'Something went wrong!',
+        status: HttpStatus.CREATED
+      }
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} subject`;
+  async getSubjectTaagged(id: number) {
+    let data = await this.dataSource.manager
+      .createQueryBuilder(TeacherSubject, 'ts')
+      .select([
+        "*",
+        "ts.id as subjectListId",
+            ])
+      .leftJoin(Subject, 'su', 'su.id = ts.subjectId')
+      .where('ts.teachersId = "'+id+'"')
+      .getRawMany();
+    return data;
   }
-
   
-  
-  update(id: number, updateSubjectDto: UpdateSubjectDto) {
-    console.log(updateSubjectDto)
-    let posted_year = new Date().getFullYear();
-    // console.log(posted_year)
-    var date_year = posted_year.toString()
+  update(id: number, updateSubjectDto: UpdateSubjectDto ) {
 
 try {
     this.dataSource.manager.update(Subject,id,{
@@ -103,7 +139,7 @@ try {
     seniorJunior: updateSubjectDto.seniorJunior,
     date_from: updateSubjectDto.date_from,
     date_to: updateSubjectDto.date_to,
-    posted_year:date_year
+    school_yearId:updateSubjectDto.school_yearId
   })
   return{
     msg:'Updated successfully!', status:HttpStatus.CREATED

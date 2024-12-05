@@ -54,88 +54,6 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.ctType`]="{ item }">
-          {{
-            item.ctType == 1
-              ? "Academic Year"
-              : item.ctType == 2
-              ? "Calendar Year"
-              : ""
-          }}
-        </template>
-        <template v-slot:[`item.SY`]="{ item }">
-          {{
-            item.cyFrom && item.cyTo
-              ? formatDate(item.cyFrom) + " - " + formatDate(item.cyTo)
-              : ""
-          }}
-        </template>
-
-        <template v-slot:[`item.effectivityDate`]="{ item }">
-          {{ formatDate(item.effectivityDate) }}
-        </template>
-
-        <template v-slot:[`item.sem`]="{ item }">
-          {{
-            item.ctType == 1
-              ? item.sem == 1
-                ? "First Semester"
-                : item.sem == 2
-                ? "Second Semester"
-                : "Summer"
-              : "N/A"
-          }}
-        </template>
-
-        <template v-slot:[`item.isActive`]="{ item }">
-          <v-chip
-            class="white--text"
-            :color="item.isActive == 1 ? '#147452' : 'grey'"
-            x-small
-          >
-            {{ item.isActive == 1 ? "Active" : "Inactive" }}
-          </v-chip>
-        </template>
-
-        <template v-slot:[`item.status`]="{ item }">
-          <v-chip
-            :color="
-              item.status == 1 ? 'grey' : item.status == 2 ? '#147452' : 'red'
-            "
-            class="ma-2 white--text"
-            x-small
-          >
-            {{
-              item.status == 1
-                ? "For Approval"
-                : item.status == 2
-                ? "Approved"
-                : "Pending"
-            }}
-          </v-chip>
-        </template>
-        <template v-slot:[`item.education`]="{ item }">
-          <div
-            class="text-caption"
-            v-if="item.education != null && item.education != ''"
-          >
-            {{ item.education }}
-          </div>
-          <div
-            class="text-caption"
-            v-else
-            v-html="item.job_posting_content"
-          ></div>
-        </template>
-        <!-- <template v-slot:[`item.switch`]="{ item }">
-              <v-switch
-                v-if="item.status == 2"
-                :value="true"
-                :input-value="item.isActive == 1 ? true : false"
-                @change="switchItem(item)"
-                color="#147452"
-              ></v-switch>
-            </template> -->
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <!-- <v-btn
@@ -256,10 +174,11 @@
       </v-col>
     </v-row>
 
-    <MyJobPosting :data="coreTimeData" :action="action" />
-    <MyJobApplication :data="designationData" :action="action" />
-    <ApplicantOfJobDialog :data="applicantData" :action="action" />
-    <ShortListedtagging :data="taggingData" :action="action" />
+    <CreateSubjectDialog
+      :data="designationData"
+      :action="action"
+      :filter="filter"
+    />
 
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
@@ -364,16 +283,8 @@
 <script>
 export default {
   components: {
-    // CoreTimeDesignationDialog: () =>
-    //   import("../../components/Dialogs/Forms/CoreTimeDesignationDialog.vue"),
-    ApplicantOfJobDialog: () =>
-      import("../../components/Dialogs/Forms/ApplicantOfJobDialog.vue"),
-    MyJobApplication: () =>
-      import("../../components/Dialogs/Forms/MyJobApplicationDialog.vue"),
-    MyJobPosting: () =>
+    CreateSubjectDialog: () =>
       import("../../components/Dialogs/Forms/CreateSubjectDialog.vue"),
-    ShortListedtagging: () =>
-      import("../../components/Dialogs/Forms/ShortListedtaggingDialog.vue"),
   },
   data: () => ({
     search: "",
@@ -432,6 +343,7 @@ export default {
       { id: 2, name: "Not Active-Subjects" },
       //   { id: 3, name: "Applicants" },
     ],
+    filter: null,
     coreTimeData: null,
     designationData: null,
     totalCount: 0,
@@ -477,35 +389,14 @@ export default {
   }),
 
   mounted() {
-    this.loadYear();
-
-    // this.eventHub.$on("closeMyJobApplicationDialog", () => {
-    //   this.initialize();
-    // });
     this.eventHub.$on("closeAddSubjectDialog", () => {
       this.initialize();
     });
-    this.eventHub.$on("closeApplicantJobList", () => {
-      this.initialize();
-    });
-    this.eventHub.$on("closeMyJobApplicationDialog", () => {
-      this.initialize();
-    });
-    this.eventHub.$on("closeShortListDialog", () => {
-      this.initialize();
-    });
-
-    // this.eventHub.$on("closeMyDesignationDialog", () => {
-    //   this.initialize();
-    // });
   },
 
   beforeDestroy() {
     // this.eventHub.$off("closeMyJobApplicationDialog");
     this.eventHub.$off("closeAddSubjectDialog");
-    this.eventHub.$off("closeApplicantJobList");
-    this.eventHub.$off("closeMyJobApplicationDialog");
-    this.eventHub.$off("closeShortListDialog");
 
     // this.eventHub.$off("closeMyDesignationDialog");
   },
@@ -559,75 +450,16 @@ export default {
         "_blank" // <- This is what makes it open in a new window.
       );
     },
-    handleAllChanges() {
-      // Logic to handle changes for all three selects
-      // let output = `Selected value A: ${this.toPrint}, Selected value B: ${this.selectedMonth}, Selected value C: ${this.selectedYear}`;
-      console.log("Job Item", this.jobitem);
-      if (this.toPrint == "All") {
-        console.log("initial position", this.toPrint);
-        this.axiosCall("/job-applicant/" + this.selectedYear, "GET").then(
-          (res) => {
-            if (res) {
-              this.printData = res.data;
-            }
-          }
-        );
-      } else {
-        this.axiosCall(
-          "/job-applicant/findToPrint/" +
-            this.toPrint +
-            "/" +
-            this.jobitem +
-            "/" +
-            this.selectedMonth +
-            "/" +
-            this.selectedYear +
-            "",
-          "GET"
-        ).then((res) => {
-          console.log("onchangeData", res.data);
-          this.printData = res.data;
-        });
-      }
 
-      // console.log("three onchange", output);
-    },
-    getAllposition() {
-      this.axiosCall("/job-posting", "GET").then((res) => {
-        let arr = [];
-        let jobitem = [];
-        for (let index = 0; index < res.data.length; index++) {
-          // const element = res.data[index].position_title;
-          const element = res.data[index];
-          const items = res.data[index].plantilla_item;
-          jobitem.push(items);
-          arr.push(element);
-        }
-        console.log("JobPosted", arr);
-        arr.unshift("All");
-        jobitem.unshift("All");
-        this.toPrint = arr[0];
-        this.jobitem = jobitem[0];
-        this.selectedMonth = this.monthsList[0].id;
-        this.selectedYear = this.yearList[0];
-        this.reportTypeList = arr;
-        this.jobitemsList = jobitem;
-      });
-    },
+    // loadYear() {
+    //   let curYear;
+    //   var d = new Date();
+    //   curYear = d.getFullYear();
+    //   for (let i = curYear; i >= 2020; i--) {
+    //     this.yearList.push(i);
+    //   }
+    // },
 
-    loadYear() {
-      let curYear;
-      var d = new Date();
-      curYear = d.getFullYear();
-      for (let i = curYear; i >= 2020; i--) {
-        this.yearList.push(i);
-      }
-    },
-    printJobApplicants() {
-      this.JobPostPrint = true;
-
-      this.handleAllChanges();
-    },
     pagination(data) {
       this.paginationData = data;
     },
@@ -635,10 +467,9 @@ export default {
     initialize() {
       // this.handleAllChanges();
       this.loading = true;
-      let d = new Date();
-      let yr = d.getFullYear();
+      let filter = this.$store.getters.getFilterSelected;
       if (this.tab == 1) {
-        this.axiosCall("/subjects/CreateSubject/active/" + yr, "GET").then(
+        this.axiosCall("/subjects/CreateSubject/active/" + filter, "GET").then(
           (res) => {
             if (res) {
               console.log("Love", res.data);
@@ -648,98 +479,37 @@ export default {
           }
         );
       } else if (this.tab == 2) {
-        this.axiosCall("/subjects/CreateSubject/notActive/" + yr, "GET").then(
-          (res) => {
-            if (res) {
-              console.log("Love", res.data);
-              this.data = res.data;
-              this.loading = false;
-            }
+        this.axiosCall(
+          "/subjects/CreateSubject/notActive/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            console.log("Love", res.data);
+            this.data = res.data;
+            this.loading = false;
           }
-        );
+        });
       }
     },
-
-    switchItem(item) {
-      if (this.tab == 1) {
-        this.axiosCall("/my-core-time/toggleActive/" + item.id, "PATCH").then(
-          (res) => {
-            if (res) {
-              if (res.data.status == 200) {
-                this.fadeAwayMessage.show = true;
-                this.fadeAwayMessage.type = "success";
-                this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = res.data.msg;
-                this.initialize();
-              } else {
-                this.fadeAwayMessage.show = true;
-                this.fadeAwayMessage.type = "error";
-                this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = res.data.msg;
-              }
-            }
-          }
-        );
-      } else if (this.tab == 2) {
-        this.axiosCall("/my-designation/toggleActive/" + item.id, "PATCH").then(
-          (res) => {
-            if (res) {
-              if (res.data.status == 200) {
-                this.fadeAwayMessage.show = true;
-                this.fadeAwayMessage.type = "success";
-                this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = res.data.msg;
-                this.initialize();
-              } else {
-                this.fadeAwayMessage.show = true;
-                this.fadeAwayMessage.type = "error";
-                this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = res.data.msg;
-              }
-            }
-          }
-        );
-      }
-    },
-
-    // getVerifiedUsers() {
-    //   this.loading = true;
-
-    //   this.axiosCall("/user-details/getAllVerifiedUser", "GET").then((res) => {
-    //     if (res) {
-    //       this.data = [];
-
-    //       this.data = res.data;
-    //       this.loading = false;
-    //     }
-    //   });
-    // },
 
     changeTab(tab) {
       this.activeTab = tab;
 
-      // if (tab.id == 1) {
-
       this.tab = tab.id;
       this.initialize();
-      // } else if (tab.id == 2) {
-      //   this.getVerifiedUsers();
-      //   this.tab = tab.id;
-      // }
     },
     add() {
-      if (this.tab == 3) {
-        this.designationData = [{ id: null }];
-        this.action = "Add";
-      } else {
-        this.coreTimeData = [{ id: null }];
-        this.action = "Add";
-      }
+      let filter = this.$store.getters.getFilterSelected;
+      this.designationData = [{ id: null }];
+      this.action = "Add";
+      this.filter = filter;
     },
     editItem(item) {
       console.log(this.tab, item);
-      this.coreTimeData = item;
+      let filter = this.$store.getters.getFilterSelected;
+      this.designationData = item;
       this.action = "Update";
+      this.filter = filter;
     },
     viewApplicant(item) {
       this.applicantData = item;

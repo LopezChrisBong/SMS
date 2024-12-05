@@ -23,4 +23,10 @@ export class UpdateUserDetailDto extends PartialType(CreateUserDetailDto) {
 
     @ApiProperty()
     mobile_no: string
+
+    @ApiProperty()
+    hired: string
+
+    @ApiProperty()
+    education: string
 }

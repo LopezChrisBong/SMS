@@ -55,6 +55,8 @@ export class EnrollStudentService {
    }
    }
 
+
+
   async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
     try {
       // Check for conflicts
@@ -124,6 +126,7 @@ export class EnrollStudentService {
       throw error;
     }
   }
+  
   async EnrollStudent() {
     let data = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
@@ -257,11 +260,83 @@ export class EnrollStudentService {
         'ES.good_moral as good_moral',
         'ES.birth_certificate as birth_certificate',
         'ES.form137a as form137a',
-        'ES.year_from as year_from',
+        'ES.school_yearId as school_yearId',
           'ES.grade_level as grade_level',
-          'ES.year_to as year_to',
       ])
       .andWhere('ES.statusEnrolled = 1')
+      .getRawMany();
+    return data;
+  }
+
+  async AddClassStudent(grade:string) {
+    let data = await this.dataSource.manager
+      .createQueryBuilder(EnrollStudent, 'ES')
+      .select(["IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name",
+        'ES.id as id',
+        'ES.fname as fname',
+        'ES.mname as mname',
+        'ES.lname as lname',
+        'ES.seniorJunior as seniorJunior',
+        'ES.suffix as suffix',
+        'ES.email as email',
+        'ES.bdate as bdate',
+        'ES.birth_place as birth_place',
+        'ES.sex as sex',
+        'ES.civil_status as civil_status',
+        'ES.transfered as transfered ',
+        'ES.height as height',
+        'ES.weight as weight',
+        'ES.is_IP as is_IP ',
+        'ES.ip_Name as ip_Name',
+        'ES.fourPs as fourPs',
+        'ES.fourpis as fourpis',
+        'ES.disability as disability ',
+        'ES.disability_desc as disability_desc',
+        'ES.blood_type as blood_type',
+        'ES.isFilipino as isFilipino',
+        'ES.mobile_no as mobile_no',
+        'ES.residential_zip as residential_zip',
+        'ES.residential_house_no as residential_house_no',
+        'ES.residential_street as residential_street',
+        'ES.residential_subd as residential_subd',
+        'ES.residential_brgy as residential_brgy',
+        'ES.residential_city as residential_city',
+        'ES.residential_prov as residential_prov',
+        'ES.permanent_zip as permanent_zip',
+        'ES.permanent_house_no as permanent_house_no',
+        'ES.permanent_street as permanent_street',
+        'ES.permanent_subd as permanent_subd',
+        'ES.permanent_brgy as permanent_brgy',
+        'ES.permanent_city as permanent_city',
+        'ES.permanent_prov as permanent_prov',
+        'ES.father_fname as father_fname',
+        'ES.father_mname as father_mname',
+        'ES.father_lname as father_lname',
+        'ES.father_number as father_number',
+        'ES.mother_fname as mother_fname',
+        'ES.mother_mname as mother_mname',
+        'ES.mother_lname as mother_lname',
+        'ES.mother_number as mother_number',
+        'ES.guardian_fname as guardian_fname',
+        'ES.guardian_mname as guardian_mname',
+        'ES.guardian_lname as guardian_lname',
+        'ES.guardian_number as guardian_number',
+        'ES.last_grade_completed  as last_grade_completed',
+        'ES.last_year_completed  as last_year_completed',
+        'ES.last_school_attended  as last_school_attended',
+        'ES.last_school_ID  as last_school_ID',
+        'ES.track  as track',
+        'ES.semester  as track',
+        'ES.strand  as track',
+        'ES.lrn as lrn',
+        'ES.good_moral as good_moral',
+        'ES.birth_certificate as birth_certificate',
+        'ES.form137a as form137a',
+        'ES.school_yearId as school_yearId',
+          'ES.grade_level as grade_level',
+      ])
+      .where('ES.statusEnrolled = 1')
+      .andWhere('ES.grade_level = "'+grade+'"')
       .getRawMany();
     return data;
   }
@@ -284,9 +359,9 @@ export class EnrollStudentService {
       .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
-      .where('school_yearId = "'+filter+'"')
-      .groupBy('times_slot_from,times_slot_to,teacherID')
-      .orderBy('teacherID')
+      .where('A.school_yearId = "'+filter+'"')
+      .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
+      .orderBy('A.teacherID')
       .getRawMany();
     return data;
   }
@@ -298,6 +373,18 @@ export class EnrollStudentService {
         "*",
         "CONCAT(school_year_from, ' - ', school_year_to) AS school_year"
       ])
+      .getRawMany();
+    return data;
+  }
+
+  async getSchoolYearGenerate(grade:string,filter:number) {
+    let data = await this.dataSource.manager
+      .createQueryBuilder(EnrollStudent, 'ES')
+      .select([
+        "COUNT(*) as conflict",
+      ])
+      .where('grade_level = "'+grade+'"')
+      .andWhere('school_yearId = "'+filter+'"')
       .getRawMany();
     return data;
   }
@@ -320,15 +407,17 @@ export class EnrollStudentService {
       .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
-      .where('teacherID = "'+user.userdetail.id+'"')
-      .andWhere('school_yearId = "'+filter+'"')
-      .groupBy('times_slot_from,times_slot_to,teacherID')
-      .orderBy('teacherID')
+      .where('A.teacherID = "'+user.userdetail.id+'"')
+      .andWhere('A.school_yearId = "'+filter+'"')
+      .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
+      .orderBy('A.teacherID')
       .getRawMany();
     return data;
   }
 
   async updateEnrolledStudent(updateVS: UpdateEnrollStudentDto) {
+
+    console.log(updateVS)
     
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -342,8 +431,7 @@ export class EnrollStudentService {
           good_moral: updateVS.good_moral,
           birth_certificate: updateVS.birth_certificate,
           form137a: updateVS.form137a,
-          year_from: updateVS.year_from,
-            year_to: updateVS.year_to,
+          school_yearId:updateVS.schoo_yearId
         });
         await queryRunner.commitTransaction();
         return {

@@ -1,28 +1,16 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
-export class Subject {
+export class TeacherSubject {
 
     @PrimaryGeneratedColumn({ type: 'int' })
     id: number
 
     @Column({ type: "varchar" })
-    subject_title: string
+    subjectId: string
 
     @Column({ type: "varchar" })
-    seniorJunior: string
-
-    @Column({ type: "varchar" })
-    grade_level: string
-
-    @Column({ type: 'varchar', default: null, nullable: true })
-    date_from: string;
-
-    @Column({ type: 'varchar', default: null, nullable: true })
-    date_to: string;
-
-    @Column({ type: 'int'})
-    school_yearId: number;
+    teachersId: string
 
     @CreateDateColumn({
       nullable: false,

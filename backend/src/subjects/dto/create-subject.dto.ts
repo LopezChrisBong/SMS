@@ -19,6 +19,6 @@ export class CreateSubjectDto {
     date_to:string;
 
     @ApiProperty()
-    posted_year:string;
+    school_yearId:number;
 
 }

@@ -202,6 +202,7 @@
       :action="action"
       :grade="grade"
       :section="section"
+      :filter="filter"
     />
     <!-- <MyDesignationDialog :data="designationData" :action="action" /> -->
 
@@ -318,6 +319,7 @@ export default {
     section: null,
     sectionList: [],
     coreTimeData: null,
+    filter: null,
     designationData: null,
     totalCount: 0,
     deleteData: null,
@@ -506,71 +508,84 @@ export default {
       // }
     },
     add() {
+      let filter = this.$store.getters.getFilterSelected;
       if (this.tab == 1) {
         this.coreTimeData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 7";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 2) {
         this.coreTimeData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 8";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 3) {
         this.coreTimeData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 9";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 4) {
         this.coreTimeData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 10";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 5) {
         this.coreTimeData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 11";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 6) {
         this.coreTimeData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 12";
         this.section;
+        this.filter = filter;
       }
     },
     editItem(item) {
       console.log("Update", item);
-
+      let filter = this.$store.getters.getFilterSelected;
       if (this.tab == 1) {
         this.coreTimeData = item;
         this.action = "Update";
         this.grade = "Grade 7";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 2) {
         this.coreTimeData = item;
         this.action = "Update";
         this.grade = "Grade 8";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 3) {
         this.coreTimeData = item;
         this.action = "Update";
         this.grade = "Grade 9";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 4) {
         this.coreTimeData = item;
         this.action = "Update";
         this.grade = "Grade 10";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 5) {
         this.coreTimeData = item;
         this.action = "Update";
         this.grade = "Grade 11";
         this.section;
+        this.filter = filter;
       } else if (this.tab == 6) {
         this.coreTimeData = item;
         this.action = "Update";
         this.grade = "Grade 12";
         this.section;
+        this.filter = filter;
       }
     },
 
