@@ -209,66 +209,6 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog fullscreen scrollable persistent v-model="JobPostPrint">
-      <v-card>
-        <v-card-title dark class="dialog-header">
-          <span>Type of Report</span>
-          <v-spacer></v-spacer>
-          <v-btn icon dark @click="JobPostPrint = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-form ref="PrintFormref">
-            <v-row class="mt-4">
-              <v-col cols="4">
-                <v-autocomplete
-                  label="Position"
-                  v-model="toPrint"
-                  :rules="[formRules.required]"
-                  @change="handleAllChanges"
-                  dense
-                  class="rounded-lg"
-                  item-text="type"
-                  item-value="id"
-                  color="#93CB5B"
-                  :items="reportTypeList"
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="1">
-                <v-autocomplete
-                  label="Year"
-                  v-model="selectedYear"
-                  :rules="[formRules.required]"
-                  @change="handleAllChanges"
-                  dense
-                  class="rounded-lg"
-                  color="#93CB5B"
-                  :items="yearList"
-                >
-                </v-autocomplete>
-              </v-col>
-            </v-row>
-            <v-card-title> </v-card-title>
-            <!-- <v-data-table :headers="headers3" :items="printData">
-              <template v-slot:[`item.birth`]="{ item }">
-                {{ formatDate(item.birth) }}
-              </template>
-            </v-data-table> -->
-          </v-form>
-        </v-card-text>
-
-        <v-card-actions class="pa-5">
-          <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="JobPostPrint = false">
-            <v-icon>mdi-close-circle-outline</v-icon>
-            Cancel
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -297,14 +237,6 @@ export default {
         value: "subject_title",
         align: "start",
         valign: "center",
-      },
-
-      {
-        text: "Grade Level",
-        value: "grade_level",
-        align: "center",
-        valign: "center",
-        sortable: false,
       },
 
       {
@@ -465,11 +397,11 @@ export default {
     },
 
     initialize() {
-      // this.handleAllChanges();
-      this.loading = true;
       let filter = this.$store.getters.getFilterSelected;
+      this.loading = true;
+      // alert(filter);
       if (this.tab == 1) {
-        this.axiosCall("/subjects/CreateSubject/active/" + filter, "GET").then(
+        this.axiosCall("/subjects/getSubject/active/" + filter, "GET").then(
           (res) => {
             if (res) {
               console.log("Love", res.data);

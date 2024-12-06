@@ -7,6 +7,15 @@
               tab.name
             }}</v-tab>
           </v-tabs> -->
+        <v-btn
+          class="white--text ml-2 rounded-lg"
+          :color="$vuetify.theme.themes.light.submitBtns"
+          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          @click="underLoad()"
+        >
+          <v-icon left> mdi-clipboard-list-outline </v-icon>
+          List of Underload Teachers
+        </v-btn>
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
@@ -372,7 +381,9 @@ export default {
         }
       );
     },
-
+    underLoad() {
+      alert("underload faculty");
+    },
     changeTab(tab) {
       this.activeTab = tab;
 

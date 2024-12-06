@@ -119,6 +119,7 @@
                     item-text="name"
                     item-value="id"
                     label="Teacher to assign"
+                    @change="teacherAssign(teacher)"
                     color="#93CB5B"
                     :items="TeachersList"
                   >
@@ -256,7 +257,6 @@ export default {
   methods: {
     initialize() {
       this.getUserType();
-      this.getAllActiveSubjects();
       this.getClassroom();
       this.getRoleTeachers();
     },
@@ -278,6 +278,9 @@ export default {
       this.day = null;
       this.grade = null;
       this.dialog = false;
+    },
+    teacherAssign(teacher) {
+      this.getAllActiveSubjects(teacher);
     },
     accept() {
       if (this.$refs.UserVerifyFormref.validate()) {
@@ -379,9 +382,15 @@ export default {
       return differenceHours;
     },
 
-    getAllActiveSubjects() {
+    getAllActiveSubjects(id) {
+      let grade;
+      if (this.grade == "Grade 11" || this.grade == "Grade 12") {
+        grade = "Senior High";
+      } else {
+        grade = "Junior High";
+      }
       this.axiosCall(
-        "/subjects/getSpicificSubject/" + this.filter + "/" + this.grade,
+        "/subjects/getSpicificSubject/" + id + "/" + this.filter + "/" + grade,
         "GET"
       ).then((res) => {
         if (res) {

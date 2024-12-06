@@ -38,18 +38,14 @@
         </v-col>
       </v-row>
     </v-card>
-
-    <ViewSetDirectHeadDialog :data="head_data" />
   </div>
 </template>
 
 <script>
-import ViewSetDirectHeadDialog from "../../components/Dialogs/Views/ViewSetDirectHeadDialog.vue";
 import PieChart from "../../components/Charts/NewCharts/Pie.vue";
 import PieChart1 from "../../components/Charts/NewCharts/Bar.vue";
 export default {
   components: {
-    ViewSetDirectHeadDialog,
     PieChart,
     PieChart1,
   },
