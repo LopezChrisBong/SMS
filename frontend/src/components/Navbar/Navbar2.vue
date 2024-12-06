@@ -249,7 +249,7 @@
                 <div>
                   <v-select
                     label="School Year"
-                    color="#519043"
+                    color="#5a67da"
                     @change="changeFilter()"
                     outlined
                     v-model="selectedFiter"
@@ -607,14 +607,14 @@ export default {
   padding: 5px 0 5px 0;
 }
 .modal_header {
-  background-color: #519043;
+  background-color: #5a67da;
   padding: 5px;
 }
 .notifDiv {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: #519043;
+  background-color: #5a67da;
   color: white;
   flex: auto;
   justify-content: space-between;
@@ -627,7 +627,7 @@ export default {
 .showAllNotif {
   margin: 0;
   font-size: 12px;
-  background-color: #519043;
+  background-color: #5a67da;
   padding: 10px;
   text-align: center;
   max-height: 55vh;

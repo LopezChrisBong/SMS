@@ -174,13 +174,13 @@ export default {
         valign: "start",
         sortable: false,
       },
-      {
-        text: "Faculty Name",
-        value: "name",
-        align: "start",
-        valign: "start",
-        sortable: false,
-      },
+      // {
+      //   text: "Faculty Name",
+      //   value: "name",
+      //   align: "start",
+      //   valign: "start",
+      //   sortable: false,
+      // },
       {
         text: "Monday",
         value: "Monday",
@@ -359,7 +359,7 @@ export default {
 
     initialize() {
       // this.handleAllChanges();
-      this.loading = true;
+      this.loading = false;
       let filter = this.$store.getters.getFilterSelected;
       this.axiosCall("/enroll-student/MySchedule/" + filter, "GET").then(
         (res) => {

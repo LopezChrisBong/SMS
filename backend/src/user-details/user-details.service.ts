@@ -167,10 +167,13 @@ export class UserDetailsService {
     let data =  await this.dataSource
       .createQueryBuilder(UserDetail, 'ud')
       .select([
+        'ud.id as id',
         'ud.fname as fname',
         'ud.mname as mname',
         'ud.lname as lname',
         'ud.suffix as suffix',
+        'ud.hired as hired',
+        'ud.education as education',
         'ud.sex as sex',
         'ud.mobile_no as mobile_no',
         'ud.profile_img as profile_img',
@@ -219,6 +222,8 @@ export class UserDetailsService {
         suffix: updateUserDetailDto.suffix,
         sex: updateUserDetailDto.sex,
         mobile_no: updateUserDetailDto.mobile_no,
+        hired: updateUserDetailDto.hired,
+        education: updateUserDetailDto.education,
       });
 
       if (upd.affected == 1) {

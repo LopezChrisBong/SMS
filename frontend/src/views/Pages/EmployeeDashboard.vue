@@ -11,17 +11,13 @@
         </v-col>
       </v-row>
     </v-card>
-    <ViewSetDirectHeadDialog :data="head_data" />
   </div>
 </template>
 
 <script>
-// import BarChart from "../../components/Charts/samples/BarChart.vue";
-import ViewSetDirectHeadDialog from "../../components/Dialogs/Views/ViewSetDirectHeadDialog.vue";
 export default {
   components: {
     //  BarChart
-    ViewSetDirectHeadDialog,
   },
   data: () => ({
     mini: false,

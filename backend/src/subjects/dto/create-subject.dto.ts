@@ -10,15 +10,12 @@ export class CreateSubjectDto {
     seniorJunior:string;
 
     @ApiProperty()
-    grade_level:string;
-
-    @ApiProperty()
     date_from:string;
 
     @ApiProperty()
     date_to:string;
 
     @ApiProperty()
-    posted_year:string;
+    school_yearId:number;
 
 }

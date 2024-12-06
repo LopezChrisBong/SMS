@@ -187,10 +187,7 @@ export class UpdateEnrollStudentDto extends PartialType(CreateEnrollStudentDto) 
     form137a: boolean;
 
     @ApiProperty()
-    year_from: string;
-
-    @ApiProperty()
-    year_to: string;
+    schoo_yearId: number;
 
     @ApiProperty()
     update_type: number;

@@ -429,19 +429,11 @@ export class EnrollStudent {
     })
     form137a: boolean;
 
-    @Column({
-      nullable: true,
-      type: 'varchar',
-      length: 255,
-    })
-        year_from: string;
 
         @Column({
-          nullable: true,
-          type: 'varchar',
-          length: 255,
+          type: 'int',
         })
-            year_to: string;
+            school_yearId: number;
 
 
           @Column({

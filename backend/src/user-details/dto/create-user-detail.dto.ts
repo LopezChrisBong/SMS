@@ -16,6 +16,11 @@ export class CreateUserDetailDto {
     @ApiProperty()
     suffix: string;
 
+    @ApiProperty()
+    hired: string;
+
+    @ApiProperty()
+    education: string;
 
     @ApiProperty()
     @IsNotEmpty()

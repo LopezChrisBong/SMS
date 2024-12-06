@@ -5,8 +5,8 @@
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
             <span
-              >{{ action }} {{ grade }} {{ className }} {{ teacher }} Classroom
-              Program Schedule
+              >{{ action }} {{ grade }} {{ className }} Classroom Program
+              Schedule
             </span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -112,6 +112,21 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-autocomplete
+                    v-model="teacher"
+                    :rules="[formRules.required]"
+                    dense
+                    class="rounded-lg"
+                    item-text="name"
+                    item-value="id"
+                    label="Teacher to assign"
+                    @change="teacherAssign(teacher)"
+                    color="#93CB5B"
+                    :items="TeachersList"
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-autocomplete
                     v-model="subject"
                     dense
                     :rules="[formRules.required]"
@@ -139,21 +154,6 @@
                   >
                   </v-autocomplete>
                 </v-col> -->
-
-                <v-col cols="12" md="12">
-                  <v-autocomplete
-                    v-model="teacher"
-                    :rules="[formRules.required]"
-                    dense
-                    class="rounded-lg"
-                    item-text="name"
-                    item-value="id"
-                    label="Teacher to assign"
-                    color="#93CB5B"
-                    :items="TeachersList"
-                  >
-                  </v-autocomplete>
-                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -196,6 +196,7 @@ export default {
     action: null,
     grade: null,
     section: null,
+    filter: null,
   },
   data() {
     return {
@@ -256,7 +257,6 @@ export default {
   methods: {
     initialize() {
       this.getUserType();
-      this.getAllActiveSubjects();
       this.getClassroom();
       this.getRoleTeachers();
     },
@@ -278,6 +278,9 @@ export default {
       this.day = null;
       this.grade = null;
       this.dialog = false;
+    },
+    teacherAssign(teacher) {
+      this.getAllActiveSubjects(teacher);
     },
     accept() {
       if (this.$refs.UserVerifyFormref.validate()) {
@@ -379,11 +382,15 @@ export default {
       return differenceHours;
     },
 
-    getAllActiveSubjects() {
-      let d = new Date();
-      let yr = d.getFullYear();
+    getAllActiveSubjects(id) {
+      let grade;
+      if (this.grade == "Grade 11" || this.grade == "Grade 12") {
+        grade = "Senior High";
+      } else {
+        grade = "Junior High";
+      }
       this.axiosCall(
-        "/subjects/getSpicificSubject/" + yr + "/" + this.grade,
+        "/subjects/getSpicificSubject/" + id + "/" + this.filter + "/" + grade,
         "GET"
       ).then((res) => {
         if (res) {
