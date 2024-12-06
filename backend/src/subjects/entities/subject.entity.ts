@@ -12,9 +12,6 @@ export class Subject {
     @Column({ type: "varchar" })
     seniorJunior: string
 
-    @Column({ type: "varchar" })
-    grade_level: string
-
     @Column({ type: 'varchar', default: null, nullable: true })
     date_from: string;
 

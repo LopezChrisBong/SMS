@@ -14,7 +14,7 @@
           <v-card-text style="max-height: 700px" class="my-4">
             <v-container>
               <v-row>
-                <v-col cols="12" md="12">
+                <v-col cols="12" md="6">
                   <v-text-field
                     style="border: 1px solid gray; border-radius: 4px;"
                     class="px-2"
@@ -31,20 +31,6 @@
                     class="mt-2"
                     :items="seniorJuniorList"
                     label="Senior High / Junior High"
-                    color="#93CB5B"
-                    dense
-                  ></v-select>
-                </v-col>
-
-                <v-col cols="12" md="6">
-                  <v-select
-                    v-model="grade_level"
-                    outlined
-                    class="mt-2"
-                    :items="
-                      seniorJunior == 'Junior High' ? juniorList : seniorList
-                    "
-                    label="Grade Level"
                     color="#93CB5B"
                     dense
                   ></v-select>
@@ -296,7 +282,6 @@ export default {
           this.initialize();
           this.updateID = data.id;
           this.subject_title = data.subject_title;
-          this.grade_level = data.grade_level;
           this.seniorJunior = data.seniorJunior;
           this.dateFrom = data.date_from;
           this.dateTo = data.date_to;
@@ -304,7 +289,6 @@ export default {
           this.$refs.AddSubjectDialog.reset();
           this.initialize();
           this.subject_title = data.subject_title;
-          this.grade_level = data.grade_level;
           this.seniorJunior = data.seniorJunior;
           this.dateFrom = data.date_from;
           this.dateTo = data.date_to;
@@ -344,7 +328,6 @@ export default {
       if (type == "ADD") {
         if (
           this.subject_title == null ||
-          this.grade_level == null ||
           this.seniorJunior == null ||
           this.dateFrom == null ||
           this.dateTo == null
@@ -356,7 +339,6 @@ export default {
         } else {
           let data = {
             subject_title: this.subject_title,
-            grade_level: this.grade_level,
             seniorJunior: this.seniorJunior,
             date_from: this.dateFrom,
             date_to: this.dateTo,
@@ -386,7 +368,6 @@ export default {
         // alert("UPDATED");
         if (
           this.subject_title == null ||
-          this.grade_level == null ||
           this.seniorJunior == null ||
           this.dateFrom == null ||
           this.dateTo == null
@@ -395,7 +376,6 @@ export default {
         } else {
           let data = {
             subject_title: this.subject_title,
-            grade_level: this.grade_level,
             seniorJunior: this.seniorJunior,
             date_from: this.dateFrom,
             date_to: this.dateTo,

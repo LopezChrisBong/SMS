@@ -23,14 +23,14 @@ const entities = [
   AssignedModule,
   SysModule,
   EnrollStudent,
-  Subject,
   RoomsSection,
   AddTracks,
   AddStrand,
   Availability,
   SchoolYear,
   StudentList,
-  TeacherSubject
+  TeacherSubject,
+  Subject
 ];
 
 export {
@@ -41,14 +41,14 @@ export {
   AssignedModule,
   SysModule,
   EnrollStudent,
-  Subject,
   RoomsSection,
   AddTracks,
   AddStrand,
   Availability,
   SchoolYear,
   StudentList,
-  TeacherSubject
+  TeacherSubject,
+  Subject
 };
 
 export default entities;

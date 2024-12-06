@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,Headers } from '@nestjs/common';
 import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
+import { currentUser } from 'src/shared/jwtDecode';
 
 @Controller('subjects')
 export class SubjectsController {
@@ -18,7 +19,7 @@ export class SubjectsController {
     return this.subjectsService.addTeachersSubject(createTeacherSubjectDto);
   }
 
-  @Get('CreateSubject/active/:filter')
+  @Get('getSubject/active/:filter')
   activeSubject(@Param('filter') filter: string) {
     return this.subjectsService.activeSubject(+filter);
   }
@@ -32,11 +33,16 @@ export class SubjectsController {
   getSubjectTaagged(@Param('id') id: string) {
     return this.subjectsService.getSubjectTaagged(+id);
   }
-  
 
-  @Get('getSpicificSubject/:filter/:grade')
-  getSpicificSubject(@Param('filter') filter: string,@Param('grade') grade: string) {
-    return this.subjectsService.getSpicificSubject(+filter,grade);
+  @Get('getSpicificSubject/:id/:filter/:grade')
+  getSpicificSubject(
+    // @Headers() headers, 
+    @Param('id') id: string,
+    @Param('filter') filter: string,
+    @Param('grade') grade: string) {
+    // var head_str = headers.authorization;
+    // const curr_user = currentUser(head_str);
+    return this.subjectsService.getSpicificSubject(+id,+filter,grade);
   }
 
 

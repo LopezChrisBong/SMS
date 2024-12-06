@@ -160,7 +160,6 @@ export default {
   props: {
     data: null,
     action: null,
-    grade: null,
     filter: null,
   },
 
@@ -226,18 +225,17 @@ export default {
     },
 
     getEnrolledStudent() {
-      this.axiosCall(
-        "/subjects/CreateSubject/active/" + this.filter,
-        "GET"
-      ).then((res) => {
-        if (res.data) {
-          let data = res.data;
-          // for (let i = 0; i < data.length; i++) {
-          //   data[i].name = this.toTitleCase(data[i].name);
-          // }
-          this.subjectListed = data;
+      this.axiosCall("/subjects/getSubject/active/" + this.filter, "GET").then(
+        (res) => {
+          if (res.data) {
+            let data = res.data;
+            // for (let i = 0; i < data.length; i++) {
+            //   data[i].subject_title = this.toTitleCase(data[i].subject_title);
+            // }
+            this.subjectListed = data;
+          }
         }
-      });
+      );
     },
 
     getTaggedSubjects(id) {

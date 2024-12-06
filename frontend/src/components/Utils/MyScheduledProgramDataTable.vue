@@ -174,13 +174,13 @@ export default {
         valign: "start",
         sortable: false,
       },
-      {
-        text: "Faculty Name",
-        value: "name",
-        align: "start",
-        valign: "start",
-        sortable: false,
-      },
+      // {
+      //   text: "Faculty Name",
+      //   value: "name",
+      //   align: "start",
+      //   valign: "start",
+      //   sortable: false,
+      // },
       {
         text: "Monday",
         value: "Monday",

@@ -22,7 +22,6 @@ export class SubjectsService {
       let data = this.dataSource.manager.create(Subject,{
         subject_title: createSubjectDto.subject_title,
       seniorJunior:createSubjectDto.seniorJunior,
-      grade_level:createSubjectDto.grade_level,
       date_from:createSubjectDto.date_from,
       date_to:createSubjectDto.date_to,
       school_yearId:createSubjectDto.school_yearId
@@ -40,21 +39,37 @@ export class SubjectsService {
 
   }
 
-  async getSpicificSubject(filter:number, grade: string){
+  async getSpicificSubject(id:number,filter:number, grade: string){
+    // console.log(user.userdetail.id)
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+
+    const count = await queryRunner.query(
+      'SELECT COUNT(*) as count FROM teacher_subject where teachersId ="'+id+'"',
+    );
+    console.log(count[0].count)
+    if(count[0].count != 0){
+    let data =  this.getSubjectTaagged(id)
+              await queryRunner.release();
+              return data
+    }
+
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
     .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
     .andWhere('school_yearId = :school_yearId', {
       school_yearId: filter,
     })
-    .andWhere('grade_level = :grade', {
-      grade: grade,
+    .andWhere('seniorJunior = :seniorJunior', {
+      seniorJunior: grade,
     })
     .orderBy('created_at', 'DESC')
     .getMany()
+    await queryRunner.release();
     return data
   }
 
   async activeSubject(filter:number){
+    console.log('Filter',filter)
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
     .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
     .andWhere('sub.school_yearId = :school_yearId', {
@@ -135,7 +150,6 @@ export class SubjectsService {
 try {
     this.dataSource.manager.update(Subject,id,{
     subject_title:updateSubjectDto.subject_title,
-    grade_level: updateSubjectDto.grade_level,
     seniorJunior: updateSubjectDto.seniorJunior,
     date_from: updateSubjectDto.date_from,
     date_to: updateSubjectDto.date_to,
