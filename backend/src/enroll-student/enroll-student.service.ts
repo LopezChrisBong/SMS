@@ -186,6 +186,10 @@ export class EnrollStudentService {
         'ES.last_school_attended  as last_school_attended',
         'ES.last_school_ID  as last_school_ID',
         'ES.track  as track',
+        'ES.picture as picture',
+        'ES.goodMoral as goodMoral',
+        'ES.birthPSA as birthPSA',
+        'ES.schoolCard as schoolCard',
         'ES.semester  as track',
         'ES.strand  as track',
         
@@ -256,12 +260,12 @@ export class EnrollStudentService {
         'ES.track  as track',
         'ES.semester  as track',
         'ES.strand  as track',
-        'ES.lrn as lrn',
-        'ES.good_moral as good_moral',
-        'ES.birth_certificate as birth_certificate',
-        'ES.form137a as form137a',
+        'ES.picture as picture',
+        'ES.goodMoral as goodMoral',
+        'ES.birthPSA as birthPSA',
+        'ES.schoolCard as schoolCard',
         'ES.school_yearId as school_yearId',
-          'ES.grade_level as grade_level',
+        'ES.grade_level as grade_level',
       ])
       .andWhere('ES.statusEnrolled = 1')
       .getRawMany();
@@ -328,10 +332,10 @@ export class EnrollStudentService {
         'ES.track  as track',
         'ES.semester  as track',
         'ES.strand  as track',
-        'ES.lrn as lrn',
-        'ES.good_moral as good_moral',
-        'ES.birth_certificate as birth_certificate',
-        'ES.form137a as form137a',
+        'ES.picture as picture',
+        'ES.goodMoral as goodMoral',
+        'ES.birthPSA as birthPSA',
+        'ES.schoolCard as schoolCard',
         'ES.school_yearId as school_yearId',
           'ES.grade_level as grade_level',
       ])
@@ -426,12 +430,10 @@ export class EnrollStudentService {
  
         await queryRunner.manager.update(EnrollStudent , Number(updateVS.id), {
           statusEnrolled: updateVS.statusEnrolled,
-          grade_level: updateVS.grade_level,
-          lrn: updateVS.lrn,
-          good_moral: updateVS.good_moral,
-          birth_certificate: updateVS.birth_certificate,
-          form137a: updateVS.form137a,
-          school_yearId:updateVS.schoo_yearId
+          school_yearId:updateVS.schoo_yearId,
+          grade_level:updateVS.grade_level,
+          seniorJunior:updateVS.seniorJunior,
+
         });
         await queryRunner.commitTransaction();
         return {
@@ -608,6 +610,150 @@ async checkConflictUpdate(data: any){
     throw error;
   }
 }
+
+
+async enrollStudentWithFile( body:any, filename: any){
+    try {
+     let data = this.dataSource.manager.create(EnrollStudent,{
+      fname: body.fname,
+      lname: body.lname,
+      mname: body.mname,
+      suffix: body.suffix,
+      email: body.email,
+      bdate: body.bdate,
+      birth_place: body.birth_place,
+      sex: body.sex,
+      civil_status: body.civil_status,
+      seniorJunior: body.seniorJunior,
+      transfered: body.transfered,
+      height: body.height,
+      weight: body.weight,
+      is_IP: body.is_IP,
+      ip_Name: body.ip_Name,
+      fourPs: body.fourPs,
+      fourpis: body.fourpis,
+      disability: body.disability,
+      disability_desc: body.disability_desc,
+      blood_type: body.blood_type,
+      isFilipino: body.isFilipino,
+      mobile_no: body.mobile_no,
+      residential_zip: body.residential_zip,
+      residential_house_no: body.residential_house_no,
+      residential_street: body.residential_street,
+      residential_subd: body.residential_subd,
+      residential_brgy: body.residential_brgy,
+      residential_city: body.residential_city,
+      residential_prov: body.residential_prov,
+      permanent_zip: body.permanent_zip,
+      permanent_house_no: body.permanent_house_no,
+      permanent_street: body.permanent_street,
+      permanent_subd: body.permanent_subd,
+      permanent_brgy: body.permanent_brgy,
+      permanent_city: body.permanent_city,
+      permanent_prov: body.permanent_prov,
+      father_fname: body.father_fname,
+      father_mname: body.father_mname,
+      father_lname: body.father_lname,
+      father_number: body.father_number,
+      mother_fname: body.mother_fname,
+      mother_mname: body.mother_mname,
+      mother_lname: body.mother_lname,
+      mother_number: body.mother_number,
+      guardian_fname: body.guardian_fname,
+      guardian_mname: body.guardian_mname,
+      guardian_lname: body.guardian_lname,
+      guardian_number: body.guardian_number,
+      last_grade_completed: body.last_grade_completed,
+      last_year_completed: body.last_year_completed,
+      last_school_attended: body.last_school_attended,
+      last_school_ID: body.last_school_ID,
+      track: body.track,
+      semester: body.track,
+      strand: body.track,
+      goodMoral: filename[0].filename,
+      schoolCard: filename[1].filename,
+      birthPSA: filename[2].filename,
+      picture: filename[3].filename,
+      school_yearId:body.school_yearId,
+      grade_level:body.grade_level
+    })
+   
+    await this.enrollStudentRepository.save(data);
+    return {
+      msg: 'Saved successfully.',
+      status: HttpStatus.CREATED,
+    };
+  } catch (error) {
+    return {
+      msg: 'Saving failed',
+      status: HttpStatus.BAD_REQUEST,
+    };
+  }
+}
+
+async update_student_file( body:any, filename: any){
+  console.log('Files',filename)
+   let studentData = await this.dataSource.manager.query("SELECT * FROM enroll_student where id = "+body.id+" ");
+  
+   console.log(studentData[0].picture)
+   console.log(studentData[0].goodMoral)
+   console.log(studentData[0].birthPSA)
+   console.log(studentData[0].schoolCard)
+  
+
+  
+  //Picture File
+    const matchingFilepicture = filename.find(file => file.originalname === body.picture);
+  // Extract the filename
+    const filenamePicture = matchingFilepicture ? matchingFilepicture.filename : studentData[0].picture;
+    let updatePicture = studentData[0].picture != body.picture ? filenamePicture :  studentData[0].picture;
+
+  //School Card File
+  const matchingFileschoolCard = filename.find(file => file.originalname === body.schoolCard);
+  // Extract the filename
+    const filenameSchoolCard = matchingFileschoolCard ? matchingFileschoolCard.filename : studentData[0].schoolCard;
+    let updateSchoolCard = studentData[0].schoolCard != body.schoolCard ? filenameSchoolCard :  studentData[0].schoolCard;
+
+
+      //Birth PSA File
+  const matchingFilebirthPSA = filename.find(file => file.originalname === body.birthPSA);
+  // Extract the filename
+    const filenameBirthPSA = matchingFilebirthPSA ? matchingFilebirthPSA.filename : studentData[0].birthPSA;
+    let updateBirthPsa = studentData[0].birthPSA != body.birthPSA ? filenameBirthPSA :  studentData[0].birthPSA;
+
+
+         //Birth PSA File
+  const matchingFilegoodMoral = filename.find(file => file.originalname === body.goodMoral);
+  // Extract the filename
+    const filenameGoodMoral = matchingFilegoodMoral ? matchingFilegoodMoral.filename : studentData[0].goodMoral;
+    let updateGoodMoral = studentData[0].goodMoral != body.goodMoral ? filenameGoodMoral :  studentData[0].goodMoral;
+
+    const data ={
+      picture:updatePicture,
+      schoolCard:updateSchoolCard,
+      birthPSA:updateBirthPsa,
+      goodMoral:updateGoodMoral,
+    }
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      this.dataSource.manager.update(EnrollStudent,body.id,data
+    )
+    await queryRunner.commitTransaction();
+    return{
+      msg:'Updated successfully!', status:HttpStatus.CREATED
+    }
+  
+  } catch (error) {
+    await queryRunner.rollbackTransaction();
+    return{
+      msg:'Something went wrong!'+ error, status:HttpStatus.BAD_REQUEST
+    }
+  } finally {
+    await queryRunner.release();
+  }
+  }
 
 
 }

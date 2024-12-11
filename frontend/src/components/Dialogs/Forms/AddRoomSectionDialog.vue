@@ -14,15 +14,40 @@
           <v-card-text style="max-height: 700px" class="my-4">
             <v-container>
               <v-row>
-                <v-col cols="12" md="12">
+                <v-col cols="12">
                   <v-text-field
-                    style="border: 1px solid gray; border-radius: 4px;"
-                    class="px-2"
+                    outlined
+                    dense
                     v-model="room_section"
                     label="Room Name"
-                    hide-details
+                    :rules="[formRules.required]"
                     required
+                    class="rounded-lg"
+                    color="#6DB249"
                   ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  :class="
+                    grade == 'Grade 11'
+                      ? ''
+                      : grade == 'Grade 12'
+                      ? ''
+                      : 'd-none'
+                  "
+                >
+                  <v-autocomplete
+                    v-model="strandId"
+                    outlined
+                    dense
+                    :rules="[formRules.required]"
+                    label="Strand List"
+                    :items="strandList"
+                    item-text="strand_name"
+                    item-value="id"
+                    class="rounded-lg"
+                    color="#6DB249"
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
             </v-container>
@@ -81,6 +106,8 @@ export default {
   },
   data() {
     return {
+      strandId: null,
+      strandList: [],
       applicantNumber: null,
       juniorList: ["Grade 7", "Grade 8", "Grade 9", "Grade 10"],
       seniorList: ["Grade 11", "Grade 12"],
@@ -200,10 +227,10 @@ export default {
     data: {
       handler(data) {
         this.dialog = true;
-        console.log("View Data", data.subject_title);
         if (data.id) {
           this.initialize();
           this.updateID = data.id;
+          this.strandId = data.strandId;
           this.room_section = data.room_section;
           this.grade_level = data.grade_level;
           this.seniorJunior = data.seniorJunior;
@@ -211,8 +238,8 @@ export default {
           this.dateTo = data.date_to;
         } else {
           this.$refs.AddSubjectDialog.reset();
+          this.strandId = data.strandId;
           this.initialize();
-          this.subject_title = data.subject_title;
           this.grade_level = data.grade_level;
           this.seniorJunior = data.seniorJunior;
           this.dateFrom = data.date_from;
@@ -225,6 +252,7 @@ export default {
 
   methods: {
     initialize() {
+      this.getAllStrand();
       this.loadYearSelection();
 
       //   this.getEmpStatus();
@@ -250,52 +278,73 @@ export default {
     },
 
     checkConflict(type) {
-      if (type == "ADD") {
-        if (this.room_section == null) {
-          this.fadeAwayMessage.show = true;
-          this.fadeAwayMessage.type = "error";
-          this.fadeAwayMessage.header = "System Message";
-          this.fadeAwayMessage.message = "Please fill all fields";
-        } else {
-          let data = {
-            room_section: this.room_section,
-            grade_level: this.grade,
-          };
-          // console.log(data);
-          this.axiosCall("/rooms-section", "POST", data).then((res) => {
-            console.log(res.data);
-            // alert("Successfully Added");
-
-            if (res.data.status == 201) {
-              this.fadeAwayMessage.show = true;
-              this.fadeAwayMessage.type = "success";
-              this.fadeAwayMessage.header = "System Message";
-              this.fadeAwayMessage.message = "Successfully Added Subject!";
-              this.closeD();
-              // location.reload();
-            } else if (res.data.status == 400) {
-              this.fadeAwayMessage.show = true;
-              this.fadeAwayMessage.type = "error";
-              this.fadeAwayMessage.header = "System Message";
-              this.fadeAwayMessage.message = res.data.msg;
+      if (this.$refs.AddSubjectDialog.validate()) {
+        if (type == "ADD") {
+          if (this.room_section == null) {
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "error";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = "Please fill all fields";
+          } else {
+            let data;
+            if (this.grade == "Grade 11" || this.grade == "Grade 12") {
+              data = {
+                room_section: this.room_section,
+                grade_level: this.grade,
+                strandId: this.strandId,
+              };
+            } else {
+              data = {
+                room_section: this.room_section,
+                grade_level: this.grade,
+              };
             }
-          });
-        }
-      } else if (type == "UPDATE") {
-        // alert("UPDATED");
-        if (this.room_section == null) {
-          this.fadeAwayMessage.show = true;
-          this.fadeAwayMessage.type = "error";
-          this.fadeAwayMessage.header = "System Message";
-          this.fadeAwayMessage.message = "Please fill all fields";
-        } else {
-          let data = {
-            room_section: this.room_section,
-            grade_level: this.grade,
-          };
-          console.log(data);
-          this.axiosCall("/rooms-section/" + this.updateID, "PATCH", data).then(
-            (res) => {
+            // console.log(data);
+            this.axiosCall("/rooms-section", "POST", data).then((res) => {
+              console.log(res.data);
+              // alert("Successfully Added");
+
+              if (res.data.status == 201) {
+                this.fadeAwayMessage.show = true;
+                this.fadeAwayMessage.type = "success";
+                this.fadeAwayMessage.header = "System Message";
+                this.fadeAwayMessage.message = "Successfully Added Subject!";
+                this.closeD();
+                // location.reload();
+              } else if (res.data.status == 400) {
+                this.fadeAwayMessage.show = true;
+                this.fadeAwayMessage.type = "error";
+                this.fadeAwayMessage.header = "System Message";
+                this.fadeAwayMessage.message = res.data.msg;
+              }
+            });
+          }
+        } else if (type == "UPDATE") {
+          // alert("UPDATED");
+          if (this.room_section == null) {
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "error";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = "Please fill all fields";
+          } else {
+            let data;
+            if (this.grade == "Grade 11" || this.grade == "Grade 12") {
+              data = {
+                room_section: this.room_section,
+                grade_level: this.grade,
+                strandId: this.strandId,
+              };
+            } else {
+              data = {
+                room_section: this.room_section,
+                grade_level: this.grade,
+              };
+            }
+            this.axiosCall(
+              "/rooms-section/" + this.updateID,
+              "PATCH",
+              data
+            ).then((res) => {
               console.log(res.data);
               if (res.data.status == 201) {
                 this.fadeAwayMessage.show = true;
@@ -310,10 +359,32 @@ export default {
                 this.fadeAwayMessage.header = "System Message";
                 this.fadeAwayMessage.message = res.data.msg;
               }
-            }
-          );
+            });
+          }
         }
       }
+    },
+
+    getAllStrand() {
+      this.axiosCall("/rooms-section/AllStrand/Data/strand", "GET").then(
+        (res) => {
+          if (res) {
+            let data = [];
+
+            for (let index = 0; index < res.data.length; index++) {
+              console.log();
+              const arr = {
+                id: res.data[index].id,
+                strand_name: res.data[index].strand_name,
+                trackId: res.data[index].trackId,
+              };
+              data.push(arr);
+            }
+            this.strandList = data;
+            console.log("All Strand", res.data);
+          }
+        }
+      );
     },
   },
 };

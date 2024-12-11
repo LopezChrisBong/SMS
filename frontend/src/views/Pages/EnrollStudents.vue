@@ -37,18 +37,37 @@
           <v-col class="mt-2 px-8" cols="12">
             <div v-if="tab.id == 1">
               <v-row>
-                <v-col cols="12"
-                  ><strong>Senior/Junior High Enrolly</strong
-                  ><v-divider></v-divider
+                <v-col cols="12">
+                  <!-- <strong>Senior/Junior High Enrolly</strong
+                  > -->
+                  <v-divider></v-divider
                 ></v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <v-select
                     :disabled="!isUpdate"
                     :items="seniorJuniorList"
-                    label="Junior High / Senior High"
+                    label="Grade Level Category"
                     color="#6DB249"
                     dense
                     v-model="formdata.seniorJunior"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                  <v-select
+                    :rules="[formRules.required]"
+                    :items="
+                      formdata.seniorJunior == 'Elementary'
+                        ? elementaryList
+                        : formdata.seniorJunior == 'Primary'
+                        ? primaryList
+                        : formdata.seniorJunior == 'Junior High'
+                        ? juniorList
+                        : seniorList
+                    "
+                    label="Grades"
+                    color="#6DB249"
+                    dense
+                    v-model="grade_level"
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
@@ -856,6 +875,63 @@
                   >
                   </v-text-field>
                 </v-col>
+                <v-col cols="12">
+                  <p>File Upload:</p>
+                </v-col>
+                <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                  <v-file-input
+                    outlined
+                    v-model="GoodMoral"
+                    dense
+                    class="rounded-lg"
+                    label="Good Moral"
+                    color="#6DB249"
+                    accept=".pdf"
+                    :clearable="false"
+                  >
+                  </v-file-input>
+                </v-col>
+                <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                  <v-file-input
+                    outlined
+                    v-model="SchoolCard"
+                    dense
+                    class="rounded-lg"
+                    label="School Card/Form137"
+                    color="#6DB249"
+                    accept=".pdf"
+                    :clearable="false"
+                  >
+                  </v-file-input>
+                </v-col>
+
+                <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                  <v-file-input
+                    outlined
+                    v-model="PSA"
+                    dense
+                    class="rounded-lg"
+                    label="Philippines Statistic Authority"
+                    color="#6DB249"
+                    accept=".pdf"
+                    :clearable="false"
+                  >
+                  </v-file-input>
+                </v-col>
+
+                <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                  <v-file-input
+                    outlined
+                    v-model="Picture"
+                    dense
+                    class="rounded-lg"
+                    label="2x2 Picture"
+                    color="#6DB249"
+                    accept=".png, .jpeg, .jpg"
+                    :clearable="false"
+                  >
+                  </v-file-input>
+                </v-col>
               </v-row>
             </div>
           </v-col>
@@ -947,7 +1023,16 @@
 export default {
   components: {},
   data: () => ({
+    juniorList: ["Grade 7", "Grade 8", "Grade 9", "Grade 10"],
+    elementaryList: ["Grade 1", "Grade 2", "Grade 3"],
+    primaryList: ["Grade 4", "Grade 5", "Grade 6"],
+    seniorList: ["Grade 11", "Grade 12"],
     sheet: false,
+    grade_level: null,
+    GoodMoral: null,
+    PSA: null,
+    SchoolCard: null,
+    Picture: null,
     viewRemarks: false,
     submitDialog: false,
     isUpdate: true,
@@ -971,7 +1056,7 @@ export default {
       { id: 2, type: "By naturalization" },
     ],
     countryList: [],
-    seniorJuniorList: ["Junior High", "Senior High"],
+    seniorJuniorList: ["Elementary", "Primary", "Junior High", "Senior High"],
     status: null,
     formdata: {
       id: null,
@@ -1175,6 +1260,46 @@ export default {
 
     saveUpdate() {
       this.confirmDialog = false;
+      const fd = new FormData();
+      let file = new File(["default content"], "default.pdf", {
+        type: "application/pdf",
+      });
+
+      let goodMoral;
+      if (this.GoodMoral == null) {
+        goodMoral = file;
+      } else {
+        goodMoral = this.GoodMoral;
+      }
+
+      let birthPSA;
+      if (this.PSA == null) {
+        birthPSA = file;
+      } else {
+        birthPSA = this.PSA;
+      }
+
+      let schoolCard;
+      if (this.SchoolCard == null) {
+        schoolCard = file;
+      } else {
+        schoolCard = this.SchoolCard;
+      }
+
+      let picture;
+      if (this.Picture == null) {
+        picture = file;
+      } else {
+        picture = this.Picture;
+      }
+
+      let arrFile = [goodMoral, birthPSA, schoolCard, picture];
+
+      for (let i = 0; i < arrFile.length; i++) {
+        const element = arrFile[i];
+        fd.append("file", element);
+      }
+
       let data = {
         fname: this.formdata.fname,
         lname: this.formdata.lname,
@@ -1234,22 +1359,29 @@ export default {
         track: this.transfer.track,
         semester: this.transfer.track,
         strand: this.transfer.track,
+        school_yearId: this.selectedFiter,
+        grade_level: this.grade_level,
       };
-      console.log(data);
-      this.axiosCall("/enroll-student", "POST", data).then((res) => {
-        if (res.data.status == 201) {
-          this.fadeAwayMessage.show = true;
-          this.fadeAwayMessage.type = "success";
-          this.fadeAwayMessage.header = "System Message Enrollment";
-          this.fadeAwayMessage.message = res.data.msg;
-          this.initialize();
-        } else {
-          this.fadeAwayMessage.show = true;
-          this.fadeAwayMessage.type = "error";
-          this.fadeAwayMessage.header = "System Message";
-          this.fadeAwayMessage.message = res.data.msg;
+
+      fd.append("body", JSON.stringify(data));
+      console.log("FD", fd);
+      this.axiosCall("/enroll-student/enrollStudentWithFile", "POST", fd).then(
+        (res) => {
+          if (res.data.status == 201) {
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "success";
+            this.fadeAwayMessage.header = "System Message Enrollment";
+            this.fadeAwayMessage.message = res.data.msg;
+            this.initialize();
+            this.$router.push("/enroll-success");
+          } else {
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "error";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = res.data.msg;
+          }
         }
-      });
+      );
     },
 
     getAllTracks() {

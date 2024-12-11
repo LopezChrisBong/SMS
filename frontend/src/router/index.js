@@ -19,7 +19,7 @@ import NotFound from "../views/Pages/NotFound.vue";
 import EnrollStudents from "../views/Pages/EnrollStudents.vue";
 import Student_verify from "../views/Pages/student_verify.vue";
 import CreateSubject from "../views/Pages/CreateSubject.vue";
-import AddRoomsSection from "../views/Pages/AddRoomsSection.vue";
+import HishSchoolRooms from "../views/Pages/AddRoomsSection.vue";
 import AddTracks from "../views/Pages/addTracks.vue";
 import AddStrands from "../views/Pages/AddStrands.vue";
 import StudentEnroll from "../views/Auth/StudentEnroll.vue";
@@ -28,6 +28,8 @@ import ClassroomProgramm from "../views/Pages/ClassroomProgramm.vue";
 import AvailableFaculty from "../views/Pages/AvailableFaculty.vue";
 import MyScheduledProgram from "../views/Pages/MyScheduledProgram.vue";
 import AddSchoolYear from "../views/Pages/AddSchoolYear.vue";
+import AddElementaryRooms from "../views/Pages/AddElementaryRooms.vue";
+import ElementaryProgram from "../views/Pages/ElementaryProgram.vue";
 
 Vue.use(VueRouter);
 
@@ -94,10 +96,18 @@ const routes = [
         meta: { title: "Create Subject", authRequired: true },
       },
       {
-        path: "add-rooms",
-        component: AddRoomsSection,
-        meta: { title: "Add Rooms", authRequired: true },
+        path: "high-school-rooms",
+        component: HishSchoolRooms,
+        meta: { title: "Add High School Rooms", authRequired: true },
       },
+
+      {
+        path: "elementary-rooms",
+        component: AddElementaryRooms,
+        meta: { title: "Add Elementary Rooms", authRequired: true },
+      },
+
+
       {
         path: "add-tracks",
         component: AddTracks,
@@ -150,7 +160,13 @@ const routes = [
       {
         path: "classroom-programm",
         component: ClassroomProgramm,
-        meta: { title: "Classroom Programm", authRequired: true },
+        meta: { title: "High School Program", authRequired: true },
+      },
+
+      {
+        path: "elementary-programm",
+        component: ElementaryProgram,
+        meta: { title: "Elementary Program", authRequired: true },
       },
 
       {

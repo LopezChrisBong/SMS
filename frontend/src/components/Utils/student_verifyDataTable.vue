@@ -95,17 +95,9 @@ e<template>
       </v-col>
     </v-row>
 
-    <AccountVerificationDialog
-      :data="updateData"
-      :action="action"
-      v-on:reloadTable="initialize"
-    />
+    <AccountVerificationDialog :data="updateData" :action="action" />
 
-    <ViewAccountVerificationDialog
-      :data="viewData"
-      :action="action"
-      v-on:reloadTable="initialize"
-    />
+    <ViewAccountVerificationDialog :data="viewData" :action="action" />
 
     <v-dialog v-model="dialogConfirmDelete" max-width="500">
       <v-card>
@@ -253,7 +245,7 @@ export default {
       this.activeTab = { id: 1, name: "For Verification" };
       this.axiosCall("/enroll-student/EnrollStudent", "GET").then((res) => {
         if (res) {
-          console.log(res.data);
+          console.log("Enrolled", res.data);
           let data = res.data;
           data.forEach((element, i) => {
             data[i].name = this.toTitleCase(element.name);

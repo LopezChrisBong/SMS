@@ -309,7 +309,28 @@ export class UserDetailsService {
     };
   }
 
+  async remove(id: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
 
+    try {
+
+      const toReturn = await queryRunner.query(
+        'DELETE users , user_detail  FROM users  INNER JOIN user_detail  WHERE users.id= user_detail.userID and user_detail.id = "'+id+'"',
+      );
+
+      return {
+        
+        msg: 'Deleted successfully'+ toReturn +'!',
+        status: HttpStatus.OK,
+      };
+    } catch (error) {
+      return {
+        msg: 'Deletion failed',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
 
 
 

@@ -38,11 +38,27 @@
           {{ item.fname }} {{ item.lname }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-btn x-small color="grey" outlined @click="editItem(item)">
+          <v-btn
+            x-small
+            color="blue"
+            outlined
+            @click="editItem(item)"
+            class="mx-2"
+          >
             <v-icon size="14">{{
               tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
             }}</v-icon>
             {{ tab == 1 ? "Verify" : "View" }}
+          </v-btn>
+
+          <v-btn
+            x-small
+            color="red"
+            outlined
+            :class="tab == 2 ? 'd-none' : ''"
+            @click="deleteItem(item)"
+          >
+            <v-icon size="14">mdi-delete-off</v-icon>Delete
           </v-btn>
         </template>
       </v-data-table>
@@ -261,10 +277,12 @@ export default {
         this.tab = tab.id;
       }
     },
-    // deleteItem(item) {
-    //   this.dialogConfirmDelete = true;
-    //   this.deleteData = item;
-    // },
+
+    deleteItem(item) {
+      this.dialogConfirmDelete = true;
+      this.deleteData = item;
+    },
+
     editItem(item) {
       this.updateData = [{ id: null }];
       setTimeout(() => {
@@ -272,15 +290,19 @@ export default {
         this.action = this.tab == 1 ? "Verify" : "Update";
       }, 100);
     },
-    // confirmDelete() {
-    //   this.axiosCall("/request-type/" + this.deleteData.id, "DELETE").then(
-    //     () => {
-    //       this.fadeAwayMessage.show = true;
-    //       this.itemData = null;
-    //       this.initialize();
-    //     }
-    //   );
-    // },
+
+    confirmDelete() {
+      this.axiosCall("/user-details/" + this.deleteData.id, "DELETE").then(
+        (res) => {
+          console.log(res.data);
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "success";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = "Account deleted successfully!";
+          this.initialize();
+        }
+      );
+    },
   },
 };
 </script>

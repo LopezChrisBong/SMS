@@ -175,16 +175,16 @@ export class UpdateEnrollStudentDto extends PartialType(CreateEnrollStudentDto) 
     strand: string;
 
     @ApiProperty()
-      lrn: boolean;
+    picture: string;
 
       @ApiProperty()
-      good_moral: boolean;
+      goodMoral: string;
 
       @ApiProperty()
-    birth_certificate: boolean;
+      birthPSA: string;
 
     @ApiProperty()
-    form137a: boolean;
+    schoolCard: string;
 
     @ApiProperty()
     schoo_yearId: number;

@@ -7,4 +7,7 @@ export class CreateRoomsSectionDto {
 
     @ApiProperty()
     grade_level:string;
+
+    @ApiProperty()
+    strandId:number;
 }
