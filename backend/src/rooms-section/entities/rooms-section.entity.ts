@@ -33,6 +33,15 @@ export class RoomsSection {
       )
       grade_level:string
 
+      @Column(
+        {  
+          type:'int',
+          nullable:true,
+          default:null
+        }
+      )
+      strandId:number
+
       @CreateDateColumn({
         nullable: false,
         type: 'datetime',

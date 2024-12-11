@@ -14,7 +14,7 @@
           <v-card-text style="max-height: 700px" class="my-4">
             <v-container>
               <v-row>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="12">
                   <v-text-field
                     style="border: 1px solid gray; border-radius: 4px;"
                     class="px-2"
@@ -24,7 +24,7 @@
                     required
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6">
+                <!-- <v-col cols="12" md="6">
                   <v-select
                     v-model="seniorJunior"
                     outlined
@@ -34,10 +34,10 @@
                     color="#93CB5B"
                     dense
                   ></v-select>
-                </v-col>
+                </v-col> -->
               </v-row>
 
-              <v-row class="mt-10">
+              <!-- <v-row class="mt-10">
                 <v-col col="12" md="6">From: {{ dateFrom }}</v-col>
                 <v-col col="12" md="6">To: {{ dateTo }}</v-col>
               </v-row>
@@ -67,7 +67,7 @@
                     ></v-date-picker>
                   </v-menu>
                 </v-col>
-                <v-col cols="12" lg="6">
+                 <v-col cols="12" lg="6">
                   <v-menu
                     ref="menu"
                     v-model="menu"
@@ -101,8 +101,8 @@
                       </v-btn>
                     </v-date-picker>
                   </v-menu>
-                </v-col>
-              </v-row>
+                </v-col> 
+              </v-row> -->
             </v-container>
           </v-card-text>
           <v-divider></v-divider>
@@ -326,12 +326,7 @@ export default {
 
     checkConflict(type) {
       if (type == "ADD") {
-        if (
-          this.subject_title == null ||
-          this.seniorJunior == null ||
-          this.dateFrom == null ||
-          this.dateTo == null
-        ) {
+        if (this.subject_title == null) {
           this.fadeAwayMessage.show = true;
           this.fadeAwayMessage.type = "error";
           this.fadeAwayMessage.header = "System Message";
@@ -339,10 +334,6 @@ export default {
         } else {
           let data = {
             subject_title: this.subject_title,
-            seniorJunior: this.seniorJunior,
-            date_from: this.dateFrom,
-            date_to: this.dateTo,
-            school_yearId: this.filter,
           };
           // console.log(data);
           this.axiosCall("/subjects", "POST", data).then((res) => {
@@ -366,20 +357,11 @@ export default {
         }
       } else if (type == "UPDATE") {
         // alert("UPDATED");
-        if (
-          this.subject_title == null ||
-          this.seniorJunior == null ||
-          this.dateFrom == null ||
-          this.dateTo == null
-        ) {
+        if (this.subject_title == null) {
           alert("Please Fillup missing form");
         } else {
           let data = {
             subject_title: this.subject_title,
-            seniorJunior: this.seniorJunior,
-            date_from: this.dateFrom,
-            date_to: this.dateTo,
-            school_yearId: this.filter,
           };
           console.log(data);
           this.axiosCall("/subjects/" + this.updateID, "PATCH", data).then(

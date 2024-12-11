@@ -138,6 +138,7 @@
 export default {
   name: "login",
   mounted() {
+    this.getSchoolYear();
     if (this.$store.state.user) {
       if (!this.$store.state.user.usertype.id) {
         //this.deleteToken();

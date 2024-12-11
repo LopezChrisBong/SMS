@@ -22,11 +22,13 @@ export class RoomsSectionService {
 
 
   async create(createRoomsSectionDto: CreateRoomsSectionDto) {
+    console.log(createRoomsSectionDto)
 
       try {
         let data = this.dataSource.manager.create(RoomsSection,{
           room_section: createRoomsSectionDto.room_section,
           grade_level:createRoomsSectionDto.grade_level,
+          strandId:createRoomsSectionDto.strandId,
         })
         await this.dataSource.manager.save(data)
         return{
@@ -165,6 +167,21 @@ export class RoomsSectionService {
     return genCount;
   }
 
+
+  async getConflictStrand(grade:string, filter:number, strandId: number) {
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    const genCount = await queryRunner.query(
+      // 'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "Grade 9" and  school_yearId = "'+filter+'"',
+      'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "'+grade+'" and  school_yearId = "'+filter+'" and strandId = "'+strandId+'"',
+    );
+    console.log(genCount[0].count_gen)
+
+    await queryRunner.release();
+    return genCount[0].count_gen;
+  }
+
   async getRoomClassList(id: number,grade:string, filter:number) {
 
     let data = await this.dataSource.manager
@@ -189,6 +206,7 @@ export class RoomsSectionService {
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
+    
    
 try {
    const gradeRecord = await queryRunner.query(
@@ -275,11 +293,148 @@ for (let i = 0; i < gradeRecordclassList.length; i++) {
   }
 
 
+  async genStrandRecord(grade:string, filter:number , strandId:number) {
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+   
+try {
+   const gradeRecord = await queryRunner.query(
+      'SELECT * FROM enroll_student where grade_level = "'+grade+'" and school_yearId = "'+filter+'" and strand = "'+strandId+'" and statusEnrolled = 1 ',
+    );
+
+    const room = await queryRunner.query(
+      'SELECT *  FROM rooms_section where grade_level = "'+grade+'" and strandId = "'+strandId+'"',
+    );
+
+    // const students = Array.from({ length:gradeRecord.length }, (_, i) => ({ id: i + 1, lname: `Student ${i + 1}` }));
+    // const rooms = Array.from({ length: room.length }, (_, i) => ({ id: i + 1, room_section: `Room ${i + 1}` }));
+
+    // const gradeRecord = []
+    // for (let index = 0; index < 50; index++) {
+    //   const element ={id: +index , lname:'love'+index};
+    //   gradeRecord.push(element)
+    // }
+
+    // const room = []
+    // for (let index = 1; index <= 7; index++) {
+    //   const element ={id: +index , lname:'love'+index};
+    //   room.push(element)
+    // }
+
+   
+    const gradeRecordclassList = []
+    let roomIndex = 0;
+   // Evenly distribute students across rooms
+   gradeRecord.forEach((student, index) => {
+    gradeRecordclassList.push({
+      studentId: student.id,
+      studentName: student.lname,
+      roomId: room[roomIndex].id,
+      roomName: room[roomIndex].lname,
+    });
+
+    // Move to the next room, cycle back to the first room after the last
+    roomIndex = (roomIndex + 1) % room.length;
+  });
+
+//Save
+
+
+for (let i = 0; i < gradeRecordclassList.length; i++) {
+  
+    let stranRecord = this.dataSource.manager.create(StudentList, {
+      studentId:gradeRecordclassList[i].studentId,
+      roomId:gradeRecordclassList[i].roomId,
+      grade_level:grade,
+      school_yearId:filter,
+      strandId:strandId
+  })
+  await this.dataSource.manager.save(stranRecord)
+}
+
+
+  // const groupedByRoomId = gradeRecordclassList.reduce((acc, item) => {
+  //   // If the roomId key doesn't exist in the accumulator, initialize it as an empty array
+  //   if (!acc[item.roomId]) {
+  //     acc[item.roomId] = [];
+  //   }
+  //   // Push the current item into the appropriate group
+  //   acc[item.roomId].push(item);
+  //   return acc;
+  // }, {});
+  // console.log(groupedByRoomId)
+    // return { gradeLevel, classList };
+    await queryRunner.release();
+    // console.log(gradeRecord[0].student_no)
+    
+    
+    return{
+      msg:'Successfully generated list for "'+grade+'"!', 
+      status:HttpStatus.CREATED
+    }
+  
+} catch (error) {
+  return{
+    msg:'Something went wrong!'+ error, 
+    status:HttpStatus.BAD_REQUEST
+  }
+}
+  
+  }
+ async updateAddRecords(createStudentListDto:CreateStudentListDto, grade:string, sy:number , room:number){
+
+  try {
+    
+  let conflict = await this.dataSource.manager
+  .createQueryBuilder(StudentList, 'ES')
+  .select([
+    "COUNT(*) as conflict",
+  ])
+  .where('grade_level = "'+grade+'"')
+  .andWhere('school_yearId = '+sy+'')
+  .andWhere('roomId = '+room+'')
+  .getRawMany();
+
+  // console.log(conflict[0].conflict,sy,grade,room)
+
+  if(conflict[0].conflict == 0){
+  const studentList =  JSON.parse(JSON.stringify(createStudentListDto))
+  for (let i = 0; i < studentList.length; i++) {
+    let updateClassRecord = this.dataSource.manager.create(StudentList, {
+      studentId:studentList[i].studentId,
+      roomId:room,
+      grade_level:grade,
+      school_yearId:sy
+   })
+
+    await this.dataSource.manager.save(updateClassRecord)
+  }
+    return{
+      msg:'Save successfully!', status:HttpStatus.CREATED
+          }
+    }
+      return{
+       msg:'Conflict on updating classlist, Please check duplicate school year, room name!',  status:HttpStatus.BAD_REQUEST
+          }
+
+  } catch (error) {
+    return{
+      msg:'Something went wrong!'+ error, status:HttpStatus.BAD_REQUEST
+    }
+  }
+
+
+  
+
+
+ }
+
   async AllStrand() {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     const toReturn = await queryRunner.query(
-      'SELECT * FROM add_strand left join add_tracks on add_strand.trackId = add_tracks.id  order by strand_name ASC',
+      'SELECT *, add_strand.id as id FROM add_strand left join add_tracks on add_strand.trackId = add_tracks.id  order by strand_name ASC',
     );
     await queryRunner.release();
     return toReturn;
@@ -306,6 +461,7 @@ try {
     this.dataSource.manager.update(RoomsSection,id,{
     room_section:updateRoomsSectionDto.room_section,
     grade_level: updateRoomsSectionDto.grade_level,
+    strandId:updateRoomsSectionDto.strandId
   })
   return{
     msg:'Updated successfully!', status:HttpStatus.CREATED

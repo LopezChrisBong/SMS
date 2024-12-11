@@ -13,4 +13,7 @@ export class CreateStudentListDto {
 
     @ApiProperty()
     school_yearId:number;
+
+    @ApiProperty()
+    strandId:number;
 }

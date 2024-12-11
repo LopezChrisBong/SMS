@@ -16,15 +16,10 @@ export class SubjectsService {
   ){}
 
  async create(createSubjectDto: CreateSubjectDto) {
-  console.log(createSubjectDto)
     
     try {
       let data = this.dataSource.manager.create(Subject,{
         subject_title: createSubjectDto.subject_title,
-      seniorJunior:createSubjectDto.seniorJunior,
-      date_from:createSubjectDto.date_from,
-      date_to:createSubjectDto.date_to,
-      school_yearId:createSubjectDto.school_yearId
       })
 
       await this.dataSource.manager.save(data)
@@ -68,27 +63,20 @@ export class SubjectsService {
     return data
   }
 
-  async activeSubject(filter:number){
-    console.log('Filter',filter)
+  async activeSubject(){
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
-    .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
-    .andWhere('sub.school_yearId = :school_yearId', {
-      school_yearId: filter,
-    })
-    .orderBy('created_at', 'DESC')
+    // .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
+    .orderBy('subject_title', 'ASC')
     .getMany()
     return data
   }
 
   
 
-  async notActiveSubject(filter:number){
+  async notActiveSubject(){
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'JP')
-    .where('JP.id NOT IN (SELECT id FROM subject where Date(NOW()) between Date(date_from) and Date(date_to))')
-    .andWhere('school_yearId = :school_yearId', {
-      school_yearId: filter,
-    })
-    .orderBy('created_at', 'DESC')
+    // .where('JP.id NOT IN (SELECT id FROM subject where Date(NOW()) between Date(date_from) and Date(date_to))')
+    .orderBy('subject_title', 'ASC')
     .getMany()
     return data
 
@@ -150,10 +138,6 @@ export class SubjectsService {
 try {
     this.dataSource.manager.update(Subject,id,{
     subject_title:updateSubjectDto.subject_title,
-    seniorJunior: updateSubjectDto.seniorJunior,
-    date_from: updateSubjectDto.date_from,
-    date_to: updateSubjectDto.date_to,
-    school_yearId:updateSubjectDto.school_yearId
   })
   return{
     msg:'Updated successfully!', status:HttpStatus.CREATED

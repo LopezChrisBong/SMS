@@ -19,15 +19,15 @@ export class SubjectsController {
     return this.subjectsService.addTeachersSubject(createTeacherSubjectDto);
   }
 
-  @Get('getSubject/active/:filter')
-  activeSubject(@Param('filter') filter: string) {
-    return this.subjectsService.activeSubject(+filter);
+  @Get('getSubject/active')
+  activeSubject() {
+    return this.subjectsService.activeSubject();
   }
   
 
-  @Get('CreateSubject/notActive/:filter')
-  notActiveSubject(@Param('filter') filter: string) {
-    return this.subjectsService.notActiveSubject(+filter);
+  @Get('CreateSubject/notActive')
+  notActiveSubject() {
+    return this.subjectsService.notActiveSubject();
   }
   @Get('getSubjectTaagged/:id')
   getSubjectTaagged(@Param('id') id: string) {

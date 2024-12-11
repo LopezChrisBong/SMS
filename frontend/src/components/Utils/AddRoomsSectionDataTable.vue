@@ -34,7 +34,32 @@
         ></v-text-field>
         <v-btn
           class="white--text ml-2 rounded-lg"
-          :class="generatedCount == 0 ? '' : 'd-none'"
+          :class="
+            generatedCount != 0
+              ? 'd-none'
+              : gradeName == 'Grade 11'
+              ? ''
+              : gradeName == 'Grade 12'
+              ? ''
+              : 'd-none'
+          "
+          :color="$vuetify.theme.themes.light.submitBtns"
+          @click="dummyGenerate()"
+        >
+          <v-icon left> mdi-database-check-outline </v-icon>
+          Generate Class Record
+        </v-btn>
+        <v-btn
+          class="white--text ml-2 rounded-lg"
+          :class="
+            generatedCount != 0
+              ? 'd-none'
+              : gradeName == 'Grade 11'
+              ? 'd-none'
+              : gradeName == 'Grade 12'
+              ? 'd-none'
+              : ''
+          "
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="generateClassRecord()"
@@ -171,7 +196,53 @@
       v-on:reloadTable="initialize"
     />
 
-    <v-dialog v-model="confirmDialog" persistent max-width="350">
+    <v-dialog v-model="generateSeniorClassRecord" persistent max-width="550">
+      <v-card color="white">
+        <div class="pa-4 #3a3b3a--text">
+          <div class="text-h6 mb-1">
+            Please choose strand to generate class list!
+          </div>
+          <div class="text-body-1 mb-1 mt-10">
+            <v-autocomplete
+              v-model="strandId"
+              :rules="[formRules.required]"
+              dense
+              outlined
+              label="Strand"
+              class="rounded-lg"
+              item-text="strand_name"
+              item-value="id"
+              color="#93CB5B"
+              :items="strandList"
+            >
+            </v-autocomplete>
+          </div>
+        </div>
+
+        <!-- <v-card-title class="text-h5">
+                Are you sure you want to proceed?
+              </v-card-title> -->
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="red"
+            outlined
+            @click="generateSeniorClassRecord = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="#147452"
+            class="white--text"
+            @click="generateByStrand()"
+          >
+            Generate
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="confirmDelete" persistent max-width="350">
       <v-card color="white">
         <div class="pa-4 #3a3b3a--text">
           <div class="text-h6 mb-1">WARNING!</div>
@@ -190,7 +261,7 @@
               </v-card-title> -->
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="confirmDialog = false">
+          <v-btn color="red" outlined @click="confirmDelete = false">
             Close
           </v-btn>
           <v-btn color="#147452" class="white--text" @click="deleteItem()">
@@ -230,6 +301,10 @@ export default {
     taggingData: null,
     fullname: null,
     applicantData: null,
+    strandId: null,
+    strandList: [],
+    confirmDelete: false,
+    generateSeniorClassRecord: false,
     headers: [
       {
         text: "Room Name",
@@ -456,6 +531,81 @@ export default {
           }
         });
       }
+    },
+    dummyGenerate() {
+      let filter = this.$store.getters.getFilterSelected;
+      this.axiosCall(
+        "/enroll-student/getSchoolYear/toGenerate/" +
+          this.gradeName +
+          "/" +
+          filter,
+        "GET"
+      ).then((res) => {
+        this.conflict = res.data[0].conflict;
+
+        console.log("Strand Conflict", this.conflict);
+        if (this.conflict == 0) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "No Student Enrolled in this School Year or Grade Level";
+        } else {
+          this.generateSeniorClassRecord = true;
+          this.getAllStrand();
+        }
+      });
+    },
+    generateByStrand() {
+      let filter = this.$store.getters.getFilterSelected;
+      this.axiosCall(
+        "/rooms-section/getConflictStrand/" +
+          this.gradeName +
+          "/" +
+          filter +
+          "/" +
+          this.strandId,
+        "GET"
+      ).then((res) => {
+        console.log("conflict", res.data);
+
+        if (res.data != 0) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "Please select another strand to generate, class list already exist!";
+        } else {
+          console.log("wala pa");
+          this.axiosCall(
+            "/rooms-section/genStrandRecord/seniorHigh/" +
+              this.gradeName +
+              "/" +
+              filter +
+              "/" +
+              this.strandId,
+            "POST"
+          ).then((res) => {
+            if (res) {
+              if (res.data.status == 201) {
+                this.dialog = false;
+                this.fadeAwayMessage.show = true;
+                this.fadeAwayMessage.type = "success";
+                this.fadeAwayMessage.header = "System Message";
+                this.fadeAwayMessage.message = res.data.msg;
+                this.confirmDialog = false;
+                this.initialize();
+              } else if (res.data.status == 400) {
+                this.confirmDialog = false;
+                this.fadeAwayMessage.show = true;
+                this.fadeAwayMessage.type = "error";
+                this.fadeAwayMessage.header = "System Message";
+                this.fadeAwayMessage.message = res.data.msg;
+              }
+            }
+          });
+        }
+      });
     },
 
     generateClassRecord() {
@@ -815,6 +965,28 @@ export default {
     confirmDelete(item) {
       this.confirmDialog = true;
       this.deleteData = item;
+    },
+
+    getAllStrand() {
+      this.axiosCall("/rooms-section/AllStrand/Data/strand", "GET").then(
+        (res) => {
+          if (res) {
+            let data = [];
+
+            for (let index = 0; index < res.data.length; index++) {
+              console.log();
+              const arr = {
+                id: res.data[index].id,
+                strand_name: res.data[index].strand_name,
+                trackId: res.data[index].trackId,
+              };
+              data.push(arr);
+            }
+            this.strandList = data;
+            console.log("All Strand", res.data);
+          }
+        }
+      );
     },
   },
 };
