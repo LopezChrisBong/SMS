@@ -11,7 +11,9 @@
       <v-form ref="ShortListAccess" @submit.prevent>
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
-            <span>{{ action }} {{ room_section }} Student List</span>
+            <span
+              >{{ action }} {{ grade }} {{ room_section }} Student List</span
+            >
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
               <v-icon>mdi-close</v-icon>
@@ -62,6 +64,19 @@
                       medium
                       class="mb-2 ma-2 pa-2 "
                       outlined
+                      @click="
+                        grade == 'Grade 10' || grade == 'Grade 6'
+                          ? notUpdateable()
+                          : updateable()
+                      "
+                    >
+                      <v-icon size="14">mdi-pencil</v-icon>Update
+                    </v-btn>
+                    <v-btn
+                      color="#147452"
+                      medium
+                      class="mb-2 ma-2 pa-2 "
+                      outlined
                       @click="employeeDialog = true"
                     >
                       <v-icon size="14">mdi-plus</v-icon>Add
@@ -104,15 +119,6 @@
             <v-btn color="#147452" class="white--text" @click="save()">
               <v-icon>mdi-check-circle</v-icon>
               Save
-            </v-btn>
-            <v-btn
-              color="#5a67da"
-              class="white--text"
-              v-if="action == 'Update'"
-              @click="update()"
-            >
-              <v-icon>mdi-check-circle</v-icon>
-              Delete
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -177,6 +183,76 @@
       </v-form>
     </v-dialog>
 
+    <v-dialog
+      v-model="updateClassListDialog"
+      persistent
+      eager
+      scrollable
+      max-width="700px"
+    >
+      <v-form ref="updateClassListDialogForm" @submit.prevent>
+        <v-card>
+          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+            <span>Update Class List</span>
+            <v-spacer></v-spacer>
+            <v-btn icon dark @click="updateClassListDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+
+          <v-card-text style="max-height: 700px" class="my-4">
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="nextSchoolYear"
+                    dense
+                    outlined
+                    required
+                    label="School Year"
+                    :items="nextSchoolYearList"
+                    item-text="school_year"
+                    item-value="id"
+                    class="rounded-lg"
+                    color="#6DB249"
+                  ></v-autocomplete>
+                </v-col>
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="nextClass"
+                    dense
+                    outlined
+                    required
+                    :rules="[formRules.required]"
+                    label="Room List"
+                    :items="nextClassRoomList"
+                    item-text="room_section"
+                    item-value="id"
+                    class="rounded-lg"
+                    color="#6DB249"
+                  ></v-autocomplete>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-divider></v-divider>
+
+          <v-card-actions class="pa-5">
+            <v-spacer></v-spacer>
+
+            <v-btn color="red" outlined @click="updateClassListDialog = false">
+              <v-icon>mdi-close-circle-outline</v-icon>
+              Cancel
+            </v-btn>
+
+            <v-btn color="#147452" class="white--text" @click="updateStudent()">
+              <v-icon>mdi-check-circle</v-icon>
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -210,6 +286,13 @@ export default {
       student_activeList: [],
       remove_item: [],
       room_section: null,
+      updateClassListDialog: false,
+      nextSchoolYearList: [],
+      nextSchoolYear: null,
+      nextGradeLevel: null,
+      nextClass: null,
+      nextClassRoomList: [],
+
       headers: [
         {
           text: "Name",
@@ -241,6 +324,7 @@ export default {
       handler(data) {
         this.initialize();
         this.dialog = true;
+        this.$refs.updateClassListDialogForm.resetValidation();
         // console.log("DATA", data);
         if (data.id) {
           console.log("Data Title", data);
@@ -257,6 +341,7 @@ export default {
   methods: {
     initialize() {
       this.getEnrolledStudent();
+      this.getSchoolYear();
     },
 
     getEnrolledStudent() {
@@ -297,7 +382,47 @@ export default {
         }
       });
     },
+    notUpdateable() {
+      alert("This grade level is  not updatable!");
+    },
 
+    updateable() {
+      this.nextGradeLevel =
+        this.grade == "Grade 1"
+          ? "Grade 2"
+          : this.grade == "Grade 2"
+          ? "Grade 3"
+          : this.grade == "Grade 3"
+          ? "Grade 4"
+          : this.grade == "Grade 4"
+          ? "Grade 5"
+          : this.grade == "Grade 5"
+          ? "Grade 6"
+          : this.grade == "Grade 6"
+          ? "Grade 7"
+          : this.grade == "Grade 7"
+          ? "Grade 8"
+          : this.grade == "Grade 8"
+          ? "Grade 9"
+          : this.grade == "Grade 9"
+          ? "Grade 10"
+          : this.grade == "Grade 10"
+          ? "Grade 11"
+          : "Grade 12";
+      this.updateClassListDialog = true;
+      this.getAllRooms();
+    },
+
+    getAllRooms() {
+      this.axiosCall("/rooms-section/" + this.nextGradeLevel, "GET").then(
+        (res) => {
+          if (res) {
+            console.log("Love", res.data);
+            this.nextClassRoomList = res.data;
+          }
+        }
+      );
+    },
     saveStudent() {
       for (let i = 0; i < this.student_activeList.length; i++) {
         for (let j = 0; j < this.studentData.length; j++) {
@@ -330,6 +455,7 @@ export default {
       this.eventHub.$emit("closeaddStudentClassRoomDialog", false);
       this.initialize();
       this.dialog = false;
+      this.updateClassListDialog = false;
     },
 
     save() {
@@ -365,62 +491,42 @@ export default {
       // }
     },
 
-    update() {
-      console.log("Update Data");
-      if (this.$refs.ShortListAccess.validate()) {
-        const fd = new FormData();
-        console.log(fd);
-        let data = {
-          resolution: this.resolution,
-          effective_date: this.effective_date,
-        };
-        if (this.fileNewValue == true) {
-          console.log("File naa", this.fileNewValue);
-          fd.append("file", this.file_selected);
-          fd.append("body", JSON.stringify(data));
-          this.axiosCall("/resolution/" + this.id, "PATCH", fd).then((res) => {
-            if (res.data.status == 200) {
-              this.fadeAwayMessage.show = true;
-              this.fadeAwayMessage.type = "success";
-              this.fadeAwayMessage.header = "System Message";
-              this.fadeAwayMessage.message = res.data.msg;
-              this.closeD();
-            } else {
-              this.fadeAwayMessage.show = true;
-              this.fadeAwayMessage.type = "error";
-              this.fadeAwayMessage.header = "System Message";
-              this.fadeAwayMessage.message = res.data.msg;
-            }
-          });
-        } else {
-          console.log("File", this.fileNewValue);
-          this.axiosCall(
-            "/resolution/noFileUploaded/" + this.id,
-            "PATCH",
-            data
-          ).then((res) => {
-            if (res.data.status == 200) {
-              this.fadeAwayMessage.show = true;
-              this.fadeAwayMessage.type = "success";
-              this.fadeAwayMessage.header = "System Message";
-              this.fadeAwayMessage.message = res.data.msg;
-              this.closeD();
-            } else {
-              this.fadeAwayMessage.show = true;
-              this.fadeAwayMessage.type = "error";
-              this.fadeAwayMessage.header = "System Message";
-              this.fadeAwayMessage.message = res.data.msg;
-            }
-          });
+    async updateStudent() {
+      if (this.$refs.updateClassListDialogForm.validate()) {
+        let StudentID = [];
+        for (let index = 0; index < this.studentList.length; index++) {
+          await StudentID.push(this.studentList[index].studentId);
         }
-      }
-    },
 
-    getSchoolYear() {
-      this.axiosCall("/school-year", "GET").then((res) => {
-        console.log(res.data);
-        this.syList = res.data;
-      });
+        this.axiosCall(
+          "/rooms-section/updateAddRecords/" +
+            this.nextGradeLevel +
+            "/" +
+            this.nextSchoolYear +
+            "/" +
+            this.nextClass,
+          "POST",
+          this.studentList
+        ).then((res) => {
+          if (res) {
+            if (res.data.status == 201) {
+              this.dialog = false;
+              this.fadeAwayMessage.show = true;
+              this.fadeAwayMessage.type = "success";
+              this.fadeAwayMessage.header = "System Message";
+              this.fadeAwayMessage.message = res.data.msg;
+              this.confirmDialog = false;
+              this.initialize();
+            } else if (res.data.status == 400) {
+              this.confirmDialog = false;
+              this.fadeAwayMessage.show = true;
+              this.fadeAwayMessage.type = "error";
+              this.fadeAwayMessage.header = "System Message";
+              this.fadeAwayMessage.message = res.data.msg;
+            }
+          }
+        });
+      }
     },
 
     getEmpDetails() {
@@ -439,6 +545,15 @@ export default {
     getDesignations() {
       this.axiosCall("/designations", "GET").then((res) => {
         this.designationList = res.data;
+      });
+    },
+
+    getSchoolYear() {
+      this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
+        if (res) {
+          this.nextSchoolYearList = res.data;
+          this.nextSchoolYear = res.data[0].id;
+        }
       });
     },
   },

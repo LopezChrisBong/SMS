@@ -2,11 +2,11 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="6" class="flex-items">
-        <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
+        <!-- <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
-        </v-tabs>
+        </v-tabs> -->
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="12" md="6" class="d-flex justify-space-between">
@@ -239,19 +239,19 @@ export default {
         valign: "center",
       },
 
-      {
-        text: "Senior / Junior",
-        value: "seniorJunior",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
+      // {
+      //   text: "Senior / Junior",
+      //   value: "seniorJunior",
+      //   align: "center",
+      //   valign: "center",
+      //   sortable: false,
+      // },
 
       {
         text: "Action",
         value: "action",
-        align: "center",
-        valign: "center",
+        align: "end",
+        valign: "end",
         sortable: false,
       },
     ],
@@ -271,8 +271,10 @@ export default {
     activeTab: { id: 1, name: "Active-Jobs" },
     tab: 1,
     tabList: [
-      { id: 1, name: "Active-Subjects" },
-      { id: 2, name: "Not Active-Subjects" },
+      { id: 1, name: "Active-Jobs" },
+      // { id: 2, name: "Primary" },
+      // { id: 2, name: "Junior High" },
+      // { id: 2, name: "Senior High" },
       //   { id: 3, name: "Applicants" },
     ],
     filter: null,
@@ -397,30 +399,27 @@ export default {
     },
 
     initialize() {
-      let filter = this.$store.getters.getFilterSelected;
+      // let filter = this.$store.getters.getFilterSelected;
       this.loading = true;
       // alert(filter);
       if (this.tab == 1) {
-        this.axiosCall("/subjects/getSubject/active/" + filter, "GET").then(
-          (res) => {
-            if (res) {
-              console.log("Love", res.data);
-              this.data = res.data;
-              this.loading = false;
-            }
-          }
-        );
-      } else if (this.tab == 2) {
-        this.axiosCall(
-          "/subjects/CreateSubject/notActive/" + filter,
-          "GET"
-        ).then((res) => {
+        this.axiosCall("/subjects/getSubject/active", "GET").then((res) => {
           if (res) {
             console.log("Love", res.data);
             this.data = res.data;
             this.loading = false;
           }
         });
+      } else if (this.tab == 2) {
+        this.axiosCall("/subjects/CreateSubject/notActive", "GET").then(
+          (res) => {
+            if (res) {
+              console.log("LoveNot", res.data);
+              this.data = res.data;
+              this.loading = false;
+            }
+          }
+        );
       }
     },
 

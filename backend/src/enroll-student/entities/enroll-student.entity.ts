@@ -406,32 +406,28 @@ export class EnrollStudent {
     grade_level: string;
 
       @Column({
-        type: 'tinyint',
-        default:false,
+        type: 'varchar',nullable: true
       })
-      lrn: boolean;
+      picture: string;
 
       @Column({
-        type: 'tinyint',
-        default:false,
+        type: 'varchar',nullable: true
       })
-      good_moral: boolean;
+      goodMoral: string;
 
       @Column({
-        type: 'tinyint',
-        default:false,
+        type: 'varchar',nullable: true
       })
-    birth_certificate: boolean;
+      birthPSA: string;
 
-    @Column({
-      type: 'tinyint',
-      default:false,
-    })
-    form137a: boolean;
+      @Column({
+        type: 'varchar',nullable: true
+      })
+    schoolCard: string;
 
 
         @Column({
-          type: 'int',
+          type: 'int',nullable: false
         })
             school_yearId: number;
 

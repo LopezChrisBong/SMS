@@ -178,6 +178,22 @@ export class CreateEnrollStudentDto {
       @ApiProperty()
       statusEnrolled: boolean;
 
+      @ApiProperty()
+      picture: string;
+  
+        @ApiProperty()
+        goodMoral: string;
+  
+        @ApiProperty()
+        birthPSA: string;
+  
+      @ApiProperty()
+      schoolCard: string;
+
+
+      @ApiProperty()
+      school_yearId:number
+
 
  
 }

@@ -220,7 +220,10 @@ export class UserDetailsController {
   }
 
   
-
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.userDetailsService.remove(+id);
+  }
 
 
 }

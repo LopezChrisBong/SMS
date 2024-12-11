@@ -319,7 +319,6 @@ export default {
     // console.log("is OIC", this.isOIC);
     // this.loadUserRoles();
     // alert(this.$router.history.current.path);
-
     this.getSchoolYear();
     if (this.$store.state.expiryDate < Date.now()) {
       this.$store.dispatch("setUser", null);
@@ -448,6 +447,7 @@ export default {
         if (res) {
           this.schooYearList = res.data;
           this.selectedFiter = res.data[0];
+          this.$store.commit("setFilterSelected", this.selectedFiter.id);
         }
       });
     },

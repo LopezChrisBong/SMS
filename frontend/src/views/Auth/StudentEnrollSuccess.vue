@@ -14,7 +14,7 @@
               >
                 Please submit the following documents on the registrars office!
                 Note that within six days of not submitting you required
-                document to pass your pending enrolemnt will be deleted!
+                document to pass your pending enrollment will be deleted!
               </p>
             </div>
 

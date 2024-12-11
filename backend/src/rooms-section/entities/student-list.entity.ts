@@ -50,6 +50,15 @@ export class StudentList {
       school_yearId:number
 
 
+      @Column(
+        {  
+          type:'int',
+          nullable:true
+        }
+      )
+      strandId:number
+
+
       @CreateDateColumn({
         nullable: false,
         type: 'datetime',

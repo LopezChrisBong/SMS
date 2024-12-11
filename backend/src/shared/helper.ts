@@ -25,57 +25,13 @@ export class Helper {
     cb(null, join(process.cwd(), '/../upload_img/'));
   }
 
-  static TO_filePath(req, file, cb) {
-    cb(null, join(process.cwd(), '/../uploaded_attachments/'));
+  static student_files(req, file, cb) {
+    // cb(null, join(process.cwd(), '/../student_file/'));
+    cb(null, join(process.cwd(), '/student_file/'));
+
   }
 
-  static tar_filepath(req, file, cb) {
-    cb(null, join(process.cwd(), '/../uploaded_attachments/'));
-  }
-
-  static leave_filePath(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../uploaded_leave_attachment/'));
-  }
-  static upload_application_eligibility(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../upload_application_eligibility/'));
-  }
-
-  static upload_application_employment(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../upload_application_employment/'));
-  }
-
-  static upload_application_letter(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../upload_application_letter/'));
-  }
-
-  static upload_application_pds(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../upload_application_pds/'));
-  }
-  static upload_application_performance(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../upload_application_performance/'));
-  }
-  static upload_application_seminar(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../upload_application_seminar/'));
-  }
-
-  static upload_application_tor(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../upload_application_tor/'));
-  }
-
-  static multiple_file_upload(req, file, cb) {
-    // cb(null, join(process.cwd(), '/uploaded_leave_attachment/'));
-    cb(null, join(process.cwd(), '/../upload_application_tor/'));
-  }
-
-  static esign_filepath(req, file, cb) {
-    cb(null, join(process.cwd(), '/../uploadedEsigImg/'));
-  }
+  // static esign_filepath(req, file, cb) {
+  //   cb(null, join(process.cwd(), '/../uploadedEsigImg/'));
+  // }
 }

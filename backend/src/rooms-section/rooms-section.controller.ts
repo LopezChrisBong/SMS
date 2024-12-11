@@ -33,6 +33,16 @@ export class RoomsSectionController {
     return this.roomsSectionService.generateClassRecord(grade, +filter);
   }
 
+  @Post('genStrandRecord/seniorHigh/:grade/:filter/:strand')
+  genStrandRecord(@Param('grade') grade: string,@Param('filter') filter: string, @Param('strand') strand: string) {
+    return this.roomsSectionService.genStrandRecord(grade, +filter ,+strand);
+  }
+
+  @Post('updateAddRecords/:grade/:sy/:room')
+  updateAddRecords(@Body() createStudentListDto: CreateStudentListDto,@Param('grade') grade: string,@Param('sy') sy: string,@Param('room') room: string) {
+    return this.roomsSectionService.updateAddRecords(createStudentListDto, grade, +sy, +room );
+  }
+
   @Post('addStudentClassRoom')
   addStudentClassRoom(@Body() createAddStudentRoomDto: CreateAddStudentRoomDto) {
     return this.roomsSectionService.addStudentClassRoom(createAddStudentRoomDto);
@@ -65,14 +75,18 @@ export class RoomsSectionController {
     return this.roomsSectionService.getCountGen(grade, +filter);
   }
 
+  @Get('getConflictStrand/:grade/:filter/:strand')
+  getConflictStrand(@Param('grade') grade: string,@Param('filter') filter: string ,@Param('strand') strand: string) {
+
+    return this.roomsSectionService.getConflictStrand(grade, +filter, +strand);
+  }
+
   @Get('getRoomClassList/:id/:grade/:filter')
   getRoomClassList(@Param('id') id: string,@Param('grade') grade: string,@Param('filter') filter: string) {
 
     return this.roomsSectionService.getRoomClassList(+id, grade, +filter);
   }
 
-
- 
 
 
   @Get('AllStrand/Data/strand')

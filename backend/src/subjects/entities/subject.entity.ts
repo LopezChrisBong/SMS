@@ -9,17 +9,6 @@ export class Subject {
     @Column({ type: "varchar" })
     subject_title: string
 
-    @Column({ type: "varchar" })
-    seniorJunior: string
-
-    @Column({ type: 'varchar', default: null, nullable: true })
-    date_from: string;
-
-    @Column({ type: 'varchar', default: null, nullable: true })
-    date_to: string;
-
-    @Column({ type: 'int'})
-    school_yearId: number;
 
     @CreateDateColumn({
       nullable: false,
