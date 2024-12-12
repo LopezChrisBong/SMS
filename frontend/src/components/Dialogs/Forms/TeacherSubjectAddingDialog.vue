@@ -8,10 +8,11 @@
       scrollable
       max-width="900px"
     >
-      <v-form ref="ShortListAccess" @submit.prevent>
+      <v-form ref="dataGradeSubjects" @submit.prevent>
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
-            <span>{{ action }} My Subject List</span>
+            <span v-if="toAdd == 1">{{ action }} My Subject List</span>
+            <span v-else>{{ action }} My Grade Level List</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
               <v-icon>mdi-close</v-icon>
@@ -34,7 +35,7 @@
                     </v-btn>
                   </div>
                   <v-data-table
-                    :headers="headers"
+                    :headers="toAdd == 1 ? headers : headers1"
                     :items="subject_list"
                     :items-per-page="10"
                     hide-default-footer
@@ -94,7 +95,8 @@
       <v-form ref="employeeDialogForm" @submit.prevent>
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
-            <span>Add Subjects</span>
+            <span v-if="toAdd == 1">Add Subjects To Teach</span>
+            <span v-else>Add Grade Level To Teach</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="employeeDialog = false">
               <v-icon>mdi-close</v-icon>
@@ -106,16 +108,16 @@
               <v-row>
                 <v-col cols="12">
                   <v-autocomplete
-                    v-model="subjectData"
+                    v-model="dataAddedList"
                     multiple
                     small-chips
                     deletable-chips
                     dense
                     outlined
                     required
-                    label="Subjects"
-                    :items="subjectListed"
-                    item-text="subject_title"
+                    :label="toAdd == 1 ? 'Subjects' : 'Grade Level'"
+                    :items="dataListed"
+                    :item-text="toAdd == 1 ? 'subject_title' : 'description'"
                     item-value="id"
                     class="rounded-lg"
                     color="#6DB249"
@@ -161,6 +163,7 @@ export default {
     data: null,
     action: null,
     filter: null,
+    toAdd: null,
   },
 
   data() {
@@ -171,14 +174,31 @@ export default {
       dialog: false,
       resolution_list: [],
       subject_list: [],
-      subjectData: [],
-      subjectListed: [],
+      dataAddedList: [],
+      dataListed: [],
       remove_item: [],
       room_section: null,
       headers: [
         {
           text: "Subject Name",
           value: "subject_title",
+          align: "start",
+          valign: "center",
+          sortable: false,
+        },
+
+        {
+          text: "Action",
+          value: "action",
+          align: "end",
+          valign: "center",
+          sortable: false,
+        },
+      ],
+      headers1: [
+        {
+          text: "Grade Level",
+          value: "description",
           align: "start",
           valign: "center",
           sortable: false,
@@ -210,7 +230,7 @@ export default {
         if (data.id) {
           console.log("Data Title", data);
           this.getTaggedSubjects(data.id);
-          this.subjectData = [];
+          this.dataAddedList = [];
           this.room_section = data.room_section;
         }
       },
@@ -221,112 +241,139 @@ export default {
 
   methods: {
     initialize() {
-      this.getEnrolledStudent();
+      this.getAllDataNeeded();
     },
 
-    getEnrolledStudent() {
-      this.axiosCall("/subjects/getSubject/active/" + this.filter, "GET").then(
-        (res) => {
+    getAllDataNeeded() {
+      if (this.toAdd == 1) {
+        this.axiosCall("/subjects/getSubject/active", "GET").then((res) => {
           if (res.data) {
             let data = res.data;
+            console.log("LISTED DATA", data);
             // for (let i = 0; i < data.length; i++) {
             //   data[i].subject_title = this.toTitleCase(data[i].subject_title);
             // }
-            this.subjectListed = data;
+            this.dataListed = data;
           }
+        });
+      } else {
+        for (let index = 1; index < 13; index++) {
+          const data = { id: index, description: "Grade " + [index] };
+
+          this.dataListed.push(data);
         }
-      );
+        // this.dataListed = [
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 2",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+        //   {id:1,name:"Grade 1",},
+
+        // ];
+      }
     },
 
     getTaggedSubjects(id) {
-      this.axiosCall("/subjects/getSubjectTaagged/" + id, "GET").then((res) => {
-        if (res.data) {
-          let data = res.data;
+      if (this.toAdd == 1) {
+        this.axiosCall("/subjects/getSubjectTaagged/" + id, "GET").then(
+          (res) => {
+            if (res.data) {
+              let data = res.data;
 
-          for (let i = 0; i < data.length; i++) {
-            data[i].subject_title = this.toTitleCase(data[i].subject_title);
-            this.subjectData.push(data[i].id);
+              for (let i = 0; i < data.length; i++) {
+                data[i].subject_title = this.toTitleCase(data[i].subject_title);
+                this.dataAddedList.push(data[i].id);
+              }
+              this.subject_list = data;
+            }
           }
-          this.subject_list = data;
-        }
-      });
+        );
+      } else {
+        this.axiosCall("/subjects/getGradeTaagged/" + id, "GET").then((res) => {
+          if (res.data) {
+            let data = res.data;
+            console.log("Grade Level", data);
+            for (let i = 0; i < data.length; i++) {
+              data[i].description = this.toTitleCase(data[i].description);
+              this.dataAddedList.push(data[i].id);
+            }
+            this.subject_list = data;
+          }
+        });
+      }
     },
 
     saveStudent() {
-      for (let i = 0; i < this.subjectListed.length; i++) {
-        for (let j = 0; j < this.subjectData.length; j++) {
-          if (this.subjectListed[i].id == this.subjectData[j]) {
-            if (
-              this.subject_list.filter((e) => e.id == this.subjectData[j])
-                .length == 0
-            ) {
-              this.subject_list.push(this.subjectListed[i]);
+      if (this.toAdd == 1) {
+        for (let i = 0; i < this.dataListed.length; i++) {
+          for (let j = 0; j < this.dataAddedList.length; j++) {
+            if (this.dataListed[i].id == this.dataAddedList[j]) {
+              if (
+                this.subject_list.filter((e) => e.id == this.dataAddedList[j])
+                  .length == 0
+              ) {
+                this.subject_list.push(this.dataListed[i]);
+              }
             }
           }
         }
-      }
 
-      this.employeeDialog = false;
+        this.employeeDialog = false;
+      } else {
+        for (let i = 0; i < this.dataListed.length; i++) {
+          for (let j = 0; j < this.dataAddedList.length; j++) {
+            if (this.dataListed[i].id == this.dataAddedList[j]) {
+              if (
+                this.subject_list.filter((e) => e.id == this.dataAddedList[j])
+                  .length == 0
+              ) {
+                this.subject_list.push(this.dataListed[i]);
+              }
+            }
+          }
+        }
+
+        this.employeeDialog = false;
+      }
     },
     deleteItem(item, index) {
       console.log(item.id, index);
+
       if (item.id) {
         this.remove_item.push(this.subject_list[index]);
         this.subject_list.splice(index, 1);
-        this.subjectData.splice(index, 1);
+        this.dataAddedList.splice(index, 1);
       } else {
         this.subject_list.splice(index, 1);
-        this.subjectData.splice(index, 1);
+        this.dataAddedList.splice(index, 1);
       }
     },
 
     closeD() {
-      this.eventHub.$emit("closeaddStudentClassRoomDialog", false);
+      this.eventHub.$emit("closedDataGradeSubjects", false);
       this.initialize();
       this.dialog = false;
     },
 
     save() {
       // if (this.subject_list.length > 0) {
-      let data = {
-        userID: this.data.id,
-        subject_list: JSON.stringify(this.subject_list),
-        removed_subjects: JSON.stringify(this.remove_item),
-      };
-      this.axiosCall("/subjects/addTeachersSubject", "POST", data).then(
-        (res) => {
-          console.log(res);
-          if (res.data.status == 201) {
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "success";
-            this.fadeAwayMessage.header = "System Message";
-            this.fadeAwayMessage.message = res.data.msg;
-            this.closeD();
-          } else {
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "error";
-            this.fadeAwayMessage.header = "System Message";
-            this.fadeAwayMessage.message = res.data.msg;
-          }
-        }
-      );
-    },
-
-    update() {
-      console.log("Update Data");
-      if (this.$refs.ShortListAccess.validate()) {
-        const fd = new FormData();
-        console.log(fd);
+      if (this.toAdd == 1) {
         let data = {
-          resolution: this.resolution,
-          effective_date: this.effective_date,
+          userID: this.data.id,
+          subject_list: JSON.stringify(this.subject_list),
+          removed_subjects: JSON.stringify(this.remove_item),
         };
-        if (this.fileNewValue == true) {
-          console.log("File naa", this.fileNewValue);
-          fd.append("file", this.file_selected);
-          fd.append("body", JSON.stringify(data));
-          this.axiosCall("/resolution/" + this.id, "PATCH", fd).then((res) => {
-            if (res.data.status == 200) {
+        this.axiosCall("/subjects/addTeachersSubject", "POST", data).then(
+          (res) => {
+            console.log(res);
+            if (res.data.status == 201) {
               this.fadeAwayMessage.show = true;
               this.fadeAwayMessage.type = "success";
               this.fadeAwayMessage.header = "System Message";
@@ -338,15 +385,18 @@ export default {
               this.fadeAwayMessage.header = "System Message";
               this.fadeAwayMessage.message = res.data.msg;
             }
-          });
-        } else {
-          console.log("File", this.fileNewValue);
-          this.axiosCall(
-            "/resolution/noFileUploaded/" + this.id,
-            "PATCH",
-            data
-          ).then((res) => {
-            if (res.data.status == 200) {
+          }
+        );
+      } else {
+        let data = {
+          userID: this.data.id,
+          gradeLevel_list: JSON.stringify(this.subject_list),
+          removed_gradeLevel: JSON.stringify(this.remove_item),
+        };
+        this.axiosCall("/subjects/addTeachers/Grade-Level", "POST", data).then(
+          (res) => {
+            console.log(res);
+            if (res.data.status == 201) {
               this.fadeAwayMessage.show = true;
               this.fadeAwayMessage.type = "success";
               this.fadeAwayMessage.header = "System Message";
@@ -358,10 +408,61 @@ export default {
               this.fadeAwayMessage.header = "System Message";
               this.fadeAwayMessage.message = res.data.msg;
             }
-          });
-        }
+          }
+        );
       }
     },
+
+    // update() {
+    //   console.log("Update Data");
+    //   if (this.$refs.ShortListAccess.validate()) {
+    //     const fd = new FormData();
+    //     console.log(fd);
+    //     let data = {
+    //       resolution: this.resolution,
+    //       effective_date: this.effective_date,
+    //     };
+    //     if (this.fileNewValue == true) {
+    //       console.log("File naa", this.fileNewValue);
+    //       fd.append("file", this.file_selected);
+    //       fd.append("body", JSON.stringify(data));
+    //       this.axiosCall("/resolution/" + this.id, "PATCH", fd).then((res) => {
+    //         if (res.data.status == 200) {
+    //           this.fadeAwayMessage.show = true;
+    //           this.fadeAwayMessage.type = "success";
+    //           this.fadeAwayMessage.header = "System Message";
+    //           this.fadeAwayMessage.message = res.data.msg;
+    //           this.closeD();
+    //         } else {
+    //           this.fadeAwayMessage.show = true;
+    //           this.fadeAwayMessage.type = "error";
+    //           this.fadeAwayMessage.header = "System Message";
+    //           this.fadeAwayMessage.message = res.data.msg;
+    //         }
+    //       });
+    //     } else {
+    //       console.log("File", this.fileNewValue);
+    //       this.axiosCall(
+    //         "/resolution/noFileUploaded/" + this.id,
+    //         "PATCH",
+    //         data
+    //       ).then((res) => {
+    //         if (res.data.status == 200) {
+    //           this.fadeAwayMessage.show = true;
+    //           this.fadeAwayMessage.type = "success";
+    //           this.fadeAwayMessage.header = "System Message";
+    //           this.fadeAwayMessage.message = res.data.msg;
+    //           this.closeD();
+    //         } else {
+    //           this.fadeAwayMessage.show = true;
+    //           this.fadeAwayMessage.type = "error";
+    //           this.fadeAwayMessage.header = "System Message";
+    //           this.fadeAwayMessage.message = res.data.msg;
+    //         }
+    //       });
+    //     }
+    //   }
+    // },
 
     getSchoolYear() {
       this.axiosCall("/school-year", "GET").then((res) => {

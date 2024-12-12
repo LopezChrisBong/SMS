@@ -5,7 +5,8 @@ import { DataSource, Repository } from 'typeorm';
 import { Subject } from './entities/subject.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
-import { TeacherSubject } from 'src/entities';
+import { GradeLevel, TeacherGradeLevel, TeacherSubject } from 'src/entities';
+import { CreateTeacherGradeLevelDto } from './dto/create-teacher-gradeLevel.dto';
 
 @Injectable()
 export class SubjectsService {
@@ -50,13 +51,13 @@ export class SubjectsService {
     }
 
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
-    .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
-    .andWhere('school_yearId = :school_yearId', {
-      school_yearId: filter,
-    })
-    .andWhere('seniorJunior = :seniorJunior', {
-      seniorJunior: grade,
-    })
+    // .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
+    // .andWhere('school_yearId = :school_yearId', {
+    //   school_yearId: filter,
+    // })
+    // .andWhere('seniorJunior = :seniorJunior', {
+    //   seniorJunior: grade,
+    // })
     .orderBy('created_at', 'DESC')
     .getMany()
     await queryRunner.release();
@@ -99,12 +100,48 @@ export class SubjectsService {
 
       for (let i = 0; i < subjectList.length; i++) {
         if(!subjectList[i].subjectListId){
-          let addStudent = this.dataSource.manager.create(TeacherSubject, {
+          let addSubject = this.dataSource.manager.create(TeacherSubject, {
             teachersId:createTeacherSubjectDto.userID,
             subjectId:subjectList[i].id,
         })
        
-        await this.dataSource.manager.save(addStudent)
+        await this.dataSource.manager.save(addSubject)
+        }
+      }
+      return{
+        msg:'Saved successfully!',
+        status: HttpStatus.CREATED
+      }
+
+    } catch (error) {
+      return{
+        msg:'Something went wrong!',
+        status: HttpStatus.CREATED
+      }
+    }
+  }
+
+  async addTeachersGradeLevel(createTeacherGradeLevelDto: CreateTeacherGradeLevelDto) {
+
+    try {
+      let gradeLevel_list = JSON.parse(createTeacherGradeLevelDto.gradeLevel_list)
+      let removed_gradeLevel = JSON.parse(createTeacherGradeLevelDto.removed_gradeLevel)
+      // console.log(gradeLevel_list, removed_gradeLevel,createTeacherGradeLevelDto.userID)
+      if(removed_gradeLevel.length>0){
+        for (let i = 0; i < removed_gradeLevel.length; i++) {
+        
+          await this.dataSource.manager.delete(TeacherGradeLevel, removed_gradeLevel[i].gradeListId)
+        }
+      }
+
+      for (let i = 0; i < gradeLevel_list.length; i++) {
+        if(!gradeLevel_list[i].gradeListId){
+          let addGrade = this.dataSource.manager.create(TeacherGradeLevel, {
+            teachersId:createTeacherGradeLevelDto.userID,
+            grade_level:gradeLevel_list[i].id,
+        })
+        console.log('Grade',addGrade)
+        await this.dataSource.manager.save(addGrade)
         }
       }
       return{
@@ -132,6 +169,21 @@ export class SubjectsService {
       .getRawMany();
     return data;
   }
+
+
+  async getGradeTaagged(id: number) {
+    let data = await this.dataSource.manager
+      .createQueryBuilder(TeacherGradeLevel, 'tg')
+      .select([
+        "*",
+        "tg.id as gradeListId",
+            ])
+      .leftJoin(GradeLevel, 'g', 'g.id = tg.grade_level')
+      .where('tg.teachersId = "'+id+'"')
+      .getRawMany();
+    return data;
+  }
+  
   
   update(id: number, updateSubjectDto: UpdateSubjectDto ) {
 

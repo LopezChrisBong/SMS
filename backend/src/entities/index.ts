@@ -8,6 +8,8 @@ import { AddStrand } from 'src/rooms-section/entities/add-strand.entity';
 import { AddTracks } from 'src/rooms-section/entities/add-tracks.entity';
 import { RoomsSection } from 'src/rooms-section/entities/rooms-section.entity';
 import { StudentList } from 'src/rooms-section/entities/student-list.entity';
+import { GradeLevel } from 'src/subjects/entities/grade-level.entity';
+import { TeacherGradeLevel } from 'src/subjects/entities/prefered-grade-level.entity';
 import { TeacherSubject } from 'src/subjects/entities/prefered-subject.entity';
 import { Subject } from 'src/subjects/entities/subject.entity';
 import { SysModule } from 'src/sys-modules/entities/sys-module.entity';
@@ -30,7 +32,9 @@ const entities = [
   SchoolYear,
   StudentList,
   TeacherSubject,
-  Subject
+  Subject,
+  TeacherGradeLevel,
+  GradeLevel
 ];
 
 export {
@@ -48,7 +52,9 @@ export {
   SchoolYear,
   StudentList,
   TeacherSubject,
-  Subject
+  Subject,
+  TeacherGradeLevel,
+  GradeLevel
 };
 
 export default entities;

@@ -13,8 +13,8 @@
         </v-btn>
         {{
           $vuetify.breakpoint.smAndUp
-            ? "School Management System - Asuncion National High School"
-            : "  SMS - ANHS"
+            ? "Limbaan Integrated Faculty - Loading and Enrollment System (LIFE)"
+            : "LIFE"
         }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
@@ -446,8 +446,18 @@ export default {
       this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
         if (res) {
           this.schooYearList = res.data;
-          this.selectedFiter = res.data[0];
-          this.$store.commit("setFilterSelected", this.selectedFiter.id);
+          // Get the current date
+          const currentDate = new Date();
+
+          // Filter rows where the current date is between start_date and end_date
+          const filteredData = res.data.filter((item) => {
+            const startDate = new Date(item.startDate);
+            const endDate = new Date(item.endDate);
+            return currentDate >= startDate && currentDate <= endDate;
+          });
+          console.log("Filtered", filteredData[0].id);
+          this.selectedFiter = filteredData[0];
+          this.$store.commit("setFilterSelected", filteredData[0].id);
         }
       });
     },
