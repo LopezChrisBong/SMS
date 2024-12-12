@@ -51,7 +51,7 @@
       <v-data-table
         :headers="headers"
         :items="filteredItems"
-        :items-per-page="10"
+        :items-per-page="50"
         :search="search"
         :options.sync="options"
         :loading="loading"
@@ -172,7 +172,7 @@
             :value="options.itemsPerPage"
             style="max-width: 90px"
             class="rounded-lg"
-            @change="options.itemsPerPage = parseInt($event, 10)"
+            @change="options.itemsPerPage = parseInt($event, 50)"
             :items="perPageChoices"
           >
           </v-select>

@@ -4,6 +4,7 @@ import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
 import { currentUser } from 'src/shared/jwtDecode';
+import { CreateTeacherGradeLevelDto } from './dto/create-teacher-gradeLevel.dto';
 
 @Controller('subjects')
 export class SubjectsController {
@@ -19,6 +20,11 @@ export class SubjectsController {
     return this.subjectsService.addTeachersSubject(createTeacherSubjectDto);
   }
 
+  @Post('addTeachers/Grade-Level')
+  addTeachersGradeLevel(@Body() createTeacherGradeLevelDto: CreateTeacherGradeLevelDto) {
+    return this.subjectsService.addTeachersGradeLevel(createTeacherGradeLevelDto);
+  }
+
   @Get('getSubject/active')
   activeSubject() {
     return this.subjectsService.activeSubject();
@@ -29,9 +35,15 @@ export class SubjectsController {
   notActiveSubject() {
     return this.subjectsService.notActiveSubject();
   }
+
   @Get('getSubjectTaagged/:id')
   getSubjectTaagged(@Param('id') id: string) {
     return this.subjectsService.getSubjectTaagged(+id);
+  }
+
+  @Get('getGradeTaagged/:id')
+  getGradeTaagged(@Param('id') id: string) {
+    return this.subjectsService.getGradeTaagged(+id);
   }
 
   @Get('getSpicificSubject/:id/:filter/:grade')

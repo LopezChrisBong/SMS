@@ -8,20 +8,18 @@
               <v-row class="mx-5 pt-6">
                 <v-col cols="12" class="pa-0 mb-2">
                   <div class="text-h5" color="#123E4D" align="center">
-                    <b>Asuncion National High School</b>
+                    <b>Limbaan Integrated Faculty</b>
                   </div>
                   <div class="text-h5" color="#123E4D" align="center">
-                    <b> School Managemen System</b>
+                    <b> Loading and Enrollment System</b>
                   </div>
                   <div style="margin:0 auto; width:45%" class="pa-2">
-                    <v-img
-                      src="../../assets/img/AsuncionNationalHighSchool.png"
-                    ></v-img>
+                    <v-img src="../../assets/img/limbaanlogo.png"></v-img>
                   </div>
 
                   <div class="text-subtitle1" color="#123E4D" align="center">
                     <b class="text-subtitle1" style="color: #5a67da"
-                      >Welcome to <span style="color: #5a67da">SMS</span>!</b
+                      >Welcome to <span style="color: #5a67da">LIFE</span>!</b
                     >
                     | Sign In
                   </div>

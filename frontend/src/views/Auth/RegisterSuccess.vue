@@ -7,7 +7,7 @@
             <div class="justify-center pa-4">
               <h3 style="color: #5A67DA; width: 70%" class="mb-1">
                 You have successfully registered your account on
-                <span style="color: #5A67DA">SMS</span>
+                <span style="color: #5A67DA">LIFE</span>
               </h3>
               <p
                 class="text-caption text-gray-100"

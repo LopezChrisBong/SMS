@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { hashPassword } from 'src/auth/utils/bcrypt';
 import {
+  TeacherGradeLevel,
   Users,
   UserType,
 } from 'src/entities';
@@ -79,7 +80,22 @@ export class UserDetailsService {
 
   }
 
-  async TeachingRole() {
+  async TeachingRole(grade:string) {
+
+ 
+    let conflict = grade == 'Grade 1'? 1 : grade == 'Grade 2'? 2 : grade == 'Grade 3'? 3 :grade == 'Grade 4'? 4 :grade == 'Grade 5'? 5 :grade == 'Grade 6'? 6 :grade == 'Grade 7'? 7 :grade == 'Grade 8'? 8 :grade == 'Grade 9'? 9 :grade == 'Grade 10'? 10 :grade == 'Grade 11'? 11 : 12
+    
+    console.log('grade',conflict)
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    const count = await queryRunner.query(
+      'SELECT COUNT(*) as count FROM teacher_grade_level where grade_level ="'+conflict+'"',
+    );
+
+  
+
+    if(count[0].count == 0){
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
@@ -97,6 +113,29 @@ export class UserDetailsService {
       .getRawMany();
 
     return data;
+    }
+
+        let data = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        'UD.id as id',
+        'UD.fname as fname',
+        'UD.mname as mname',
+        'UD.lname as lname',
+      ])
+      .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
+      .leftJoinAndMapOne('UD.user', TeacherGradeLevel, 'tg', 'UD.id = tg.teachersId')
+      .where('user.isValidated = 1')
+      .andWhere('user.id != 2') //security user ID
+      .andWhere('tg.grade_level = '+conflict+'') //security user ID
+      .andWhere('user.isAdminApproved = 1')
+      .andWhere('user.user_roleID = 2')
+      .getRawMany();
+
+    return data;
+
+
 
   }
 

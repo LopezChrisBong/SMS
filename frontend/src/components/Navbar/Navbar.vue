@@ -10,8 +10,8 @@
       <v-toolbar-title :class="$vuetify.breakpoint.smAndUp ? 'pt-4' : ''">
         {{
           $vuetify.breakpoint.smAndUp
-            ? "School Management System - Asuncion National High School"
-            : "  SMS - ANHS"
+            ? "Limbaan Integrated Faculty-loading and Enrollment System (LIFE)"
+            : " LIFE"
         }}</v-toolbar-title
       >
 
@@ -106,12 +106,10 @@
           <div class=" px-2">
             <div>
               <v-list-item-avatar v-if="!$vuetify.breakpoint.smAndUp">
-                <v-img
-                  src="../../assets/img/Asuncion National High Scholl.jpg"
-                ></v-img>
+                <v-img src="../../assets/img/limbaanlogo.jpg"></v-img>
               </v-list-item-avatar>
               <span v-if="!$vuetify.breakpoint.smAndUp" class="px-4 "
-                >SMS - ANHS</span
+                >LIFE</span
               >
               <v-btn
                 icon

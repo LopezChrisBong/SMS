@@ -225,10 +225,24 @@
                       <v-btn
                         size="x-small"
                         color="blue"
-                        class="white--text"
-                        @click="addSubject(data)"
+                        class="white--text mx-2"
+                        @click="
+                          addGrade_Subject(data);
+                          toAdd = 1;
+                        "
                       >
                         Subjects
+                      </v-btn>
+                      <v-btn
+                        size="x-small"
+                        color="blue"
+                        class="white--text"
+                        @click="
+                          addGrade_Subject(data);
+                          toAdd = 2;
+                        "
+                      >
+                        Grade Level
                       </v-btn>
                     </v-col>
                     <!-- <v-col cols="auto">
@@ -382,11 +396,7 @@
         :data="taggingData"
         :action="action"
         :filter="filter"
-      />
-      <TeacherGradeAddingDialog
-        :data="tagGrade"
-        :action="action"
-        :filter="filter"
+        :toAdd="toAdd"
       />
     </v-card>
     <fade-away-message-component
@@ -404,11 +414,10 @@ export default {
   components: {
     TeacherSubjectAddingDialog: () =>
       import("../../components/Dialogs/Forms/TeacherSubjectAddingDialog.vue"),
-    TeacherGradeAddingDialog: () =>
-      import("../../components/Dialogs/Forms/TeacherGradeAddingDialog.vue"),
   },
   data() {
     return {
+      toAdd: null,
       action: null,
       taggingData: null,
       isSelecting: false,
@@ -451,12 +460,12 @@ export default {
     };
   },
   mounted() {
-    this.eventHub.$on("closeaddSubjectDialog", () => {
+    this.eventHub.$on("closedDataGradeSubjects", () => {
       this.initialize();
     });
   },
   beforeDestroy() {
-    this.eventHub.$off("closeaddSubjectDialog");
+    this.eventHub.$off("closedDataGradeSubjects");
   },
   computed: {
     filterYear() {
@@ -482,17 +491,12 @@ export default {
   },
 
   methods: {
-    addSubject(item) {
+    addGrade_Subject(item) {
       let filter = this.$store.getters.getFilterSelected;
       this.taggingData = item;
       this.action = "View";
       this.filter = filter;
-    },
-    addGradeLevel(item) {
-      let filter = this.$store.getters.getFilterSelected;
-      this.tagGrade = item;
-      this.action = "View";
-      this.filter = filter;
+      this.toAdd;
     },
 
     totalYearService() {
