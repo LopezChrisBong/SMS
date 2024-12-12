@@ -72,9 +72,9 @@ export class UserDetailsController {
     return this.userDetailsService.getAllVerifiedUser();
   }
 
-  @Get('getAllVerifiedUser/TeachingRole')
-  TeachingRole() {
-    return this.userDetailsService.TeachingRole();
+  @Get('getAllVerifiedUser/TeachingRole/:grade')
+  TeachingRole(@Param('grade') grade: string) {
+    return this.userDetailsService.TeachingRole(grade);
   }
 
   // @UseGuards(JWTAuthGuard)

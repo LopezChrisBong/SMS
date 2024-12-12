@@ -279,6 +279,7 @@ export default {
       this.grade = null;
       this.dialog = false;
     },
+
     teacherAssign(teacher) {
       this.getAllActiveSubjects(teacher);
     },
@@ -413,7 +414,7 @@ export default {
 
     getRoleTeachers() {
       this.axiosCall(
-        "/user-details/getAllVerifiedUser/TeachingRole",
+        "/user-details/getAllVerifiedUser/TeachingRole/" + this.grade,
         "GET"
       ).then((res) => {
         console.log("Teacher Role", res.data);

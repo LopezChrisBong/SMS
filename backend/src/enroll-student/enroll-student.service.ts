@@ -365,7 +365,8 @@ export class EnrollStudentService {
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
       .where('A.school_yearId = "'+filter+'"')
       .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
-      .orderBy('A.teacherID')
+      // .orderBy('A.teacherID, ud.lname')
+      .orderBy('A.roomId')
       .getRawMany();
     return data;
   }
@@ -375,9 +376,11 @@ export class EnrollStudentService {
       .createQueryBuilder(SchoolYear, 'A')
       .select([
         "*",
-        "CONCAT(school_year_from, ' - ', school_year_to) AS school_year"
+        "CONCAT(school_year_from, ' - ', school_year_to) AS school_year",
+       "CONCAT(school_year_from, '-06-01') as startDate,CONCAT(school_year_to, '-05-31') as endDate"
       ])
       .getRawMany();
+
     return data;
   }
 

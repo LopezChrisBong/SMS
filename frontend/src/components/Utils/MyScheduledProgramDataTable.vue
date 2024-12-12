@@ -32,8 +32,8 @@
           </v-btn> -->
         <v-btn
           class="white--text ml-2 rounded-lg"
-          color="#147452"
-          @click="print()"
+          :color="$vuetify.theme.themes.light.submitBtns"
+          @click="printMySched()"
         >
           <v-icon left> mdi-printer-outline </v-icon>
           Print
@@ -51,7 +51,7 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.action`]="{ item }">
+        <!--  <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <v-btn
               x-small
@@ -62,7 +62,7 @@
             >
               <v-icon size="14">mdi-printer-outline</v-icon>Print
             </v-btn>
-            <!-- <v-btn
+             <v-btn
                   x-small
                   color="red"
                   class="my-2"
@@ -70,9 +70,9 @@
                   @click="confirmDelete(item)"
                 >
                   <v-icon size="14">mdi-delete-off</v-icon>Delete
-                </v-btn> -->
+                </v-btn> 
           </div>
-        </template>
+        </template>-->
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
@@ -216,13 +216,13 @@ export default {
         valign: "center",
         sortable: false,
       },
-      {
-        text: "Saturday",
-        value: "Saturday",
-        align: "end",
-        valign: "end",
-        sortable: false,
-      },
+      // {
+      //   text: "#5a67da",
+      //   value: "#5a67da",
+      //   align: "end",
+      //   valign: "end",
+      //   sortable: false,
+      // },
 
       //   {
       //     text: "Action",
@@ -418,6 +418,21 @@ export default {
     //   this.confirmDialog = true;
     //   this.deleteData = item;
     // },
+
+    printMySched() {
+      let userDetailId = this.$store.state.user.id;
+      console.log("User", userDetailId);
+      let filter = this.$store.getters.getFilterSelected;
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getMySchedule/" +
+          userDetailId +
+          "/" +
+          filter +
+          "",
+        "_blank" // <- This is what makes it open in a new window.
+      );
+    },
   },
 };
 </script>
