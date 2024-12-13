@@ -14,13 +14,12 @@ async function bootstrap() {
   var whitelist = [
     'http://localhost:8080',
     'http://localhost:3000',
-    'http://his.dnsc.edu.ph:3000',
-    'http://his.dnsc.edu.ph:8080',
-    'https://his.dnsc.edu.ph:8080',
-    'https://his.dnsc.edu.ph:3000',
-    'https://his.dnsc.edu.ph',
+    'https://limbaan.life:3000',
+    'https://limbaan.life:8080',
+    'http://limbaan.life:8080',
+    'http://limbaan.life:3000',
+    'https://limbaan.life',
     'http://localhost',
-    // 'https://dnsc.edu.ph/'
   ];
   const httpsOptions = {
     // key: fs.readFileSync(join(__dirname, '../key.pem')),
@@ -56,8 +55,8 @@ async function bootstrap() {
   });
 
   const config1 = new DocumentBuilder()
-    .setTitle('HRMIS APIsss')
-    .setDescription('hrmis backend')
+    .setTitle('LIMBAAN APIsss')
+    .setDescription('limbaan backend')
     .setVersion('1.0')
     .addBearerAuth({
       type: 'http',

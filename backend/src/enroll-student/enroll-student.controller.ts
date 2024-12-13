@@ -97,8 +97,8 @@ export class EnrollStudentController {
 
   @Delete('deleteApplicantsFile/:fileName')
   async deleteFile(@Param('fileName') fileName: string) {
-    fs.unlink('student_file/'+fileName,
-    // fs.unlink('/../student_file/' + fileName, 
+    // fs.unlink('student_file/'+fileName,
+    fs.unlink('/../student_file/' + fileName, 
       (err) => {
       if (err) {
         console.error(err);
@@ -227,8 +227,8 @@ export class EnrollStudentController {
     }
 
     const file = createReadStream(
-      join(process.cwd(), '/student_file/'+data),
-      // join(process.cwd(), '/../student_file/' + data),
+      // join(process.cwd(), '/student_file/'+data),
+      join(process.cwd(), '/../student_file/' + data),
     );
     res.set({
       'Content-Type': content_type,

@@ -17,10 +17,9 @@ export class SubjectsService {
   ){}
 
  async create(createSubjectDto: CreateSubjectDto, curr_user:any) {
-  const queryRunner = this.dataSource.createQueryRunner();
-  await queryRunner.connect();
 
-  const user = await queryRunner.query(
+
+  const user = await this.dataSource.query(
     'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
   );
 
@@ -44,22 +43,19 @@ export class SubjectsService {
 
   async getSpicificSubject(id:number,filter:number, grade: string){
     // console.log(user.userdetail.id)
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
 
-    const user = await queryRunner.query(
+    const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+id+'"',
     );
 
     console.log(user[0].status)
 
-    const count = await queryRunner.query(
+    const count = await this.dataSource.query(
       'SELECT COUNT(*) as count FROM teacher_subject where teachersId ="'+id+'"',
     );
     console.log(count[0].count)
     if(count[0].count != 0){
     let data =  this.getSubjectTaagged(id)
-              await queryRunner.release();
               return data
     }
 
@@ -74,7 +70,6 @@ export class SubjectsService {
     .where('status ="'+user[0].status+'"')
     .orderBy('created_at', 'DESC')
     .getMany()
-    await queryRunner.release();
     return data
   }
 

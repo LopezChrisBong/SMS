@@ -129,10 +129,8 @@ export class EnrollStudentService {
   
   async EnrollStudent(curr_user:any) {
 
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
 
-    const user = await queryRunner.query(
+    const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
 
@@ -225,10 +223,9 @@ export class EnrollStudentService {
   }
 
   async EnrolledStudent(curr_user:any) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
+   
 
-    const user = await queryRunner.query(
+    const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
 
@@ -391,10 +388,9 @@ export class EnrollStudentService {
   }
 
   async FacultySchedule(filter:number, curr_user:any) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
 
-    const user = await queryRunner.query(
+
+    const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
 
@@ -512,12 +508,10 @@ export class EnrollStudentService {
 }
 
 async getClassProgramm(grade: string , section : number, filter:number ) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    const toReturn = await queryRunner.query(
+ 
+    const toReturn = await this.dataSource.query(
       '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name ,t1.id as availId,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" and t1.school_yearId ="'+filter+'" order by t1.day ASC' ,      
     );
-    await queryRunner.release();
     return toReturn;
 
 

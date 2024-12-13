@@ -144,41 +144,34 @@ export class RoomsSectionService {
 
   async getAlltracks() {
 
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    const toReturn = await queryRunner.query(
+ 
+    const toReturn = await this.dataSource.query(
       'SELECT * FROM add_tracks  order by tracks_name ASC',
     );
-    await queryRunner.release();
     return toReturn;
   }
 
   async getCountGen(grade:string, filter:number) {
 
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    const genCount = await queryRunner.query(
+    const genCount = await this.dataSource.query(
       // 'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "Grade 9" and  school_yearId = "'+filter+'"',
       'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "'+grade+'" and  school_yearId = "'+filter+'"',
     );
     console.log(genCount[0].count_gen)
 
-    await queryRunner.release();
     return genCount;
   }
 
 
   async getConflictStrand(grade:string, filter:number, strandId: number) {
 
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    const genCount = await queryRunner.query(
+ 
+    const genCount = await this.dataSource.query(
       // 'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "Grade 9" and  school_yearId = "'+filter+'"',
       'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "'+grade+'" and  school_yearId = "'+filter+'" and strandId = "'+strandId+'"',
     );
     console.log(genCount[0].count_gen)
 
-    await queryRunner.release();
     return genCount[0].count_gen;
   }
 
@@ -431,22 +424,18 @@ for (let i = 0; i < gradeRecordclassList.length; i++) {
  }
 
   async AllStrand() {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    const toReturn = await queryRunner.query(
+
+    const toReturn = await this.dataSource.query(
       'SELECT *, add_strand.id as id FROM add_strand left join add_tracks on add_strand.trackId = add_tracks.id  order by strand_name ASC',
     );
-    await queryRunner.release();
     return toReturn;
   }
 
   async AllStrandEnroll(id:number) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    const toReturn = await queryRunner.query(
+
+    const toReturn = await this.dataSource.query(
       'SELECT * FROM add_strand where trackId = '+id+' order by strand_name ASC',
     );
-    await queryRunner.release();
     return toReturn;
   }
 
