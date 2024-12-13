@@ -226,7 +226,6 @@ export default {
       handler(data) {
         this.initialize();
         this.dialog = true;
-        // console.log("DATA", data);
         if (data.id) {
           console.log("Data Title", data);
           this.getTaggedSubjects(data.id);
@@ -257,26 +256,19 @@ export default {
           }
         });
       } else {
-        for (let index = 1; index < 13; index++) {
-          const data = { id: index, description: "Grade " + [index] };
+        if (this.data.status == 1) {
+          for (let index = 1; index < 7; index++) {
+            const data = { id: index, description: "Grade " + [index] };
 
-          this.dataListed.push(data);
+            this.dataListed.push(data);
+          }
+        } else {
+          for (let index = 7; index < 13; index++) {
+            const data = { id: index, description: "Grade " + [index] };
+
+            this.dataListed.push(data);
+          }
         }
-        // this.dataListed = [
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 2",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-        //   {id:1,name:"Grade 1",},
-
-        // ];
       }
     },
 

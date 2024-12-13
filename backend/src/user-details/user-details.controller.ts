@@ -73,8 +73,17 @@ export class UserDetailsController {
   }
 
   @Get('getAllVerifiedUser/TeachingRole/:grade')
-  TeachingRole(@Param('grade') grade: string) {
-    return this.userDetailsService.TeachingRole(grade);
+  TeachingRole(@Param('grade') grade: string, @Headers() headers ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.TeachingRole(grade,curr_user);
+  }
+
+  @Get('getAllVerifiedUser/TeachingRoleSched')
+  TeachingRoleSched( @Headers() headers ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.TeachingRoleSched(curr_user);
   }
 
   // @UseGuards(JWTAuthGuard)
