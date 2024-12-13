@@ -10,6 +10,9 @@ export class Subject {
     subject_title: string
 
 
+    @Column({ type: "int"})
+    status: number
+
     @CreateDateColumn({
       nullable: false,
       type: 'datetime',

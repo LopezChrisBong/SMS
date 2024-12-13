@@ -26,6 +26,9 @@ export class RegisterUserDto {
     empStatusID: string;
 
     @ApiProperty()
+    status: number;
+
+    @ApiProperty()
     officeID: string;
 
     @ApiProperty()

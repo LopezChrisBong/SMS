@@ -35,6 +35,9 @@ export class UpdateVerifiedUser {
   user_roleID: number;
 
   @ApiProperty()
+  status: number;
+
+  @ApiProperty()
   assignedModuleID: number;
 
   @ApiProperty()

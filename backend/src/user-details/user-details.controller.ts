@@ -57,28 +57,45 @@ export class UserDetailsController {
     // return this.userDetailsService.createauth(createUserAuthDto, req.body);
   }
 
-  // @UseGuards(JWTAuthGuard)
-  // @ApiBearerAuth()
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
   @Get('getAllUsersToVerify')
-  getAllUsersToVerify() {
-    return this.userDetailsService.getAllUsersToVerify();
+  getAllUsersToVerify(
+    @Headers() headers
+  ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.getAllUsersToVerify(curr_user);
   }
 
 
-  // @UseGuards(JWTAuthGuard)
-  // @ApiBearerAuth()
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
   @Get('getAllVerifiedUser')
-  getAllVerifiedUser() {
-    return this.userDetailsService.getAllVerifiedUser();
+  getAllVerifiedUser(
+    @Headers() headers
+  ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.getAllVerifiedUser(curr_user);
   }
 
   @Get('getAllVerifiedUser/TeachingRole/:grade')
-  TeachingRole(@Param('grade') grade: string) {
-    return this.userDetailsService.TeachingRole(grade);
+  TeachingRole(@Param('grade') grade: string, @Headers() headers ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.TeachingRole(grade,curr_user);
   }
 
-  // @UseGuards(JWTAuthGuard)
-  // @ApiBearerAuth()
+  @Get('getAllVerifiedUser/TeachingRoleSched')
+  TeachingRoleSched( @Headers() headers ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.TeachingRoleSched(curr_user);
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
   @Post('updateVerifiedUser')
   updateVerifiedUser(@Body() updateVU: UpdateVerifiedUser) {
     return this.userDetailsService.updateVerifiedUser(updateVU);

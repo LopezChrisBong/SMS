@@ -57,6 +57,21 @@
                   >
                   </v-autocomplete>
                 </v-col>
+
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="verifyModel.newStatus"
+                    :rules="[formRules.required]"
+                    dense
+                    class="rounded-lg"
+                    item-text="description"
+                    item-value="id"
+                    label="School Level"
+                    color="#93CB5B"
+                    :items="statusList"
+                  >
+                  </v-autocomplete>
+                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -101,6 +116,11 @@ export default {
   data() {
     return {
       dialog: false,
+
+      statusList: [
+        { id: 1, description: "Elementary" },
+        { id: 2, description: "High School" },
+      ],
       verifyModel: {
         id: null,
         userID: null,
@@ -110,6 +130,7 @@ export default {
         usertypeID: null,
         assignedModuleID: null,
         user_roleID: null,
+        newStatus: null,
       },
       userRoleList: [],
       usertypeList: [],
@@ -130,7 +151,7 @@ export default {
         this.initialize();
         this.$refs.UserVerifyFormref.resetValidation();
         if (data.id) {
-          console.log("Love", data.user_user_roleID);
+          console.log("Love", data);
           this.verifyModel.id = data.id;
           this.verifyModel.userID = data.user_id;
           this.verifyModel.name = data.name;
@@ -138,6 +159,7 @@ export default {
           this.verifyModel.usertypeID = data.user_usertypeID.toString();
           this.verifyModel.user_roleID = data.user_user_roleID;
           this.verifyModel.assignedModuleID = data.user_assignedModuleID;
+          this.verifyModel.newStatus = data.status;
           // this.verifyModel.date_hired = data.emp_date_hired;
         }
       },
@@ -176,6 +198,7 @@ export default {
           usertypeID: this.verifyModel.usertypeID,
           user_roleID: this.verifyModel.user_roleID,
           assignedModuleID: this.verifyModel.assignedModuleID,
+          status: this.verifyModel.newStatus,
           update_type: this.action == "Verify" ? 1 : 2,
         };
 

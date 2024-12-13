@@ -35,6 +35,20 @@
                     dense
                   ></v-select>
                 </v-col> -->
+                <!-- <v-col cols="12">
+                  <v-autocomplete
+                    v-model="newStatus"
+                    :rules="[formRules.required]"
+                    dense
+                    class="rounded-lg"
+                    item-text="description"
+                    item-value="id"
+                    label="School Level"
+                    color="#93CB5B"
+                    :items="statusList"
+                  >
+                  </v-autocomplete>
+                </v-col> -->
               </v-row>
 
               <!-- <v-row class="mt-10">
@@ -159,6 +173,11 @@ export default {
   },
   data() {
     return {
+      newStatus: null,
+      statusList: [
+        { id: 1, description: "Elementary" },
+        { id: 2, description: "High School" },
+      ],
       applicantNumber: null,
       juniorList: ["Grade 7", "Grade 8", "Grade 9", "Grade 10"],
       seniorList: ["Grade 11", "Grade 12"],
@@ -277,7 +296,7 @@ export default {
     data: {
       handler(data) {
         this.dialog = true;
-        console.log("View Data", data.subject_title);
+        console.log("View Data", data);
         if (data.id) {
           this.initialize();
           this.updateID = data.id;
@@ -285,6 +304,7 @@ export default {
           this.seniorJunior = data.seniorJunior;
           this.dateFrom = data.date_from;
           this.dateTo = data.date_to;
+          this.newStatus = data.status;
         } else {
           this.$refs.AddSubjectDialog.reset();
           this.initialize();
@@ -334,6 +354,7 @@ export default {
         } else {
           let data = {
             subject_title: this.subject_title,
+            // status: this.newStatus,
           };
           // console.log(data);
           this.axiosCall("/subjects", "POST", data).then((res) => {
@@ -362,6 +383,7 @@ export default {
         } else {
           let data = {
             subject_title: this.subject_title,
+            // status: this.newStatus,
           };
           console.log(data);
           this.axiosCall("/subjects/" + this.updateID, "PATCH", data).then(

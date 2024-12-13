@@ -5,7 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Subject } from './entities/subject.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
-import { GradeLevel, TeacherGradeLevel, TeacherSubject } from 'src/entities';
+import { GradeLevel, TeacherGradeLevel, TeacherSubject, UserDetail } from 'src/entities';
 import { CreateTeacherGradeLevelDto } from './dto/create-teacher-gradeLevel.dto';
 
 @Injectable()
@@ -16,11 +16,17 @@ export class SubjectsService {
     private readonly subjectRepository: Repository<Subject>,
   ){}
 
- async create(createSubjectDto: CreateSubjectDto) {
-    
+ async create(createSubjectDto: CreateSubjectDto, curr_user:any) {
+
+
+  const user = await this.dataSource.query(
+    'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+  );
+
     try {
       let data = this.dataSource.manager.create(Subject,{
         subject_title: createSubjectDto.subject_title,
+        status: user[0].status,
       })
 
       await this.dataSource.manager.save(data)
@@ -37,16 +43,19 @@ export class SubjectsService {
 
   async getSpicificSubject(id:number,filter:number, grade: string){
     // console.log(user.userdetail.id)
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
 
-    const count = await queryRunner.query(
+    const user = await this.dataSource.query(
+      'SELECT * FROM user_detail where id ="'+id+'"',
+    );
+
+    console.log(user[0].status)
+
+    const count = await this.dataSource.query(
       'SELECT COUNT(*) as count FROM teacher_subject where teachersId ="'+id+'"',
     );
     console.log(count[0].count)
     if(count[0].count != 0){
     let data =  this.getSubjectTaagged(id)
-              await queryRunner.release();
               return data
     }
 
@@ -58,15 +67,25 @@ export class SubjectsService {
     // .andWhere('seniorJunior = :seniorJunior', {
     //   seniorJunior: grade,
     // })
+    .where('status ="'+user[0].status+'"')
     .orderBy('created_at', 'DESC')
     .getMany()
-    await queryRunner.release();
     return data
   }
 
-  async activeSubject(){
+  async activeSubject(curr_user:any){
+
+    let userStatus = 
+    await this.dataSource.manager.createQueryBuilder(UserDetail,'ud')
+    .select('*')
+    // .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
+    .where('ud.id = "'+curr_user.userdetail.id+'"')
+    .getRawOne()
+
+
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
     // .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
+    .where('status = "'+userStatus.status+'"')
     .orderBy('subject_title', 'ASC')
     .getMany()
     return data
