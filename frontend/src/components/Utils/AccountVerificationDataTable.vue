@@ -100,11 +100,7 @@
       </v-col>
     </v-row>
 
-    <AccountVerificationDialog
-      :data="updateData"
-      :action="action"
-      v-on:reloadTable="initialize"
-    />
+    <AccountVerificationDialog :data="updateData" :action="action" />
 
     <v-dialog v-model="dialogConfirmDelete" max-width="500">
       <v-card>

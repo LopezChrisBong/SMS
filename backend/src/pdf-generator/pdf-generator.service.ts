@@ -421,10 +421,10 @@ export class PdfGeneratorService {
     let teacherName = mySched[0].name
 
 
-    let headerImg = join(process.cwd(), '/static/img/header.png');
-    // let headerImg = join(process.cwd(), '/../static/img/header.png');
-    let footerImg = join(process.cwd(), '/static/img/footer.png');
-    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    // let headerImg = join(process.cwd(), '/static/img/header.png');
+    let headerImg = join(process.cwd(), '/../static/img/header.png');
+    // let footerImg = join(process.cwd(), '/static/img/footer.png');
+    let footerImg = join(process.cwd(), '/../static/img/footer.png');
 
 
     const data = [

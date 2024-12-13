@@ -184,7 +184,6 @@
       :data="coreTimeData"
       :action="action"
       :grade="gradeName"
-      v-on:reloadTable="initialize"
     />
     <!-- <MyJobApplication :data="designationData" :action="action" />
     <ApplicantOfJobDialog :data="applicantData" :action="action" />-->
@@ -193,7 +192,6 @@
       :action="action"
       :grade="gradeName"
       :filter="passfilter"
-      v-on:reloadTable="initialize"
     />
 
     <v-dialog v-model="generateSeniorClassRecord" persistent max-width="550">

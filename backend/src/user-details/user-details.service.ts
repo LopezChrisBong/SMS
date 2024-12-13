@@ -42,7 +42,12 @@ export class UserDetailsService {
     private dataSource: DataSource,
   ) {}
 
-  async getAllUsersToVerify() {
+  async getAllUsersToVerify(curr_user:any) {
+
+    const user = await this.dataSource.query(
+      'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+    );
+
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
@@ -57,11 +62,17 @@ export class UserDetailsService {
       .where('user.isValidated = 1')
       .andWhere('user.id != 2') //security user ID
       .andWhere('user.isAdminApproved = 0')
+      .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
     return data;
   }
 
-  async getAllVerifiedUser() {
+  async getAllVerifiedUser(curr_user:any) {
+
+
+    const user = await this.dataSource.query(
+      'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+    );
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
@@ -76,8 +87,8 @@ export class UserDetailsService {
       .where('user.isValidated = 1')
       .andWhere('user.id != 2') //security user ID
       .andWhere('user.isAdminApproved = 1')
+      .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
-
     return data;
 
   }
@@ -90,16 +101,14 @@ export class UserDetailsService {
     
     // console.log('grade',conflict)
 
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
 
-    const user = await queryRunner.query(
+    const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
 
     // console.log(user[0].id)
 
-    const count = await queryRunner.query(
+    const count = await this.dataSource.query(
       'SELECT COUNT(*) as count FROM teacher_grade_level where grade_level ="'+conflict+'"',
     );
 
@@ -122,7 +131,6 @@ export class UserDetailsService {
       .andWhere('user.user_roleID = 2')
       .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
-
     return data;
     }
 
@@ -143,7 +151,6 @@ export class UserDetailsService {
       .andWhere('user.isAdminApproved = 1')
       .andWhere('user.user_roleID = 2')
       .getRawMany();
-
     return data;
 
   }
@@ -151,12 +158,9 @@ export class UserDetailsService {
 
   async TeachingRoleSched(curr_user:any) {
 
-    // console.log('grade',conflict)
 
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
 
-    const user = await queryRunner.query(
+    const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
 
@@ -177,7 +181,6 @@ export class UserDetailsService {
       .andWhere('user.user_roleID = 2')
       .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
-
     return data;
 
   }
@@ -225,12 +228,10 @@ export class UserDetailsService {
   }
 
   async findAll() {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    const toReturn = await queryRunner.query(
+   
+    const toReturn = await this.dataSource.query(
       'SELECT * FROM user_detail left join users on user_detail.userID = users.id where users.isAdminApproved != "false" order by lname ASC',
     );
-    await queryRunner.release();
     return toReturn;
   }
   async getUserProfileImg(curr_user: any) {
@@ -403,13 +404,14 @@ export class UserDetailsService {
       const toReturn = await queryRunner.query(
         'DELETE users , user_detail  FROM users  INNER JOIN user_detail  WHERE users.id= user_detail.userID and user_detail.id = "'+id+'"',
       );
-
+      await queryRunner.commitTransaction();
       return {
         
         msg: 'Deleted successfully'+ toReturn +'!',
         status: HttpStatus.OK,
       };
     } catch (error) {
+      await queryRunner.rollbackTransaction();
       return {
         msg: 'Deletion failed',
         status: HttpStatus.BAD_REQUEST,

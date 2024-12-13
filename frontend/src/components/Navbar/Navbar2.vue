@@ -319,17 +319,19 @@ export default {
     // console.log("is OIC", this.isOIC);
     // this.loadUserRoles();
     // alert(this.$router.history.current.path);
-    this.getSchoolYear();
-    if (this.$store.state.expiryDate < Date.now()) {
-      this.$store.dispatch("setUser", null);
-      this.$store.dispatch("setIsAuthenticated", 0);
-      // this.render = true;
-      this.$router.push("/");
 
-      // location.reload();
-    }
+    // if (this.$store.state.expiryDate < Date.now()) {
+    //   this.$store.dispatch("setUser", null);
+    //   this.$store.dispatch("setIsAuthenticated", 0);
+    //   // this.render = true;
+    //   this.$router.push("/");
+
+    //   // location.reload();
+    // }
+    this.getSchoolYear();
     // this.getOICActive();
     this.loadImg();
+
     // this.getMyNotifs();
 
     // this.onResize();

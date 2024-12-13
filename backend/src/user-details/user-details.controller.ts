@@ -57,19 +57,27 @@ export class UserDetailsController {
     // return this.userDetailsService.createauth(createUserAuthDto, req.body);
   }
 
-  // @UseGuards(JWTAuthGuard)
-  // @ApiBearerAuth()
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
   @Get('getAllUsersToVerify')
-  getAllUsersToVerify() {
-    return this.userDetailsService.getAllUsersToVerify();
+  getAllUsersToVerify(
+    @Headers() headers
+  ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.getAllUsersToVerify(curr_user);
   }
 
 
-  // @UseGuards(JWTAuthGuard)
-  // @ApiBearerAuth()
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
   @Get('getAllVerifiedUser')
-  getAllVerifiedUser() {
-    return this.userDetailsService.getAllVerifiedUser();
+  getAllVerifiedUser(
+    @Headers() headers
+  ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.getAllVerifiedUser(curr_user);
   }
 
   @Get('getAllVerifiedUser/TeachingRole/:grade')
@@ -86,8 +94,8 @@ export class UserDetailsController {
     return this.userDetailsService.TeachingRoleSched(curr_user);
   }
 
-  // @UseGuards(JWTAuthGuard)
-  // @ApiBearerAuth()
+  @UseGuards(JWTAuthGuard)
+  @ApiBearerAuth()
   @Post('updateVerifiedUser')
   updateVerifiedUser(@Body() updateVU: UpdateVerifiedUser) {
     return this.userDetailsService.updateVerifiedUser(updateVU);

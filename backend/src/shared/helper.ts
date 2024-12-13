@@ -26,8 +26,8 @@ export class Helper {
   }
 
   static student_files(req, file, cb) {
-    // cb(null, join(process.cwd(), '/../student_file/'));
-    cb(null, join(process.cwd(), '/student_file/'));
+    cb(null, join(process.cwd(), '/../student_file/'));
+    // cb(null, join(process.cwd(), '/student_file/'));
 
   }
 

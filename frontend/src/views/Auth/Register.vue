@@ -59,6 +59,21 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" class="pa-0 px-4">
+                  <v-select
+                    outlined
+                    :items="schoolLevelList"
+                    label="School Level"
+                    color="#93CB5B"
+                    class="font-size-14"
+                    dense
+                    item-text="description"
+                    item-value="id"
+                    :rules="[formRules.required]"
+                    v-model="schoolLevel"
+                  ></v-select>
+                </v-col>
+
+                <v-col cols="12" class="pa-0 px-4">
                   <v-btn
                     @click="next()"
                     block
@@ -300,6 +315,7 @@ export default {
   data: () => ({
     otp: null,
     termsDialog: true,
+    schoolLevel: null,
     isAgreed: null,
     step: { id: 1, name: "Personal Information" },
     isLoading: false,
@@ -320,6 +336,10 @@ export default {
     designationList: [],
     positionList: [],
     empStatusList: [],
+    schoolLevelList: [
+      { id: 1, description: "Elementary" },
+      { id: 2, description: "High School" },
+    ],
 
     show1: false,
     show2: false,
@@ -391,6 +411,7 @@ export default {
           suffix: this.suffix,
           email: this.email,
           password: this.password,
+          status: this.schoolLevel,
         };
 
         this.axiosCall("/auth/registerUser", "POST", data).then((res) => {
