@@ -441,6 +441,7 @@ export default {
         profile_img: null,
         hired: null,
         education: null,
+        status: null,
       },
       oldPass: null,
       password: null,
@@ -467,6 +468,7 @@ export default {
   beforeDestroy() {
     this.eventHub.$off("closedDataGradeSubjects");
   },
+
   computed: {
     filterYear() {
       return this.$store.getters.getFilterSelected;
@@ -533,6 +535,7 @@ export default {
           this.data.hired = res.data.hired;
           this.data.education = res.data.education;
           this.data.sex = res.data.sex;
+          this.data.status = res.data.status;
           this.data.mobile_no = res.data.mobile_no;
           this.data.profile_img = res.data.profile_img
             ? process.env.VUE_APP_SERVER +

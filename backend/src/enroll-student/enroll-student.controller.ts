@@ -134,13 +134,21 @@ export class EnrollStudentController {
    // @UseGuards(JWTAuthGuard)
   // @ApiBearerAuth()
   @Get('EnrollStudent')
-  EnrollStudent() {
-    return this.enrollStudentService.EnrollStudent();
+  EnrollStudent(
+    @Headers() headers,
+    ) {
+     var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.enrollStudentService.EnrollStudent(curr_user);
   }
 
   @Get('EnrolledStudent')
-  EnrolledStudent() {
-    return this.enrollStudentService.EnrolledStudent();
+  EnrolledStudent(
+    @Headers() headers,
+  ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.enrollStudentService.EnrolledStudent(curr_user);
   }
 
   @Get('AddClassStudent/EnrolledStudent/:grade')
@@ -152,8 +160,12 @@ export class EnrollStudentController {
 
 
   @Get('FacultySchedule/:filter')
-  FacultySchedule(@Param('filter') filter: string,) {
-    return this.enrollStudentService.FacultySchedule(+filter);
+  FacultySchedule(@Param('filter') filter: string,
+  @Headers() headers,
+) {
+  var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.enrollStudentService.FacultySchedule(+filter, curr_user);
   }
 
     @Get('getSchoolYear')

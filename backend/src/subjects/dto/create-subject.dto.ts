@@ -10,6 +10,9 @@ export class CreateSubjectDto {
     seniorJunior:string;
 
     @ApiProperty()
+    status:number;
+
+    @ApiProperty()
     date_from:string;
 
     @ApiProperty()

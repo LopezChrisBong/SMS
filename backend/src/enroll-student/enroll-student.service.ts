@@ -127,7 +127,28 @@ export class EnrollStudentService {
     }
   }
   
-  async EnrollStudent() {
+  async EnrollStudent(curr_user:any) {
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+
+    const user = await queryRunner.query(
+      'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+    );
+
+    let school_level;
+    let school_level1;
+    if(user[0].status == 1){
+      school_level = 'Elementary'
+      school_level1 = 'Primary'
+     
+    }
+    else{
+      school_level = 'Junior High'
+      school_level1 = 'Senior High'
+    }
+
+
     let data = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .select([
@@ -194,13 +215,34 @@ export class EnrollStudentService {
         'ES.strand  as track',
         
       ])
-      .andWhere('ES.statusEnrolled = 0')
+      .where('ES.statusEnrolled = 0')
+      .andWhere('ES.seniorJunior IN (:...values)', {
+        values: [school_level, school_level1],
+      })
       .getRawMany();
 
     return data;
   }
 
-  async EnrolledStudent() {
+  async EnrolledStudent(curr_user:any) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+
+    const user = await queryRunner.query(
+      'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+    );
+
+    let school_level;
+    let school_level1;
+    if(user[0].status == 1){
+      school_level = 'Elementary'
+      school_level1 = 'Primary'
+     
+    }
+    else{
+      school_level = 'Junior High'
+      school_level1 = 'Senior High'
+    }
     let data = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .select(["IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name",
@@ -268,6 +310,9 @@ export class EnrollStudentService {
         'ES.grade_level as grade_level',
       ])
       .andWhere('ES.statusEnrolled = 1')
+      .andWhere('ES.seniorJunior IN (:...values)', {
+        values: [school_level, school_level1],
+      })
       .getRawMany();
     return data;
   }
@@ -345,7 +390,16 @@ export class EnrollStudentService {
     return data;
   }
 
-  async FacultySchedule(filter:number) {
+  async FacultySchedule(filter:number, curr_user:any) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+
+    const user = await queryRunner.query(
+      'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+    );
+
+
+
     let data = await this.dataSource.manager
       .createQueryBuilder(Availability, 'A')
       .select([
@@ -364,6 +418,7 @@ export class EnrollStudentService {
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
       .where('A.school_yearId = "'+filter+'"')
+      .andWhere('ud.status = "'+user[0].status+'"')
       .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
       // .orderBy('A.teacherID, ud.lname')
       .orderBy('A.roomId')

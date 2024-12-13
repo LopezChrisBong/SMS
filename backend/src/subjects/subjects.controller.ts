@@ -11,8 +11,13 @@ export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
 
   @Post('')
-  create(@Body() createSubjectDto: CreateSubjectDto) {
-    return this.subjectsService.create(createSubjectDto);
+  create(
+    @Body() createSubjectDto: CreateSubjectDto,
+    @Headers() headers,
+  ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.subjectsService.create(createSubjectDto, curr_user);
   }
 
   @Post('addTeachersSubject')
@@ -26,8 +31,12 @@ export class SubjectsController {
   }
 
   @Get('getSubject/active')
-  activeSubject() {
-    return this.subjectsService.activeSubject();
+  activeSubject(
+    @Headers() headers,
+     ) {
+        var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.subjectsService.activeSubject(curr_user);
   }
   
 

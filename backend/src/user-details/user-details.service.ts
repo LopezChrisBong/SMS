@@ -51,6 +51,7 @@ export class UserDetailsService {
         'UD.fname as fname',
         'UD.mname as mname',
         'UD.lname as lname',
+        'UD.status as status',
       ])
       .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
       .where('user.isValidated = 1')
@@ -69,6 +70,7 @@ export class UserDetailsService {
         'UD.fname as fname',
         'UD.mname as mname',
         'UD.lname as lname',
+        'UD.status as status',
       ])
       .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
       .where('user.isValidated = 1')
@@ -80,15 +82,23 @@ export class UserDetailsService {
 
   }
 
-  async TeachingRole(grade:string) {
+  async TeachingRole(grade:string, curr_user:any) {
+   
 
- 
+
     let conflict = grade == 'Grade 1'? 1 : grade == 'Grade 2'? 2 : grade == 'Grade 3'? 3 :grade == 'Grade 4'? 4 :grade == 'Grade 5'? 5 :grade == 'Grade 6'? 6 :grade == 'Grade 7'? 7 :grade == 'Grade 8'? 8 :grade == 'Grade 9'? 9 :grade == 'Grade 10'? 10 :grade == 'Grade 11'? 11 : 12
     
-    console.log('grade',conflict)
+    // console.log('grade',conflict)
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
+
+    const user = await queryRunner.query(
+      'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+    );
+
+    // console.log(user[0].id)
+
     const count = await queryRunner.query(
       'SELECT COUNT(*) as count FROM teacher_grade_level where grade_level ="'+conflict+'"',
     );
@@ -105,11 +115,12 @@ export class UserDetailsService {
         'UD.mname as mname',
         'UD.lname as lname',
       ])
-      .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
+      .leftJoin( Users, 'user', 'UD.userID = user.id')
       .where('user.isValidated = 1')
       .andWhere('user.id != 2') //security user ID
       .andWhere('user.isAdminApproved = 1')
       .andWhere('user.user_roleID = 2')
+      .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
 
     return data;
@@ -135,7 +146,39 @@ export class UserDetailsService {
 
     return data;
 
+  }
 
+
+  async TeachingRoleSched(curr_user:any) {
+
+    // console.log('grade',conflict)
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+
+    const user = await queryRunner.query(
+      'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+    );
+
+    // console.log(user[0].id)
+    let data = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        'UD.id as id',
+        'UD.fname as fname',
+        'UD.mname as mname',
+        'UD.lname as lname',
+      ])
+      .leftJoin( Users, 'user', 'UD.userID = user.id')
+      .where('user.isValidated = 1')
+      .andWhere('user.id != 2') //security user ID
+      .andWhere('user.isAdminApproved = 1')
+      .andWhere('user.user_roleID = 2')
+      .andWhere('UD.status = "'+user[0].status+'"')
+      .getRawMany();
+
+    return data;
 
   }
 
@@ -156,6 +199,10 @@ export class UserDetailsService {
           usertypeID: updateVU.usertypeID,
           user_roleID: updateVU.user_roleID == null ? 3 : updateVU.user_roleID,
           assignedModuleID: updateVU.assignedModuleID,
+        });
+
+        await queryRunner.manager.update(UserDetail, updateVU.id, {
+          status: updateVU.status,
         });
 
 
@@ -216,12 +263,11 @@ export class UserDetailsService {
         'ud.sex as sex',
         'ud.mobile_no as mobile_no',
         'ud.profile_img as profile_img',
+        'ud.status as status',
       ])
       .where('ud.id = :id', { id })
       .getRawOne();
 
-
-      // console.log('Personal Info',data)
       return data;
   }
 
