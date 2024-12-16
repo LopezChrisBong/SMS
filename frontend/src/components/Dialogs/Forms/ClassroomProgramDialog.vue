@@ -197,6 +197,7 @@ export default {
     grade: null,
     section: null,
     filter: null,
+    adviser: null,
   },
   data() {
     return {
@@ -259,7 +260,18 @@ export default {
     initialize() {
       this.getUserType();
       this.getClassroom();
-      this.getRoleTeachers();
+      if (
+        this.grade == "Grade 1" ||
+        this.grade == "Grade 2" ||
+        this.grade == "Grade 3" ||
+        this.grade == "Grade 4" ||
+        this.grade == "Kinder 1" ||
+        this.grade == "Kinder 2"
+      ) {
+        this.TeachingRoleAdvisory();
+      } else {
+        this.getRoleTeachers();
+      }
     },
     getUserType() {
       this.axiosCall("/user-type/getAllUsertype", "GET").then((res) => {
@@ -408,7 +420,8 @@ export default {
         "/rooms-section/" + this.grade + "/" + this.section,
         "GET"
       ).then((res) => {
-        console.log("ClassName", res.data[0].room_section);
+        console.log("ClassName", res.data[0].teacherId);
+        // this.adviser = res.data[0].teacherId;
         this.className = res.data[0].room_section;
       });
     },
@@ -418,7 +431,20 @@ export default {
         "/user-details/getAllVerifiedUser/TeachingRole/" + this.grade,
         "GET"
       ).then((res) => {
-        console.log("Teacher Role", res.data);
+        console.log("Teacher Role1", res.data);
+        this.TeachersList = res.data;
+      });
+    },
+
+    TeachingRoleAdvisory() {
+      this.axiosCall(
+        "/user-details/getAdviser/RoomAdvisory/" +
+          this.adviser +
+          "/" +
+          this.grade,
+        "GET"
+      ).then((res) => {
+        console.log("Teacher Role2", res.data);
         this.TeachersList = res.data;
       });
     },

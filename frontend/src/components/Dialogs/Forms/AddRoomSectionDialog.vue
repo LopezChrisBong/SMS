@@ -26,6 +26,19 @@
                     color="#6DB249"
                   ></v-text-field>
                 </v-col>
+                <v-col>
+                  <v-autocomplete
+                    v-model="adviser"
+                    outlined
+                    dense
+                    label="Select Advider"
+                    :items="adviserList"
+                    item-text="name"
+                    item-value="id"
+                    class="rounded-lg"
+                    color="#6DB249"
+                  ></v-autocomplete>
+                </v-col>
                 <v-col
                   cols="12"
                   :class="
@@ -114,6 +127,8 @@ export default {
     return {
       strandId: null,
       strandList: [],
+      adviserList: [],
+      adviser: null,
       applicantNumber: null,
       juniorList: ["Grade 7", "Grade 8", "Grade 9", "Grade 10"],
       seniorList: ["Grade 11", "Grade 12"],
@@ -242,6 +257,7 @@ export default {
           this.seniorJunior = data.seniorJunior;
           this.dateFrom = data.date_from;
           this.dateTo = data.date_to;
+          this.adviser = data.teacherId.toString();
         } else {
           this.$refs.AddSubjectDialog.reset();
           this.strandId = data.strandId;
@@ -260,6 +276,7 @@ export default {
     initialize() {
       this.getAllStrand();
       this.loadYearSelection();
+      this.getRoleTeachers();
 
       //   this.getEmpStatus();
       //   this.getInstitutes();
@@ -280,6 +297,7 @@ export default {
       this.confirmSubmit.error = false;
       this.confirmSubmit.msg = null;
       this.eventHub.$emit("closeAddSubjectDialog", false);
+      this.$refs.AddSubjectDialog.reset();
       this.dialog = false;
     },
 
@@ -297,12 +315,14 @@ export default {
               data = {
                 room_section: this.room_section,
                 grade_level: this.grade,
+                teacherId: this.adviser,
                 strandId: this.strandId,
               };
             } else {
               data = {
                 room_section: this.room_section,
                 grade_level: this.grade,
+                teacherId: this.adviser,
               };
             }
             // console.log(data);
@@ -338,12 +358,14 @@ export default {
               data = {
                 room_section: this.room_section,
                 grade_level: this.grade,
+                teacherId: this.adviser,
                 strandId: this.strandId,
               };
             } else {
               data = {
                 room_section: this.room_section,
                 grade_level: this.grade,
+                teacherId: this.adviser,
               };
             }
             this.axiosCall(
@@ -391,6 +413,16 @@ export default {
           }
         }
       );
+    },
+
+    getRoleTeachers() {
+      this.axiosCall(
+        "/user-details/getAllVerifiedUser/TeachingRole/" + this.grade,
+        "GET"
+      ).then((res) => {
+        console.log("Teacher Role", res.data);
+        this.adviserList = res.data;
+      });
     },
   },
 };

@@ -61,7 +61,7 @@ export class EnrollStudentService {
     try {
       // Check for conflicts
       const conflict = await this.checkConflict(createAvailabilityDto);
-      let hours =  await this.dataSource.query('SELECT '+createAvailabilityDto.teacherID+', SUM(hours) AS total_hours_per_weekFROM availability GROUP BY '+createAvailabilityDto.teacherID+';')
+      const hours =  await this.dataSource.query('SELECT '+createAvailabilityDto.teacherID+', SUM(hours) AS total_hours_per_week FROM availability GROUP BY '+createAvailabilityDto.teacherID+';')
   
       if (conflict) {
         return {
