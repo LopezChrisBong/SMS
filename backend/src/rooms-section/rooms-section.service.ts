@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRoomsSectionDto } from './dto/create-rooms-section.dto';
 import { UpdateRoomsSectionDto } from './dto/update-rooms-section.dto';
-import { AddStrand, AddTracks, EnrollStudent, RoomsSection, StudentList } from 'src/entities';
+import { AddStrand, AddTracks, EnrollStudent, RoomsSection, StudentList, UserDetail } from 'src/entities';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAddTrackDto } from './dto/create-add-track.dto';
@@ -28,6 +28,7 @@ export class RoomsSectionService {
         let data = this.dataSource.manager.create(RoomsSection,{
           room_section: createRoomsSectionDto.room_section,
           grade_level:createRoomsSectionDto.grade_level,
+          teacherId:createRoomsSectionDto.teacherId,
           strandId:createRoomsSectionDto.strandId,
         })
         await this.dataSource.manager.save(data)
@@ -119,11 +120,14 @@ export class RoomsSectionService {
 
  async findAll(gradeLevel:string) {
     let data = await this.dataSource.manager
-    .createQueryBuilder(RoomsSection, 'UD')
+    .createQueryBuilder(RoomsSection, 'RS')
     .select([
-      "*"
+      "*",
+      'RS.id as id',
+      "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,'. ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name", 
     ])
-    .where('UD.grade_level = "'+gradeLevel+'"')
+    .leftJoin(UserDetail, 'ud', 'ud.id = RS.teacherId')
+    .where('RS.grade_level = "'+gradeLevel+'"')
     .getRawMany();
 
     return data
@@ -450,6 +454,7 @@ try {
     this.dataSource.manager.update(RoomsSection,id,{
     room_section:updateRoomsSectionDto.room_section,
     grade_level: updateRoomsSectionDto.grade_level,
+    teacherId:updateRoomsSectionDto.teacherId,
     strandId:updateRoomsSectionDto.strandId
   })
   return{

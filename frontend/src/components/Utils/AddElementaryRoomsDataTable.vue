@@ -273,13 +273,13 @@ export default {
         sortable: false,
       },
 
-      // {
-      //   text: "Grade Level",
-      //   value: "grade_level",
-      //   align: "center",
-      //   valign: "center",
-      //   sortable: false,
-      // },
+      {
+        text: "Adviser",
+        value: "name",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
 
       {
         text: "Action",

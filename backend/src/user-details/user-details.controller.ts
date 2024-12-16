@@ -87,6 +87,13 @@ export class UserDetailsController {
     return this.userDetailsService.TeachingRole(grade,curr_user);
   }
 
+  @Get('getAdviser/RoomAdvisory/:id/:grade')
+  TeachingRoleAdvisory( @Param('id') id: number,@Param('grade') grade: string, @Headers() headers ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.TeachingRoleAdvisory(id,grade, curr_user);
+  }
+
   @Get('getAllVerifiedUser/TeachingRoleSched')
   TeachingRoleSched( @Headers() headers ) {
     var head_str = headers.authorization;

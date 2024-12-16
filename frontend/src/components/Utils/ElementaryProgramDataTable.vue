@@ -198,11 +198,12 @@
     </v-row>
 
     <ClassroomProgramDialog
-      :data="coreTimeData"
+      :data="addProgramData"
       :action="action"
       :grade="grade"
       :section="section"
       :filter="filter"
+      :adviser="adviser"
     />
     <!-- <MyDesignationDialog :data="designationData" :action="action" /> -->
 
@@ -295,6 +296,7 @@ export default {
     ],
 
     data: [],
+    adviser: null,
     verified: [],
     perPageChoices: [
       { text: "5", value: 5 },
@@ -320,7 +322,7 @@ export default {
     ],
     section: null,
     sectionList: [],
-    coreTimeData: null,
+    addProgramData: null,
     filter: null,
     designationData: null,
     totalCount: 0,
@@ -402,8 +404,9 @@ export default {
       this.loading = true;
       this.axiosCall("/rooms-section/" + this.activeTab.name, "GET").then(
         (res) => {
-          console.log("Classroom List", res.data);
+          console.log("Classroom List", res.data[0].teacherId);
           this.sectionList = res.data;
+          this.adviser = res.data[0].teacherId;
           this.section = res.data[0].id;
         }
       );
@@ -515,112 +518,177 @@ export default {
     },
     add() {
       let filter = this.$store.getters.getFilterSelected;
+
       if (this.tab == 1) {
-        this.coreTimeData = [{ id: null }];
-        this.action = "Add";
-        this.grade = "Grade 1";
-        this.section;
-        this.filter = filter;
+        if (this.adviser == null) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "No adviser for this classroom please select adviser";
+        } else {
+          this.addProgramData = [{ id: null }];
+          this.action = "Add";
+          this.grade = "Grade 1";
+          this.adviser;
+          this.section;
+          this.filter = filter;
+        }
       } else if (this.tab == 2) {
-        this.coreTimeData = [{ id: null }];
-        this.action = "Add";
-        this.grade = "Grade 2";
-        this.section;
-        this.filter = filter;
+        if (this.adviser == null) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "No adviser for this classroom please select adviser";
+        } else {
+          this.addProgramData = [{ id: null }];
+          this.action = "Add";
+          this.grade = "Grade 2";
+          this.adviser;
+          this.section;
+          this.filter = filter;
+        }
       } else if (this.tab == 3) {
-        this.coreTimeData = [{ id: null }];
-        this.action = "Add";
-        this.grade = "Grade 3";
-        this.section;
-        this.filter = filter;
+        if (this.adviser == null) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "No adviser for this classroom please select adviser";
+        } else {
+          this.addProgramData = [{ id: null }];
+          this.action = "Add";
+          this.grade = "Grade 3";
+          this.adviser;
+          this.section;
+          this.filter = filter;
+        }
       } else if (this.tab == 4) {
-        this.coreTimeData = [{ id: null }];
-        this.action = "Add";
-        this.grade = "Grade 4";
-        this.section;
-        this.filter = filter;
+        if (this.adviser == null) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "No adviser for this classroom please select adviser";
+        } else {
+          this.addProgramData = [{ id: null }];
+          this.action = "Add";
+          this.grade = "Grade 4";
+          this.adviser;
+          this.section;
+          this.filter = filter;
+        }
       } else if (this.tab == 5) {
-        this.coreTimeData = [{ id: null }];
+        this.addProgramData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 5";
+        this.adviser;
         this.section;
         this.filter = filter;
       } else if (this.tab == 6) {
-        this.coreTimeData = [{ id: null }];
+        this.addProgramData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 6";
+        this.adviser;
         this.section;
         this.filter = filter;
       } else if (this.tab == 7) {
-        this.coreTimeData = [{ id: null }];
-        this.action = "Add";
-        this.grade = "Kinder 1";
-        this.section;
-        this.filter = filter;
+        if (this.adviser == null) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "No adviser for this classroom please select adviser";
+        } else {
+          this.addProgramData = [{ id: null }];
+          this.action = "Add";
+          this.grade = "Kinder 1";
+          this.adviser;
+          this.section;
+          this.filter = filter;
+        }
       } else if (this.tab == 8) {
-        this.coreTimeData = [{ id: null }];
-        this.action = "Add";
-        this.grade = "Kinder 2";
-        this.section;
-        this.filter = filter;
+        if (this.adviser == null) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "No adviser for this classroom please select adviser";
+        } else {
+          this.addProgramData = [{ id: null }];
+          this.action = "Add";
+          this.grade = "Kinder 2";
+          this.adviser;
+          this.section;
+          this.filter = filter;
+        }
       }
     },
     editItem(item) {
       console.log("Update", item);
       let filter = this.$store.getters.getFilterSelected;
       if (this.tab == 1) {
-        this.coreTimeData = item;
+        this.addProgramData = item;
         this.action = "Update";
         this.grade = "Grade 1";
+        this.adviser;
         this.section;
         this.filter = filter;
       } else if (this.tab == 2) {
-        this.coreTimeData = item;
+        this.addProgramData = item;
         this.action = "Update";
         this.grade = "Grade 2";
+        this.adviser;
         this.section;
         this.filter = filter;
       } else if (this.tab == 3) {
-        this.coreTimeData = item;
+        this.addProgramData = item;
         this.action = "Update";
         this.grade = "Grade 3";
+        this.adviser;
         this.section;
         this.filter = filter;
       } else if (this.tab == 4) {
-        this.coreTimeData = item;
+        this.addProgramData = item;
         this.action = "Update";
         this.grade = "Grade 4";
+        this.adviser;
         this.section;
         this.filter = filter;
       } else if (this.tab == 5) {
-        this.coreTimeData = item;
+        this.addProgramData = item;
         this.action = "Update";
         this.grade = "Grade 5";
+        this.adviser;
         this.section;
         this.filter = filter;
       } else if (this.tab == 6) {
-        this.coreTimeData = item;
+        this.addProgramData = item;
         this.action = "Update";
         this.grade = "Grade 6";
+        this.adviser;
         this.section;
         this.filter = filter;
       } else if (this.tab == 7) {
-        this.coreTimeData = item;
+        this.addProgramData = item;
         this.action = "Update";
+        this.adviser;
         this.grade = "Kinder 1";
         this.section;
         this.filter = filter;
       } else if (this.tab == 8) {
-        this.coreTimeData = item;
+        this.addProgramData = item;
         this.action = "Update";
         this.grade = "Kinder 2";
+        this.adviser;
         this.section;
         this.filter = filter;
       }
     },
 
     viewItem(item) {
-      this.coreTimeData = item;
+      this.addProgramData = item;
       this.action = "View";
     },
 
