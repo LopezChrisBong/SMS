@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
-        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#EA7142" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -58,96 +58,17 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.ctType`]="{ item }">
-          {{
-            item.ctType == 1
-              ? "Academic Year"
-              : item.ctType == 2
-              ? "Calendar Year"
-              : ""
-          }}
-        </template>
-        <template v-slot:[`item.SY`]="{ item }">
-          {{
-            item.cyFrom && item.cyTo
-              ? formatDate(item.cyFrom) + " - " + formatDate(item.cyTo)
-              : ""
-          }}
-        </template>
-
-        <template v-slot:[`item.effectivityDate`]="{ item }">
-          {{ formatDate(item.effectivityDate) }}
-        </template>
-
-        <template v-slot:[`item.sem`]="{ item }">
-          {{
-            item.ctType == 1
-              ? item.sem == 1
-                ? "First Semester"
-                : item.sem == 2
-                ? "Second Semester"
-                : "Summer"
-              : "N/A"
-          }}
-        </template>
-
-        <template v-slot:[`item.isActive`]="{ item }">
-          <v-chip
-            class="white--text"
-            :color="item.isActive == 1 ? '#5a67da' : 'grey'"
-            x-small
-          >
-            {{ item.isActive == 1 ? "Active" : "Inactive" }}
-          </v-chip>
-        </template>
-
-        <template v-slot:[`item.status`]="{ item }">
-          <v-chip
-            :color="
-              item.status == 1 ? 'grey' : item.status == 2 ? '#5a67da' : 'red'
-            "
-            class="ma-2 white--text"
-            x-small
-          >
-            {{
-              item.status == 1
-                ? "For Approval"
-                : item.status == 2
-                ? "Approved"
-                : "Pending"
-            }}
-          </v-chip>
-        </template>
-        <!-- <template v-slot:[`item.switch`]="{ item }">
-            <v-switch
-              v-if="item.status == 2"
-              :value="true"
-              :input-value="item.isActive == 1 ? true : false"
-              @change="switchItem(item)"
-              color="#5a67da"
-            ></v-switch>
-          </template> -->
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap">
             <v-btn
               x-small
-              color="grey"
+              color="blue"
               class="mx-1"
-              v-if="item.status != 2"
               outlined
               @click="editItem(item)"
             >
               <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
-            <!-- <v-btn
-              x-small
-              color="grey"
-              class="mx-1"
-              outlined
-              @click="viewItem(item)"
-            >
-              <v-icon size="14">mdi-eye-outline</v-icon>View
-            </v-btn> -->
             <v-btn
               x-small
               color="#C62828"
@@ -167,7 +88,7 @@
           <v-select
             dense
             outlined
-            color="#5a67da"
+            color="#EA7142"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"

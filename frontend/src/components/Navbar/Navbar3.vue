@@ -7,7 +7,7 @@
       :mini-variant.sync="mini"
       :temporary="!$vuetify.breakpoint.smAndUp"
       app
-      style="background-color: #5a67da"
+      style="background-color: #EA7142"
     >
       <!-- <v-navigation-drawer
     v-model="drawer"
@@ -39,7 +39,7 @@
       </v-list-item>
 
       <v-list nav dense class="sidebar mt-2">
-        <div v-for="(link, i) in links" :key="i" style="background: #5a67da">
+        <div v-for="(link, i) in links" :key="i" style="background: #EA7142">
           <v-list-item
             v-if="!link.subLink"
             :key="link.title"
@@ -83,7 +83,7 @@
     </v-navigation-drawer>
 
     <!-- <v-app-bar app flat> -->
-    <v-app-bar app flat color="#5a67da">
+    <v-app-bar app flat color="#EA7142">
       <div
         class="d-flex elevation-4 mt-6 px-2 align-center rounded-t-lg"
         style="background-color: white; width: 100%; height: 60px"
@@ -122,7 +122,7 @@
             </v-chip>
           </template>
           <v-card width="240">
-            <v-list color="#5a67da">
+            <v-list color="#EA7142">
               <v-list-item>
                 <v-list-item-avatar>
                   <img :src="profImg" max-width="60" />
@@ -491,14 +491,14 @@ export default {
   padding: 5px 0 5px 0;
 }
 .modal_header {
-  background-color: #5a67da;
+  background-color: #ea7142;
   padding: 5px;
 }
 .notifDiv {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: #5a67da;
+  background-color: #ea7142;
   color: white;
   flex: auto;
   justify-content: space-between;
@@ -511,7 +511,7 @@ export default {
 .showAllNotif {
   margin: 0;
   font-size: 12px;
-  background-color: #5a67da;
+  background-color: #ea7142;
   padding: 10px;
   text-align: center;
   max-height: 55vh;

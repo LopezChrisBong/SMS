@@ -8,14 +8,14 @@
       :screenSmall="mini"
       v-on:closeNav="mini = false"
     />
-    <!--  <v-main style="background-color: #5a67da;overflow-y:hidden "> -->
-    <v-main style="background-color: #5a67da; ">
+    <!--  <v-main style="background-color: #EA7142;overflow-y:hidden "> -->
+    <v-main style="background-color: #EA7142; ">
       <div class=" mx-2 fill-height pb-6" style="background-color:white; ">
         <div class="d-flex justify-space-between pt-4 px-4  ">
           <div>
             <v-select
               label="Year"
-              color="#5a67da"
+              color="#EA7142"
               @change="changeFilter()"
               outlined
               v-model="selectedFiter"

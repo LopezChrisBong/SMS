@@ -842,7 +842,7 @@
                     class="rounded-lg"
                     label="Good Moral"
                     color="#6DB249"
-                    accept=".pdf"
+                    accept=".pdf, .png, .jpg, .jpeg"
                     :clearable="false"
                   >
                   </v-file-input>
@@ -855,7 +855,7 @@
                     class="rounded-lg"
                     label="School Card/Form137"
                     color="#6DB249"
-                    accept=".pdf"
+                    accept=".pdf, .png, .jpg, .jpeg"
                     :clearable="false"
                   >
                   </v-file-input>
@@ -869,7 +869,7 @@
                     class="rounded-lg"
                     label="Philippines Statistic Authority"
                     color="#6DB249"
-                    accept=".pdf"
+                    accept=".pdf, .png, .jpg, .jpeg"
                     :clearable="false"
                   >
                   </v-file-input>
@@ -883,7 +883,7 @@
                     class="rounded-lg"
                     label="2x2 Picture"
                     color="#6DB249"
-                    accept=".png, .jpeg, .jpg"
+                    accept=".pdf, .png, .jpg, .jpeg"
                     :clearable="false"
                   >
                   </v-file-input>
@@ -897,7 +897,7 @@
           <v-col cols="10" class="white--text rounded-lg">
             <v-btn
               block
-              color="#5a67da"
+              color="#EA7142"
               @click="confirmSave()"
               dense
               class="white--text"
@@ -981,8 +981,16 @@ export default {
   components: {},
   data: () => ({
     juniorList: ["Grade 7", "Grade 8", "Grade 9", "Grade 10"],
-    elementaryList: ["Grade 1", "Grade 2", "Grade 3"],
-    primaryList: ["Grade 4", "Grade 5", "Grade 6"],
+    elementaryList: [
+      "Kinder 1",
+      "Kinder 2",
+      "Grade 1",
+      "Grade 2",
+      "Grade 3",
+      "Grade 4",
+      "Grade 5",
+      "Grade 6",
+    ],
     seniorList: ["Grade 11", "Grade 12"],
     sheet: false,
     viewRemarks: false,
@@ -1008,7 +1016,7 @@ export default {
       { id: 2, type: "By naturalization" },
     ],
     countryList: [],
-    seniorJuniorList: ["Elementary", "Primary", "Junior High", "Senior High"],
+    seniorJuniorList: ["Elementary", "Junior High", "Senior High"],
     status: null,
     formdata: {
       id: null,
@@ -1425,7 +1433,7 @@ export default {
 }
 
 thead th {
-  background-color: #5a67da !important;
+  background-color: #ea7142 !important;
   color: white !important;
 }
 thead th:first-child {

@@ -5,8 +5,8 @@
         <v-col align="center" cols="12" md="6">
           <v-card max-width="400" class="rounded-card">
             <div class="justify-center pa-4">
-              <h3 style="color: #5a67da">
-                Create your <span style="color: #5a67da">Account</span>
+              <h3 style="color: #EA7142">
+                Create your <span style="color: #EA7142">Account</span>
                 <span class="text-subtitle-1 black--text"> | Sign In</span>
               </h3>
               <p class="text-caption text-gray-100">
@@ -58,7 +58,7 @@
                     label="Suffix"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" class="pa-0 px-4">
+                <!-- <v-col cols="12" class="pa-0 px-4">
                   <v-select
                     outlined
                     :items="schoolLevelList"
@@ -71,7 +71,7 @@
                     :rules="[formRules.required]"
                     v-model="schoolLevel"
                   ></v-select>
-                </v-col>
+                </v-col> -->
 
                 <v-col cols="12" class="pa-0 px-4">
                   <v-btn
@@ -257,7 +257,7 @@
                     block
                     depressed
                     :color="$vuetify.theme.themes.light.submitBtns"
-                    class="white--text py-5 font-size-14 rounded-lg"
+                    class="white--text py-5 font-size-14 rounded-lg shake"
                     >{{ step.id == 2 ? "REGISTER" : "NEXT" }}</v-btn
                   >
                 </v-col>
@@ -314,6 +314,8 @@ export default {
 
   data: () => ({
     otp: null,
+    timerCounts: 1,
+    animated: false,
     termsDialog: true,
     schoolLevel: null,
     isAgreed: null,
@@ -403,30 +405,55 @@ export default {
     },
     register() {
       if (this.$refs.Step2Formref.validate()) {
-        this.isLoading = true;
-        let data = {
-          fname: this.firstname,
-          mname: this.middlename,
-          lname: this.lastname,
-          suffix: this.suffix,
-          email: this.email,
-          password: this.password,
-          status: this.schoolLevel,
-        };
-
-        this.axiosCall("/auth/registerUser", "POST", data).then((res) => {
-          if (res.data.status == 201) {
-            this.isLoading = false;
-            this.$store.dispatch("setEmail", this.email);
-            this.$router.push("/registration-success");
+        let level = localStorage.getItem("level");
+        if (level == null) {
+          this.isLoading = false;
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.message =
+            "Please Select what school level you are!";
+          this.fadeAwayMessage.header = "System Message";
+          this.animated = false;
+          if (this.timerCounts != 0) {
+            setTimeout(() => {
+              this.timerCounts--;
+            }, 1000);
           } else {
-            this.isLoading = false;
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "error";
-            this.fadeAwayMessage.message = res.data.message;
-            this.fadeAwayMessage.header = "System Message";
+            this.$router.push("/");
           }
-        });
+        } else {
+          let status;
+          if (level == "Elementary") {
+            status = 1;
+          } else {
+            status = 2;
+          }
+          this.isLoading = true;
+          let data = {
+            fname: this.firstname,
+            mname: this.middlename,
+            lname: this.lastname,
+            suffix: this.suffix,
+            email: this.email,
+            password: this.password,
+            status: status,
+          };
+
+          this.axiosCall("/auth/registerUser", "POST", data).then((res) => {
+            if (res.data.status == 201) {
+              this.isLoading = false;
+              this.$store.dispatch("setEmail", this.email);
+              this.$router.push("/registration-success");
+            } else {
+              this.isLoading = false;
+              this.fadeAwayMessage.show = true;
+              this.fadeAwayMessage.type = "error";
+              this.fadeAwayMessage.message = res.data.message;
+              this.fadeAwayMessage.header = "System Message";
+              this.animated = true;
+            }
+          });
+        }
       }
     },
 
@@ -543,8 +570,8 @@ export default {
 
 <style scoped>
 .content {
-  background-color: #5a67da;
-  /* background: url("../../assets/img/new_bg.png"); */
+  /* background-color: #EA7142; */
+  background: url("../../assets/img/bglogin.jpg");
   background-position: center;
   position: fixed;
   top: 0;
@@ -603,5 +630,28 @@ export default {
   margin-left: 2px;
   font-size: 28px;
   text-align: center;
+}
+.shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+}
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 </style>

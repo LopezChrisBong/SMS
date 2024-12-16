@@ -14,10 +14,10 @@
           <v-card-text style="max-height: 700px" class="my-4">
             <v-container>
               <v-row>
-                <v-col cols="12">
+                <v-col cols="12" v-if="userId == 3">
                   <v-autocomplete
                     v-model="verifyModel.usertypeID"
-                    :rules="[formRules.required]"
+                    :rules="userId == 3 ? [formRules.required] : []"
                     dense
                     class="rounded-lg"
                     item-text="description"
@@ -43,10 +43,10 @@
                   </v-autocomplete>
                 </v-col>
 
-                <v-col cols="12">
+                <v-col cols="12" v-if="userId == 3">
                   <v-autocomplete
                     v-model="verifyModel.assignedModuleID"
-                    :rules="[formRules.required]"
+                    :rules="userId == 3 ? [formRules.required] : []"
                     dense
                     class="rounded-lg"
                     item-text="description"
@@ -58,10 +58,10 @@
                   </v-autocomplete>
                 </v-col>
 
-                <v-col cols="12">
+                <v-col cols="12" v-if="userId == 3">
                   <v-autocomplete
                     v-model="verifyModel.newStatus"
-                    :rules="[formRules.required]"
+                    :rules="userId == 3 ? [formRules.required] : []"
                     dense
                     class="rounded-lg"
                     item-text="description"
@@ -168,6 +168,7 @@ export default {
   },
   methods: {
     initialize() {
+      this.userId = this.$store.state.user.id;
       this.getUserType();
       this.getAssignedModules();
       this.getUseRoles();

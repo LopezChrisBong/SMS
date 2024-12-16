@@ -200,6 +200,7 @@ export default {
   },
   data() {
     return {
+      userId: null,
       dialog: false,
       readonly: true,
       className: [],

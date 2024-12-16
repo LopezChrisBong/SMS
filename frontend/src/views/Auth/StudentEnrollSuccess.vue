@@ -5,7 +5,7 @@
         <v-col align="center" cols="12" md="6">
           <v-card max-width="400" class="rounded-card">
             <div class="justify-center pa-4">
-              <h3 style="color: #5A67DA; width: 70%" class="mb-1">
+              <h3 style="color: #EA7142; width: 70%" class="mb-1">
                 You have been success enrolled!
               </h3>
               <p
@@ -73,8 +73,8 @@ export default {
 
 <style scoped>
 .content {
-  /* background: url("../../assets/img/new_bg.png"); */
-  background-color: #5a67da;
+  background: url("../../assets/img/bglogin.jpg");
+  /* background-color: #EA7142; */
   background-position: center;
   position: fixed;
   top: 0;

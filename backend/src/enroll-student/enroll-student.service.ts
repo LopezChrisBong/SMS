@@ -61,6 +61,7 @@ export class EnrollStudentService {
     try {
       // Check for conflicts
       const conflict = await this.checkConflict(createAvailabilityDto);
+      let hours =  await this.dataSource.query('SELECT '+createAvailabilityDto.teacherID+', SUM(hours) AS total_hours_per_weekFROM availability GROUP BY '+createAvailabilityDto.teacherID+';')
   
       if (conflict) {
         return {
@@ -69,6 +70,14 @@ export class EnrollStudentService {
           conflictDetails: conflict,
         };
       }
+      if(hours >= 31){
+        return {
+          msg: 'Loading of more than 30 hours in a week is restricted on this system.',
+          status: HttpStatus.CONFLICT,
+          conflictDetails: hours,
+        };
+      }
+
       // Save the schedule
       const newSchedule = this.availabilityRepository.create(createAvailabilityDto);
       await this.availabilityRepository.save(newSchedule);
@@ -545,19 +554,26 @@ async remove(id: number) {
 async updateClassProgram(id: number,
   updateAvailabilityDto: UpdateAvailabilityDto,
   user: any,) {
-    let data = updateAvailabilityDto
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
   try {
     // Check for conflicts
-    const conflict = await this.checkConflictUpdate(data);
+    // const conflict = await this.checkConflictUpdate(data);
 
-    if (conflict) {
+    // if (conflict) {
+    //   return {
+    //     msg: 'Conflict detected. Schedule cannot be updated.',
+    //     status: HttpStatus.CONFLICT,
+    //     conflictDetails: conflict,
+    //   };
+    // }
+    let hours =  await this.dataSource.query('SELECT '+id+', SUM(hours) AS total_hours_per_weekFROM availability GROUP BY '+id+';')
+    if(hours >= 31){
       return {
-        msg: 'Conflict detected. Schedule cannot be updated.',
+        msg: 'Update conflict faculty already reach 30 hours in total of loading!',
         status: HttpStatus.CONFLICT,
-        conflictDetails: conflict,
+        conflictDetails: hours,
       };
     }
 

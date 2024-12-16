@@ -217,8 +217,8 @@ export default {
         sortable: false,
       },
       // {
-      //   text: "#5a67da",
-      //   value: "#5a67da",
+      //   text: "#EA7142",
+      //   value: "#EA7142",
       //   align: "end",
       //   valign: "end",
       //   sortable: false,

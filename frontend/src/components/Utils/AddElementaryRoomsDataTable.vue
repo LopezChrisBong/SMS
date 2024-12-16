@@ -312,6 +312,8 @@ export default {
       { id: 4, name: "Grade 4" },
       { id: 5, name: "Grade 5" },
       { id: 6, name: "Grade 6" },
+      { id: 7, name: "Kinder 1" },
+      { id: 8, name: "Kinder 2" },
     ],
     coreTimeData: null,
     designationData: null,
@@ -361,36 +363,17 @@ export default {
   }),
 
   mounted() {
-    // this.eventHub.$on("closeMyJobApplicationDialog", () => {
-    //   this.initialize();
-    // });
-
     this.eventHub.$on("closeAddSubjectDialog", () => {
       this.initialize();
     });
     this.eventHub.$on("closeaddStudentClassRoomDialog", () => {
       this.initialize();
     });
-    // this.eventHub.$on("closeMyJobApplicationDialog", () => {
-    //   this.initialize();
-    // });
-    // this.eventHub.$on("closeShortListDialog", () => {
-    //   this.initialize();
-    // });
-
-    // this.eventHub.$on("closeMyDesignationDialog", () => {
-    //   this.initialize();
-    // });
   },
 
   beforeDestroy() {
-    this.eventHub.$off("closeaddStudentClassRoomDialog");
     this.eventHub.$off("closeAddSubjectDialog");
-    // this.eventHub.$off("closeApplicantJobList");
-    // this.eventHub.$off("closeMyJobApplicationDialog");
-    // this.eventHub.$off("closeShortListDialog");
-
-    // this.eventHub.$off("closeMyDesignationDialog");
+    this.eventHub.$off("closeaddStudentClassRoomDialog");
   },
 
   watch: {
@@ -491,6 +474,30 @@ export default {
         );
       } else if (this.tab == 6) {
         this.gradeName = "Grade 6";
+
+        this.axiosCall("/rooms-section/" + this.gradeName, "GET").then(
+          (res) => {
+            if (res) {
+              console.log("Love", res.data);
+              this.data = res.data;
+              this.loading = false;
+            }
+          }
+        );
+      } else if (this.tab == 7) {
+        this.gradeName = "Kinder 1";
+
+        this.axiosCall("/rooms-section/" + this.gradeName, "GET").then(
+          (res) => {
+            if (res) {
+              console.log("Love", res.data);
+              this.data = res.data;
+              this.loading = false;
+            }
+          }
+        );
+      } else if (this.tab == 8) {
+        this.gradeName = "Kinder 2";
 
         this.axiosCall("/rooms-section/" + this.gradeName, "GET").then(
           (res) => {
@@ -690,6 +697,62 @@ export default {
                   }
                 }
               });
+            } else if (this.tab == 7) {
+              this.gradeName = "Kinder 1";
+
+              this.axiosCall(
+                "/rooms-section/generateClassRecord/byGrade/level/" +
+                  this.gradeName +
+                  "/" +
+                  filter,
+                "POST"
+              ).then((res) => {
+                if (res) {
+                  if (res.data.status == 201) {
+                    this.dialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "success";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                    this.confirmDialog = false;
+                    this.initialize();
+                  } else if (res.data.status == 400) {
+                    this.confirmDialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "error";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                  }
+                }
+              });
+            } else if (this.tab == 8) {
+              this.gradeName = "Kinder 2";
+
+              this.axiosCall(
+                "/rooms-section/generateClassRecord/byGrade/level/" +
+                  this.gradeName +
+                  "/" +
+                  filter,
+                "POST"
+              ).then((res) => {
+                if (res) {
+                  if (res.data.status == 201) {
+                    this.dialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "success";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                    this.confirmDialog = false;
+                    this.initialize();
+                  } else if (res.data.status == 400) {
+                    this.confirmDialog = false;
+                    this.fadeAwayMessage.show = true;
+                    this.fadeAwayMessage.type = "error";
+                    this.fadeAwayMessage.header = "System Message";
+                    this.fadeAwayMessage.message = res.data.msg;
+                  }
+                }
+              });
             }
           }
         }
@@ -783,6 +846,32 @@ export default {
         });
       } else if (this.tab == 6) {
         this.gradeName = "Grade 6";
+
+        this.axiosCall(
+          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            this.generatedCount = res.data[0].count_gen;
+            console.log(this.generatedCount);
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 7) {
+        this.gradeName = "Kinder 1";
+
+        this.axiosCall(
+          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+          "GET"
+        ).then((res) => {
+          if (res) {
+            this.generatedCount = res.data[0].count_gen;
+            console.log(this.generatedCount);
+            this.loading = false;
+          }
+        });
+      } else if (this.tab == 8) {
+        this.gradeName = "Kinder 2";
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
