@@ -30,6 +30,7 @@ import MyScheduledProgram from "../views/Pages/MyScheduledProgram.vue";
 import AddSchoolYear from "../views/Pages/AddSchoolYear.vue";
 import AddElementaryRooms from "../views/Pages/AddElementaryRooms.vue";
 import ElementaryProgram from "../views/Pages/ElementaryProgram.vue";
+import LandingPage from "../views/Auth/LandingPage.vue";
 
 Vue.use(VueRouter);
 
@@ -37,9 +38,15 @@ const routes = [
   {
     path: "/",
     component: OuterLayout,
-    redirect: "/login",
+    redirect: "/landing",
     meta: { authRequired: false },
     children: [
+      {
+        path: "landing",
+        alias: "/landing",
+        component: LandingPage,
+        meta: { authRequired: false },
+      },
       {
         path: "login",
         alias: "/login",

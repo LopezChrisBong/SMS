@@ -23,7 +23,7 @@ export default new Vuetify({
         header: colors.green.darken2,
         notifUnOpen: "#dff2bf",
         notifUnOpenBorder: "#d3eda7",
-        submitBtns: "#3e107c",
+        submitBtns: "#FF9916",
       },
       dark: {
         primary1: colors.grey.darken4,

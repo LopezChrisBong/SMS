@@ -182,7 +182,6 @@
                   outlined
                   dense
                   v-model="blood_type"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -192,21 +191,7 @@
                   v-on="on"
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" md="3">
-                <v-text-field
-                  outlined
-                  dense
-                  v-model="isFilipino"
-                  :rules="action == 'View' ? [] : [formRules.required]"
-                  chips
-                  :readonly="readonly"
-                  small-chips
-                  label="Citizenship"
-                  color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </v-col>
+
               <v-col cols="12" md="3">
                 <v-text-field
                   outlined
@@ -227,7 +212,6 @@
                   outlined
                   dense
                   v-model="ip_Name"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -242,7 +226,6 @@
                   outlined
                   dense
                   v-model="fourpis"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -272,7 +255,6 @@
                   outlined
                   dense
                   v-model="email"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -287,7 +269,6 @@
                   outlined
                   dense
                   v-model="disability_desc"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -427,7 +408,6 @@
                   outlined
                   dense
                   v-model="father_fname"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -442,7 +422,6 @@
                   outlined
                   dense
                   v-model="father_mname"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -458,7 +437,6 @@
                   outlined
                   dense
                   v-model="father_lname"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -474,7 +452,6 @@
                   outlined
                   dense
                   v-model="father_number"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -490,7 +467,6 @@
                   outlined
                   dense
                   v-model="mother_fname"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -506,7 +482,6 @@
                   outlined
                   dense
                   v-model="mother_mname"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -522,7 +497,6 @@
                   outlined
                   dense
                   v-model="mother_lname"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -538,7 +512,6 @@
                   outlined
                   dense
                   v-model="mother_number"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -655,7 +628,7 @@
               v-if="readonly == false"
               :color="$vuetify.theme.themes.light.submitBtns"
               class="white--text"
-              @click="update()"
+              @click="accept()"
             >
               <v-icon>mdi-pencil </v-icon>
               update
@@ -828,6 +801,7 @@ export default {
     closeD() {
       this.eventHub.$emit("closeAccountsVerificatioDataDialog", true);
       this.dialog = false;
+      this.readonly = true;
     },
     verifyStudent(item) {
       console.log(item);
@@ -835,90 +809,93 @@ export default {
       this.action = "Verify";
       this.dialog = false;
     },
-  },
-  accept() {
-    if (this.$refs.UserVerifyFormref.validate()) {
-      let data = {
-        bdate: this.bdate,
-        birth_place: this.birth_place,
-        blood_type: this.blood_type,
-        civil_status: this.civil_status,
-        disability: this.disability,
-        disability_desc: this.disability_desc,
-        email: this.email,
-        father_fname: this.father_fname,
-        father_lname: this.father_lname,
-        father_mname: this.father_mname,
-        father_number: this.father_number,
-        fname: this.fname,
-        fourPs: this.fourPs,
-        fourpis: this.fourpis,
-        guardian_fname: this.guardian_fname,
-        guardian_lname: this.guardian_lname,
-        guardian_mname: this.guardian_mname,
-        guardian_number: this.guardian_number,
-        height: this.height,
-        id: this.id,
-        ip_Name: this.ip_Name,
-        isFilipino: this.isFilipino,
-        is_IP: this.is_IP,
-        last_grade_completed: this.last_grade_completed,
-        last_school_ID: this.last_school_ID,
-        last_school_attended: this.last_school_attended,
-        last_year_completed: this.last_year_completed,
-        lname: this.lname,
-        mname: this.mname,
-        mobile_no: this.mobile_no,
-        mother_fname: this.mother_fname,
-        mother_lname: this.mother_lname,
-        mother_mname: this.mother_mname,
-        mother_number: this.mother_number,
-        name: this.name,
-        permanent_brgy: this.permanent_brgy,
-        permanent_city: this.permanent_city,
-        permanent_house_no: this.permanent_house_no,
-        permanent_prov: this.permanent_prov,
-        permanent_street: this.permanent_street,
-        permanent_subd: this.permanent_subd,
-        permanent_zip: this.permanent_zip,
-        residential_brgy: this.residential_brgy,
-        residential_city: this.residential_city,
-        residential_house_no: this.residential_house_no,
-        residential_prov: this.residential_prov,
-        residential_street: this.residential_street,
-        residential_subd: this.residential_subd,
-        residential_zip: this.residential_zip,
-        seniorJunior: this.seniorJunior,
-        sex: this.sex,
-        suffix: this.suffix,
-        track: this.track,
-        transfered: this.transfered,
-        weight: this.weight,
-      };
+    update() {
+      alert("To be followed function");
+    },
+    accept() {
+      if (this.$refs.UserVerifyFormref.validate()) {
+        let data = {
+          bdate: this.bdate,
+          birth_place: this.birth_place,
+          blood_type: this.blood_type,
+          civil_status: this.civil_status,
+          disability: this.disability,
+          disability_desc: this.disability_desc,
+          email: this.email,
+          father_fname: this.father_fname,
+          father_lname: this.father_lname,
+          father_mname: this.father_mname,
+          father_number: this.father_number,
+          fname: this.fname,
+          fourPs: this.fourPs,
+          fourpis: this.fourpis,
+          guardian_fname: this.guardian_fname,
+          guardian_lname: this.guardian_lname,
+          guardian_mname: this.guardian_mname,
+          guardian_number: this.guardian_number,
+          height: this.height,
+          id: this.id,
+          ip_Name: this.ip_Name,
+          isFilipino: this.isFilipino,
+          is_IP: this.is_IP,
+          last_grade_completed: this.last_grade_completed,
+          last_school_ID: this.last_school_ID,
+          last_school_attended: this.last_school_attended,
+          last_year_completed: this.last_year_completed,
+          lname: this.lname,
+          mname: this.mname,
+          mobile_no: this.mobile_no,
+          mother_fname: this.mother_fname,
+          mother_lname: this.mother_lname,
+          mother_mname: this.mother_mname,
+          mother_number: this.mother_number,
+          name: this.name,
+          permanent_brgy: this.permanent_brgy,
+          permanent_city: this.permanent_city,
+          permanent_house_no: this.permanent_house_no,
+          permanent_prov: this.permanent_prov,
+          permanent_street: this.permanent_street,
+          permanent_subd: this.permanent_subd,
+          permanent_zip: this.permanent_zip,
+          residential_brgy: this.residential_brgy,
+          residential_city: this.residential_city,
+          residential_house_no: this.residential_house_no,
+          residential_prov: this.residential_prov,
+          residential_street: this.residential_street,
+          residential_subd: this.residential_subd,
+          residential_zip: this.residential_zip,
+          seniorJunior: this.seniorJunior,
+          sex: this.sex,
+          suffix: this.suffix,
+          track: this.track,
+          transfered: this.transfered,
+          weight: this.weight,
+        };
 
-      this.axiosCall(
-        "/enroll-student/updateEnrolledStudent",
-        "POST",
-        data
-      ).then((res) => {
-        if (res.data.status == 200) {
-          this.dialog = false;
-          this.fadeAwayMessage.show = true;
-          this.fadeAwayMessage.type = "success";
-          this.fadeAwayMessage.header = "System Message";
-          this.fadeAwayMessage.message = res.data.msg;
-          this.closeD();
-        } else if (res.data.status == 400) {
-          this.dialog = false;
-          this.fadeAwayMessage.show = true;
-          this.fadeAwayMessage.type = "error";
-          this.fadeAwayMessage.header = "System Message";
-          this.fadeAwayMessage.message = res.data.msg;
-          this.$refs.PositionFormref.reset();
-          this.closeD();
-        }
-      });
-    }
+        this.axiosCall(
+          "/enroll-student/updateEnrolledStudent",
+          "POST",
+          data
+        ).then((res) => {
+          if (res.data.status == 200) {
+            this.dialog = false;
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "success";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = res.data.msg;
+            this.closeD();
+          } else if (res.data.status == 400) {
+            this.dialog = false;
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "error";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = res.data.msg;
+            this.$refs.UserVerifyFormref.reset();
+            this.closeD();
+          }
+        });
+      }
+    },
   },
 };
 </script>

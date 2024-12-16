@@ -40,7 +40,13 @@
                     v-model="strandId"
                     outlined
                     dense
-                    :rules="[formRules.required]"
+                    :rules="
+                      grade == 'Grade 11'
+                        ? [formRules.required]
+                        : grade == 'Grade 12'
+                        ? [formRules.required]
+                        : []
+                    "
                     label="Strand List"
                     :items="strandList"
                     item-text="strand_name"
@@ -61,7 +67,7 @@
               Cancel
             </v-btn>
             <v-btn
-              color="#5a67da"
+              color="#EA7142"
               class="white--text"
               v-if="action == 'Add'"
               @click="checkConflict('ADD')"
@@ -70,7 +76,7 @@
               Add
             </v-btn>
             <v-btn
-              color="#5a67da"
+              color="#EA7142"
               class="white--text"
               v-if="action == 'Update'"
               @click="checkConflict('UPDATE')"

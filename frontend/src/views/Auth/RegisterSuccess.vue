@@ -3,11 +3,14 @@
     <v-container fluid fill-height class="content">
       <v-row align="center" justify="center">
         <v-col align="center" cols="12" md="6">
-          <v-card max-width="400" class="rounded-card">
+          <v-card max-width="600" class="rounded-card">
+            <div style="margin:0 auto; width:25%" class="pa-2">
+              <v-img src="../../assets/img/limbaanlogo.png"></v-img>
+            </div>
             <div class="justify-center pa-4">
-              <h3 style="color: #5A67DA; width: 70%" class="mb-1">
+              <h3 style="color: #EA7142; width: 100%" class="mb-1">
                 You have successfully registered your account on
-                <span style="color: #5A67DA">LIFE</span>
+                <span style="color: #EA7142">LIFE</span>
               </h3>
               <p
                 class="text-caption text-gray-100"
@@ -56,7 +59,7 @@ export default {
             this.timerCounts--;
           }, 1000);
         } else {
-          this.$router.push("/");
+          this.$router.push("/login");
         }
       },
       immediate: true, // This ensures the watcher is triggered upon creation
@@ -72,8 +75,8 @@ export default {
 
 <style scoped>
 .content {
-  /* background: url("../../assets/img/new_bg.png"); */
-  background-color: #5a67da;
+  background: url("../../assets/img/bglogin.jpg");
+  /* background-color: #EA7142; */
   background-position: center;
   position: fixed;
   top: 0;

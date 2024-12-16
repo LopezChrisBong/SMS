@@ -19,7 +19,7 @@
 
       <v-menu>
         <template v-slot:activator="{ on }">
-          <v-chip v-on="on" color="#1976D2" class="rounded-lg d-flex py-2">
+          <v-chip v-on="on" color="#efeeef" class="rounded-lg d-flex py-2">
             <v-avatar left :size="$vuetify.breakpoint.smAndUp ? 100 : 100">
               <img :src="profImg" max-width="100" />
             </v-avatar>
@@ -45,7 +45,7 @@
           </v-chip>
         </template>
         <v-card width="240">
-          <v-list color="#5a67da">
+          <v-list color="#EA7142">
             <v-list-item>
               <v-list-item-avatar>
                 <img :src="profImg" max-width="60" />
@@ -170,13 +170,13 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <v-main style="background-color: #1976D2; ">
+    <v-main style="background-color: #efeeef; ">
       <div class=" fill-height pb-6" style="background-color:white; ">
         <div class="d-flex justify-space-between py-4 px-4  ">
           <!-- <div>
             <v-select
               label="Year"
-              color="#5a67da"
+              color="#EA7142"
               @change="changeFilter()"
               outlined
               v-model="selectedFiter"
@@ -512,14 +512,14 @@ export default {
   padding: 5px 0 5px 0;
 }
 .modal_header {
-  background-color: #5a67da;
+  background-color: #ea7142;
   padding: 5px;
 }
 .notifDiv {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: #5a67da;
+  background-color: #ea7142;
   color: white;
   flex: auto;
   justify-content: space-between;
@@ -532,7 +532,7 @@ export default {
 .showAllNotif {
   margin: 0;
   font-size: 12px;
-  background-color: #5a67da;
+  background-color: #ea7142;
   padding: 10px;
   text-align: center;
   max-height: 55vh;
