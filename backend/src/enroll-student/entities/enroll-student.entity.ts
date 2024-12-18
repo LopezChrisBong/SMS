@@ -18,13 +18,13 @@ export class EnrollStudent {
       id: number;
 
       @Column({
-        nullable: false,
+        nullable: true,
         type: 'varchar',
       })
         fname: string;
 
         @Column({
-            nullable: false,
+            nullable: true,
             type: 'varchar',
           })
         lname: string;
@@ -88,7 +88,7 @@ export class EnrollStudent {
         
         @Column({
             type: 'tinyint',
-            nullable: false,
+            default: false,
           })
         transfered: boolean;
 
@@ -106,7 +106,7 @@ export class EnrollStudent {
 
         @Column({
             type: 'tinyint',
-            nullable: false,
+            default: false,
           })
         is_IP: boolean;
 
@@ -141,7 +141,7 @@ export class EnrollStudent {
 
         @Column({
             type: 'tinyint',
-            nullable: false,
+            default: false,
           })
         fourPs: boolean;
 
@@ -168,9 +168,10 @@ export class EnrollStudent {
 
         @Column({
             nullable: true,
-            type: 'int',
+            type: 'varchar',
+            length: 255
           })
-        mobile_no: number;
+        mobile_no: string;
 
         @Column({
             nullable: true,
