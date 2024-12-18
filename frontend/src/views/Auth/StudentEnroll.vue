@@ -4,6 +4,7 @@
       class="pl-2 pt-2 pr-2 mx-2 fill-height"
       style="background-color: white; overflow-y: hidden; overflow-x: hidden"
     > -->
+
     <v-card class="">
       <v-form ref="myPdsForm">
         <!-- <v-row class="mb-2">
@@ -57,8 +58,13 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <v-select
-                    :items="seniorJuniorList"
+                    :items="
+                      levelCheck == 'Elementary'
+                        ? seniorJuniorList1
+                        : seniorJuniorList
+                    "
                     label="Grade Level"
+                    :rules="[formRules.required]"
                     color="#6DB249"
                     dense
                     v-model="formdata.seniorJunior"
@@ -74,7 +80,9 @@
                         ? primaryList
                         : formdata.seniorJunior == 'Junior High'
                         ? juniorList
-                        : seniorList
+                        : formdata.seniorJunior == 'Senior High'
+                        ? seniorList
+                        : []
                     "
                     label="Grades"
                     color="#6DB249"
@@ -254,7 +262,14 @@
                     v-model="formdata.sex"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                <v-col
+                  cols="12"
+                  sm="3"
+                  md="3"
+                  lg="3"
+                  xl="3"
+                  v-if="levelCheck == 'High School' ? 'd-none' : ''"
+                >
                   <v-select
                     :items="cvl_statusItem"
                     label="Civil Status"
@@ -277,7 +292,6 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.height"
-                    :rules="[formRules.hgtInMtrFormat]"
                     dense
                     class="rounded-lg"
                     label="Height (m)"
@@ -288,7 +302,6 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.weight"
-                    :rules="[formRules.numberRequired]"
                     dense
                     class="rounded-lg"
                     label="Weight (kg)"
@@ -366,11 +379,12 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.mobile_no"
-                    :rules="[formRules.required]"
+                    :rules="[formdata.numberOnly]"
                     dense
                     class="rounded-lg"
                     label="Mobile number"
                     color="#6DB249"
+                    type="number"
                   >
                   </v-text-field>
                 </v-col>
@@ -643,6 +657,7 @@
                     class="rounded-lg"
                     label="Phone Number"
                     color="#6DB249"
+                    type="number"
                   >
                   </v-text-field>
                 </v-col>
@@ -689,6 +704,7 @@
                     class="rounded-lg"
                     label="Phone Number"
                     color="#6DB249"
+                    type="number"
                   >
                   </v-text-field>
                 </v-col>
@@ -746,6 +762,7 @@
                     dense
                     class="rounded-lg"
                     label="Phone Number"
+                    type="number"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -938,7 +955,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- saving confirmation -->
+    <!-- delete confirmation -->
     <v-dialog v-model="deleteConfirmDialog" persistent max-width="300">
       <v-card>
         <v-card-title class="text-h6 red white--text">
@@ -963,7 +980,25 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
+    <v-dialog>
+      <template v-slot:activator="{ on, attrs }">
+        <!-- Add Contribution Button -->
+        <v-btn
+          color="#EA7142"
+          fab
+          dark
+          md
+          fixed
+          left
+          bottom
+          v-bind="attrs"
+          v-on="on"
+          @click="goLanding()"
+        >
+          <v-icon dark>mdi-arrow-collapse-left</v-icon>
+        </v-btn>
+      </template>
+    </v-dialog>
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -1016,7 +1051,8 @@ export default {
       { id: 2, type: "By naturalization" },
     ],
     countryList: [],
-    seniorJuniorList: ["Elementary", "Junior High", "Senior High"],
+    seniorJuniorList: ["Junior High", "Senior High"],
+    seniorJuniorList1: ["Elementary"],
     status: null,
     formdata: {
       id: null,
@@ -1026,7 +1062,7 @@ export default {
       suffix: null,
       fourPs: "No",
       fourpis: null,
-      seniorJunior: "Elementary",
+      seniorJunior: null,
       transfered: "No",
       email: null,
       bdate: null,
@@ -1094,6 +1130,7 @@ export default {
       guardian_lname: null,
       guardian_number: null,
     },
+
     GoodMoral: null,
     PSA: null,
     SchoolCard: null,
@@ -1116,6 +1153,12 @@ export default {
     remarksData: [],
   }),
   mounted() {
+    this.levelCheck = localStorage.getItem("level");
+    if (this.levelCheck == "Elementary") {
+      this.formdata.seniorJunior = "Elementary";
+    } else {
+      this.formdata.seniorJunior = "Junior High";
+    }
     this.initialize();
   },
 
@@ -1362,6 +1405,9 @@ export default {
           }
         }
       );
+    },
+    goLanding() {
+      this.$router.push("/landing");
     },
 
     getSchoolYear() {

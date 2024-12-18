@@ -49,6 +49,25 @@ export class UserDetailsService {
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
 
+    if(user[0].status == 0){
+      let data = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        'UD.id as id',
+        'UD.fname as fname',
+        'UD.mname as mname',
+        'UD.lname as lname',
+        'UD.status as status',
+      ])
+      .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
+      .where('user.isValidated = 1')
+      .andWhere('user.id != 2') //security user ID
+      .andWhere('user.isAdminApproved = 0')
+      .getRawMany();
+    return data;
+    }
+
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
@@ -74,6 +93,24 @@ export class UserDetailsService {
     const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
+    if(user[0].status == 0){
+      let data = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        'UD.id as id',
+        'UD.fname as fname',
+        'UD.mname as mname',
+        'UD.lname as lname',
+        'UD.status as status',
+      ])
+      .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
+      .where('user.isValidated = 1')
+      .andWhere('user.id != 2') //security user ID
+      .andWhere('user.isAdminApproved = 1')
+      .getRawMany();
+    return data;
+    }
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
