@@ -40,9 +40,9 @@ export class SubjectsController {
   }
   
 
-  @Get('CreateSubject/notActive')
-  notActiveSubject() {
-    return this.subjectsService.notActiveSubject();
+  @Get('getFacultyList/:grade')
+  getFacultyList(@Param('grade') grade: string) {
+    return this.subjectsService.getFacultyList(grade);
   }
 
   @Get('getSubjectTaagged/:id')

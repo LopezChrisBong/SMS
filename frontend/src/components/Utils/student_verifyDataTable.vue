@@ -25,7 +25,7 @@ e<template>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
-        :headers="headers"
+        :headers="tab == 1 ? headers : headers1"
         :items="data"
         :items-per-page="10"
         :search="search"
@@ -36,6 +36,9 @@ e<template>
       >
         <template v-slot:[`item.fname`]="{ item }">
           {{ item.fname }} {{ item.lname }}
+        </template>
+        <template v-slot:[`item.updated_at`]="{ item }">
+          {{ formatDate(item.updated_at) }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn x-small color="grey" outlined @click="editItem(item)">
@@ -155,6 +158,17 @@ export default {
     search: "",
     headers: [
       { text: "Name", value: "name", align: "start" },
+      {
+        text: "Actions",
+        value: "actions",
+        align: "center",
+        sortable: false,
+        width: 200,
+      },
+    ],
+    headers1: [
+      { text: "Name", value: "name", align: "start" },
+      { text: "Enrolled", value: "updated_at", align: "center" },
       {
         text: "Actions",
         value: "actions",

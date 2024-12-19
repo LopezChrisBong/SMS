@@ -93,12 +93,18 @@ export class SubjectsService {
 
   
 
-  async notActiveSubject(){
-    let data = await this.dataSource.manager.createQueryBuilder(Subject,'JP')
-    // .where('JP.id NOT IN (SELECT id FROM subject where Date(NOW()) between Date(date_from) and Date(date_to))')
-    .orderBy('subject_title', 'ASC')
-    .getMany()
-    return data
+  async getFacultyList(grade:string){
+    let data = await this.dataSource.manager
+      .createQueryBuilder(TeacherGradeLevel, 'ts')
+      .select([
+        "*",
+        "ts.id as grade_level",
+        "IF (!ISNULL(us.mname) AND LOWER(us.mname) != 'n/a', concat(us.fname, ' ',SUBSTRING(us.mname, 1, 1) ,'. ',us.lname) ,concat(us.fname, ' ', us.lname)) as name",
+            ])
+      .leftJoin(UserDetail, 'us', 'us.id = ts.teachersId')
+      .where('ts.grade_level = "'+grade+'"')
+      .getRawMany();
+    return data;
 
   }
 

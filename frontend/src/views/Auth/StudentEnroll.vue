@@ -1071,7 +1071,7 @@ export default {
       birth_place: null,
       sex: null,
       civil_status: null,
-      civil_status1: null,
+      civil_status1: "Single",
       height: null,
       weight: null,
       blood_type: null,
@@ -1265,7 +1265,8 @@ export default {
         this.fadeAwayMessage.show = true;
         this.fadeAwayMessage.type = "error";
         this.fadeAwayMessage.header = "System Message!";
-        this.fadeAwayMessage.message = "Please fill all required fields";
+        this.fadeAwayMessage.message =
+          "Palihog ug fill-up sa mga nag pula nga field!";
       }
     },
 
