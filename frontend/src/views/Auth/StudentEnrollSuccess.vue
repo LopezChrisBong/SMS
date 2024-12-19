@@ -6,15 +6,15 @@
           <v-card max-width="400" class="rounded-card">
             <div class="justify-center pa-4">
               <h3 style="color: #EA7142; width: 70%" class="mb-1">
-                You have been success enrolled!
+                You have been success submitted your partial enrollment form!
               </h3>
               <p
                 class="text-caption text-gray-100"
                 style="width: 85%; font-size: 10px"
               >
                 Please submit the following documents on the registrars office!
-                Note that within six days of not submitting you required
-                document to pass your pending enrollment will be deleted!
+                <!-- Note that within six days of not submitting you required
+                document to pass your pending enrollment will be deleted! -->
               </p>
             </div>
 

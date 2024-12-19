@@ -151,6 +151,7 @@
                         label="Mobile Number"
                         dense
                         color="#6DB249"
+                        type="number"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="6" sm="6" v-if="readonly == false">

@@ -31,6 +31,8 @@ import AddSchoolYear from "../views/Pages/AddSchoolYear.vue";
 import AddElementaryRooms from "../views/Pages/AddElementaryRooms.vue";
 import ElementaryProgram from "../views/Pages/ElementaryProgram.vue";
 import LandingPage from "../views/Auth/LandingPage.vue";
+import TeachersListGradeLevel from "../views/Pages/TeachersListGradeLevel.vue";
+import ElementaryTeacherListGradeLevel from "../views/Pages/ElementaryTeacherListGradeLevel.vue";
 
 Vue.use(VueRouter);
 
@@ -180,6 +182,17 @@ const routes = [
         path: "faculty-schedule",
         component: AvailableFaculty,
         meta: { title: "Faculty Schedule List", authRequired: true },
+      },
+      {
+        path: "teachers-list",
+        component: TeachersListGradeLevel,
+        meta: { title: "Faculty List", authRequired: true },
+      },
+
+      {
+        path: "elementarty-teachers-list",
+        component: ElementaryTeacherListGradeLevel,
+        meta: { title: "Faculty List", authRequired: true },
       },
 
       {

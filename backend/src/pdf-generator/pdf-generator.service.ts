@@ -395,6 +395,7 @@ export class PdfGeneratorService {
 
 
   async getMySchedule(facultyId: number, filter: number) {
+    console.log(facultyId, filter)
     let mySched = await this.dataSource.manager
     .createQueryBuilder(Availability, 'A')
     .select([

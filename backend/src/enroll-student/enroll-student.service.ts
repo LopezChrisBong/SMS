@@ -61,7 +61,6 @@ export class EnrollStudentService {
     try {
       // Check for conflicts
       const conflict = await this.checkConflict(createAvailabilityDto);
-      const hours =  await this.dataSource.query('SELECT '+createAvailabilityDto.teacherID+', SUM(hours) AS total_hours_per_week FROM availability GROUP BY '+createAvailabilityDto.teacherID+';')
   
       if (conflict) {
         return {
@@ -70,13 +69,7 @@ export class EnrollStudentService {
           conflictDetails: conflict,
         };
       }
-      if(hours >= 31){
-        return {
-          msg: 'Loading of more than 30 hours in a week is restricted on this system.',
-          status: HttpStatus.CONFLICT,
-          conflictDetails: hours,
-        };
-      }
+
 
       // Save the schedule
       const newSchedule = this.availabilityRepository.create(createAvailabilityDto);
@@ -314,6 +307,7 @@ export class EnrollStudentService {
         'ES.schoolCard as schoolCard',
         'ES.school_yearId as school_yearId',
         'ES.grade_level as grade_level',
+        'ES.updated_at as updated_at',
       ])
       .andWhere('ES.statusEnrolled = 1')
       .andWhere('ES.seniorJunior IN (:...values)', {

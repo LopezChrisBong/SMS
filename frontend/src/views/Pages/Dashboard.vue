@@ -5,6 +5,45 @@
         <v-col lg="6" xl="6" md="6" sm="12" xs="12">
           <v-card class="card-style">
             <v-row>
+              <v-col cols="12" class="pt-16 text-center">
+                <p class="text-h1">
+                  130
+                </p>
+              </v-col>
+              <v-col cols="12 ">
+                <v-divider></v-divider>
+                <v-list-item-title
+                  color="#808191"
+                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                  >Overall Enrollment List
+                </v-list-item-title>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+        <v-col lg="6" xl="6" md="6" sm="12" xs="12">
+          <v-card class="card-style">
+            <v-row>
+              <v-col cols="12" class="pt-16 text-center">
+                <p class="text-h1">
+                  15
+                </p>
+              </v-col>
+              <v-col cols="12 ">
+                <v-divider></v-divider>
+                <v-list-item-title
+                  color="#808191"
+                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                  >Average Number of Enrollees per Day per Year Level
+                </v-list-item-title>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+
+        <v-col lg="6" xl="6" md="6" sm="12" xs="12">
+          <v-card class="card-style">
+            <v-row>
               <v-col cols="12" class="pt-16">
                 <PieChart :data="TeachingNonTeaching" />
               </v-col>
@@ -36,6 +75,43 @@
             </v-row>
           </v-card>
         </v-col>
+
+        <v-col lg="6" xl="6" md="6" sm="12" xs="12">
+          <v-card class="card-style">
+            <v-row>
+              <v-col cols="12" class="pt-16">
+                <LineChartVue :data="maleFemale" />
+              </v-col>
+              <v-col cols="12 ">
+                <v-divider></v-divider>
+                <v-list-item-title
+                  color="#808191"
+                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                >
+                  Number of teachers to be hired
+                </v-list-item-title>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+        <v-col lg="6" xl="6" md="6" sm="12" xs="12">
+          <v-card class="card-style">
+            <v-row>
+              <v-col cols="12" class="pt-16">
+                <AreaChart :data="maleFemale" />
+              </v-col>
+              <v-col cols="12 ">
+                <v-divider></v-divider>
+                <v-list-item-title
+                  color="#808191"
+                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                >
+                  Enrollee Demographics
+                </v-list-item-title>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
       </v-row>
     </v-card>
   </div>
@@ -44,10 +120,14 @@
 <script>
 import PieChart from "../../components/Charts/NewCharts/Pie.vue";
 import PieChart1 from "../../components/Charts/NewCharts/Bar.vue";
+import AreaChart from "../../components/Charts/AreaChart.vue";
+import LineChartVue from "../../components/Charts/LineChart.vue";
 export default {
   components: {
     PieChart,
     PieChart1,
+    AreaChart,
+    LineChartVue,
   },
   data: () => ({
     mini: false,

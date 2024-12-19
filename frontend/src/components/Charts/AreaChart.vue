@@ -7,7 +7,7 @@ export default {
     return {
       gradient: null,
       gradient2: null,
-      gradient3: null
+      gradient3: null,
     };
   },
   mounted() {
@@ -17,7 +17,7 @@ export default {
     this.gradient2 = this.$refs.canvas
       .getContext("2d")
       .createLinearGradient(0, 0, 0, 450);
-  this.gradient3 = this.$refs.canvas
+    this.gradient3 = this.$refs.canvas
       .getContext("2d")
       .createLinearGradient(0, 0, 0, 450);
     this.gradient.addColorStop(0, "rgba(255, 0,0, 0.5)");
@@ -35,51 +35,52 @@ export default {
     this.renderChart(
       {
         labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
+          "Grade 7",
+          "Grade 8",
+          "Grade 9",
+          "Grade 10",
+          "Grade 11",
+          "Grade 12",
+          // "July",
+          // "August",
+          // "September",
+          // "October",
+          // "November",
+          // "December",
         ],
         datasets: [
           {
-            label: "Personal Salary Loan",
+            label: "Verification",
             borderColor: "#008080",
             pointBackgroundColor: "white",
             pointBorderColor: "white",
             borderWidth: 1,
             backgroundColor: this.gradient3,
-            data: [6, 59, 2, 5, 20, 30, 15, 6, 59, 2, 5, 20, 30, 15]
+            data: [6, 59, 2, 5, 20, 30, 15, 6, 59, 2, 5, 20, 30, 15],
           },
           {
-            label: "Emergency Loan",
+            // label: "Emergency Loan",
+            label: "Enrolled",
             borderColor: "#FC2525",
             pointBackgroundColor: "white",
             borderWidth: 1,
             pointBorderColor: "white",
             backgroundColor: this.gradient,
-            data: [40, 39, 10, 40, 39, 80, 40, 40, 39, 10, 40, 39, 80, 40]
+            data: [40, 39, 10, 40, 39, 80, 40, 40, 39, 10, 40, 39, 80, 40],
           },
           {
-            label: "Multipurpose Loan",
+            label: "Droped",
             borderColor: "#05CBE1",
             pointBackgroundColor: "white",
             pointBorderColor: "white",
             borderWidth: 1,
             backgroundColor: this.gradient2,
-            data: [60, 55, 32, 10, 2, 12, 53, 60, 55, 32, 10, 2, 12, 53]
+            data: [60, 55, 32, 10, 2, 12, 53, 60, 55, 32, 10, 2, 12, 53],
           },
-        ]
+        ],
       },
       { responsive: true, maintainAspectRatio: false }
     );
-  }
+  },
 };
 </script>

@@ -320,6 +320,7 @@ export default {
               day: this.day,
               grade_level: this.grade,
               hours: hours,
+              school_yearId: filter,
             };
             this.axiosCall("/enroll-student/addSchedule", "POST", data).then(
               (res) => {
