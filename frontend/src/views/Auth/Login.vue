@@ -26,7 +26,14 @@
                     <b> Loading and Enrollment System</b>
                   </div>
                   <div style="margin:0 auto; width:45%" class="pa-2">
-                    <v-img src="../../assets/img/limbaanlogo.png"></v-img>
+                    <v-img
+                      v-if="limbaanimg == 'Elementary'"
+                      src="../../assets/img/limbaanelementary.png"
+                    ></v-img>
+                    <v-img
+                      v-else
+                      src="../../assets/img/limbaanlogo.png"
+                    ></v-img>
                   </div>
 
                   <div class="text-subtitle1" color="#123E4D" align="center">
@@ -148,6 +155,8 @@
 export default {
   name: "login",
   mounted() {
+    this.limbaanimg = localStorage.getItem("level");
+    console.log("Limbaan", this.limbaanimg);
     this.getSchoolYear();
     if (this.$store.state.user) {
       if (!this.$store.state.user.usertype.id) {
@@ -210,6 +219,7 @@ export default {
     email: "",
     password: "",
     show1: false,
+    limbaanimg: null,
     show2: false,
     fadeAwayMessage: {
       show: false,

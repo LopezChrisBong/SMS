@@ -9,8 +9,8 @@
                 <div
                   :style="
                     $vuetify.breakpoint.smAndDown
-                      ? 'margin:0 auto; width:50%'
-                      : 'margin:0 auto; width:35%'
+                      ? 'margin:0 auto; width:60%'
+                      : 'margin:0 auto; width:30%'
                   "
                   class="pa-2"
                 >
@@ -18,17 +18,18 @@
                 </div>
 
                 <div
-                  :class="
-                    $vuetify.breakpoint.smAndDown ? 'text-h5' : 'text-h3 mb-5'
-                  "
+                  :class="$vuetify.breakpoint.smAndDown ? 'text-h5' : 'text-h3'"
                   color="#123E4D"
                   align="center"
                 >
-                  <b style="color: #EA7142"
+                  <!-- <b style="color: #EA7142"
                     >Welcome to <span style="color: #EA7142"></span>LIFE!</b
-                  >
+                  > -->
+                  <v-img
+                    src="../../assets/img/Screenshot_2024-12-20_093502-removebg-preview.png"
+                  ></v-img>
                 </div>
-                <div
+                <!-- <div
                   :class="
                     $vuetify.breakpoint.smAndDown
                       ? 'text-subtitle-1 mb-3 mt-3'
@@ -42,7 +43,7 @@
                     <br v-if="$vuetify.breakpoint.smAndDown" />
                     <span v-else> - </span> Loading and Enrollment System</b
                   >
-                </div>
+                </div> -->
               </v-col>
 
               <v-col cols="12" md="6" class="pa-0 px-4 mt-n2">

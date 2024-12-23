@@ -293,6 +293,7 @@ export default {
     options: {
       handler() {
         this.initialize();
+        this.getClassroom(this.section);
       },
       deep: true,
     },
@@ -517,7 +518,7 @@ export default {
 
     deleteItem() {
       this.axiosCall(
-        "/enroll-student/deleteAvailabilitySchedule" + this.deleteData.availId,
+        "/enroll-student/deleteAvailabilitySchedule/" + this.deleteData.availId,
         "DELETE"
       ).then((res) => {
         if (res.data.status == 200) {

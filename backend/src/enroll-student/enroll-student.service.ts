@@ -513,7 +513,7 @@ export class EnrollStudentService {
 async getClassProgramm(grade: string , section : number, filter:number ) {
  
     const toReturn = await this.dataSource.query(
-      '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name ,t1.id as availId,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" and t1.school_yearId ="'+filter+'" order by t1.day ASC' ,      
+      '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name ,t1.id as availId,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" and t1.school_yearId ="'+filter+'" order by t1.day ASC, t1.times_slot_from ASC' ,      
     );
     return toReturn;
 
@@ -551,9 +551,10 @@ async updateClassProgram(id: number,
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
   try {
     // Check for conflicts
-    // const conflict = await this.checkConflictUpdate(data);
+    // const conflict = await this.checkConflictUpdate(updateAvailabilityDto);
 
     // if (conflict) {
     //   return {
@@ -562,14 +563,15 @@ async updateClassProgram(id: number,
     //     conflictDetails: conflict,
     //   };
     // }
-    let hours =  await this.dataSource.query('SELECT '+id+', SUM(hours) AS total_hours_per_weekFROM availability GROUP BY '+id+';')
-    if(hours >= 31){
-      return {
-        msg: 'Update conflict faculty already reach 30 hours in total of loading!',
-        status: HttpStatus.CONFLICT,
-        conflictDetails: hours,
-      };
-    }
+
+    // let hours =  await this.dataSource.query('SELECT '+id+', SUM(hours) AS total_hours_per_weekFROM availability GROUP BY '+id+';')
+    // if(hours >= 31){
+    //   return {
+    //     msg: 'Update conflict faculty already reach 30 hours in total of loading!',
+    //     status: HttpStatus.CONFLICT,
+    //     conflictDetails: hours,
+    //   };
+    // }
 
     // update the schedule
     await queryRunner.manager.update(Availability, id, {
