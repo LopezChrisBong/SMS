@@ -3,10 +3,10 @@
     <v-container fluid fill-height class="content">
       <v-row align="center" justify="center">
         <v-col align="center" cols="12" md="6">
-          <v-card max-width="400" class="rounded-card">
+          <v-card max-width="500" class="rounded-card">
             <div class="justify-center pa-4">
-              <h3 style="color: #EA7142; width: 70%" class="mb-1">
-                You have been success submitted your partial enrollment form!
+              <h3 style="color: #EA7142; width: 70%" class="mb-4 mt-4">
+                You have successfully submitted your partial enrollment form!
               </h3>
               <p
                 class="text-caption text-gray-100"

@@ -415,8 +415,8 @@ export class PdfGeneratorService {
     .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
     .where('A.teacherID = "'+facultyId+'"')
     .andWhere('A.school_yearId = "'+filter+'"')
-    .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
-    .orderBy('A.teacherID')
+    // .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
+    // .orderBy('A.teacherID')
     .getRawMany();
 
     let teacherName = mySched[0].name

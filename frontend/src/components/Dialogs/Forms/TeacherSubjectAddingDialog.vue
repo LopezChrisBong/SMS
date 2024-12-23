@@ -351,6 +351,7 @@ export default {
     closeD() {
       this.eventHub.$emit("closedDataGradeSubjects", false);
       this.initialize();
+      this.$router.go(0);
       this.dialog = false;
     },
 

@@ -220,7 +220,6 @@
                         small-chips
                         color="#6DB249"
                         label="Date of Birth"
-                        readonly
                         v-bind="attrs"
                         v-on="on"
                       ></v-text-field>
@@ -1415,7 +1414,15 @@ export default {
       this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
         if (res) {
           this.schooYearList = res.data;
-          this.selectedFiter = res.data[0].id;
+          const currentDate = new Date();
+          // Filter rows where the current date is between start_date and end_date
+          const filteredData = res.data.filter((item) => {
+            const startDate = new Date(item.startDate);
+            const endDate = new Date(item.endDate);
+            return currentDate >= startDate && currentDate <= endDate;
+          });
+          console.log("Filtered", filteredData[0].id);
+          this.selectedFiter = filteredData[0];
         }
       });
     },

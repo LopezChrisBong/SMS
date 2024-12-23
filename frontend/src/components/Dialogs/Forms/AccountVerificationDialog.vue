@@ -58,7 +58,7 @@
                   </v-autocomplete>
                 </v-col>
 
-                <v-col cols="12" v-if="userId == 3">
+                <!-- <v-col cols="12" v-if="userId == 3">
                   <v-autocomplete
                     v-model="verifyModel.newStatus"
                     :rules="userId == 3 ? [formRules.required] : []"
@@ -71,7 +71,7 @@
                     :items="statusList"
                   >
                   </v-autocomplete>
-                </v-col>
+                </v-col> -->
               </v-row>
             </v-container>
           </v-card-text>
