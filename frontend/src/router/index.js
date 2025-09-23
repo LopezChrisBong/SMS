@@ -33,6 +33,7 @@ import ElementaryProgram from "../views/Pages/ElementaryProgram.vue";
 import LandingPage from "../views/Auth/LandingPage.vue";
 import TeachersListGradeLevel from "../views/Pages/TeachersListGradeLevel.vue";
 import ElementaryTeacherListGradeLevel from "../views/Pages/ElementaryTeacherListGradeLevel.vue";
+import MyStudentRecord from "../views/Pages/MyStudentRecord.vue";
 
 Vue.use(VueRouter);
 
@@ -315,7 +316,23 @@ const routes = [
         component: MyScheduledProgram,
         meta: { title: "My Schedule List", authRequired: true },
       },
+      {
+        path: "high-school-rooms",
+        component: HishSchoolRooms,
+        meta: { title: "Add High School Rooms", authRequired: true },
+      },
 
+      {
+        path: "elementary-rooms",
+        component: AddElementaryRooms,
+        meta: { title: "Add Elementary Rooms", authRequired: true },
+      },
+       {
+        path: "my-student-record",
+        component: MyStudentRecord,
+        meta: { title: "My Student Record", authRequired: true },
+      },
+      
 
 
     ],

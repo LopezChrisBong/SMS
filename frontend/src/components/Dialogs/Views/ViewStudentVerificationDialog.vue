@@ -47,7 +47,6 @@
                   outlined
                   dense
                   v-model="mname"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -77,7 +76,6 @@
                   outlined
                   dense
                   v-model="suffix"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -152,7 +150,6 @@
                   outlined
                   dense
                   v-model="height"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -167,7 +164,6 @@
                   outlined
                   dense
                   v-model="weight"
-                  :rules="action == 'View' ? [] : [formRules.required]"
                   chips
                   :readonly="readonly"
                   small-chips
@@ -870,6 +866,7 @@ export default {
           track: this.track,
           transfered: this.transfered,
           weight: this.weight,
+          update_type: 2,
         };
 
         this.axiosCall(

@@ -65,6 +65,24 @@ export class SubjectsController {
     // const curr_user = currentUser(head_str);
     return this.subjectsService.getSpicificSubject(+id,+filter,grade);
   }
+  
+  @Get('getMyClassRecord/:filter/:tab')
+  getMyClassRecord(
+    @Headers() headers,@Param('filter') filter: string,@Param('tab') tab: string
+     ) {
+        var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.subjectsService.getMyClassRecord(curr_user,+filter,+tab);
+  }
+
+    @Get('getMySubjects')
+  getMySubjects(
+    @Headers() headers,
+     ) {
+        var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.subjectsService.getMySubjects(curr_user);
+  }
 
 
   @Patch(':id')

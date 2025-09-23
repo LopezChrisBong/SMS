@@ -94,15 +94,17 @@ export class EnrollStudent {
 
         @Column({
             nullable: true,
-            type: 'int',
+            type: 'varchar',
+            length: 255,
           })
-        height: number;
+        height: string;
 
         @Column({
             nullable: true,
-            type: 'int',
+            type: 'varchar',
+            length: 255,
           })
-        weight: number;
+        weight: string;
 
         @Column({
             type: 'tinyint',

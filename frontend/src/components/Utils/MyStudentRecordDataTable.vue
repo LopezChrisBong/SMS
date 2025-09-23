@@ -1,10 +1,10 @@
-<template>
+e<template>
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <v-tabs v-model="activeTab" color="#EA7142" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
+            tab.subject_title
           }}</v-tab>
         </v-tabs>
       </v-col>
@@ -34,31 +34,16 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.fname`]="{ item }">
-          {{ item.fname }} {{ item.lname }}
-        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
-            x-small
-            color="blue"
-            outlined
-            @click="editItem(item)"
             class="mx-2"
-          >
-            <v-icon size="14">{{
-              tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
-            }}</v-icon>
-            {{ tab == 1 ? "Verify" : "View" }}
-          </v-btn>
-
-          <v-btn
             x-small
-            color="red"
+            color="green"
             outlined
-            :class="tab == 2 ? 'd-none' : ''"
-            @click="deleteItem(item)"
+            @click="viewItem(item)"
           >
-            <v-icon size="14">mdi-delete-off</v-icon>Delete
+            <v-icon size="14">mdi-pencil</v-icon>
+            Attendance
           </v-btn>
         </template>
       </v-data-table>
@@ -100,7 +85,7 @@
       </v-col>
     </v-row>
 
-    <AccountVerificationDialog :data="updateData" :action="action" />
+    <ViewStudentAttendanceDialog :data="viewData" :action="action" />
 
     <v-dialog v-model="dialogConfirmDelete" max-width="500">
       <v-card>
@@ -147,13 +132,13 @@
 <script>
 export default {
   components: {
-    AccountVerificationDialog: () =>
-      import("../../components/Dialogs/Forms/AccountVerificationDialog.vue"),
+    ViewStudentAttendanceDialog: () =>
+      import("../Dialogs/Views/ViewStudentAttendanceDialog.vue"),
   },
   data: () => ({
     search: "",
     headers: [
-      { text: "Name", value: "name", align: "start" },
+      { text: "Class name", value: "room_section", align: "start" },
       {
         text: "Actions",
         value: "actions",
@@ -173,15 +158,12 @@ export default {
       { text: "250", value: 250 },
       { text: "500", value: 500 },
     ],
-    activeTab: { id: 1, name: "For Verification" },
+    activeTab: {},
     tab: 1,
-    tabList: [
-      { id: 1, name: "For Verification" },
-      { id: 2, name: "Verified" },
-    ],
+    tabList: [],
     totalCount: 0,
     deleteData: null,
-    updateData: null,
+    viewData: null,
     loading: false,
     options: {},
     action: null,
@@ -199,25 +181,29 @@ export default {
   }),
 
   mounted() {
-    this.eventHub.$on("closeAccountsVerificationDialog", () => {
-      if (this.tab == 1) {
-        this.initialize();
-      } else if (this.tab == 2) {
-        this.getVerifiedUsers();
-      }
+    this.eventHub.$on("closeStudentAttendanceDialog", () => {
+      this.initialize();
     });
   },
   beforeDestroy() {
-    this.eventHub.$off("closeAccountsVerificationDialog");
+    this.eventHub.$off("closeStudentAttendanceDialog");
   },
-
+  computed: {
+    filterYear() {
+      return this.$store.getters.getFilterSelected;
+    },
+  },
   watch: {
     options: {
       handler() {
-        if (this.tab == 1) {
+        this.initialize();
+      },
+      deep: true,
+    },
+    filterYear: {
+      handler(newData, oldData) {
+        if (oldData != newData) {
           this.initialize();
-        } else if (this.tab == 2) {
-          this.getVerifiedUsers();
         }
       },
       deep: true,
@@ -230,75 +216,81 @@ export default {
     },
 
     initialize() {
-      this.loading = true;
-      this.tab = 1;
-
-      this.axiosCall("/user-details/getAllUsersToVerify", "GET").then((res) => {
-        if (res) {
-          // console.log(res.data);
-          let data = res.data;
-          data.forEach((element, i) => {
-            data[i].name = this.toTitleCase(element.name);
-          });
-          this.activeTab = { id: 1, name: "For Verification" };
-          this.data = data;
-          this.loading = false;
-        }
-      });
+      this.getMySubjectList();
     },
+    async getMySubjectList() {
+      const res = await this.axiosCall("/subjects/getMySubjects", "GET");
 
-    getVerifiedUsers() {
-      this.loading = true;
+      if (res.data && res.data.length > 0) {
+        let data = res.data;
 
-      this.axiosCall("/user-details/getAllVerifiedUser", "GET").then((res) => {
-        if (res) {
-          let data = res.data;
-          data.forEach((element, i) => {
-            data[i].name = this.toTitleCase(element.name);
-          });
-          this.data = data;
-          this.loading = false;
+        // Flatten if needed
+        if (Array.isArray(data[0])) {
+          data = data[0];
+        }
+
+        // Format titles + mark first as active
+        data = data.map((item, index) => ({
+          ...item,
+          subject_title: this.toTitleCase(item.subject_title),
+          active: index === 0, // ✅ mark first as active
+        }));
+
+        // ✅ Set first tab values
+        this.tab = data[0].id;
+        this.activeTab = data[0];
+        this.tabList = data;
+        this.getMyClassRecord();
+      }
+    },
+    getMyClassRecord() {
+      let filter = this.$store.getters.getFilterSelected;
+      // alert(filter);
+      this.axiosCall(
+        "/subjects/getMyClassRecord/" + filter + "/" + this.tab,
+        "GET"
+      ).then((res) => {
+        if (res.data.status != 500 && Array.isArray(res.data)) {
+          // res.data.forEach((element, i) => {
+          //   res.data[i].room_section = this.toUpperCase(
+          //     element.room_section || ""
+          //   );
+          // });
+          this.data = res.data;
+        } else {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message =
+            "Please set your prefered subject in profile tab!";
         }
       });
     },
 
     changeTab(tab) {
       this.activeTab = tab;
-
-      if (tab.id == 1) {
-        this.initialize();
-        this.tab = tab.id;
-      } else if (tab.id == 2) {
-        this.getVerifiedUsers();
-        this.tab = tab.id;
-      }
+      this.tab = tab.id;
+      this.getMyClassRecord();
     },
+    // deleteItem(item) {
+    //   this.dialogConfirmDelete = true;
+    //   this.deleteData = item;
+    // },
 
-    deleteItem(item) {
-      this.dialogConfirmDelete = true;
-      this.deleteData = item;
+    viewItem(item) {
+      console.log(item);
+      this.viewData = item;
+      this.action = "View";
     },
-
-    editItem(item) {
-      this.updateData = [{ id: null }];
-      setTimeout(() => {
-        this.updateData = item;
-        this.action = this.tab == 1 ? "Verify" : "Update";
-      }, 100);
-    },
-
-    confirmDelete() {
-      this.axiosCall("/user-details/" + this.deleteData.id, "DELETE").then(
-        (res) => {
-          console.log(res.data);
-          this.fadeAwayMessage.show = true;
-          this.fadeAwayMessage.type = "success";
-          this.fadeAwayMessage.header = "System Message";
-          this.fadeAwayMessage.message = "Account deleted successfully!";
-          this.initialize();
-        }
-      );
-    },
+    // confirmDelete() {
+    //   this.axiosCall("/request-type/" + this.deleteData.id, "DELETE").then(
+    //     () => {
+    //       this.fadeAwayMessage.show = true;
+    //       this.itemData = null;
+    //       this.initialize();
+    //     }
+    //   );
+    // },
   },
 };
 </script>

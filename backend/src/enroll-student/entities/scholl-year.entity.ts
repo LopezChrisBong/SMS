@@ -12,6 +12,9 @@ export class SchoolYear {
     @Column({ type: "varchar" })
     school_year_to: string
 
+    @Column({ type: "boolean", default:false })
+    status: boolean
+
     @CreateDateColumn({
       nullable: false,
       type: 'datetime',

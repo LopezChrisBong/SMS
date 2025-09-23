@@ -40,10 +40,10 @@ export class UpdateEnrollStudentDto extends PartialType(CreateEnrollStudentDto) 
     transfered: boolean;
     
     @ApiProperty()
-    height: number;
+    height: string;
     
     @ApiProperty()
-    weight: number;
+    weight: string;
     
     @ApiProperty()
     is_IP: boolean;

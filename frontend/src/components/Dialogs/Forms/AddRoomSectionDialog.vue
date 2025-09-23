@@ -30,6 +30,8 @@
                   <v-autocomplete
                     v-model="adviser"
                     outlined
+                    chips
+                    deletable-chips
                     dense
                     label="Select Advider"
                     :items="adviserList"

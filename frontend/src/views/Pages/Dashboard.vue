@@ -6,16 +6,14 @@
           <v-card class="card-style">
             <v-row>
               <v-col cols="12" class="pt-16 text-center">
-                <p class="text-h1">
-                  130
-                </p>
+                <p class="text-h1">{{ enrollData }}/{{ verifyData }}</p>
               </v-col>
               <v-col cols="12 ">
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
                   class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
-                  >Overall Enrollment List
+                  >Overall Enrolled Student
                 </v-list-item-title>
               </v-col>
             </v-row>
@@ -144,6 +142,8 @@ export default {
     TeachingNonTeaching: {},
     label: [],
     top_clients: [],
+    enrollData: null,
+    verifyData: null,
     today: null,
     activeCalendar: null,
     tracked: {},
@@ -182,11 +182,9 @@ export default {
   },
   methods: {
     initialize() {
-      // this.getUpComingBdays();
-      // this.getMaleFemaleCount();
-      // this.getEmployeeStats();
-      // this.getIfHasDirectHead();
-      // this.getMyDirectHead();
+      this.getTeachingNonTeachingCount();
+      this.getMaleFemaleCount();
+      this.getTotalEnrolledStudent();
     },
 
     getDayOnDate() {
@@ -346,6 +344,27 @@ export default {
         }
       );
     },
+
+    getTotalEnrolledStudent() {
+      let filter = this.$store.getters.getFilterSelected;
+      let userData = this.$store.state.user.status;
+      this.axiosCall(
+        "/enroll-student/getTotalEnrolledStudent/" + filter + "/" + userData,
+        "GET"
+      ).then(
+        (res) => {
+          if (res.data) {
+            console.log("Data Enroled", res.data.enrolledData);
+            console.log("Data Verify", res.data.verifyData);
+            this.enrollData = res.data.enrolledData;
+            this.verifyData = res.data.verifyData;
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
   created() {
     if (this.$store.state.expiryDate < Date.now()) {
@@ -359,8 +378,6 @@ export default {
 
   mounted() {
     this.initialize();
-    this.getTeachingNonTeachingCount();
-    this.getMaleFemaleCount();
   },
 };
 </script>

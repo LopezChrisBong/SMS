@@ -61,8 +61,8 @@ export class UserDetailsService {
         'UD.status as status',
       ])
       .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
-      .where('user.isValidated = 1')
-      .andWhere('user.id != 2') //security user ID
+      // .where('user.isValidated = 1')
+      // .andWhere('user.id != 2') 
       .andWhere('user.isAdminApproved = 0')
       .getRawMany();
     return data;
@@ -79,10 +79,10 @@ export class UserDetailsService {
         'UD.status as status',
       ])
       .leftJoinAndMapOne('UD.user', Users, 'user', 'UD.userID = user.id')
-      .where('user.isValidated = 1')
-      .andWhere('user.id != 2') //security user ID
+      // .where('user.isValidated = 1')
+      // .andWhere('user.id != 2') //security user ID
       .andWhere('user.isAdminApproved = 0')
-      .andWhere('UD.status = "'+user[0].status+'"')
+      // .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
     return data;
   }
@@ -125,7 +125,7 @@ export class UserDetailsService {
       .where('user.isValidated = 1')
       .andWhere('user.id != 2') //security user ID
       .andWhere('user.isAdminApproved = 1')
-      .andWhere('UD.status = "'+user[0].status+'"')
+      // .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
     return data;
 
@@ -167,7 +167,7 @@ export class UserDetailsService {
       .andWhere('user.id != 2') //security user ID
       .andWhere('user.isAdminApproved = 1')
       .andWhere('user.user_roleID = 2')
-      .andWhere('UD.status = "'+user[0].status+'"')
+      // .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
     return data;
     }
@@ -227,7 +227,7 @@ export class UserDetailsService {
       .andWhere('user.isAdminApproved = 1')
       .andWhere('user.user_roleID = 2')
       .andWhere('UD.id = "'+id+'"')
-      .andWhere('UD.status = "'+user[0].status+'"')
+      // .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
       console.log('No Null',data)
     return data;
@@ -260,7 +260,7 @@ export class UserDetailsService {
       .andWhere('user.id != 2') //security user ID
       .andWhere('user.isAdminApproved = 1')
       .andWhere('user.user_roleID = 2')
-      .andWhere('UD.status = "'+user[0].status+'"')
+      // .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
     return data;
 
