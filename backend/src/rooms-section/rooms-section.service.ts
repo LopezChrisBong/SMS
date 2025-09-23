@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRoomsSectionDto } from './dto/create-rooms-section.dto';
 import { UpdateRoomsSectionDto } from './dto/update-rooms-section.dto';
-import { AddStrand, AddTracks, EnrollStudent, RoomsSection, StudentList, UserDetail } from 'src/entities';
+import { AddStrand, AddTracks, EnrollStudent, RoomsSection, SchoolYear, StudentAttendance, StudentList, UserDetail } from 'src/entities';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAddTrackDto } from './dto/create-add-track.dto';
@@ -10,6 +10,8 @@ import { CreateAddStrandDto } from './dto/create-add-strand.dto';
 import { UpdateAddStrandDto } from './dto/update-add-strand.dto';
 import { CreateStudentListDto } from './dto/create-student-list.dto';
 import { CreateAddStudentRoomDto } from './dto/create-add-student-room.dto';
+import { CreateStudentAttendanceDto } from './dto/create-student-attendance.dto';
+import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
 
 @Injectable()
 export class RoomsSectionService {
@@ -22,7 +24,7 @@ export class RoomsSectionService {
 
 
   async create(createRoomsSectionDto: CreateRoomsSectionDto) {
-    console.log(createRoomsSectionDto)
+    // console.log(createRoomsSectionDto)
 
       try {
         let data = this.dataSource.manager.create(RoomsSection,{
@@ -84,7 +86,7 @@ export class RoomsSectionService {
         try {
           let studentList = JSON.parse(createAddStudentRoomDto.stundent_list)
           let removeStudent = JSON.parse(createAddStudentRoomDto.removed_student)
-          console.log(studentList, removeStudent.length,createAddStudentRoomDto.classID)
+          // console.log(studentList, removeStudent.length,createAddStudentRoomDto.classID)
           if(removeStudent.length>0){
             for (let i = 0; i < removeStudent.length; i++) {
             
@@ -116,6 +118,32 @@ export class RoomsSectionService {
           }
         }
       }
+
+      async studentAttendance(createStudentAttendanceDto:CreateStudentAttendanceDto){
+      let data = JSON.parse(createStudentAttendanceDto.data)
+      try {
+          for (let i = 0; i < data.length; i++) {
+          let saveData = this.dataSource.manager.create(StudentAttendance,{
+                roomID: data[i].roomId,
+                attendance:data[i].attendance,
+                school_yearID:data[i].school_yearId,
+                studentID:data[i].studentId,
+                subjectID:createStudentAttendanceDto.subjectID,
+                attendanceDate:createStudentAttendanceDto.attendanceDate,
+                teacherID:createStudentAttendanceDto.teacherID
+          })
+            await this.dataSource.manager.save(saveData)
+          }
+          return{
+            msg:'Save successfully!', status:HttpStatus.CREATED
+            }
+      } catch (error) {
+      return{
+            msg:'Something went wrong!'+ error, status:HttpStatus.BAD_REQUEST
+            }
+      }
+
+    }
 
 
  async findAll(gradeLevel:string) {
@@ -161,9 +189,101 @@ export class RoomsSectionService {
       // 'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "Grade 9" and  school_yearId = "'+filter+'"',
       'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "'+grade+'" and  school_yearId = "'+filter+'"',
     );
-    console.log(genCount[0].count_gen)
+    // console.log(genCount[0].count_gen)
 
     return genCount;
+  }
+
+  async  getMyStudentAttendance(userID:number,filter:number, roomID:number){
+  try {
+        // console.log(roomID, filter, userID)
+      let data = await this.dataSource.manager
+      .createQueryBuilder(EnrollStudent, 'ES')
+      .select([
+        "*",
+        "ES.id as id",
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name", 
+            ])
+      .leftJoin(StudentList, 'SL', 'ES.id = SL.studentId')
+      .leftJoin(RoomsSection, 'RS', 'RS.id = SL.roomId')
+      .leftJoin(SchoolYear, 'SY', 'SY.id = SL.school_yearId')
+      // .where('RS.teacherId = :teacherId', { teacherId: userID })
+      .andWhere('SY.id = :filter', { filter: filter})
+      .andWhere('RS.id = :roomID', { roomID :roomID})
+      .andWhere('ES.statusEnrolled = 1')
+      // .groupBy('ES.lname')
+      .getRawMany();
+
+       data = data.map(data => (Object.assign(Object.assign({}, data), { attendance: false })));
+      // console.log(data)
+      return data
+    
+    } catch (error) {
+              return{
+            msg:'Something went wrong!' +error,
+            status: HttpStatus.BAD_REQUEST
+          }
+  }
+
+  }
+
+   async getAllAttendanceByDate(date:string, roomID:number, subjectID:number) {
+  //  console.log('date',date, roomID,subjectID )
+    let data = await this.dataSource.manager
+    .createQueryBuilder(StudentAttendance, 'SA')
+    .select([
+      "*",
+      "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name",  
+    ])
+    .leftJoin(EnrollStudent, 'ES', 'ES.id = SA.studentID')
+     .where('SA.attendanceDate = :date', { date :date})
+     .andWhere('SA.roomID = :roomID', { roomID :roomID})
+     .andWhere('SA.subjectID = :subjectID', { subjectID :subjectID})
+    .getRawMany();
+  //  console.log('program',data)
+    return data
+  }
+  
+  async getAllAttendanceWholeSemester(roomID:number, subjectID:number){
+      // console.log('Semester Attendance',roomID,subjectID)
+        // Step 1: Get distinct attendance dates for this room & subject
+  const dates = await this.dataSource.query(
+    `
+    SELECT DISTINCT attendanceDate
+    FROM student_attendance
+    WHERE roomID = ? AND subjectID = ?
+    ORDER BY attendanceDate
+    `,
+    [roomID, subjectID]
+  );
+
+  if (!dates.length) {
+    return []; // no attendance found
+  }
+
+  // Step 2: Build dynamic columns
+  const dateColumns = dates
+    .map(
+      (d) =>
+        `MAX(CASE WHEN a.attendanceDate = '${d.attendanceDate}' THEN a.attendance END) AS \`${d.attendanceDate}\``
+    )
+    .join(', ');
+
+  // Step 3: Build and run final pivot query
+  const sql = `
+    SELECT 
+      CONCAT(s.fname, ' ', s.lname) AS student_name,
+      ${dateColumns}
+    FROM student_attendance a
+    JOIN enroll_student s ON a.studentID = s.id
+    WHERE a.roomID = ? AND a.subjectID = ? AND s.statusEnrolled = 1
+    GROUP BY s.id, s.fname, s.lname
+    ORDER BY student_name
+  `;
+  // console.log(await this.dataSource.query(sql, [roomID, subjectID]));
+
+  return this.dataSource.query(sql, [roomID, subjectID]);
+      
   }
 
 
@@ -174,7 +294,7 @@ export class RoomsSectionService {
       // 'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "Grade 9" and  school_yearId = "'+filter+'"',
       'SELECT COUNT(*) as count_gen FROM student_list where grade_level = "'+grade+'" and  school_yearId = "'+filter+'" and strandId = "'+strandId+'"',
     );
-    console.log(genCount[0].count_gen)
+    // console.log(genCount[0].count_gen)
 
     return genCount[0].count_gen;
   }
@@ -427,6 +547,40 @@ for (let i = 0; i < gradeRecordclassList.length; i++) {
 
  }
 
+async updateAttendance(date: string, updateStudentAttendanceDto: UpdateStudentAttendanceDto) {
+  const data = JSON.parse(updateStudentAttendanceDto.data);
+  // console.log(data, date);
+
+  try {
+    await Promise.all(
+      data.map(item =>
+        this.dataSource.manager.update(
+          StudentAttendance,
+          {
+            attendanceDate: date,
+            roomID: item.roomID,
+            subjectID: item.subjectID,
+            studentID: item.studentID,
+            school_yearID: item.school_yearID
+          },
+          {
+            attendance: item.attendance
+          }
+        )
+      )
+    );
+
+    return {
+      msg: 'Updated successfully!',
+      status: HttpStatus.OK
+    };
+  } catch (error) {
+    return {
+      msg: 'Something went wrong! ' + error,
+      status: HttpStatus.BAD_REQUEST
+    };
+  }
+} 
   async AllStrand() {
 
     const toReturn = await this.dataSource.query(

@@ -8,6 +8,8 @@ import { CreateAddStrandDto } from './dto/create-add-strand.dto';
 import { UpdateAddStrandDto } from './dto/update-add-strand.dto';
 import { CreateStudentListDto } from './dto/create-student-list.dto';
 import { CreateAddStudentRoomDto } from './dto/create-add-student-room.dto';
+import { CreateStudentAttendanceDto } from './dto/create-student-attendance.dto';
+import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
 
 @Controller('rooms-section')
 export class RoomsSectionController {
@@ -48,6 +50,15 @@ export class RoomsSectionController {
     return this.roomsSectionService.addStudentClassRoom(createAddStudentRoomDto);
   }
 
+    @Post('studentAttendance')
+  studentAttendance(@Body() createStudentAttendanceDto:CreateStudentAttendanceDto) {
+    return this.roomsSectionService.studentAttendance(createStudentAttendanceDto);
+  }
+
+    @Get('getAllAttendanceByDate/:date/:roomID/:subjectID')
+  getAllAttendanceByDate(@Param('date') date: string,@Param('roomID') roomID: string,@Param('subjectID') subjectID: string) {
+    return this.roomsSectionService.getAllAttendanceByDate(date,+roomID,+subjectID);
+  }
 
 
   
@@ -80,6 +91,10 @@ export class RoomsSectionController {
 
     return this.roomsSectionService.getConflictStrand(grade, +filter, +strand);
   }
+    @Get('getMyStudentAttendance/:id/:filter/:roomID')
+  getMyStudentAttendance(@Param('id') id: string,@Param('filter') filter: string,@Param('roomID') roomID: string) {
+  return this.roomsSectionService.getMyStudentAttendance(+id, +filter, +roomID);
+  }
 
   @Get('getRoomClassList/:id/:grade/:filter')
   getRoomClassList(@Param('id') id: string,@Param('grade') grade: string,@Param('filter') filter: string) {
@@ -100,11 +115,21 @@ export class RoomsSectionController {
   }
  
  
+      @Get('getAllAttendanceWholeSemester/:roomID/:subjectID')
+  getAllAttendanceWholeSemester(@Param('roomID') roomID: string,@Param('subjectID') subjectID: string) {
+    return this.roomsSectionService.getAllAttendanceWholeSemester(+roomID,+subjectID);
+  }
+
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.roomsSectionService.findOne(+id);
   }
-
+  
+   @Patch('updateAttendance/:date')
+  updateAttendance(@Param('date') date: string, @Body() updateStudentAttendanceDto: UpdateStudentAttendanceDto) {
+    return this.roomsSectionService.updateAttendance(date, updateStudentAttendanceDto);
+  }
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRoomsSectionDto: UpdateRoomsSectionDto) {
     return this.roomsSectionService.update(+id, updateRoomsSectionDto);

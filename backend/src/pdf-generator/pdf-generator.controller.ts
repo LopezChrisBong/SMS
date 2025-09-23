@@ -52,6 +52,30 @@ export class PdfGeneratorController {
 
     // console.log(n)
   }
+  
+  @Get('/getAllUnderLoadFaculty/:filter')
+      async getAllUnderLoadFaculty(
+        @Res() res,
+
+        @Param('filter') filter: number,
+      ): Promise<void> {
+        const buffer = await this.pdfGeneratorService.getAllUnderLoadFaculty(
+          filter,
+        );
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename=example.pdf',
+          'Content-Length': buffer.length,
+
+          // prevent cache
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: 0,
+        });
+
+        res.end(buffer);
+      }
 
   @Get('getQRCode/:id')
   async getQRCode(@Res() res, @Param('id') id: string): Promise<void> {
@@ -72,5 +96,35 @@ export class PdfGeneratorController {
 
     // console.log(n)
   }
+
+      @Get('/getSchoolForm2/:filter/:roomID/:subjectID/:date/:teacherID')
+      async getSchoolForm2(
+        @Res() res,
+        @Param('filter') filter: number,
+        @Param('roomID') roomID: number,
+        @Param('subjectID') subjectID: string,
+        @Param('date') date: string,
+        @Param('teacherID') teacherID: number,
+      ): Promise<void> {
+        const buffer = await this.pdfGeneratorService.getSchoolForm2(
+          filter,
+          roomID,
+          +subjectID,
+          date,
+          teacherID
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename=example.pdf',
+          'Content-Length': buffer.length,
+
+          // prevent cache
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: 0,
+        });
+
+        res.end(buffer);
+      }
 
 }

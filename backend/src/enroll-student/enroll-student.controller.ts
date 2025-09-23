@@ -156,6 +156,11 @@ export class EnrollStudentController {
     return this.enrollStudentService.AddClassStudent(grade);
   }
 
+  @Get('getTotalEnrolledStudent/:filter/:status')
+  getTotalEnrolledStudent(@Param('filter') filter: string,@Param('status') status: string,) {
+    return this.enrollStudentService.getTotalEnrolledStudent(+filter, +status);
+  }
+
 
 
 

@@ -5,7 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Subject } from './entities/subject.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
-import { GradeLevel, TeacherGradeLevel, TeacherSubject, UserDetail } from 'src/entities';
+import { Availability, GradeLevel, RoomsSection, TeacherGradeLevel, TeacherSubject, UserDetail } from 'src/entities';
 import { CreateTeacherGradeLevelDto } from './dto/create-teacher-gradeLevel.dto';
 
 @Injectable()
@@ -48,12 +48,12 @@ export class SubjectsService {
       'SELECT * FROM user_detail where id ="'+id+'"',
     );
 
-    console.log(user[0].status)
+    // console.log(user[0].status)
 
     const count = await this.dataSource.query(
       'SELECT COUNT(*) as count FROM teacher_subject where teachersId ="'+id+'"',
     );
-    console.log(count[0].count)
+    // console.log(count[0].count)
     if(count[0].count != 0){
     let data =  this.getSubjectTaagged(id)
               return data
@@ -73,6 +73,64 @@ export class SubjectsService {
     return data
   }
 
+  async getMySubjects(curr_user:any){
+    try {
+          let subjects = await this.dataSource.manager
+        .createQueryBuilder(TeacherSubject, 'ts')
+        .select([
+          '*',
+          's.subject_title as subject_title',
+        ])
+        .leftJoin(Subject, 's', 's.id = ts.subjectId')
+        .where('ts.teachersId = :id', { id: curr_user.userdetail.id })
+        .orderBy('s.subject_title')
+        .getRawMany();
+
+      subjects = subjects.map(subj => ({
+        ...subj,
+        active: 0
+      }));
+      // console.log('Subjects', subjects);
+      return subjects
+    } catch (error) {
+          return{
+            msg:'Something went wrong!'+ error, status:HttpStatus.BAD_REQUEST
+      }
+    }
+
+  }
+
+    async getMyClassRecord(curr_user:any,filter:number, tab:number){
+    // console.log(filter)
+    try {
+          let classRecord = await this.dataSource.manager
+        .createQueryBuilder(TeacherSubject, 'ts')
+        .select([
+          '*',
+          's.subject_title as subject_title',
+        ])
+        .leftJoin(Subject, 's', 's.id = ts.subjectId')
+        .leftJoin(Availability, 'a', 'a.subjectId = s.id')
+        .leftJoin(RoomsSection, 'rs', 'rs.id = a.roomId')
+        .where('a.teacherID = :id', { id: curr_user.userdetail.id })
+        .andWhere('s.id = :tab', { tab: tab })
+        .andWhere('a.school_yearId = :filter', { filter: filter })
+        .groupBy('rs.room_section')
+        .orderBy('rs.room_section', 'ASC')
+        .getRawMany();
+       
+
+        // console.log(classRecord)
+        return classRecord
+    } catch (error) {
+           return{
+            msg:'Something went wrong!'+ error, status:HttpStatus.BAD_REQUEST
+      }
+    }
+
+  }
+
+
   async activeSubject(curr_user:any){
 
     let userStatus = 
@@ -85,7 +143,7 @@ export class SubjectsService {
 
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
     // .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
-    .where('status = "'+userStatus.status+'"')
+    // .where('status = "'+userStatus.status+'"')
     .orderBy('subject_title', 'ASC')
     .getMany()
     return data

@@ -14,7 +14,7 @@
           <v-card-text style="max-height: 700px" class="my-4">
             <v-container>
               <v-row>
-                <v-col cols="12" md="12">
+                <v-col cols="12" md="12" v-if="action != 'Update'">
                   <v-autocomplete
                     v-model="school_year_from"
                     :rules="[formRules.required]"
@@ -30,7 +30,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col cols="12" md="12">
+                <v-col cols="12" md="12" v-if="action != 'Update'">
                   <v-text-field
                     v-model="school_year_to"
                     dense
@@ -43,6 +43,24 @@
                     color="#93CB5B"
                   >
                   </v-text-field>
+                </v-col>
+                <v-col cols="12" md="12" v-if="action == 'Update'">
+                  <v-autocomplete
+                    v-model="status"
+                    :rules="[formRules.required]"
+                    dense
+                    outlined
+                    class="rounded-lg"
+                    item-text="name"
+                    item-value="id"
+                    label="Status"
+                    color="#93CB5B"
+                    :items="[
+                      { id: 1, name: 'Activate' },
+                      { id: 0, name: 'Inactive' },
+                    ]"
+                  >
+                  </v-autocomplete>
                 </v-col>
               </v-row>
             </v-container>
@@ -101,6 +119,7 @@ export default {
   },
   data() {
     return {
+      status: null,
       applicantNumber: null,
       seniorJunior: null,
       grade_level: null,
@@ -160,6 +179,7 @@ export default {
           this.updateID = data.id;
           this.school_year_from = data.school_year_from;
           this.school_year_to = data.school_year_to;
+          this.status = data.status;
         } else {
           this.$refs.AddSchoolYear.reset();
           this.initialize();
@@ -230,6 +250,7 @@ export default {
         let data = {
           school_year_from: this.school_year_from,
           school_year_to: this.school_year_to,
+          status: this.status,
         };
         console.log(data);
         this.axiosCall(

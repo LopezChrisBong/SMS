@@ -446,20 +446,30 @@ export default {
     // },
     getSchoolYear() {
       this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
-        if (res) {
-          this.schooYearList = res.data;
-          // Get the current date
-          const currentDate = new Date();
+        // if (res) {
+        //   this.schooYearList = res.data;
+        //   // Get the current date
+        //   const currentDate = new Date();
 
-          // Filter rows where the current date is between start_date and end_date
-          const filteredData = res.data.filter((item) => {
-            const startDate = new Date(item.startDate);
-            const endDate = new Date(item.endDate);
-            return currentDate >= startDate && currentDate <= endDate;
-          });
-          console.log("Filtered", filteredData[0].id);
-          this.selectedFiter = filteredData[0];
-          this.$store.commit("setFilterSelected", filteredData[0].id);
+        //   // Filter rows where the current date is between start_date and end_date
+        //   const filteredData = res.data.filter((item) => {
+        //     const startDate = new Date(item.startDate);
+        //     const endDate = new Date(item.endDate);
+        //     return currentDate >= startDate && currentDate <= endDate;
+        //   });
+        //   console.log("Filtered", filteredData[0].id);
+        //   this.selectedFiter = filteredData[0];
+        //   this.$store.commit("setFilterSelected", filteredData[0].id);
+        // }
+        if (res) {
+          this.selectedFiter = res.data[0].id;
+          const activeYear = res.data.find((item) => item.status === 1);
+          if (activeYear) {
+            this.selectedFiter = activeYear.id;
+          }
+          this.$store.commit("setFilterSelected", this.selectedFiter);
+          let data = res.data;
+          this.schooYearList = data;
         }
       });
     },

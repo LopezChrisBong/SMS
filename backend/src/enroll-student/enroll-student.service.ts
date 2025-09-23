@@ -396,9 +396,6 @@ export class EnrollStudentService {
     const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
-
-
-
     let data = await this.dataSource.manager
       .createQueryBuilder(Availability, 'A')
       .select([
@@ -417,7 +414,7 @@ export class EnrollStudentService {
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
       .where('A.school_yearId = "'+filter+'"')
-      .andWhere('ud.status = "'+user[0].status+'"')
+      // .andWhere('ud.status = "'+user[0].status+'"')
       .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
       // .orderBy('A.teacherID, ud.lname')
       .orderBy('A.roomId')
@@ -471,14 +468,14 @@ export class EnrollStudentService {
       .where('A.teacherID = "'+user.userdetail.id+'"')
       .andWhere('A.school_yearId = "'+filter+'"')
       .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
-      .orderBy('A.teacherID')
+      .orderBy('A.times_slot_from')
       .getRawMany();
     return data;
   }
 
   async updateEnrolledStudent(updateVS: UpdateEnrollStudentDto) {
 
-    console.log(updateVS)
+    // console.log(updateVS)
     
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -490,7 +487,59 @@ export class EnrollStudentService {
           school_yearId:updateVS.schoo_yearId,
           grade_level:updateVS.grade_level,
           seniorJunior:updateVS.seniorJunior,
-
+          fname:updateVS.fname,
+          lname:updateVS.lname,
+          mname:updateVS.mname,
+          suffix:updateVS.suffix,
+          email:updateVS.email,
+          bdate:updateVS.bdate,
+          birth_place:updateVS.birth_place,
+          civil_status:updateVS.civil_status,
+          sex:updateVS.sex,
+          height:updateVS.height,
+          weight:updateVS.weight,
+          ip_Name:updateVS.ip_Name,
+          fourpis:updateVS.fourpis,
+          blood_type:updateVS.blood_type,
+          isFilipino:updateVS.isFilipino,
+          mobile_no:updateVS.mobile_no,
+          residential_zip:updateVS.residential_zip,
+          residential_house_no:updateVS.residential_house_no,
+          residential_street:updateVS.residential_street,
+          residential_subd:updateVS.residential_subd,
+          residential_brgy:updateVS.residential_brgy,
+          residential_city:updateVS.residential_city,
+          residential_prov:updateVS.residential_prov,
+          permanent_zip:updateVS.permanent_zip,
+          permanent_house_no:updateVS.permanent_house_no,
+          permanent_street:updateVS.permanent_street,
+          permanent_subd:updateVS.permanent_subd,
+          permanent_brgy:updateVS.permanent_brgy,
+          permanent_city:updateVS.permanent_city,
+          permanent_prov:updateVS.permanent_prov,
+          father_fname:updateVS.father_fname,
+          father_mname:updateVS.father_mname,
+          father_lname:updateVS.father_lname,
+          father_number:updateVS.father_number,
+          mother_fname:updateVS.mother_fname,
+          mother_mname:updateVS.mother_mname,
+          mother_lname:updateVS.mother_lname,
+          mother_number:updateVS.mother_number,
+          guardian_fname:updateVS.guardian_fname,
+          guardian_mname:updateVS.guardian_mname,
+          guardian_lname:updateVS.guardian_lname,
+          guardian_number:updateVS.guardian_number,
+          last_grade_completed:updateVS.last_grade_completed,
+          last_year_completed:updateVS.last_year_completed,
+          last_school_attended:updateVS.last_school_attended,
+          last_school_ID:updateVS.last_school_ID,
+          track:updateVS.track,
+          semester:updateVS.semester,
+          strand:updateVS.strand,
+          picture:updateVS.picture,
+          goodMoral:updateVS.goodMoral,
+          birthPSA:updateVS.birthPSA,
+          schoolCard:updateVS.schoolCard
         });
         await queryRunner.commitTransaction();
         return {
@@ -611,11 +660,11 @@ async updateSchoolYear(id: number,
     await queryRunner.startTransaction();
   try {
 
-    // update the schedule
+    await this.dataSource.manager.query(`UPDATE school_year SET status = 0`);
     await queryRunner.manager.update(SchoolYear, id, {
-      school_year_from: updateSchoolYearDto.school_year_from,
-      school_year_to: updateSchoolYearDto.school_year_to,
-      // isActive: updateMyCoreTimeDto.isActive,
+      // school_year_from: updateSchoolYearDto.school_year_from,
+      // school_year_to: updateSchoolYearDto.school_year_to,
+      status: updateSchoolYearDto.status,
     });
 
 
@@ -756,13 +805,13 @@ async enrollStudentWithFile( body:any, filename: any){
 }
 
 async update_student_file( body:any, filename: any){
-  console.log('Files',filename)
+  // console.log('Files',filename)
    let studentData = await this.dataSource.manager.query("SELECT * FROM enroll_student where id = "+body.id+" ");
   
-   console.log(studentData[0].picture)
-   console.log(studentData[0].goodMoral)
-   console.log(studentData[0].birthPSA)
-   console.log(studentData[0].schoolCard)
+  //  console.log(studentData[0].picture)
+  //  console.log(studentData[0].goodMoral)
+  //  console.log(studentData[0].birthPSA)
+  //  console.log(studentData[0].schoolCard)
   
 
   
@@ -819,5 +868,49 @@ async update_student_file( body:any, filename: any){
   }
   }
 
+
+  async getTotalEnrolledStudent(filter:number ,status:number) {
+    // console.log('status',status)
+    let catchData;
+    let catchData1;
+    if(status == 1){
+      catchData = 'Elementary'
+    }else{
+      catchData = 'Junior High'
+      catchData1 = 'Senior High'
+    }
+
+    let enrolled = await this.dataSource.manager
+    .createQueryBuilder(EnrollStudent, 'ES')
+    .select([
+      "COUNT(*) as numberEnrolled",
+    ])
+    .where('statusEnrolled = 1')
+    .andWhere('school_yearId = "'+filter+'"')
+    .andWhere('seniorJunior IN (:...values)', {
+      values: [catchData, catchData1],
+    })
+    .getRawMany();
+
+
+    let verify = await this.dataSource.manager
+    .createQueryBuilder(EnrollStudent, 'ES')
+    .select([
+      "COUNT(*) as numberVerify",
+    ])
+    .where('statusEnrolled = 0')
+    .andWhere('school_yearId = "'+filter+'"')
+    .andWhere('seniorJunior IN (:...values)', {
+      values: [catchData, catchData1],
+    })
+    .getRawMany();
+
+    // console.log('Enrolled',enrolled[0].numberEnrolled)
+    // console.log('Verify',verify[0].numberVerify)
+    let enrolledData = parseInt(enrolled[0].numberEnrolled)
+    let verifyData = parseInt(verify[0].numberVerify)
+   
+  return {enrolledData,verifyData};
+  }
 
 }

@@ -14,7 +14,7 @@
           @click="underLoad()"
         >
           <v-icon left> mdi-clipboard-list-outline </v-icon>
-          List of Underload Teachers
+          List of Underload/Overloaded Teachers
         </v-btn>
       </v-col>
       <v-spacer></v-spacer>
@@ -401,7 +401,15 @@ export default {
       );
     },
     underLoad() {
-      alert("underload faculty");
+      // alert("underload faculty");
+      let filter = this.$store.getters.getFilterSelected;
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getAllUnderLoadFaculty/" +
+          filter +
+          "",
+        "_blank"
+      );
     },
     changeTab(tab) {
       this.activeTab = tab;

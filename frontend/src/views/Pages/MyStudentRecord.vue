@@ -16,7 +16,7 @@
               <v-spacer></v-spacer>
               
             </v-toolbar> -->
-          <AccountVerificationDataTable />
+          <MyStudentRecordDataTable />
         </v-col>
       </v-row>
     </v-card>
@@ -26,8 +26,8 @@
 <script>
 export default {
   components: {
-    AccountVerificationDataTable: () =>
-      import("../../components/Utils/student_verifyDataTable.vue"),
+    MyStudentRecordDataTable: () =>
+      import("../../components/Utils/MyStudentRecordDataTable.vue"),
   },
   created() {
     // console.log("created");

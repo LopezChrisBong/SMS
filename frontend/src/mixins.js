@@ -434,6 +434,11 @@ export default {
         return moment(date).format(format);
       }
     },
+    noYearFormatDate(date, format = "MMMM DD") {
+      if (date) {
+        return moment(date).format(format);
+      }
+    },
     formatDateYear(date, format = "MMMM YYYY") {
       if (date) {
         return moment(date).format(format);
