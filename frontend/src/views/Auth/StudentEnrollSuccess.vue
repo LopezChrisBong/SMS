@@ -64,7 +64,7 @@ export default {
     },
   },
   data: () => ({
-    timerCounts: 20,
+    timerCounts: 10,
   }),
 
   methods: {},

@@ -2,7 +2,12 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
-        <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
+        <v-tabs
+          v-model="activeTab"
+          show-arrows
+          color="#147452"
+          align-tabs="left"
+        >
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -44,10 +49,11 @@
               : 'd-none'
           "
           :color="$vuetify.theme.themes.light.submitBtns"
+          :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           @click="dummyGenerate()"
         >
           <v-icon left> mdi-database-check-outline </v-icon>
-          Generate Class Record
+          Generate Class List
         </v-btn>
         <v-btn
           class="white--text ml-2 rounded-lg"
@@ -62,15 +68,17 @@
           "
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
+          :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           @click="generateClassRecord()"
         >
           <v-icon left> mdi-database-check-outline </v-icon>
-          Generate Class Record
+          Generate Class List
         </v-btn>
         <v-btn
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
+          :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           @click="add()"
         >
           <v-icon left> mdi-plus-box-outline </v-icon>
@@ -109,7 +117,7 @@
               outlined
               @click="addStudent(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Students
+              <v-icon size="14">mdi-eye-outline</v-icon>Students
             </v-btn>
             <v-btn
               x-small
@@ -119,7 +127,7 @@
               outlined
               @click="printClassList(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Print
+              <v-icon size="14">mdi-printer-outline</v-icon>Print
             </v-btn>
             <v-btn
               x-small
@@ -131,6 +139,7 @@
               <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
             <v-btn
+              v-if="generatedCount == 0"
               x-small
               color="red"
               outlined
@@ -181,7 +190,7 @@
     </v-row>
 
     <AddRoomSectionDialog
-      :data="coreTimeData"
+      :data="studentData"
       :action="action"
       :grade="gradeName"
     />
@@ -352,7 +361,7 @@ export default {
       { id: 5, name: "Grade 11" },
       { id: 6, name: "Grade 12" },
     ],
-    coreTimeData: null,
+    studentData: null,
     designationData: null,
     totalCount: 0,
     deleteData: null,
@@ -900,19 +909,32 @@ export default {
     },
 
     add() {
-      this.coreTimeData = [{ id: null }];
+      this.studentData = [{ id: null }];
       this.action = "Add";
     },
     editItem(item) {
-      this.coreTimeData = item;
+      this.studentData = item;
       this.action = "Update";
     },
     printClassList(item) {
       console.log(item);
-      this.fadeAwayMessage.show = true;
-      this.fadeAwayMessage.type = "info";
-      this.fadeAwayMessage.header = "System Message";
-      this.fadeAwayMessage.message = "This Feature is to be followed";
+      // this.fadeAwayMessage.show = true;
+      // this.fadeAwayMessage.type = "info";
+      // this.fadeAwayMessage.header = "System Message";
+      // this.fadeAwayMessage.message = "This Feature is to be followed";
+
+      let filter = this.$store.getters.getFilterSelected;
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getAllStudenList/" +
+          filter +
+          "/" +
+          item.id +
+          "/" +
+          this.gradeName +
+          "",
+        "_blank"
+      );
     },
 
     addStudent(item) {
@@ -931,7 +953,7 @@ export default {
     },
     viewItem(item) {
       if (this.tab == 1) {
-        this.coreTimeData = item;
+        this.studentData = item;
         this.action = "View";
       } else {
         this.designationData = item;

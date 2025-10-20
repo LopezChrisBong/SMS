@@ -4,10 +4,7 @@
       <v-form ref="UserVerifyFormref" @submit.prevent>
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
-            <span
-              >{{ action }} {{ grade }} {{ className }} Classroom Program
-              Schedule
-            </span>
+            <span>{{ action }} {{ grade }} {{ className }} Class Program </span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
               <v-icon>mdi-close</v-icon>

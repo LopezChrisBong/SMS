@@ -149,4 +149,9 @@ export class RoomsSectionController {
   remove(@Param('id') id: string) {
     return this.roomsSectionService.remove(+id);
   }
+
+    @Delete('deleteStrand/:id')
+  deleteStrand(@Param('id') id: string) {
+    return this.roomsSectionService.deleteStrand(+id);
+  }
 }

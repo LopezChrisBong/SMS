@@ -127,4 +127,30 @@ export class PdfGeneratorController {
         res.end(buffer);
       }
 
+      @Get('/getAllStudenList/:filter/:roomID/:grade')
+      async getAllStudenList(
+        @Res() res,
+        @Param('filter') filter: number,
+        @Param('roomID') roomID: number,
+        @Param('grade') grade: string,
+      ): Promise<void> {
+        const buffer = await this.pdfGeneratorService.getAllStudenList(
+          filter,
+          roomID,
+          grade,
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename=example.pdf',
+          'Content-Length': buffer.length,
+
+          // prevent cache
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: 0,
+        });
+
+        res.end(buffer);
+      }
+
 }

@@ -9,8 +9,10 @@ import { DataSource } from 'typeorm';
 import { SendNewEmailDto } from './dto/send-new-email.dto';
 import {
   Availability,
+  EnrollStudent,
   RoomsSection,
   SchoolYear,
+  StudentList,
   Subject,
   UserDetail,
   Users,
@@ -824,5 +826,64 @@ async transformSchoolForm2(data: any[], selectedMonth: string) {
   });
 
   return { headers, rows };
+}
+
+  async getAllStudenList(filter:number, id:number, grade:string){
+    let rawData = await this.dataSource.manager
+      .createQueryBuilder(StudentList, 'SL')
+      .select([
+        "*",
+        "SL.id as studentListId",
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name", 
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,'. ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
+            ])
+      .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
+      .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
+      .where('SL.school_yearId = "'+filter+'"')
+      .andWhere('SL.grade_level = "'+grade+'"')
+      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('ES.statusEnrolled = 1')
+      .orderBy('ES.lname')
+      .getRawMany();
+      // console.log(rawData)
+
+        let headerImg = join(process.cwd(), '/static/img/header.png');
+        let footerImg = join(process.cwd(), '/static/img/footer.png');
+        
+        // let headerImg = join(process.cwd(), '/../static/img/header.png');
+        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+        const data = [
+        {
+        header_img: this.base64_encode(headerImg, 'headerfooter'),
+        footer_img: this.base64_encode(footerImg, 'headerfooter'),
+        studentData:rawData ? rawData:[]
+        },
+    ];
+    try {
+      const browser = await puppeteer.launch({ 
+        headless: 'new',
+        args: ['--no-sandbox']
+      });
+      const page = await browser.newPage();
+      // compile(template_name, data)
+      const content = await this.compile('student-list', data);
+      await page.setContent(content);
+
+      const buffer = await page.pdf({
+        format: 'legal',
+        margin: {
+          top: '0.20in',
+          left: '0.50in',
+          bottom: '0.20in',
+          right: '0.50in',
+        },
+        landscape: false,
+        printBackground: true,
+        });
+      await browser.close();
+      return buffer;
+    } catch (e) {
+      console.log(e);
+    }
 }
 }

@@ -8,7 +8,8 @@
             }}</v-tab>
           </v-tabs> -->
         <v-btn
-          class="white--text ml-2 rounded-lg"
+          class="white--text rounded-lg"
+          :class="$vuetify.breakpoint.smAndUp ? 'ml-2' : 'caption'"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="underLoad()"

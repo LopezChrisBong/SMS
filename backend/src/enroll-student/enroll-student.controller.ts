@@ -60,8 +60,8 @@ export class EnrollStudentController {
     files: Array<Express.Multer.File>,
     @Request() request,
   ) {
-    console.log(files);
-    console.log(JSON.parse(request.body.body));
+    // console.log(files);
+    // console.log(JSON.parse(request.body.body));
     const bodystring = JSON.parse(request.body.body);
     return this.enrollStudentService.enrollStudentWithFile(bodystring, files);
   }

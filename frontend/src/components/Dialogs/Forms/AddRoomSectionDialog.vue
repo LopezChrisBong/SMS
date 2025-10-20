@@ -259,7 +259,9 @@ export default {
           this.seniorJunior = data.seniorJunior;
           this.dateFrom = data.date_from;
           this.dateTo = data.date_to;
-          this.adviser = data.teacherId.toString();
+          this.adviser = data.teacherId
+            ? data.teacherId.toString()
+            : data.teacherId;
         } else {
           this.$refs.AddSubjectDialog.reset();
           this.strandId = data.strandId;
@@ -419,7 +421,10 @@ export default {
 
     getRoleTeachers() {
       this.axiosCall(
-        "/user-details/getAllVerifiedUser/TeachingRole/" + this.grade,
+        "/user-details/getAllVerifiedUser/TeachingAdvisoryRole/" +
+          this.grade +
+          "/" +
+          this.data.id,
         "GET"
       ).then((res) => {
         console.log("Teacher Role", res.data);

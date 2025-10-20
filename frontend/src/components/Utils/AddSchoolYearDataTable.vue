@@ -67,7 +67,7 @@
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Activate
+              <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
             <!-- <v-btn
                   x-small

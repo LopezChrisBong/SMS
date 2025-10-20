@@ -2,7 +2,12 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
-        <v-tabs v-model="activeTab" color="#EA7142" align-tabs="left">
+        <v-tabs
+          v-model="activeTab"
+          show-arrows
+          color="#EA7142"
+          align-tabs="left"
+        >
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -308,17 +313,17 @@ export default {
       { text: "500", value: 500 },
     ],
     grade: null,
-    activeTab: { id: 1, name: "Grade 1" },
-    tab: 1,
+    activeTab: { id: 7, name: "Kinder 1" },
+    tab: 7,
     tabList: [
+      { id: 7, name: "Kinder 1" },
+      { id: 8, name: "Kinder 2" },
       { id: 1, name: "Grade 1" },
       { id: 2, name: "Grade 2" },
       { id: 3, name: "Grade 3" },
       { id: 4, name: "Grade 4" },
       { id: 5, name: "Grade 5" },
       { id: 6, name: "Grade 6" },
-      { id: 7, name: "Kinder 1" },
-      { id: 8, name: "Kinder 2" },
     ],
     section: null,
     sectionList: [],
