@@ -143,7 +143,7 @@ export class SubjectsService {
 
     let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
     // .where('Date(now()) between Date(sub.date_from) and Date(sub.date_to)')
-    // .where('status = "'+userStatus.status+'"')
+    .where('status = "'+userStatus.status+'"')
     .orderBy('subject_title', 'ASC')
     .getMany()
     return data

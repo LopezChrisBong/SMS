@@ -2,7 +2,12 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
-        <v-tabs v-model="activeTab" color="#EA7142" align-tabs="left">
+        <v-tabs
+          v-model="activeTab"
+          show-arrows
+          color="#EA7142"
+          align-tabs="left"
+        >
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>

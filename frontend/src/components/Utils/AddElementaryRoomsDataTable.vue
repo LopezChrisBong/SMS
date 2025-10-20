@@ -1,8 +1,13 @@
 <template>
   <div>
     <v-row class="mx-2">
-      <v-col cols="12" md="8" class="flex-items">
-        <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
+      <v-col cols="12" md="8" class="flex-items" style="overflow: auto">
+        <v-tabs
+          v-model="activeTab"
+          show-arrows
+          color="#147452"
+          align-tabs="left"
+        >
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -20,7 +25,7 @@
             Print
           </v-btn> -->
 
-        <v-text-field
+        <!-- <v-text-field
           v-model="search"
           outlined
           prepend-inner-icon="search"
@@ -31,21 +36,23 @@
           :class="generatedCount == 0 ? 'd-none' : ''"
           color="#239FAB"
           dense
-        ></v-text-field>
+        ></v-text-field> -->
         <v-btn
           class="white--text ml-2 rounded-lg"
           :class="generatedCount == 0 ? '' : 'd-none'"
+          :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="confirmGenerate()"
         >
           <v-icon left> mdi-database-check-outline </v-icon>
-          Generate Class Record
+          Generate Class List
         </v-btn>
         <v-btn
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
+          :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           @click="add()"
         >
           <v-icon left> mdi-plus-box-outline </v-icon>
@@ -84,7 +91,7 @@
               outlined
               @click="addStudent(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Students
+              <v-icon size="14">mdi-eye-outline</v-icon>Students
             </v-btn>
             <v-btn
               x-small
@@ -94,7 +101,7 @@
               outlined
               @click="printClassList(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Print
+              <v-icon size="14">mdi-printer-outline</v-icon>Print
             </v-btn>
             <v-btn
               x-small
@@ -107,6 +114,7 @@
             </v-btn>
             <v-btn
               x-small
+              v-if="generatedCount == 0"
               color="red"
               outlined
               class="my-2 mx-2"
@@ -303,17 +311,17 @@ export default {
       { text: "250", value: 250 },
       { text: "500", value: 500 },
     ],
-    activeTab: { id: 1, name: "Grade 1" },
-    tab: 1,
+    activeTab: { id: 7, name: "Kinder 1" },
+    tab: 7,
     tabList: [
+      { id: 7, name: "Kinder 1" },
+      { id: 8, name: "Kinder 2" },
       { id: 1, name: "Grade 1" },
       { id: 2, name: "Grade 2" },
       { id: 3, name: "Grade 3" },
       { id: 4, name: "Grade 4" },
       { id: 5, name: "Grade 5" },
       { id: 6, name: "Grade 6" },
-      { id: 7, name: "Kinder 1" },
-      { id: 8, name: "Kinder 2" },
     ],
     coreTimeData: null,
     designationData: null,
@@ -896,10 +904,22 @@ export default {
     },
     printClassList(item) {
       console.log(item);
-      this.fadeAwayMessage.show = true;
-      this.fadeAwayMessage.type = "info";
-      this.fadeAwayMessage.header = "System Message";
-      this.fadeAwayMessage.message = "This Feature is to be followed";
+      // this.fadeAwayMessage.show = true;
+      // this.fadeAwayMessage.type = "info";
+      // this.fadeAwayMessage.header = "System Message";
+      // this.fadeAwayMessage.message = "This Feature is to be followed";
+      let filter = this.$store.getters.getFilterSelected;
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getAllStudenList/" +
+          filter +
+          "/" +
+          item.id +
+          "/" +
+          this.gradeName +
+          "",
+        "_blank"
+      );
     },
 
     addStudent(item) {

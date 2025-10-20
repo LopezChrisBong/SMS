@@ -6,15 +6,25 @@
           <v-form ref="Formref">
             <v-row class="mx-5 pt-6">
               <v-col cols="12" class="pa-0 mb-2">
-                <div
-                  :style="
-                    $vuetify.breakpoint.smAndDown
-                      ? 'margin:0 auto; width:60%'
-                      : 'margin:0 auto; width:30%'
-                  "
-                  class="pa-2"
-                >
-                  <v-img src="../../assets/img/limbaanlogo.png"></v-img>
+                <div class="d-flex justify-space-between">
+                  <div
+                    :style="
+                      $vuetify.breakpoint.smAndDown
+                        ? 'margin:0 auto; width:60%'
+                        : 'margin:0 auto; width:33%'
+                    "
+                  >
+                    <v-img src="../../assets/img/limbaanelementary.png"></v-img>
+                  </div>
+                  <div
+                    :style="
+                      $vuetify.breakpoint.smAndDown
+                        ? 'margin:0 auto; width:60%'
+                        : 'margin:0 auto; width:30%'
+                    "
+                  >
+                    <v-img src="../../assets/img/limbaanlogo.png"></v-img>
+                  </div>
                 </div>
 
                 <div

@@ -41,23 +41,35 @@ e<template>
           {{ formatDate(item.updated_at) }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-btn x-small color="grey" outlined @click="editItem(item)">
-            <v-icon size="14">{{
-              tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
-            }}</v-icon>
-            {{ tab == 1 ? "Verify" : "Update" }}
-          </v-btn>
+          <div class="d-flex">
+            <v-btn x-small color="grey" outlined @click="editItem(item)">
+              <v-icon size="14">{{
+                tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
+              }}</v-icon>
+              {{ tab == 1 ? "Verify" : "Update" }}
+            </v-btn>
 
-          <v-btn
-            class="mx-2"
-            x-small
-            color="green"
-            outlined
-            @click="viewItem(item)"
-          >
-            <v-icon size="14">mdi-eye</v-icon>
-            View
-          </v-btn>
+            <v-btn
+              class="mx-2"
+              x-small
+              color="green"
+              outlined
+              @click="viewItem(item)"
+            >
+              <v-icon size="14">mdi-eye</v-icon>
+              View
+            </v-btn>
+            <v-btn
+              x-small
+              v-if="tab == 2"
+              color="orange"
+              outlined
+              @click="viewQRItem(item)"
+            >
+              <v-icon size="14">mdi-qrcode</v-icon>
+              QR
+            </v-btn>
+          </div>
         </template>
       </v-data-table>
     </v-card>
@@ -134,6 +146,39 @@ e<template>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="qrCodedialog" max-width="400px">
+      <v-card>
+        <v-card-title dark class="dialog-header">
+          <span>QR Code</span>
+          <v-spacer></v-spacer>
+          <!-- <v-btn icon dark @click="qrCodedialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn> -->
+          <v-btn color="orange" class="white--text" @click="printQRCode()">
+            <!-- <v-icon>mdi-printer</v-icon> -->
+            Print
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col class="mt-2 mb-1 d-flex justify-center">
+              <qr-code :size="150" :text="qrText"></qr-code>
+            </v-col>
+            <v-col class=" d-flex justify-center" cols="12" v-if="viewQRData"
+              ><h2>Student: {{ "  " + viewQRData.name }}</h2></v-col
+            >
+          </v-row>
+        </v-card-text>
+        <!--    <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="orange" class="white--text" @click="printQRCode()">
+            <v-icon>mdi-printer</v-icon> 
+            Print
+          </v-btn>
+        </v-card-actions>-->
+      </v-card>
+    </v-dialog>
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -156,6 +201,7 @@ export default {
   },
   data: () => ({
     search: "",
+    qrCodedialog: false,
     headers: [
       { text: "Name", value: "name", align: "start" },
       {
@@ -195,6 +241,7 @@ export default {
       { id: 2, name: "Enrolled" },
     ],
     totalCount: 0,
+    viewQRData: null,
     deleteData: null,
     updateData: null,
     viewData: null,
@@ -318,6 +365,20 @@ export default {
         this.viewData = item;
         this.action = "Update";
       }
+    },
+    viewQRItem(item) {
+      console.log(item);
+      this.viewQRData = item;
+      this.qrCodedialog = true;
+      if (item.id) {
+        this.qrText = item.id.toString();
+        this.dialog = true;
+      }
+    },
+    printQRCode() {
+      const url =
+        process.env.VUE_APP_SERVER + "/pdf-generator/getQRCode/" + this.qrText;
+      window.open(url);
     },
     // confirmDelete() {
     //   this.axiosCall("/request-type/" + this.deleteData.id, "DELETE").then(

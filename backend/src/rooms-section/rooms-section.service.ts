@@ -670,4 +670,20 @@ try {
       };
     }
   }
+
+  
+    async deleteStrand(id: number) {
+    try {
+      await this.dataSource.getRepository(AddStrand).delete(id);
+      return {
+        msg: 'Deleted successfully.',
+        status: HttpStatus.OK,
+      };
+    } catch (error) {
+      return {
+        msg: 'Deletion failed',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
 }

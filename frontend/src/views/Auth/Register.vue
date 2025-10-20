@@ -4,6 +4,17 @@
       <v-row align="center" justify="center">
         <v-col align="center" cols="12" md="6">
           <v-card max-width="400" class="rounded-card">
+            <div style="margin:0 auto; width:20%" class="pa-2">
+              <v-img
+                v-if="limbaanimg == 'Elementary'"
+                src="../../assets/img/limbaanelementary.png"
+              ></v-img>
+              <v-img v-else src="../../assets/img/limbaanlogo.png"></v-img>
+            </div>
+            <div v-if="limbaanimg == 'Elementary'">
+              LIMBAAN Elementary School
+            </div>
+            <div v-else>LIMBAAN National High School</div>
             <div class="justify-center pa-4">
               <h3 style="color: #EA7142">
                 Create your <span style="color: #EA7142">Account</span>
@@ -292,11 +303,13 @@ export default {
   name: "Register",
   mounted() {
     // this.OTPInput();
+
     this.getOffices();
     this.getPositions();
     this.getDesignations();
     this.getEmpStatus();
     this.getInstitutes();
+    this.limbaanimg = localStorage.getItem("level");
     if (this.$store.state.user) {
       this.deleteToken();
       this.$store.dispatch("setUser", null);
@@ -315,6 +328,7 @@ export default {
   data: () => ({
     otp: null,
     timerCounts: 1,
+    limbaanimg: null,
     animated: false,
     termsDialog: true,
     schoolLevel: null,

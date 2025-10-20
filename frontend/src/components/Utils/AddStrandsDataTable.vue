@@ -64,15 +64,15 @@
             >
               <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
-            <!-- <v-btn
-                x-small
-                color="red"
-                class="my-2"
-                outlined
-                @click="confirmDelete(item)"
-              >
-                <v-icon size="14">mdi-delete-off</v-icon>Delete
-              </v-btn> -->
+            <v-btn
+              x-small
+              color="red"
+              class="my-2"
+              outlined
+              @click="confirmDelete(item)"
+            >
+              <v-icon size="14">mdi-delete-off</v-icon>Delete
+            </v-btn>
           </div>
         </template>
       </v-data-table>
@@ -425,25 +425,26 @@ export default {
     },
 
     deleteItem() {
-      this.axiosCall("/rooms-section/" + this.deleteData.id, "DELETE").then(
-        (res) => {
-          if (res.data.status == 200) {
-            this.dialog = false;
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "success";
-            this.fadeAwayMessage.header = "System Message";
-            this.fadeAwayMessage.message = res.data.msg;
-            this.confirmDialog = false;
-            this.initialize();
-          } else if (res.data.status == 400) {
-            this.confirmDialog = false;
-            this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "error";
-            this.fadeAwayMessage.header = "System Message";
-            this.fadeAwayMessage.message = res.data.msg;
-          }
+      this.axiosCall(
+        "/rooms-section/deleteStrand/" + this.deleteData.id,
+        "DELETE"
+      ).then((res) => {
+        if (res.data.status == 200) {
+          this.dialog = false;
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "success";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = res.data.msg;
+          this.confirmDialog = false;
+          this.initialize();
+        } else if (res.data.status == 400) {
+          this.confirmDialog = false;
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = res.data.msg;
         }
-      );
+      });
     },
     confirmDelete(item) {
       this.confirmDialog = true;

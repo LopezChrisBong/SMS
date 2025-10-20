@@ -63,7 +63,7 @@
                         ? seniorJuniorList1
                         : seniorJuniorList
                     "
-                    label="Grade Level"
+                    label="Grade Level*"
                     :rules="[formRules.required]"
                     color="#6DB249"
                     dense
@@ -84,7 +84,7 @@
                         ? seniorList
                         : []
                     "
-                    label="Grades"
+                    label="Grades*"
                     color="#6DB249"
                     dense
                     v-model="grade_level"
@@ -99,7 +99,7 @@
                         ? [formRules.required]
                         : []
                     "
-                    label="Semester"
+                    label="Semester*"
                     color="#6DB249"
                     dense
                     v-model="transfer.semester"
@@ -129,7 +129,7 @@
                         ? [formRules.required]
                         : []
                     "
-                    label="Tracks"
+                    label="Tracks*"
                     color="#6DB249"
                     item-text="tracks_name"
                     item-value="id"
@@ -147,7 +147,7 @@
                         ? [formRules.required]
                         : []
                     "
-                    label="Strand"
+                    label="Strand*"
                     color="#6DB249"
                     item-text="strand_name"
                     item-value="id"
@@ -163,7 +163,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="First Name"
+                    label="First Name*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -184,7 +184,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Last Name"
+                    label="Last Name*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -202,7 +202,7 @@
               </v-row>
 
               <v-row>
-                <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                <!-- <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-menu
                     ref="menu"
                     :close-on-content-click="false"
@@ -219,7 +219,7 @@
                         chips
                         small-chips
                         color="#6DB249"
-                        label="Date of Birth"
+                        label="Date of Birth*"
                         v-bind="attrs"
                         v-on="on"
                       ></v-text-field>
@@ -241,7 +241,19 @@
                       </v-btn>
                     </v-date-picker>
                   </v-menu>
+                </v-col> -->
+
+                <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                  <v-text-field
+                    label="Birth Date"
+                    v-model="formdata.bdate"
+                    :rules="[formRules.required]"
+                    required
+                    type="date"
+                    class="text-uppercase"
+                  />
                 </v-col>
+
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.birth_place"
@@ -311,7 +323,6 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.blood_type"
-                    :rules="[]"
                     dense
                     class="rounded-lg"
                     label="Blood Type"
@@ -370,7 +381,7 @@
                     class="rounded-lg"
                     item-text="type"
                     item-value="id"
-                    label="Household ID number"
+                    label="Household ID number*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -378,21 +389,22 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.mobile_no"
-                    :rules="[formdata.numberOnly]"
+                    label="Mobile Number*"
                     dense
                     class="rounded-lg"
-                    label="Mobile number"
                     color="#6DB249"
-                    type="number"
-                  >
-                  </v-text-field>
+                    type="text"
+                    @input="validateNumber"
+                    :rules="[(v) => v.length === 11 || 'Must be 11 digits']"
+                  />
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.email"
+                    :rules="[formRules.required, formRules.email]"
                     dense
                     class="rounded-lg"
-                    label="Email address"
+                    label="Email address*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -442,7 +454,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="House Number"
+                    label="House Number*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -454,7 +466,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Street"
+                    label="Street*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -466,7 +478,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Subdivision / Village"
+                    label="Subdivision / Village*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -478,7 +490,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Barangay"
+                    label="Barangay*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -490,7 +502,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Municipality / City"
+                    label="Municipality / City*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -502,7 +514,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Province"
+                    label="Province*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -510,10 +522,10 @@
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
                     v-model="formdata.residential_zip"
-                    :rules="[formRules.required]"
+                    :rules="[(v) => v.length === 4 || 'Must be 4 digits']"
                     dense
                     class="rounded-lg"
-                    label="Zip Code"
+                    label="Zip Code*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -536,7 +548,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="House Number"
+                    label="House Number*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -548,7 +560,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Street"
+                    label="Street*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -560,7 +572,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Subdivision / Village"
+                    label="Subdivision / Village*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -572,7 +584,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Barangay"
+                    label="Barangay*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -584,7 +596,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Municipality / City"
+                    label="Municipality / City*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -596,7 +608,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Province"
+                    label="Province*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -608,7 +620,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Zip Code"
+                    label="Zip Code*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -727,7 +739,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="First Name"
+                    label="First Name*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -735,7 +747,6 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.guardian_mname"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
                     label="Middle Name"
@@ -749,7 +760,7 @@
                     :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="Last Name"
+                    label="Last Name*"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -757,10 +768,11 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.guardian_number"
-                    :rules="[formRules.required]"
+                    @input="validateNumber"
+                    :rules="[(v) => v.length === 11 || 'Must be 11 digits']"
                     dense
                     class="rounded-lg"
-                    label="Phone Number"
+                    label="Phone Number*"
                     type="number"
                     color="#6DB249"
                   >
@@ -790,7 +802,7 @@
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
-                  <v-text-field
+                  <!-- <v-text-field
                     v-model="transfer.last_grade_completed"
                     v-if="formdata.transfered == 'Yes'"
                     :rules="
@@ -801,10 +813,39 @@
                     label="Last Grade Level Completed"
                     color="#6DB249"
                   >
-                  </v-text-field>
+                  </v-text-field> -->
+                  <v-select
+                    v-if="formdata.transfered == 'Yes'"
+                    :rules="
+                      formdata.transfered == 'Yes' ? [formRules.required] : []
+                    "
+                    :items="
+                      formdata.seniorJunior == 'Elementary'
+                        ? [
+                            'Kinder 1',
+                            'Kinder 2',
+                            'Grade 1',
+                            'Grade 2',
+                            'Grade 3',
+                            'Grade 4',
+                            'Grade 5',
+                          ]
+                        : formdata.seniorJunior == 'Primary'
+                        ? primaryList
+                        : formdata.seniorJunior == 'Junior High'
+                        ? ['Grade 6', 'Grade 7', 'Grade 8', 'Grade 9']
+                        : formdata.seniorJunior == 'Senior High'
+                        ? ['Grade 10', 'Grade 11']
+                        : []
+                    "
+                    label="Last Grade Level Completed*"
+                    color="#6DB249"
+                    dense
+                    v-model="transfer.last_grade_completed"
+                  ></v-select>
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
-                  <v-text-field
+                  <!-- <v-text-field
                     v-model="transfer.last_year_completed"
                     v-if="formdata.transfered == 'Yes'"
                     :rules="
@@ -815,7 +856,20 @@
                     label="Last School Year Level Completed"
                     color="#6DB249"
                   >
-                  </v-text-field>
+                  </v-text-field> -->
+                  <v-select
+                    v-if="formdata.transfered == 'Yes'"
+                    :rules="
+                      formdata.transfered == 'Yes' ? [formRules.required] : []
+                    "
+                    :items="schooYearList"
+                    label="Last School Year Level Completed"
+                    color="#6DB249"
+                    item-text="school_year"
+                    item-value="id"
+                    dense
+                    v-model="transfer.last_year_completed"
+                  ></v-select>
                 </v-col>
 
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
@@ -909,8 +963,8 @@
           </v-col>
         </v-row>
         <v-row class="my-4">
-          <v-col cols="1"> </v-col>
-          <v-col cols="10" class="white--text rounded-lg">
+          <v-col cols="4"> </v-col>
+          <v-col cols="4" class="white--text rounded-lg">
             <v-btn
               block
               color="#EA7142"
@@ -921,7 +975,7 @@
               Submit
             </v-btn>
           </v-col>
-          <v-col cols="1"> </v-col>
+          <v-col cols="4"> </v-col>
         </v-row>
       </v-form>
     </v-card>
@@ -930,10 +984,10 @@
     <v-dialog v-model="confirmDialog" persistent max-width="390">
       <v-card color="white">
         <div class="pa-4 #3a3b3a--text">
-          <div class="text-overline mb-1">WARNING!</div>
+          <div class="text-overline mb-1">Notification!</div>
           <div class="text-body-1 mb-1" v-if="confirmAction == 'SAVE'">
             <p style="text-align: justify">
-              Are you sure you wish to save your changes?
+              You are about to enroll this student. Do you want to continue?
             </p>
           </div>
         </div>
@@ -1029,6 +1083,7 @@ export default {
     sheet: false,
     viewRemarks: false,
     submitDialog: false,
+    mobile: "",
     isUpdate: true,
     isUpdateAllowed: false,
     confirmAction: null,
@@ -1069,7 +1124,7 @@ export default {
       ip_Name: null,
       birth_place: null,
       sex: null,
-      civil_status: null,
+      civil_status: "Single",
       civil_status1: "Single",
       height: null,
       weight: null,
@@ -1204,6 +1259,14 @@ export default {
     },
   },
   methods: {
+    validateNumber() {
+      // Remove non-digits
+      this.formdata.mobile_no = this.formdata.mobile_no.replace(/\D/g, "");
+      // Limit to 11 digits
+      if (this.formdata.mobile_no.length > 11) {
+        this.formdata.mobile_no = this.formdata.mobile_no.slice(0, 11);
+      }
+    },
     prependData(val, arr) {
       var dumpArr = arr.slice();
       dumpArr.unshift(val);

@@ -414,7 +414,7 @@ export class EnrollStudentService {
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
       .where('A.school_yearId = "'+filter+'"')
-      // .andWhere('ud.status = "'+user[0].status+'"')
+      .andWhere('ud.status = "'+user[0].status+'"')
       .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
       // .orderBy('A.teacherID, ud.lname')
       .orderBy('A.roomId')
@@ -787,10 +787,10 @@ async enrollStudentWithFile( body:any, filename: any){
       schoolCard: filename[1].filename,
       birthPSA: filename[2].filename,
       picture: filename[3].filename,
-      school_yearId:body.school_yearId,
+      school_yearId:body.school_yearId.id,
       grade_level:body.grade_level
     })
-   
+   console.log(data)
     await this.enrollStudentRepository.save(data);
     return {
       msg: 'Saved successfully.',

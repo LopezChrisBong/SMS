@@ -21,7 +21,19 @@
           <v-card-text style="max-height: 700px" class="my-5">
             <v-row class="ma-5">
               <v-col cols="12" md="4">
-                <v-menu
+                <v-text-field
+                  v-model="attendance_date"
+                  label="Attendance Date"
+                  prepend-inner-icon="mdi-calendar"
+                  readonly
+                  outlined
+                  dense
+                  hide-details
+                  color="#239FAB"
+                  class="rounded-lg"
+                  @change="attendance_date ? changeDate() : ''"
+                ></v-text-field>
+                <!-- <v-menu
                   ref="attendance_menu"
                   :close-on-content-click="false"
                   :return-value.sync="attendance_date"
@@ -32,40 +44,29 @@
                   dense
                 >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-combobox
-                      outlined
+                    <v-text-field
                       v-model="attendance_date"
-                      :rules="[formRules.required]"
-                      prepend-inner-icon="mdi-calendar"
                       label="Attendance Date"
+                      prepend-inner-icon="mdi-calendar"
                       readonly
+                      outlined
+                      dense
+                      hide-details
+                      color="#239FAB"
+                      class="rounded-lg"
                       v-bind="attrs"
                       v-on="on"
-                      color="#239FAB"
-                      hide-details
-                      class="rounded-lg"
-                      dense
-                    ></v-combobox>
+                      @change="attendance_date ? changeDate() : ''"
+                    ></v-text-field>
                   </template>
                   <v-date-picker
                     v-model="attendance_date"
-                    no-title
                     color="#239FAB"
                     :allowed-dates="allowedDates"
-                  >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="#239FAB"
-                      class="white--text"
-                      @click="
-                        $refs.attendance_menu.save(attendance_date);
-                        attendance_date != null ? changeDate() : '';
-                      "
-                    >
-                      OK
-                    </v-btn>
-                  </v-date-picker>
-                </v-menu>
+                    no-title
+                    readonly
+                  ></v-date-picker>
+                </v-menu> -->
               </v-col>
               <v-col cols="4">
                 <v-btn
@@ -209,7 +210,6 @@
                   :headers="filteredHeaders"
                   :items="filteredItems"
                   item-key="student_name"
-                  class="rotate-header"
                   dense
                 >
                   <template v-slot:body="{ items }">
@@ -219,7 +219,7 @@
                           <strong>{{ item.student_name }}</strong>
                         </td>
                         <td
-                          v-for="header in headerSemester.filter(
+                          v-for="header in filteredHeaders.filter(
                             (h) => h.key !== 'student_name'
                           )"
                           :key="header.key"
@@ -374,7 +374,7 @@ export default {
     return {
       readonly: true,
       qrCodedialog: false,
-      attendance_date: null,
+      attendance_date: new Date().toLocaleDateString("en-CA"),
       attendance_menu: false,
       messageSaved: null,
       scanDialog: false,
@@ -431,9 +431,17 @@ export default {
         if (data.id) {
           console.log("Love", data);
         }
+        if (this.attendance_date) {
+          this.changeDate();
+        }
       },
       deep: true,
     },
+    // attendance_date(newVal) {
+    //   if (newVal) {
+    //     this.changeDate();
+    //   }
+    // },
     options: {
       handler() {
         this.initialize();
@@ -735,7 +743,7 @@ export default {
         const name = row.student_name;
         if (!grouped[name]) {
           grouped[name] = { student_name: name };
-          dates.forEach((date) => (grouped[name][date] = "")); // empty default
+          dates.forEach((date) => (grouped[name][date] = ""));
         }
         Object.entries(row).forEach(([key, value]) => {
           if (key !== "student_name") {
@@ -755,6 +763,9 @@ export default {
         ...dates.map((date) => ({
           text: this.noYearFormatDate(date),
           key: date,
+          align: "center",
+          sortable: false,
+          width: 100,
         })),
       ];
       this.headerSemester = headers;
@@ -887,19 +898,5 @@ export default {
 
 .sticky-first-col :deep(td:first-child) {
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.06);
-}
-
-/* Target the table header cells */
-.v-data-table.rotate-header th {
-  writing-mode: vertical-rl; /* make text vertical */
-  transform: rotate(180deg); /* flip so it's upright */
-  text-align: center;
-  white-space: nowrap;
-  padding: 8px 4px; /* tighter space */
-  max-width: 40px; /* narrow column */
-}
-.v-data-table.rotate-header th:first-child {
-  writing-mode: horizontal-tb !important;
-  transform: none !important;
 }
 </style>
