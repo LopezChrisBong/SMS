@@ -808,7 +808,7 @@
           <v-col cols="10" class="white--text rounded-lg">
             <v-btn
               block
-              color="#5a67da"
+              color="#EA7142"
               @click="confirmSave()"
               dense
               class="white--text"
@@ -1277,7 +1277,7 @@ export default {
 }
 
 thead th {
-  background-color: #5a67da !important;
+  background-color: #ea7142 !important;
   color: white !important;
 }
 thead th:first-child {

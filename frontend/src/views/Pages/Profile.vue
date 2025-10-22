@@ -135,7 +135,7 @@
                         color="#6DB249"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="6" md="6">
+                    <!-- <v-col cols="6" md="6">
                       <v-text-field
                         v-model="data.sex"
                         :readonly="readonly"
@@ -143,6 +143,16 @@
                         dense
                         color="#6DB249"
                       ></v-text-field>
+                    </v-col> -->
+                    <v-col cols="6" md="6">
+                      <v-select
+                        :items="sexItem"
+                        v-model="data.sex"
+                        :readonly="readonly"
+                        label="Sex"
+                        color="#6DB249"
+                        dense
+                      ></v-select>
                     </v-col>
                     <v-col cols="6" md="6">
                       <v-text-field
@@ -151,6 +161,7 @@
                         label="Mobile Number"
                         dense
                         color="#6DB249"
+                        type="number"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="6" sm="6" v-if="readonly == false">
@@ -224,6 +235,7 @@
                     <v-col cols="auto">
                       <v-btn
                         size="x-small"
+                        v-if="assignedModules != 21 && assignedModules != 3"
                         color="blue"
                         class="white--text mx-2"
                         @click="
@@ -235,6 +247,7 @@
                       </v-btn>
                       <v-btn
                         size="x-small"
+                        v-if="assignedModules != 21 && assignedModules != 3"
                         color="blue"
                         class="white--text"
                         @click="
@@ -444,11 +457,13 @@ export default {
         status: null,
       },
       oldPass: null,
+      sexItem: ["Male", "Female"],
       password: null,
       confirmPassword: null,
       showOldPass: false,
       show1: false,
       show2: false,
+      assignedModules: null,
       fadeAwayMessage: {
         show: false,
         type: "success",
@@ -461,6 +476,8 @@ export default {
     };
   },
   mounted() {
+    this.assignedModules = this.$store.state.user.user.assignedModuleID;
+    console.log("assignedModules", this.assignedModules);
     this.eventHub.$on("closedDataGradeSubjects", () => {
       this.initialize();
     });

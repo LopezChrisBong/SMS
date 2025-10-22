@@ -53,6 +53,11 @@
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.status`]="{ item }">
+          <v-chip :color="item.status == 0 ? 'warning' : 'green'">
+            {{ item.status == 0 ? "Inactive" : "Active" }}
+          </v-chip>
+        </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <v-btn
@@ -241,14 +246,21 @@ export default {
         valign: "center",
         sortable: false,
       },
+      {
+        text: "Status",
+        value: "status",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
 
-      //   {
-      //     text: "Action",
-      //     value: "action",
-      //     align: "end",
-      //     valign: "end",
-      //     sortable: false,
-      //   },
+      {
+        text: "Action",
+        value: "action",
+        align: "end",
+        valign: "end",
+        sortable: false,
+      },
     ],
 
     data: [],

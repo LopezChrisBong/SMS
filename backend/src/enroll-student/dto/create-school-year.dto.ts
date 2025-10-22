@@ -7,4 +7,7 @@ export class CreateSchoolYearDto {
 
     @ApiProperty()
     school_year_to: string;
+
+        @ApiProperty()
+    status: boolean;
 }

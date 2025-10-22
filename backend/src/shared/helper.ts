@@ -22,12 +22,13 @@ export class Helper {
   }
 
   static filePath(req, file, cb) {
-    cb(null, join(process.cwd(), '/../upload_img/'));
+    // cb(null, join(process.cwd(), '/../upload_img/'));
+    cb(null, join(process.cwd(), '/upload_img/'));
   }
 
   static student_files(req, file, cb) {
-    cb(null, join(process.cwd(), '/../student_file/'));
-    // cb(null, join(process.cwd(), '/student_file/'));
+    // cb(null, join(process.cwd(), '/../student_file/'));
+    cb(null, join(process.cwd(), '/student_file/'));
 
   }
 

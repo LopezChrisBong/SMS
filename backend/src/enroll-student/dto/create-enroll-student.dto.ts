@@ -38,10 +38,10 @@ export class CreateEnrollStudentDto {
     transfered: boolean;
     
     @ApiProperty()
-    height: number;
+    height: string;
     
     @ApiProperty()
-    weight: number;
+    weight: string;
     
     @ApiProperty()
     is_IP: boolean;
@@ -62,7 +62,7 @@ export class CreateEnrollStudentDto {
     isFilipino: string;
     
     @ApiProperty()
-    mobile_no: number;
+    mobile_no: string;
     
     @ApiProperty()
     residential_zip: string;

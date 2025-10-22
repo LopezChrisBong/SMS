@@ -75,51 +75,34 @@
               </tfoot>
         
               <tbody class=""> 
-                <tr>
-                    <td colspan="">
-                        <tr class="strong" >
-                     
-                       
-                        <td class="font-12">Name:&nbsp;<u>{{teacherName}}</u></td>
-
-                        </tr>
-                        {{!-- <tr class="strong" >
-                        <td class="font-12">Department unit: &nbsp;<u>{{unit_department}}</u></td>
-                        </tr> --}}
-                    
-                    </td>
+                <tr >
+                    <td colspan="2" align="center" style="font-weight: bold; text-transform:uppercase">List of Underload and Overloaded Faculty </td>
                 </tr>
-               
-
                 <tr>
                   <td colspan='2'>
                     <table id="mySched" style="width:100%">
-                  <tr>
                     <tr>
-                    <td    align='center' class="font-12">Time</td>
-                    <td    align='center' class="font-12">Monday</td>
+                    <tr>
+                    <td    align='center' class="font-12">Name</td>
+                    {{!-- <td    align='center' class="font-12">Position</td> --}}
+                    <td    align='center' class="font-12">Loaded Hour</td>
                     
-                    <td    align='center' class="font-12">Tuesday</td>
+                    <td    align='center' class="font-12">Hours Underload</td>
                     
                     
-                    <td    align='center' class="font-12">Wednesday</td>
-                    <td    align='center' class="font-12">Thursday</td>
-                    <td    align='center' class="font-12">Friday</td>
-                    
+                    <td    align='center' class="font-12">Hours Overload</td>
+                    {{!-- <td    align='center' class="font-12">Subjects</td> --}}
                 </tr>
-                {{#mySched}}
+                    {{#load}}
                 <tr>
-                  {{!-- <td   align='center'  class="font-12" >{{toTitleCase fullname}}</td> --}}
-                   <td   align='center' class="font-12">{{time}}</td>
-                  <td   align='center' class="font-12">{{Monday}}</td>
-                  <td   align='center' class="font-12">{{Tuesday}}</td>
-                  <td   align='center' class="font-12">{{Wednesday}}</td>
-                    <td   align='center' class="font-12">{{Thursday}}</td>
-                  <td   align='center' class="font-12">{{Friday}}</td>
+                   <td class="font-12" style="text-transform: uppercase;">{{name}}</td>
+                  {{!-- <td   align='center' class="font-12">{{education}}</td> --}}
+                  <td   align='center' class="font-12">{{hours}}</td>
+                  <td   align='center' class="font-12">{{underload}}</td>
+                  <td   align='center' class="font-12">{{overload}}</td>
                 </tr>
-                {{/mySched}}
+                  {{/load}}
                     </table>
-                </td>
                 </tr>
                 <tr class="font-12"> 
                     <td>

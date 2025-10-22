@@ -60,8 +60,8 @@ export class EnrollStudentController {
     files: Array<Express.Multer.File>,
     @Request() request,
   ) {
-    console.log(files);
-    console.log(JSON.parse(request.body.body));
+    // console.log(files);
+    // console.log(JSON.parse(request.body.body));
     const bodystring = JSON.parse(request.body.body);
     return this.enrollStudentService.enrollStudentWithFile(bodystring, files);
   }
@@ -156,6 +156,11 @@ export class EnrollStudentController {
     return this.enrollStudentService.AddClassStudent(grade);
   }
 
+  @Get('getTotalEnrolledStudent/:filter/:status')
+  getTotalEnrolledStudent(@Param('filter') filter: string,@Param('status') status: string,) {
+    return this.enrollStudentService.getTotalEnrolledStudent(+filter, +status);
+  }
+
 
 
 
@@ -191,6 +196,11 @@ export class EnrollStudentController {
   @Get('getClassProgramm/:grade/:section/:filter')
   getMyCoreTime(@Param('grade') grade: string,@Param('section') section: string,@Param('filter') filter: string,) {
     return this.enrollStudentService.getClassProgramm(grade, +section,+filter);
+  }
+
+    @Get('checkConflict/:data')
+  checkConflict(@Param('data') data: string,) {
+    return this.enrollStudentService.checkConflict(data);
   }
 
 

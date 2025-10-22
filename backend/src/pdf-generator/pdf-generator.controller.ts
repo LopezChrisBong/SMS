@@ -13,9 +13,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PdfGeneratorService } from './pdf-generator.service';
-import { CreatePdfGeneratorDto } from './dto/create-pdf-generator.dto';
-import { UpdatePdfGeneratorDto } from './dto/update-pdf-generator.dto';
-import { SendNewEmailDto } from './dto/send-new-email.dto';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -52,6 +49,65 @@ export class PdfGeneratorController {
 
     // console.log(n)
   }
+  
+  @Get('/getAllUnderLoadFaculty/:filter/:status')
+      async getAllUnderLoadFaculty(
+        @Res() res,
+
+        @Param('filter') filter: number,
+        @Param('status') status: string,
+      ): Promise<void> {
+        const buffer = await this.pdfGeneratorService.getAllUnderLoadFaculty(
+          filter,
+          +status
+        );
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename=example.pdf',
+          'Content-Length': buffer.length,
+
+          // prevent cache
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: 0,
+        });
+
+        res.end(buffer);
+      }
+
+  @Get('/getClassProgramm/:filter/:status/:grade/:roomID')
+      async getClassProgramm(
+        @Res() res,
+
+        @Param('filter') filter: number,
+        @Param('status') status: string,
+        @Param('grade') grade: string,
+        @Param('roomID') roomID: string,
+      ): Promise<void> {
+        const buffer = await this.pdfGeneratorService.getClassProgramm(
+          filter,
+          +status,
+          grade,
+          +roomID
+        );
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename=example.pdf',
+          'Content-Length': buffer.length,
+
+          // prevent cache
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: 0,
+        });
+
+        res.end(buffer);
+      }
+
+
+  
 
   @Get('getQRCode/:id')
   async getQRCode(@Res() res, @Param('id') id: string): Promise<void> {
@@ -72,5 +128,61 @@ export class PdfGeneratorController {
 
     // console.log(n)
   }
+
+      @Get('/getSchoolForm2/:filter/:roomID/:subjectID/:date/:teacherID')
+      async getSchoolForm2(
+        @Res() res,
+        @Param('filter') filter: number,
+        @Param('roomID') roomID: number,
+        @Param('subjectID') subjectID: string,
+        @Param('date') date: string,
+        @Param('teacherID') teacherID: number,
+      ): Promise<void> {
+        const buffer = await this.pdfGeneratorService.getSchoolForm2(
+          filter,
+          roomID,
+          +subjectID,
+          date,
+          teacherID
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename=example.pdf',
+          'Content-Length': buffer.length,
+
+          // prevent cache
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: 0,
+        });
+
+        res.end(buffer);
+      }
+
+      @Get('/getAllStudenList/:filter/:roomID/:grade')
+      async getAllStudenList(
+        @Res() res,
+        @Param('filter') filter: number,
+        @Param('roomID') roomID: number,
+        @Param('grade') grade: string,
+      ): Promise<void> {
+        const buffer = await this.pdfGeneratorService.getAllStudenList(
+          filter,
+          roomID,
+          grade,
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename=example.pdf',
+          'Content-Length': buffer.length,
+
+          // prevent cache
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: 0,
+        });
+
+        res.end(buffer);
+      }
 
 }

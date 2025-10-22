@@ -1,8 +1,25 @@
 <template>
   <div>
     <v-row class="mx-2">
+      <v-spacer></v-spacer>
+      <v-col cols="12">
+        <v-btn
+          class="white--text ml-2 rounded-lg"
+          :color="$vuetify.theme.themes.light.submitBtns"
+          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          @click="classProgramms()"
+        >
+          <v-icon left> mdi-printer-outline </v-icon>
+          Class Programm
+        </v-btn>
+      </v-col>
       <v-col cols="12" md="8" class="flex-items">
-        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
+        <v-tabs
+          v-model="activeTab"
+          show-arrows
+          color="#EA7142"
+          align-tabs="left"
+        >
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -48,7 +65,7 @@
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
-      <v-data-table
+      <!-- <v-data-table
         :headers="headers"
         :items="filteredItems"
         :items-per-page="50"
@@ -58,96 +75,17 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.ctType`]="{ item }">
-          {{
-            item.ctType == 1
-              ? "Academic Year"
-              : item.ctType == 2
-              ? "Calendar Year"
-              : ""
-          }}
-        </template>
-        <template v-slot:[`item.SY`]="{ item }">
-          {{
-            item.cyFrom && item.cyTo
-              ? formatDate(item.cyFrom) + " - " + formatDate(item.cyTo)
-              : ""
-          }}
-        </template>
-
-        <template v-slot:[`item.effectivityDate`]="{ item }">
-          {{ formatDate(item.effectivityDate) }}
-        </template>
-
-        <template v-slot:[`item.sem`]="{ item }">
-          {{
-            item.ctType == 1
-              ? item.sem == 1
-                ? "First Semester"
-                : item.sem == 2
-                ? "Second Semester"
-                : "Summer"
-              : "N/A"
-          }}
-        </template>
-
-        <template v-slot:[`item.isActive`]="{ item }">
-          <v-chip
-            class="white--text"
-            :color="item.isActive == 1 ? '#5a67da' : 'grey'"
-            x-small
-          >
-            {{ item.isActive == 1 ? "Active" : "Inactive" }}
-          </v-chip>
-        </template>
-
-        <template v-slot:[`item.status`]="{ item }">
-          <v-chip
-            :color="
-              item.status == 1 ? 'grey' : item.status == 2 ? '#5a67da' : 'red'
-            "
-            class="ma-2 white--text"
-            x-small
-          >
-            {{
-              item.status == 1
-                ? "For Approval"
-                : item.status == 2
-                ? "Approved"
-                : "Pending"
-            }}
-          </v-chip>
-        </template>
-        <!-- <template v-slot:[`item.switch`]="{ item }">
-            <v-switch
-              v-if="item.status == 2"
-              :value="true"
-              :input-value="item.isActive == 1 ? true : false"
-              @change="switchItem(item)"
-              color="#5a67da"
-            ></v-switch>
-          </template> -->
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap">
             <v-btn
               x-small
-              color="grey"
+              color="blue"
               class="mx-1"
-              v-if="item.status != 2"
               outlined
               @click="editItem(item)"
             >
               <v-icon size="14">mdi-pencil-outline</v-icon>Update
             </v-btn>
-            <!-- <v-btn
-              x-small
-              color="grey"
-              class="mx-1"
-              outlined
-              @click="viewItem(item)"
-            >
-              <v-icon size="14">mdi-eye-outline</v-icon>View
-            </v-btn> -->
             <v-btn
               x-small
               color="#C62828"
@@ -158,7 +96,116 @@
             </v-btn>
           </div>
         </template>
-      </v-data-table>
+      </v-data-table> -->
+      <div v-for="(items, day) in groupedByDay" :key="day" class="mb-6">
+        <v-card outlined class="pa-3">
+          <div class="text-h6 font-weight-bold mb-2">{{ day }}</div>
+
+          <v-data-table
+            :headers="headers"
+            :items="items"
+            :items-per-page="50"
+            dense
+            class="elevation-1"
+            hide-default-footer
+          >
+            <template v-slot:[`item.action`]="{ item }">
+              <div class="text-no-wrap">
+                <v-btn
+                  block
+                  x-small
+                  color="blue"
+                  outlined
+                  class="mx-1 my-1"
+                  @click="editItem(item)"
+                >
+                  <v-icon size="14">mdi-pencil-outline</v-icon>Update
+                </v-btn>
+
+                <v-menu
+                  v-if="item.hasConflict"
+                  v-model="menuStates[item.availId]"
+                  offset-y
+                  transition="scale-transition"
+                  close-on-content-click="false"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      block
+                      x-small
+                      color="orange"
+                      class="white--text mx-1 my-1"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                      @click.stop="toggleMenu(item)"
+                    >
+                      <v-icon size="14">mdi-alert-outline</v-icon>Conflict
+                    </v-btn>
+                  </template>
+
+                  <v-card class="pa-4" max-width="500" style="width: 500px;">
+                    <v-card-title class="headline"
+                      >Conflict Information</v-card-title
+                    >
+                    <v-card-text>
+                      <div v-if="conflictData">
+                        <!-- {{ conflictData.conflictData }} -->
+                        <v-row
+                          v-for="(item, index) in conflictData.conflictData"
+                          :key="item.id"
+                          class="elevation-2 mb-2"
+                        >
+                          <v-col cols="12">
+                            <v-chip color="red" class="white--text">{{
+                              index + 1
+                            }}</v-chip>
+                            Room Name:
+                            {{ item.room_section }}
+                          </v-col>
+                          <v-col cols="12">
+                            Subject: {{ item.subject_title }}
+                          </v-col>
+                          <v-col cols="12">
+                            Time: {{ item.times_slot_from }} -
+                            {{ item.times_slot_to }}
+                          </v-col>
+                          <v-col cols="12"> Day: {{ item.day }} </v-col>
+                          <v-col cols="12">
+                            Grade: {{ item.grade_level }}
+                          </v-col>
+                        </v-row>
+                      </div>
+                      <div v-else>Loading conflict info...</div>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        small
+                        text
+                        color="primary"
+                        @click="menuStates[item.id] = false"
+                      >
+                        Close
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-menu>
+
+                <v-btn
+                  block
+                  x-small
+                  color="#C62828"
+                  class="white--text mx-1 my-1"
+                  @click="confirmDelete(item)"
+                >
+                  <v-icon size="14">mdi-trash-can-outline</v-icon>Delete
+                </v-btn>
+              </div>
+            </template>
+          </v-data-table>
+        </v-card>
+      </div>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
       <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
@@ -167,7 +214,7 @@
           <v-select
             dense
             outlined
-            color="#5a67da"
+            color="#EA7142"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -198,13 +245,19 @@
     </v-row>
 
     <ClassroomProgramDialog
-      :data="coreTimeData"
+      :data="facultyLoadData"
       :action="action"
       :grade="grade"
       :section="section"
       :filter="filter"
     />
-    <!-- <MyDesignationDialog :data="designationData" :action="action" /> -->
+    <FacultyLoadDialog
+      :data="addFacultyLoadData"
+      :action="action"
+      :grade="grade"
+      :section="section"
+      :filter="filter"
+    />
 
     <v-dialog v-model="confirmDialog" persistent max-width="350">
       <v-card color="white">
@@ -231,6 +284,23 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- 
+    <v-overlay :value="showOverlay" opacity="0.1" class="elevation-1">
+      <v-card class="pa-4 mx-auto" max-width="550">
+        <v-card-title>Information</v-card-title>
+        <v-card-text>
+          This behaves like a dialog but is just an overlay.
+          <div>{{ conflictData }}</div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn small text color="primary" @click="showOverlay = false">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-overlay> -->
+
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -244,15 +314,15 @@
 <script>
 export default {
   components: {
-    // CoreTimeDesignationDialog: () =>
-    //   import("../../components/Dialogs/Forms/CoreTimeDesignationDialog.vue"),
-    // MyDesignationDialog: () =>
-    //   import("../../components/Dialogs/Forms/MyDesignationDialog.vue"),
+    FacultyLoadDialog: () =>
+      import("../../components/Dialogs/Forms/FacultyLoadDialog.vue"),
     ClassroomProgramDialog: () =>
       import("../../components/Dialogs/Forms/ClassroomProgramDialog.vue"),
   },
   data: () => ({
     search: "",
+    groupedByDay: {},
+    conflictData: null,
     headers: [
       {
         text: "Time",
@@ -269,13 +339,13 @@ export default {
         sortable: false,
       },
 
-      {
-        text: "Day",
-        value: "day",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
+      // {
+      //   text: "Day",
+      //   value: "day",
+      //   align: "center",
+      //   valign: "center",
+      //   sortable: false,
+      // },
 
       {
         text: "Subject",
@@ -288,8 +358,9 @@ export default {
       {
         text: "Action",
         value: "action",
-        align: "center",
-        valign: "center",
+        align: "end",
+        valign: "end",
+        width: 40,
         sortable: false,
       },
     ],
@@ -317,8 +388,13 @@ export default {
       { id: 6, name: "Grade 12" },
     ],
     section: null,
+    firstLoad: true,
+    menu: {},
+    openMenuId: null,
+    menuStates: {},
     sectionList: [],
-    coreTimeData: null,
+    addFacultyLoadData: null,
+    facultyLoadData: null,
     filter: null,
     designationData: null,
     totalCount: 0,
@@ -328,6 +404,7 @@ export default {
     options: {},
     action: null,
     paginationData: {},
+    showOverlay: false,
     formdata: [],
     work_dates_menu: false,
     confirmDialog: false,
@@ -353,16 +430,17 @@ export default {
   },
 
   mounted() {
+    this.initialize();
     this.eventHub.$on("closeAddScheduleDialog", () => {
       this.getClassroom(this.section);
     });
-    // this.eventHub.$on("closeMyDesignationDialog", () => {
-    //   this.initialize();
-    // });
+    this.eventHub.$on("closeFacultyLoadDialog", () => {
+      this.getClassroom(this.section);
+    });
   },
   beforeDestroy() {
     this.eventHub.$off("closeAddScheduleDialog");
-    // this.eventHub.$off("closeMyDesignationDialog");
+    this.eventHub.$off("closeFacultyLoadDialog");
   },
 
   watch: {
@@ -371,6 +449,10 @@ export default {
     },
     options: {
       handler() {
+        if (this.firstLoad) {
+          this.firstLoad = false; // ignore initial run
+          return;
+        }
         this.initialize();
       },
       deep: true,
@@ -378,7 +460,7 @@ export default {
     filterYear: {
       handler(newData, oldData) {
         if (oldData != newData) {
-          console.log(oldData, newData);
+          // console.log(oldData, newData);
           this.getClassroom(this.section);
         }
       },
@@ -393,20 +475,44 @@ export default {
 
     initialize() {
       this.getClassListed();
-      this.getClassroom(this.section);
     },
 
-    getClassListed() {
-      this.loading = true;
-      this.axiosCall("/rooms-section/" + this.activeTab.name, "GET").then(
-        (res) => {
-          console.log("Classroom List", res.data);
+    async getClassListed() {
+      if (this.loadingSections) return;
+      if (!this.activeTab?.name) return; // Prevent undefined requests
+
+      this.loadingSections = true;
+
+      try {
+        const res = await this.axiosCall(
+          "/rooms-section/" + this.activeTab.name,
+          "GET"
+        );
+
+        if (res.data.length > 0) {
           this.sectionList = res.data;
           this.section = res.data[0].id;
+          this.getClassroom(this.section);
+        } else {
+          if (
+            this.sectionList.length === 0 ||
+            this.activeTab.name === "Grade 7"
+          )
+            this.sectionList = [];
         }
-      );
+      } finally {
+        this.loadingSections = false;
+      }
     },
-    getClassroom(section) {
+    groupByDay(items) {
+      const grouped = {};
+      items.forEach((item) => {
+        if (!grouped[item.day]) grouped[item.day] = [];
+        grouped[item.day].push(item);
+      });
+      return grouped;
+    },
+    async getClassroom(section) {
       this.loading = true;
       let filter = this.$store.getters.getFilterSelected;
       let grade =
@@ -421,20 +527,28 @@ export default {
           : this.tab == 5
           ? "Grade 11"
           : "Grade 12";
-      this.axiosCall(
-        "/enroll-student/getClassProgramm/" +
-          grade +
-          "/" +
-          section +
-          "/" +
-          filter,
-        "GET"
-      ).then((res) => {
+
+      try {
+        const res = await this.axiosCall(
+          `/enroll-student/getClassProgramm/${grade}/${section}/${filter}`,
+          "GET"
+        );
+
         if (res) {
           this.data = res.data;
-          this.loading = false;
+          this.groupedByDay = this.groupByDay(this.data);
+          await Promise.all(
+            this.data.map(async (item, index) => {
+              const hasConflict = await this.checkConflict(item);
+              this.$set(this.data[index], "hasConflict", hasConflict);
+            })
+          );
         }
-      });
+      } catch (error) {
+        console.error("Error fetching classroom data:", error);
+      } finally {
+        this.loading = false;
+      }
     },
 
     changeValueSection(data) {
@@ -482,19 +596,6 @@ export default {
         );
       }
     },
-    // getVerifiedUsers() {
-    //   this.loading = true;
-
-    //   this.axiosCall("/user-details/getAllVerifiedUser", "GET").then((res) => {
-    //     if (res) {
-    //       this.data = [];
-
-    //       this.data = res.data;
-    //       this.loading = false;
-    //     }
-    //   });
-    // },
-
     changeTab(tab) {
       this.activeTab = tab;
 
@@ -510,37 +611,37 @@ export default {
     add() {
       let filter = this.$store.getters.getFilterSelected;
       if (this.tab == 1) {
-        this.coreTimeData = [{ id: null }];
+        this.addFacultyLoadData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 7";
         this.section;
         this.filter = filter;
       } else if (this.tab == 2) {
-        this.coreTimeData = [{ id: null }];
+        this.addFacultyLoadData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 8";
         this.section;
         this.filter = filter;
       } else if (this.tab == 3) {
-        this.coreTimeData = [{ id: null }];
+        this.addFacultyLoadData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 9";
         this.section;
         this.filter = filter;
       } else if (this.tab == 4) {
-        this.coreTimeData = [{ id: null }];
+        this.addFacultyLoadData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 10";
         this.section;
         this.filter = filter;
       } else if (this.tab == 5) {
-        this.coreTimeData = [{ id: null }];
+        this.addFacultyLoadData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 11";
         this.section;
         this.filter = filter;
       } else if (this.tab == 6) {
-        this.coreTimeData = [{ id: null }];
+        this.addFacultyLoadData = [{ id: null }];
         this.action = "Add";
         this.grade = "Grade 12";
         this.section;
@@ -548,40 +649,40 @@ export default {
       }
     },
     editItem(item) {
-      console.log("Update", item);
+      // console.log("Update", item);
       let filter = this.$store.getters.getFilterSelected;
       if (this.tab == 1) {
-        this.coreTimeData = item;
+        this.facultyLoadData = item;
         this.action = "Update";
         this.grade = "Grade 7";
         this.section;
         this.filter = filter;
       } else if (this.tab == 2) {
-        this.coreTimeData = item;
+        this.facultyLoadData = item;
         this.action = "Update";
         this.grade = "Grade 8";
         this.section;
         this.filter = filter;
       } else if (this.tab == 3) {
-        this.coreTimeData = item;
+        this.facultyLoadData = item;
         this.action = "Update";
         this.grade = "Grade 9";
         this.section;
         this.filter = filter;
       } else if (this.tab == 4) {
-        this.coreTimeData = item;
+        this.facultyLoadData = item;
         this.action = "Update";
         this.grade = "Grade 10";
         this.section;
         this.filter = filter;
       } else if (this.tab == 5) {
-        this.coreTimeData = item;
+        this.facultyLoadData = item;
         this.action = "Update";
         this.grade = "Grade 11";
         this.section;
         this.filter = filter;
       } else if (this.tab == 6) {
-        this.coreTimeData = item;
+        this.facultyLoadData = item;
         this.action = "Update";
         this.grade = "Grade 12";
         this.section;
@@ -590,13 +691,13 @@ export default {
     },
 
     viewItem(item) {
-      this.coreTimeData = item;
+      this.facultyLoadData = item;
       this.action = "View";
     },
 
     deleteItem() {
       this.axiosCall(
-        "/enroll-student/deleteAvailabilitySchedule" + this.deleteData.availId,
+        "/enroll-student/deleteAvailabilitySchedule/" + this.deleteData.availId,
         "DELETE"
       ).then((res) => {
         if (res.data.status == 200) {
@@ -607,6 +708,7 @@ export default {
           this.fadeAwayMessage.message = res.data.msg;
           this.confirmDialog = false;
           this.initialize();
+          this.getClassroom(this.section);
         } else if (res.data.status == 400) {
           this.confirmDialog = false;
           this.fadeAwayMessage.show = true;
@@ -619,6 +721,76 @@ export default {
     confirmDelete(item) {
       this.confirmDialog = true;
       this.deleteData = item;
+    },
+    toggleMenu(item) {
+      // Close all other menus first
+      Object.keys(this.menuStates).forEach((key) => {
+        this.$set(this.menuStates, key, false);
+      });
+
+      // Toggle the clicked one
+      const isCurrentlyOpen = this.menuStates[item.id];
+      this.$set(this.menuStates, item.id, !isCurrentlyOpen);
+
+      // Load conflict info if opened
+      if (!isCurrentlyOpen) {
+        this.viewConflict(item);
+      }
+    },
+    async checkConflict(item) {
+      try {
+        const res = await this.axiosCall(
+          "/enroll-student/checkConflict/" + JSON.stringify(item),
+          "GET"
+        );
+        this.conflictData = res.data;
+        if (res.data.status == 200) {
+          return false;
+        } else {
+          return true;
+        }
+      } catch (error) {
+        console.error("Error checking conflict:", error);
+        return false;
+      }
+    },
+    async viewConflict(item) {
+      this.showOverlay = true;
+      await this.checkConflict(item);
+      console.log(this.conflictData);
+    },
+    classProgramms() {
+      let filter = this.$store.getters.getFilterSelected;
+      let userStatus = this.$store.state.user.status;
+      let grade;
+      if (this.tab == 1) {
+        grade = "Grade 7";
+      } else if (this.tab == 2) {
+        grade = "Grade 8";
+      } else if (this.tab == 3) {
+        grade = "Grade 9";
+      } else if (this.tab == 4) {
+        grade = "Grade 10";
+      } else if (this.tab == 5) {
+        grade = "Grade 11";
+      } else if (this.tab == 6) {
+        grade = "Grade 12";
+      }
+
+      console.log(userStatus, filter, grade, this.section);
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getClassProgramm/" +
+          filter +
+          "/" +
+          userStatus +
+          "/" +
+          grade +
+          "/" +
+          this.section +
+          "",
+        "_blank"
+      );
     },
   },
 };

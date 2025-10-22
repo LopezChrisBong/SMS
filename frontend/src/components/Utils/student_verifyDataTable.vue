@@ -2,7 +2,7 @@ e<template>
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
-        <v-tabs v-model="activeTab" color="#5a67da" align-tabs="left">
+        <v-tabs v-model="activeTab" color="#EA7142" align-tabs="left">
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
             tab.name
           }}</v-tab>
@@ -18,14 +18,14 @@ e<template>
           single-line
           hide-details
           class="rounded-lg"
-          color="#5a67da"
+          color="#EA7142"
           dense
         ></v-text-field>
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
-        :headers="headers"
+        :headers="tab == 1 ? headers : headers1"
         :items="data"
         :items-per-page="10"
         :search="search"
@@ -37,24 +37,39 @@ e<template>
         <template v-slot:[`item.fname`]="{ item }">
           {{ item.fname }} {{ item.lname }}
         </template>
+        <template v-slot:[`item.updated_at`]="{ item }">
+          {{ formatDate(item.updated_at) }}
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-btn x-small color="grey" outlined @click="editItem(item)">
-            <v-icon size="14">{{
-              tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
-            }}</v-icon>
-            {{ tab == 1 ? "Verify" : "Update" }}
-          </v-btn>
+          <div class="d-flex">
+            <v-btn x-small color="grey" outlined @click="editItem(item)">
+              <v-icon size="14">{{
+                tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
+              }}</v-icon>
+              {{ tab == 1 ? "Verify" : "Update" }}
+            </v-btn>
 
-          <v-btn
-            class="mx-2"
-            x-small
-            color="green"
-            outlined
-            @click="viewItem(item)"
-          >
-            <v-icon size="14">mdi-eye</v-icon>
-            View
-          </v-btn>
+            <v-btn
+              class="mx-2"
+              x-small
+              color="green"
+              outlined
+              @click="viewItem(item)"
+            >
+              <v-icon size="14">mdi-eye</v-icon>
+              View
+            </v-btn>
+            <v-btn
+              x-small
+              v-if="tab == 2"
+              color="orange"
+              outlined
+              @click="viewQRItem(item)"
+            >
+              <v-icon size="14">mdi-qrcode</v-icon>
+              QR
+            </v-btn>
+          </div>
         </template>
       </v-data-table>
     </v-card>
@@ -65,7 +80,7 @@ e<template>
           <v-select
             dense
             outlined
-            color="#5a67da"
+            color="#EA7142"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -131,6 +146,39 @@ e<template>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="qrCodedialog" max-width="400px">
+      <v-card>
+        <v-card-title dark class="dialog-header">
+          <span>QR Code</span>
+          <v-spacer></v-spacer>
+          <!-- <v-btn icon dark @click="qrCodedialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn> -->
+          <v-btn color="orange" class="white--text" @click="printQRCode()">
+            <!-- <v-icon>mdi-printer</v-icon> -->
+            Print
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col class="mt-2 mb-1 d-flex justify-center">
+              <qr-code :size="150" :text="qrText"></qr-code>
+            </v-col>
+            <v-col class=" d-flex justify-center" cols="12" v-if="viewQRData"
+              ><h2>Student: {{ "  " + viewQRData.name }}</h2></v-col
+            >
+          </v-row>
+        </v-card-text>
+        <!--    <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="orange" class="white--text" @click="printQRCode()">
+            <v-icon>mdi-printer</v-icon> 
+            Print
+          </v-btn>
+        </v-card-actions>-->
+      </v-card>
+    </v-dialog>
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -153,8 +201,20 @@ export default {
   },
   data: () => ({
     search: "",
+    qrCodedialog: false,
     headers: [
       { text: "Name", value: "name", align: "start" },
+      {
+        text: "Actions",
+        value: "actions",
+        align: "center",
+        sortable: false,
+        width: 200,
+      },
+    ],
+    headers1: [
+      { text: "Name", value: "name", align: "start" },
+      { text: "Enrolled", value: "updated_at", align: "center" },
       {
         text: "Actions",
         value: "actions",
@@ -181,6 +241,7 @@ export default {
       { id: 2, name: "Enrolled" },
     ],
     totalCount: 0,
+    viewQRData: null,
     deleteData: null,
     updateData: null,
     viewData: null,
@@ -304,6 +365,20 @@ export default {
         this.viewData = item;
         this.action = "Update";
       }
+    },
+    viewQRItem(item) {
+      console.log(item);
+      this.viewQRData = item;
+      this.qrCodedialog = true;
+      if (item.id) {
+        this.qrText = item.id.toString();
+        this.dialog = true;
+      }
+    },
+    printQRCode() {
+      const url =
+        process.env.VUE_APP_SERVER + "/pdf-generator/getQRCode/" + this.qrText;
+      window.open(url);
     },
     // confirmDelete() {
     //   this.axiosCall("/request-type/" + this.deleteData.id, "DELETE").then(

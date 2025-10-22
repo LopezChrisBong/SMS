@@ -5,8 +5,7 @@
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
             <span
-              >{{ action }} {{ grade }} {{ className }} Classroom Program
-              Schedule
+              >{{ action }} {{ grade }} {{ className }} Faculty Schedule
             </span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -39,7 +38,6 @@
                     <v-time-picker
                       v-if="modal1"
                       v-model="time_slot_from"
-                      :readonly="action == 'Update' ? readonly : !readonly"
                       full-width
                     >
                       <v-spacer></v-spacer>
@@ -79,7 +77,6 @@
                     <v-time-picker
                       v-if="modal2"
                       v-model="time_slot_to"
-                      :readonly="action == 'Update' ? readonly : !readonly"
                       full-width
                     >
                       <v-spacer></v-spacer>
@@ -197,9 +194,11 @@ export default {
     grade: null,
     section: null,
     filter: null,
+    adviser: null,
   },
   data() {
     return {
+      userId: null,
       dialog: false,
       readonly: true,
       className: [],
@@ -247,6 +246,7 @@ export default {
           this.teacher = data.teacherID.toString();
           this.day = data.day;
           this.subject = data.subjectId;
+          this.getAllActiveSubjects(this.teacher);
 
           // this.verifyModel.usertypeID = data.user_usertypeID.toString();
         }
@@ -258,7 +258,18 @@ export default {
     initialize() {
       this.getUserType();
       this.getClassroom();
-      this.getRoleTeachers();
+      if (
+        this.grade == "Grade 1" ||
+        this.grade == "Grade 2" ||
+        this.grade == "Grade 3" ||
+        this.grade == "Grade 4" ||
+        this.grade == "Kinder 1" ||
+        this.grade == "Kinder 2"
+      ) {
+        this.TeachingRoleAdvisory();
+      } else {
+        this.getRoleTeachers();
+      }
     },
     getUserType() {
       this.axiosCall("/user-type/getAllUsertype", "GET").then((res) => {
@@ -307,6 +318,7 @@ export default {
               day: this.day,
               grade_level: this.grade,
               hours: hours,
+              school_yearId: filter,
             };
             this.axiosCall("/enroll-student/addSchedule", "POST", data).then(
               (res) => {
@@ -407,7 +419,8 @@ export default {
         "/rooms-section/" + this.grade + "/" + this.section,
         "GET"
       ).then((res) => {
-        console.log("ClassName", res.data[0].room_section);
+        console.log("ClassName", res.data[0].teacherId);
+        // this.adviser = res.data[0].teacherId;
         this.className = res.data[0].room_section;
       });
     },
@@ -417,7 +430,20 @@ export default {
         "/user-details/getAllVerifiedUser/TeachingRole/" + this.grade,
         "GET"
       ).then((res) => {
-        console.log("Teacher Role", res.data);
+        console.log("Teacher Role1", res.data);
+        this.TeachersList = res.data;
+      });
+    },
+
+    TeachingRoleAdvisory() {
+      this.axiosCall(
+        "/user-details/getAdviser/RoomAdvisory/" +
+          this.adviser +
+          "/" +
+          this.grade,
+        "GET"
+      ).then((res) => {
+        console.log("Teacher Role2", res.data);
         this.TeachersList = res.data;
       });
     },

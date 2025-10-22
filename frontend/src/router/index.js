@@ -30,6 +30,10 @@ import MyScheduledProgram from "../views/Pages/MyScheduledProgram.vue";
 import AddSchoolYear from "../views/Pages/AddSchoolYear.vue";
 import AddElementaryRooms from "../views/Pages/AddElementaryRooms.vue";
 import ElementaryProgram from "../views/Pages/ElementaryProgram.vue";
+import LandingPage from "../views/Auth/LandingPage.vue";
+import TeachersListGradeLevel from "../views/Pages/TeachersListGradeLevel.vue";
+import ElementaryTeacherListGradeLevel from "../views/Pages/ElementaryTeacherListGradeLevel.vue";
+import MyStudentRecord from "../views/Pages/MyStudentRecord.vue";
 
 Vue.use(VueRouter);
 
@@ -37,9 +41,15 @@ const routes = [
   {
     path: "/",
     component: OuterLayout,
-    redirect: "/login",
+    redirect: "/landing",
     meta: { authRequired: false },
     children: [
+      {
+        path: "landing",
+        alias: "/landing",
+        component: LandingPage,
+        meta: { authRequired: false },
+      },
       {
         path: "login",
         alias: "/login",
@@ -174,6 +184,17 @@ const routes = [
         component: AvailableFaculty,
         meta: { title: "Faculty Schedule List", authRequired: true },
       },
+      {
+        path: "teachers-list",
+        component: TeachersListGradeLevel,
+        meta: { title: "Faculty List", authRequired: true },
+      },
+
+      {
+        path: "elementarty-teachers-list",
+        component: ElementaryTeacherListGradeLevel,
+        meta: { title: "Faculty List", authRequired: true },
+      },
 
       {
         path: "my-scheduled-program",
@@ -295,7 +316,23 @@ const routes = [
         component: MyScheduledProgram,
         meta: { title: "My Schedule List", authRequired: true },
       },
+      {
+        path: "high-school-rooms",
+        component: HishSchoolRooms,
+        meta: { title: "Add High School Rooms", authRequired: true },
+      },
 
+      {
+        path: "elementary-rooms",
+        component: AddElementaryRooms,
+        meta: { title: "Add Elementary Rooms", authRequired: true },
+      },
+       {
+        path: "my-student-record",
+        component: MyStudentRecord,
+        meta: { title: "My Student Record", authRequired: true },
+      },
+      
 
 
     ],

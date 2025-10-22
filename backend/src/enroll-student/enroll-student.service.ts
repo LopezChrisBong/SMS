@@ -60,19 +60,36 @@ export class EnrollStudentService {
   async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
     try {
       // Check for conflicts
-      const conflict = await this.checkConflict(createAvailabilityDto);
+      // const conflict = await this.checkConflict(createAvailabilityDto);
   
-      if (conflict) {
-        return {
-          msg: 'Conflict detected. Schedule cannot be added.',
-          status: HttpStatus.CONFLICT,
-          conflictDetails: conflict,
-        };
-      }
+      // if (conflict) {
+      //   return {
+      //     msg: 'Conflict detected. Schedule cannot be added.',
+      //     status: HttpStatus.CONFLICT,
+      //     conflictDetails: conflict,
+      //   };
+      // }
+
       // Save the schedule
-      const newSchedule = this.availabilityRepository.create(createAvailabilityDto);
-      await this.availabilityRepository.save(newSchedule);
+      for (let index = 0; index < createAvailabilityDto.day.length; index++) {
+          console.log(createAvailabilityDto.day[index])
+        // const newSchedule = this.availabilityRepository.create(createAvailabilityDto);
+          let newSchedule = this.dataSource.manager.create(Availability, {
+                      teacherID: createAvailabilityDto.teacherID,
+                      subjectId:createAvailabilityDto.subjectId,
+                      roomId:createAvailabilityDto.roomId,
+                      grade_level:createAvailabilityDto.grade_level,
+                      day:createAvailabilityDto.day[index],
+                      times_slot_from:createAvailabilityDto.times_slot_from,
+                      times_slot_to:createAvailabilityDto.times_slot_to,
+                      hours:createAvailabilityDto.hours,
+                      school_yearId:createAvailabilityDto.school_yearId
+                  })
+        await this.availabilityRepository.save(newSchedule);
+      }
+ 
   
+     
       return {
         msg: 'Schedule added successfully.',
         status: HttpStatus.CREATED,
@@ -86,46 +103,121 @@ export class EnrollStudentService {
     }
   }
   
+  // async checkConflict(data: string){
+  //   console.log('checkConflict',JSON.parse(data))
+  //   // try {
+  //   //   const conflicts = await this.availabilityRepository
+  //   //     .createQueryBuilder('availability')
+  //   //     .where('availability.day = :dayaZ', { day: data.day })
+  //   //     .andWhere(
+  //   //       new Brackets((qb) => {
 
+  //   //         // Dili mag repeat ang subject in the same room per day
+  //   //         qb.where('availability.roomId = :roomId AND availability.subjectId = :subjectId', {
+  //   //           roomId: data.roomId,
+  //   //           subjectId: data.subjectId,
+  //   //         });
+  
+  //   //         // No overlapping of time slots in the same room per day
+  //   //         qb.orWhere(
+  //   //           'availability.roomId = :roomId AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+  //   //           { roomId: data.roomId, from: data.times_slot_from, to: data.times_slot_to }
+  //   //         );
+  
+  //   //         // No duplicate subjects across different faculty or rooms per day
+  //   //         qb.orWhere('availability.subjectId = :subjectId', { subjectId: data.subjectId });
+  
+  //   //         // Dapat walay conflicts ang faculty in time slots per room per day
+  //   //         qb.orWhere(
+  //   //           'availability.teacherID = :teacherID AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+  //   //           { teacherID: data.teacherID, from: data.times_slot_from, to: data.times_slot_to }
+  //   //         );
+  //   //       })
+  //   //     )
+  //   //     .getMany();
+  
+  //   //   return conflicts.length > 0 ? conflicts : null;
+  //   // } catch (error) {
+  //   //   console.error('Error checking conflict:', error);
+  //   //   throw error;
+  //   // }
+  // }
 
-  async checkConflict(data: CreateAvailabilityDto): Promise<any> {
-    try {
-      const conflicts = await this.availabilityRepository
-        .createQueryBuilder('availability')
-        .where('availability.day = :day', { day: data.day })
-        .andWhere(
-          new Brackets((qb) => {
+async checkConflict(data: string) {
+  try {
+    const newData = JSON.parse(data);
+    // console.log(newData)
+    const conflicts = await this.availabilityRepository
+      .createQueryBuilder('availability')
+      .select([
+        "availability.*",
+        "room.room_section as room_section",
+        "sub.subject_title as subject_title",
+      ])
+      .leftJoin(RoomsSection, 'room', 'room.id = availability.roomId')
+      .leftJoin(Subject, 'sub', 'sub.id = availability.subjectId')
+      .where('availability.day = :day', { day: newData.day })
+      .andWhere(
+        new Brackets((qb) => {
+          //  Same subject in the same room on the same day (duplicate subject in same room)
+          qb.where(
+            'availability.roomId = :roomId AND availability.subjectId = :subjectId',
+            { roomId: newData.roomId, subjectId: newData.subjectId }
+          );
 
-            // Dili mag repeat ang subject in the same room per day
-            qb.where('availability.roomId = :roomId AND availability.subjectId = :subjectId', {
-              roomId: data.roomId,
-              subjectId: data.subjectId,
-            });
-  
-            // No overlapping of time slots in the same room per day
-            qb.orWhere(
-              'availability.roomId = :roomId AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
-              { roomId: data.roomId, from: data.times_slot_from, to: data.times_slot_to }
-            );
-  
-            // No duplicate subjects across different faculty or rooms per day
-            qb.orWhere('availability.subjectId = :subjectId', { subjectId: data.subjectId });
-  
-            // Dapat walay conflicts ang faculty in time slots per room per day
-            qb.orWhere(
-              'availability.teacherID = :teacherID AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
-              { teacherID: data.teacherID, from: data.times_slot_from, to: data.times_slot_to }
-            );
-          })
-        )
-        .getMany();
-  
-      return conflicts.length > 0 ? conflicts : null;
-    } catch (error) {
-      console.error('Error checking conflict:', error);
-      throw error;
+          // Overlapping time slots in the same room on same day
+          qb.orWhere(
+            `availability.roomId = :roomId 
+             AND :from < availability.times_slot_to 
+             AND :to > availability.times_slot_from`,
+            {
+              roomId: newData.roomId,
+              from: newData.times_slot_from,
+              to: newData.times_slot_to,
+            }
+          );
+
+          //  Same subject used by another teacher or room on same day
+          // qb.orWhere('availability.subjectId = :subjectId', {
+          //   subjectId: newData.subjectId,
+          // });
+
+          //  Faculty schedule conflict (same teacher, overlapping times)
+          qb.orWhere(
+            `availability.teacherID = :teacherID 
+             AND :from < availability.times_slot_to 
+             AND :to > availability.times_slot_from`,
+            {
+              teacherID: newData.teacherID,
+              from: newData.times_slot_from,
+              to: newData.times_slot_to,
+            }
+          );
+        })
+      )
+      // ignore self when updating
+      .andWhere('availability.id != :id', { id: newData.availId || 0 })
+      .getRawMany();
+
+    if (conflicts.length > 0) {
+      // console.log(' Conflict found:', conflicts);
+      return {
+        status: 409,
+        message: 'Schedule conflict detected.',
+        conflictData:conflicts,
+        conflict: conflicts.length > 0,
+      };
     }
+
+    // console.log(' No conflict detected.');
+    return { status: 200, message: 'No conflicts.',conflict: conflicts.length > 0 };
+
+  } catch (error) {
+    // console.error(' Error checking conflict:', error);
+    throw new Error('Error checking schedule conflict');
   }
+}
+
   
   async EnrollStudent(curr_user:any) {
 
@@ -305,6 +397,7 @@ export class EnrollStudentService {
         'ES.schoolCard as schoolCard',
         'ES.school_yearId as school_yearId',
         'ES.grade_level as grade_level',
+        'ES.updated_at as updated_at',
       ])
       .andWhere('ES.statusEnrolled = 1')
       .andWhere('ES.seniorJunior IN (:...values)', {
@@ -393,9 +486,6 @@ export class EnrollStudentService {
     const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
-
-
-
     let data = await this.dataSource.manager
       .createQueryBuilder(Availability, 'A')
       .select([
@@ -468,14 +558,14 @@ export class EnrollStudentService {
       .where('A.teacherID = "'+user.userdetail.id+'"')
       .andWhere('A.school_yearId = "'+filter+'"')
       .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
-      .orderBy('A.teacherID')
+      .orderBy('A.times_slot_from')
       .getRawMany();
     return data;
   }
 
   async updateEnrolledStudent(updateVS: UpdateEnrollStudentDto) {
 
-    console.log(updateVS)
+    // console.log(updateVS)
     
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -487,7 +577,59 @@ export class EnrollStudentService {
           school_yearId:updateVS.schoo_yearId,
           grade_level:updateVS.grade_level,
           seniorJunior:updateVS.seniorJunior,
-
+          fname:updateVS.fname,
+          lname:updateVS.lname,
+          mname:updateVS.mname,
+          suffix:updateVS.suffix,
+          email:updateVS.email,
+          bdate:updateVS.bdate,
+          birth_place:updateVS.birth_place,
+          civil_status:updateVS.civil_status,
+          sex:updateVS.sex,
+          height:updateVS.height,
+          weight:updateVS.weight,
+          ip_Name:updateVS.ip_Name,
+          fourpis:updateVS.fourpis,
+          blood_type:updateVS.blood_type,
+          isFilipino:updateVS.isFilipino,
+          mobile_no:updateVS.mobile_no,
+          residential_zip:updateVS.residential_zip,
+          residential_house_no:updateVS.residential_house_no,
+          residential_street:updateVS.residential_street,
+          residential_subd:updateVS.residential_subd,
+          residential_brgy:updateVS.residential_brgy,
+          residential_city:updateVS.residential_city,
+          residential_prov:updateVS.residential_prov,
+          permanent_zip:updateVS.permanent_zip,
+          permanent_house_no:updateVS.permanent_house_no,
+          permanent_street:updateVS.permanent_street,
+          permanent_subd:updateVS.permanent_subd,
+          permanent_brgy:updateVS.permanent_brgy,
+          permanent_city:updateVS.permanent_city,
+          permanent_prov:updateVS.permanent_prov,
+          father_fname:updateVS.father_fname,
+          father_mname:updateVS.father_mname,
+          father_lname:updateVS.father_lname,
+          father_number:updateVS.father_number,
+          mother_fname:updateVS.mother_fname,
+          mother_mname:updateVS.mother_mname,
+          mother_lname:updateVS.mother_lname,
+          mother_number:updateVS.mother_number,
+          guardian_fname:updateVS.guardian_fname,
+          guardian_mname:updateVS.guardian_mname,
+          guardian_lname:updateVS.guardian_lname,
+          guardian_number:updateVS.guardian_number,
+          last_grade_completed:updateVS.last_grade_completed,
+          last_year_completed:updateVS.last_year_completed,
+          last_school_attended:updateVS.last_school_attended,
+          last_school_ID:updateVS.last_school_ID,
+          track:updateVS.track,
+          semester:updateVS.semester,
+          strand:updateVS.strand,
+          picture:updateVS.picture,
+          goodMoral:updateVS.goodMoral,
+          birthPSA:updateVS.birthPSA,
+          schoolCard:updateVS.schoolCard
         });
         await queryRunner.commitTransaction();
         return {
@@ -507,17 +649,30 @@ export class EnrollStudentService {
   
 }
 
-async getClassProgramm(grade: string , section : number, filter:number ) {
- 
-    const toReturn = await this.dataSource.query(
-      '  SELECT  CONCAT(t1.times_slot_from,  " - ", t1.times_slot_to) AS time ,CONCAT(t2.lname,  " ,", t2.fname) AS name ,t1.id as availId,  t1.*, t2.*, t3.*, t4.* FROM availability t1 LEFT JOIN user_detail t2 ON t1.teacherID = t2.id LEFT JOIN rooms_section t3 ON t1.roomId = t3.id LEFT JOIN subject t4 ON t1.subjectId = t4.id where t1.grade_level = "'+ grade +'" and t1.roomId ="'+section+'" and t1.school_yearId ="'+filter+'" order by t1.day ASC' ,      
-    );
+async getClassProgramm(grade: string, section: number, filter: number) {
+    const query = `
+      SELECT  
+        CONCAT(t1.times_slot_from, ' - ', t1.times_slot_to) AS time,
+        CONCAT(t2.lname, ', ', t2.fname) AS name,
+        t1.id AS availId,
+        t1.*, t2.*, t3.*, t4.*
+      FROM availability t1
+      LEFT JOIN user_detail t2 ON t1.teacherID = t2.id
+      LEFT JOIN rooms_section t3 ON t1.roomId = t3.id
+      LEFT JOIN subject t4 ON t1.subjectId = t4.id
+      WHERE t1.grade_level = ? 
+        AND t1.roomId = ?
+        AND t1.school_yearId = ?
+        AND t1.day IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
+      ORDER BY FIELD(t1.day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'),
+              t1.times_slot_from ASC
+    `;
+
+    const params = [grade, section, filter];
+    const toReturn = await this.dataSource.query(query, params);
+
     return toReturn;
-
-
-}
-
-
+  }
 
 async remove(id: number) {
   let queryRunner = this.dataSource.createQueryRunner();
@@ -545,21 +700,30 @@ async remove(id: number) {
 async updateClassProgram(id: number,
   updateAvailabilityDto: UpdateAvailabilityDto,
   user: any,) {
-    let data = updateAvailabilityDto
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
   try {
     // Check for conflicts
-    const conflict = await this.checkConflictUpdate(data);
+    // const conflict = await this.checkConflictUpdate(updateAvailabilityDto);
 
-    if (conflict) {
-      return {
-        msg: 'Conflict detected. Schedule cannot be updated.',
-        status: HttpStatus.CONFLICT,
-        conflictDetails: conflict,
-      };
-    }
+    // if (conflict) {
+    //   return {
+    //     msg: 'Conflict detected. Schedule cannot be updated.',
+    //     status: HttpStatus.CONFLICT,
+    //     conflictDetails: conflict,
+    //   };
+    // }
+
+    // let hours =  await this.dataSource.query('SELECT '+id+', SUM(hours) AS total_hours_per_weekFROM availability GROUP BY '+id+';')
+    // if(hours >= 31){
+    //   return {
+    //     msg: 'Update conflict faculty already reach 30 hours in total of loading!',
+    //     status: HttpStatus.CONFLICT,
+    //     conflictDetails: hours,
+    //   };
+    // }
 
     // update the schedule
     await queryRunner.manager.update(Availability, id, {
@@ -599,11 +763,11 @@ async updateSchoolYear(id: number,
     await queryRunner.startTransaction();
   try {
 
-    // update the schedule
+    await this.dataSource.manager.query(`UPDATE school_year SET status = 0`);
     await queryRunner.manager.update(SchoolYear, id, {
-      school_year_from: updateSchoolYearDto.school_year_from,
-      school_year_to: updateSchoolYearDto.school_year_to,
-      // isActive: updateMyCoreTimeDto.isActive,
+      // school_year_from: updateSchoolYearDto.school_year_from,
+      // school_year_to: updateSchoolYearDto.school_year_to,
+      status: updateSchoolYearDto.status,
     });
 
 
@@ -726,10 +890,10 @@ async enrollStudentWithFile( body:any, filename: any){
       schoolCard: filename[1].filename,
       birthPSA: filename[2].filename,
       picture: filename[3].filename,
-      school_yearId:body.school_yearId,
+      school_yearId:body.school_yearId.id,
       grade_level:body.grade_level
     })
-   
+   console.log(data)
     await this.enrollStudentRepository.save(data);
     return {
       msg: 'Saved successfully.',
@@ -744,13 +908,13 @@ async enrollStudentWithFile( body:any, filename: any){
 }
 
 async update_student_file( body:any, filename: any){
-  console.log('Files',filename)
+  // console.log('Files',filename)
    let studentData = await this.dataSource.manager.query("SELECT * FROM enroll_student where id = "+body.id+" ");
   
-   console.log(studentData[0].picture)
-   console.log(studentData[0].goodMoral)
-   console.log(studentData[0].birthPSA)
-   console.log(studentData[0].schoolCard)
+  //  console.log(studentData[0].picture)
+  //  console.log(studentData[0].goodMoral)
+  //  console.log(studentData[0].birthPSA)
+  //  console.log(studentData[0].schoolCard)
   
 
   
@@ -807,5 +971,49 @@ async update_student_file( body:any, filename: any){
   }
   }
 
+
+  async getTotalEnrolledStudent(filter:number ,status:number) {
+    // console.log('status',status)
+    let catchData;
+    let catchData1;
+    if(status == 1){
+      catchData = 'Elementary'
+    }else{
+      catchData = 'Junior High'
+      catchData1 = 'Senior High'
+    }
+
+    let enrolled = await this.dataSource.manager
+    .createQueryBuilder(EnrollStudent, 'ES')
+    .select([
+      "COUNT(*) as numberEnrolled",
+    ])
+    .where('statusEnrolled = 1')
+    .andWhere('school_yearId = "'+filter+'"')
+    .andWhere('seniorJunior IN (:...values)', {
+      values: [catchData, catchData1],
+    })
+    .getRawMany();
+
+
+    let verify = await this.dataSource.manager
+    .createQueryBuilder(EnrollStudent, 'ES')
+    .select([
+      "COUNT(*) as numberVerify",
+    ])
+    .where('statusEnrolled = 0')
+    .andWhere('school_yearId = "'+filter+'"')
+    .andWhere('seniorJunior IN (:...values)', {
+      values: [catchData, catchData1],
+    })
+    .getRawMany();
+
+    // console.log('Enrolled',enrolled[0].numberEnrolled)
+    // console.log('Verify',verify[0].numberVerify)
+    let enrolledData = parseInt(enrolled[0].numberEnrolled)
+    let verifyData = parseInt(verify[0].numberVerify)
+   
+  return {enrolledData,verifyData};
+  }
 
 }

@@ -73,7 +73,7 @@
               Save
             </v-btn>
             <v-btn
-              color="#5a67da"
+              color="#EA7142"
               class="white--text"
               v-if="action == 'Update'"
               @click="update()"
@@ -351,6 +351,7 @@ export default {
     closeD() {
       this.eventHub.$emit("closedDataGradeSubjects", false);
       this.initialize();
+      this.$router.go(0);
       this.dialog = false;
     },
 

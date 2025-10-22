@@ -7,19 +7,38 @@
             <v-form ref="Formref">
               <v-row class="mx-5 pt-6">
                 <v-col cols="12" class="pa-0 mb-2">
-                  <div class="text-h5" color="#123E4D" align="center">
+                  <div
+                    color="#123E4D"
+                    align="center"
+                    :class="
+                      $vuetify.breakpoint.smAndDown ? 'text-h6' : 'text-h5'
+                    "
+                  >
                     <b>Limbaan Integrated Faculty</b>
                   </div>
-                  <div class="text-h5" color="#123E4D" align="center">
+                  <div
+                    color="#123E4D"
+                    align="center"
+                    :class="
+                      $vuetify.breakpoint.smAndDown ? 'text-h6' : 'text-h5'
+                    "
+                  >
                     <b> Loading and Enrollment System</b>
                   </div>
                   <div style="margin:0 auto; width:45%" class="pa-2">
-                    <v-img src="../../assets/img/limbaanlogo.png"></v-img>
+                    <v-img
+                      v-if="limbaanimg == 'Elementary'"
+                      src="../../assets/img/limbaanelementary.png"
+                    ></v-img>
+                    <v-img
+                      v-else
+                      src="../../assets/img/limbaanlogo.png"
+                    ></v-img>
                   </div>
 
                   <div class="text-subtitle1" color="#123E4D" align="center">
-                    <b class="text-subtitle1" style="color: #5a67da"
-                      >Welcome to <span style="color: #5a67da">LIFE</span>!</b
+                    <b class="text-subtitle1" style="color: #EA7142"
+                      >Welcome to <span style="color: #EA7142">LIFE</span>!</b
                     >
                     | Sign In
                   </div>
@@ -85,7 +104,7 @@
                     class="d-flex justify-center  text-gray-100 mt-2"
                   >
                     <span
-                      style="color: #1976d2"
+                      style="color: #efeeef"
                       @click="doForgotPassword()"
                       class="registerLink ml-2"
                       >Forgot password?</span
@@ -136,6 +155,8 @@
 export default {
   name: "login",
   mounted() {
+    this.limbaanimg = localStorage.getItem("level");
+    console.log("Limbaan", this.limbaanimg);
     this.getSchoolYear();
     if (this.$store.state.user) {
       if (!this.$store.state.user.usertype.id) {
@@ -198,6 +219,7 @@ export default {
     email: "",
     password: "",
     show1: false,
+    limbaanimg: null,
     show2: false,
     fadeAwayMessage: {
       show: false,
@@ -216,8 +238,8 @@ export default {
   text-decoration: underline;
 }
 .content {
-  background-color: #5a67da;
-  /* background: url("../../assets/img/new_bg.png"); */
+  /* background-color: #EA7142; */
+  background: url("../../assets/img/bglogin.jpg");
   background-position: center;
   position: fixed;
   top: 0;

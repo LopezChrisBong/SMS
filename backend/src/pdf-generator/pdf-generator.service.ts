@@ -9,7 +9,10 @@ import { DataSource } from 'typeorm';
 import { SendNewEmailDto } from './dto/send-new-email.dto';
 import {
   Availability,
+  EnrollStudent,
   RoomsSection,
+  SchoolYear,
+  StudentList,
   Subject,
   UserDetail,
   Users,
@@ -395,6 +398,7 @@ export class PdfGeneratorService {
 
 
   async getMySchedule(facultyId: number, filter: number) {
+    console.log(facultyId, filter)
     let mySched = await this.dataSource.manager
     .createQueryBuilder(Availability, 'A')
     .select([
@@ -415,16 +419,16 @@ export class PdfGeneratorService {
     .where('A.teacherID = "'+facultyId+'"')
     .andWhere('A.school_yearId = "'+filter+'"')
     .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
-    .orderBy('A.teacherID')
+    .orderBy('A.times_slot_from')
     .getRawMany();
 
     let teacherName = mySched[0].name
 
 
-    // let headerImg = join(process.cwd(), '/static/img/header.png');
-    let headerImg = join(process.cwd(), '/../static/img/header.png');
-    // let footerImg = join(process.cwd(), '/static/img/footer.png');
-    let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    let headerImg = join(process.cwd(), '/static/img/header.png');
+    // let headerImg = join(process.cwd(), '/../static/img/header.png');
+    let footerImg = join(process.cwd(), '/static/img/footer.png');
+    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
 
 
     const data = [
@@ -437,15 +441,16 @@ export class PdfGeneratorService {
         // month:getmonth
       },
     ];
-    // console.log(data);
 
     // console.log(data);
     try {
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({ 
+        headless: 'new',
+        args: ['--no-sandbox']
+      });
       const page = await browser.newPage();
       // compile(template_name, data)
-      const content = await this.compile('mySched', data);
-
+      const content = await this.compile('my-sched', data);
       await page.setContent(content);
 
       const buffer = await page.pdf({
@@ -469,6 +474,225 @@ export class PdfGeneratorService {
       console.log(e);
     }
   }
+
+  async getAllUnderLoadFaculty(filter:number, status :number){
+         let query = this.dataSource.manager
+          .createQueryBuilder(UserDetail, 'UD')
+          .select([
+            "A.*",
+            "A.id as id",
+            "UD.education as education",
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+           
+          ])
+          .leftJoin(Availability, 'A', 'A.teacherID = UD.id')
+          .where('A.school_yearId = :filter', { filter })
+          .andWhere('UD.status = :status', { status: status })
+          let rawData = await query.getRawMany();
+          // console.log(rawData)
+          let load = []
+          rawData.forEach(hours => {
+            const obj = load.find(teacher=> teacher.teacherID === hours.teacherID)
+            if(obj){
+              obj.hours = Number(obj.hours) + Number(hours.hours)
+            }else{
+              load.push(hours)
+            }
+          })
+          for (let i = 0; i < load.length; i++) {
+            let loadedHour = Number(load[i].hours) - 40
+            // let loadedHour = 40 - 40
+            if(loadedHour > 0){
+              Object.assign(load[i], {overload:loadedHour});
+            }else{
+              let data = loadedHour * (-1)
+              Object.assign(load[i], {underload:data});
+            }
+          }
+            // console.log(load)
+
+            let newLoader = []
+            for (let i = 0; i < load.length; i++) {
+              if( load[i].underload != -0){
+                newLoader.push(load[i])
+              }
+            }
+            // console.log(newLoader)
+
+        let headerImg = join(process.cwd(), '/static/img/header.png');
+        let footerImg = join(process.cwd(), '/static/img/footer.png');
+        
+        // let headerImg = join(process.cwd(), '/../static/img/header.png');
+        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+        const data = [
+        {
+        header_img: this.base64_encode(headerImg, 'headerfooter'),
+        footer_img: this.base64_encode(footerImg, 'headerfooter'),
+        load:newLoader
+        // name:gradeLevel == 'Grade 11' || gradeLevel == 'Grade 12'? arr[0].name: arr.name,
+        },
+    ];
+    try {
+      const browser = await puppeteer.launch({ 
+        headless: 'new',
+        args: ['--no-sandbox']
+      });
+      const page = await browser.newPage();
+      // compile(template_name, data)
+      const content = await this.compile('underload-faculty', data);
+      await page.setContent(content);
+
+      const buffer = await page.pdf({
+        format: 'legal',
+        margin: {
+          top: '0.20in',
+          left: '0.50in',
+          bottom: '0.20in',
+          right: '0.50in',
+        },
+        landscape: false,
+        printBackground: true,
+        // displayHeaderFooter: true,
+        // footerTemplate:
+        //   '<div style="border: 1px solid black; width:100%;z-index:1">  <div style=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=" style="width:30px;height:30px;"/></div><span style="margin-right: 1cm"><span class="pageNumber"></span> of <span class="totalPages"></span></span></div>',
+      });
+      // console.log('Applicant generated');
+      await browser.close();
+      return buffer;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getClassProgramm(filter:number, status :number, grade_level:string, roomID:number){
+    // console.log(filter, status, grade_level, roomID)
+         let roomData = await this.dataSource.manager
+          .createQueryBuilder(RoomsSection,'rs')
+          .select([
+            'rs.*',
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+          ])
+          .leftJoin(UserDetail,'ud','rs.teacherId = ud.id')
+          .where('rs.id = :roomID', { roomID })
+          .getRawOne()
+
+          let schoolYear = await this.dataSource.manager
+          .createQueryBuilder(SchoolYear,'sy')
+          .where('sy.id = '+filter)
+          .getRawOne()
+        // console.log(schoolYear)
+
+         let query = this.dataSource.manager
+          .createQueryBuilder(RoomsSection, 'RS')
+          .select([
+            "A.*",
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+            "S.subject_title as subject_title",
+          ])
+          .leftJoin(Availability, 'A', 'A.roomId = RS.id')
+          .leftJoin(UserDetail, 'UD', 'UD.id = A.teacherID')
+          .leftJoin(Subject, 'S', 'S.id = A.subjectId')
+          .where('A.school_yearId = :filter', { filter })
+          .andWhere('UD.status = :status', { status: status })
+          .andWhere('A.grade_level = :grade_level', { grade_level: grade_level })
+          .andWhere('A.roomID = :roomID', { roomID: roomID })
+          let rawData = await query.getRawMany();
+          // console.log(rawData)
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+          const uniqueTimes = [
+            ...new Set(
+              rawData.map(
+                (item) => `${item.times_slot_from} - ${item.times_slot_to}`
+              )
+            ),
+          ];
+
+          const formatted = uniqueTimes.map((time) => {
+            const [from, to] = time.split(' - ');
+            const row: any = { time };
+
+            days.forEach((day) => {
+              const match = rawData.find(
+                (r) =>
+                  r.day === day &&
+                  r.times_slot_from === from &&
+                  r.times_slot_to === to
+              );
+
+              row[day] = match ? `${match.subject_title}<br><span style='font-size:8px'>${match.name}</span>` : '';
+            });
+
+            return row;
+          });
+
+          console.log(formatted);
+
+
+        let headerImg = join(process.cwd(), '/static/img/header.png');
+        let footerImg = join(process.cwd(), '/static/img/footer.png');
+        
+        // let headerImg = join(process.cwd(), '/../static/img/header.png');
+        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+        const data = [
+        {
+        header_img: this.base64_encode(headerImg, 'headerfooter'),
+        footer_img: this.base64_encode(footerImg, 'headerfooter'),
+        mySched:formatted,
+        schoolYear,
+        roomData,
+        grade_level
+        // name:gradeLevel == 'Grade 11' || gradeLevel == 'Grade 12'? arr[0].name: arr.name,
+        },
+    ];
+    try {
+      const browser = await puppeteer.launch({ 
+        headless: 'new',
+        args: ['--no-sandbox']
+      });
+      const page = await browser.newPage();
+      // compile(template_name, data)
+      const content = await this.compile('classroom-programm', data);
+      await page.setContent(content);
+
+      const buffer = await page.pdf({
+        format: 'legal',
+        margin: {
+          top: '0.20in',
+          left: '0.50in',
+          bottom: '0.20in',
+          right: '0.50in',
+        },
+        landscape: false,
+        printBackground: true,
+        // displayHeaderFooter: true,
+        // footerTemplate:
+        //   '<div style="border: 1px solid black; width:100%;z-index:1">  <div style=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=" style="width:30px;height:30px;"/></div><span style="margin-right: 1cm"><span class="pageNumber"></span> of <span class="totalPages"></span></span></div>',
+      });
+      // console.log('Applicant generated');
+      await browser.close();
+      return buffer;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+ parseTimeToMinutes(timeRange: string): number {
+  // Converts "07:15 - 07:30" or "01:00 - 02:00" into start minutes in 24-hour format
+  if (!timeRange) return 0;
+  const startPart = timeRange.split('-')[0].trim(); // "07:15"
+  const [time, maybeMeridian] = startPart.split(' ');
+  let [hour, minute] = time.split(':').map(Number);
+
+  // Detect AM/PM
+  const isPM = maybeMeridian?.toLowerCase()?.includes('pm') ?? startPart.toLowerCase().includes('pm');
+  const isAM = maybeMeridian?.toLowerCase()?.includes('am') ?? startPart.toLowerCase().includes('am');
+
+  if (isPM && hour < 12) hour += 12;
+  if (isAM && hour === 12) hour = 0;
+
+  return hour * 60 + minute;
+}
+
  
 
   async getQRCode(id: string) {
@@ -510,6 +734,287 @@ export class PdfGeneratorService {
     }
   }
  
- 
+  async getSchoolForm2(school_yearID:number, roomID:number,subjectID:number, attendanceDate:string, teacherID:number){
+    // console.log(filter,roomID,subjectID,date)
+    let attendance;
+    let rawData;
+    let month ;
+     if(attendanceDate == '1'){
+      month = 'January'
+    }
+    else if( attendanceDate == '2'){
+      month = 'February'
+    }
+    else if( attendanceDate == '3'){
+      month = 'March'
+    }
+    else if( attendanceDate == '4'){
+      month = 'April'
+    }
+    else if( attendanceDate == '5'){
+      month = 'May'
+    }
+    else if( attendanceDate == '6'){
+      month = 'June'
+    }
+    else if( attendanceDate == '7'){
+      month = 'July'
+    }
+    else if( attendanceDate == '8'){
+      month = 'August'
+    }
+    else if( attendanceDate == '9'){
+      month = 'September'
+    }
+    else if( attendanceDate == '10'){
+      month = 'October'
+    }
+    else if( attendanceDate == '11'){
+      month = 'November'
+    }
+    else if( attendanceDate == '12'){
+      month = 'December'
+    }
+    let teacherData = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        'UD.id as id',
+        'RS.room_section as room_section',
+        'RS.grade_level as grade_level'
+      ])
+      .leftJoin(RoomsSection, 'RS', 'RS.teacherID = UD.id')
+      .where('UD.id = :teacherID', { teacherID })
+      .andWhere('RS.id = :roomID', { roomID })
+      .getRawOne();
 
+     let schoolYear = await this.dataSource.manager
+          .createQueryBuilder(SchoolYear, 'SY')
+          .select([
+            // "*",
+            "CONCAT(school_year_from, ' - ', school_year_to) AS school_year",
+          "CONCAT(school_year_from, '-06-01') as startDate,CONCAT(school_year_to, '-05-31') as endDate"
+          ])
+          .where('SY.id = :school_yearID', { school_yearID })
+          .getRawOne();
+
+          
+        const dates = await this.dataSource.query(
+        `
+        SELECT DISTINCT attendanceDate
+        FROM student_attendance
+        WHERE roomID = ? AND subjectID = ? AND school_yearID = ?
+        ORDER BY attendanceDate
+        `,
+        [roomID, subjectID, school_yearID]
+      );
+       
+      if (!dates.length) {
+      attendance = false
+      }else{
+      attendance = true
+        const dateColumns = dates
+        .map(
+          (d) =>
+            `COALESCE(MAX(CASE WHEN a.attendanceDate = '${d.attendanceDate}' THEN a.attendance END), 0) AS \`${d.attendanceDate}\``
+        )
+        .join(', ');
+     
+          const sql = `
+          SELECT 
+            CONCAT(s.lname, ' ', s.fname) AS student_name,
+            ${dateColumns}
+          FROM student_attendance a
+          JOIN enroll_student s ON a.studentID = s.id
+          WHERE a.roomID = ? AND a.subjectID = ? AND a.school_yearID = ? AND MONTH(a.attendanceDate) = ?  AND s.statusEnrolled = 1
+          GROUP BY s.id, s.fname, s.lname
+          ORDER BY student_name
+        `;
+
+         rawData =  await this.dataSource.query(sql, [roomID, subjectID, school_yearID, attendanceDate])
+         }
+           
+            console.log('rawData',roomID, subjectID, school_yearID, attendanceDate);
+
+        let newData
+        let updatedRow
+         if(attendance === true){
+          newData = await this.transformSchoolForm2(rawData,month)
+          updatedRow = newData.rows.map((row) => {
+          return row.map((val, idx) => {
+            // First column is student_name, last two are absent/tardy counters → keep them as-is
+            if (idx === 0 || idx >= row.length - 2) return val;
+            if (val === "0") return "✖";       
+            if (val === "3") return "▨";       
+            if (val === "2") return "◻";       
+            if (val) return "✔";               
+            return "";                          
+          });
+        });
+        
+         }
+
+
+
+        let headerImg = join(process.cwd(), '/static/img/header.png');
+        let footerImg = join(process.cwd(), '/static/img/footer.png');
+        
+        // let headerImg = join(process.cwd(), '/../static/img/header.png');
+        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+        const data = [
+        {
+        header_img: this.base64_encode(headerImg, 'headerfooter'),
+        // footer_img: this.base64_encode(footerImg, 'headerfooter'),
+        schoolYear:schoolYear,
+        teacherData:teacherData,
+        rawData:newData,
+        updatedRow:updatedRow,
+        month:month
+  
+        },
+    ];
+    try {
+      const browser = await puppeteer.launch({ 
+        headless: 'new',
+        args: ['--no-sandbox']
+      });
+      const page = await browser.newPage();
+      // compile(template_name, data)
+      const content = await this.compile('school-form2', data);
+      await page.setContent(content);
+
+      const buffer = await page.pdf({
+        format: 'legal',
+        margin: {
+          top: '0.20in',
+          left: '0.50in',
+          bottom: '0.20in',
+          right: '0.50in',
+        },
+        landscape: true,
+        printBackground: true,
+      });
+      await browser.close();
+      return buffer;
+    } catch (e) {
+      console.log(e);
+    }
+}
+ 
+async transformSchoolForm2(data: any[], selectedMonth: string) {
+  const allDates = [...new Set(
+    data.flatMap(d => Object.keys(d).filter(k => k !== "student_name"))
+  )].sort();
+
+  const months: Record<string, number[]> = {};
+  allDates.forEach(dateStr => {
+    const date = new Date(dateStr);
+    const monthName = date.toLocaleString("default", { month: "long" });
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    if (monthName === selectedMonth) {
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      if (!months[monthName]) {
+        months[monthName] = Array.from({ length: totalDays }, (_, i) => i + 1);
+      }
+    }
+  });
+
+  const headers = [
+    { type: "fixed", label: "Learner's Name" },
+    ...Object.entries(months).map(([month, days]) => ({
+      type: "month",
+      month: "1st row for date of " + month,
+      days
+    })),
+    { type: "fixed", label: "Absent" },
+    { type: "fixed", label: "Present" }
+  ];
+
+  const rows = data.map(d => {
+    const row: (string | number)[] = [d.student_name];
+    let absent = 0, present = 0;
+
+    Object.entries(months).forEach(([month, days]) => {
+      days.forEach(day => {
+        const year = new Date(allDates[0]).getFullYear(); // take year from dataset
+        const monthIndex = new Date(`${month} 1, ${year}`).getMonth();
+        const dateStr = `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+        const val = d[dateStr] ?? "";
+        row.push(val);
+
+        if (val === "0") absent++;
+        if (val === "1") present++;
+      });
+    });
+
+    // row.push(absent, tardy);
+    row.push(absent,present);
+    return row;
+  });
+
+  return { headers, rows };
+}
+
+  async getAllStudenList(filter:number, id:number, grade:string){
+    let rawData = await this.dataSource.manager
+      .createQueryBuilder(StudentList, 'SL')
+      .select([
+        "*",
+        "SL.id as studentListId",
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name", 
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,'. ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
+            ])
+      .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
+      .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
+      .where('SL.school_yearId = "'+filter+'"')
+      .andWhere('SL.grade_level = "'+grade+'"')
+      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('ES.statusEnrolled = 1')
+      .orderBy('ES.lname')
+      .getRawMany();
+      // console.log(rawData)
+
+        let headerImg = join(process.cwd(), '/static/img/header.png');
+        let footerImg = join(process.cwd(), '/static/img/footer.png');
+        
+        // let headerImg = join(process.cwd(), '/../static/img/header.png');
+        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+        const data = [
+        {
+        header_img: this.base64_encode(headerImg, 'headerfooter'),
+        footer_img: this.base64_encode(footerImg, 'headerfooter'),
+        studentData:rawData ? rawData:[]
+        },
+    ];
+    try {
+      const browser = await puppeteer.launch({ 
+        headless: 'new',
+        args: ['--no-sandbox']
+      });
+      const page = await browser.newPage();
+      // compile(template_name, data)
+      const content = await this.compile('student-list', data);
+      await page.setContent(content);
+
+      const buffer = await page.pdf({
+        format: 'legal',
+        margin: {
+          top: '0.20in',
+          left: '0.50in',
+          bottom: '0.20in',
+          right: '0.50in',
+        },
+        landscape: false,
+        printBackground: true,
+        });
+      await browser.close();
+      return buffer;
+    } catch (e) {
+      console.log(e);
+    }
+}
 }

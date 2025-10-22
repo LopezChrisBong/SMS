@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- Top Bar -->
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="#f8bd01" dark>
       <v-toolbar-title>
         <!-- <v-icon class="mr-2">mdi-account</v-icon> -->
         <v-btn
@@ -20,7 +20,7 @@
       <v-spacer></v-spacer>
       <v-menu>
         <template v-slot:activator="{ on }">
-          <v-chip v-on="on" color="#1976D2" class="rounded-lg d-flex py-2">
+          <v-chip v-on="on" color="#F8BD01" class="rounded-lg d-flex py-2">
             <v-avatar left :size="$vuetify.breakpoint.smAndUp ? 100 : 100">
               <img :src="profImg" max-width="100" />
             </v-avatar>
@@ -46,7 +46,7 @@
           </v-chip>
         </template>
         <v-card width="240">
-          <v-list color="#5a67da">
+          <v-list color="#EA7142">
             <v-list-item>
               <v-list-item-avatar>
                 <img :src="profImg" max-width="60" />
@@ -249,7 +249,7 @@
                 <div>
                   <v-select
                     label="School Year"
-                    color="#5a67da"
+                    color="#EA7142"
                     @change="changeFilter()"
                     outlined
                     v-model="selectedFiter"
@@ -446,20 +446,30 @@ export default {
     // },
     getSchoolYear() {
       this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
-        if (res) {
-          this.schooYearList = res.data;
-          // Get the current date
-          const currentDate = new Date();
+        // if (res) {
+        //   this.schooYearList = res.data;
+        //   // Get the current date
+        //   const currentDate = new Date();
 
-          // Filter rows where the current date is between start_date and end_date
-          const filteredData = res.data.filter((item) => {
-            const startDate = new Date(item.startDate);
-            const endDate = new Date(item.endDate);
-            return currentDate >= startDate && currentDate <= endDate;
-          });
-          console.log("Filtered", filteredData[0].id);
-          this.selectedFiter = filteredData[0];
-          this.$store.commit("setFilterSelected", filteredData[0].id);
+        //   // Filter rows where the current date is between start_date and end_date
+        //   const filteredData = res.data.filter((item) => {
+        //     const startDate = new Date(item.startDate);
+        //     const endDate = new Date(item.endDate);
+        //     return currentDate >= startDate && currentDate <= endDate;
+        //   });
+        //   console.log("Filtered", filteredData[0].id);
+        //   this.selectedFiter = filteredData[0];
+        //   this.$store.commit("setFilterSelected", filteredData[0].id);
+        // }
+        if (res) {
+          this.selectedFiter = res.data[0].id;
+          const activeYear = res.data.find((item) => item.status === 1);
+          if (activeYear) {
+            this.selectedFiter = activeYear.id;
+          }
+          this.$store.commit("setFilterSelected", this.selectedFiter);
+          let data = res.data;
+          this.schooYearList = data;
         }
       });
     },
@@ -619,14 +629,14 @@ export default {
   padding: 5px 0 5px 0;
 }
 .modal_header {
-  background-color: #5a67da;
+  background-color: #ea7142;
   padding: 5px;
 }
 .notifDiv {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: #5a67da;
+  background-color: #ea7142;
   color: white;
   flex: auto;
   justify-content: space-between;
@@ -639,7 +649,7 @@ export default {
 .showAllNotif {
   margin: 0;
   font-size: 12px;
-  background-color: #5a67da;
+  background-color: #ea7142;
   padding: 10px;
   text-align: center;
   max-height: 55vh;
@@ -736,11 +746,11 @@ export default {
 }
 
 .sidebar .v-list-item--active {
-  background-color: #bcedc8 !important;
+  background-color: #ffda75 !important;
   color: #3a3b3a !important;
 }
 .sidebar .v-list-group--active {
-  background-color: #bcedc8 !important;
+  background-color: #ffda75 !important;
   border-radius: 5px;
 
   color: #3a3b3a !important;
@@ -759,7 +769,7 @@ export default {
 }
 
 .sidebar div .sub-item .v-list-item--active {
-  background-color: #bcedc8 !important;
+  background-color: #ffda75 !important;
   color: #3a3b3a !important;
 }
 

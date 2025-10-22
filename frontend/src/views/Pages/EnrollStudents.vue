@@ -45,8 +45,11 @@
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                   <v-select
                     :disabled="!isUpdate"
-                    :items="seniorJuniorList"
+                    :items="
+                      letStatus == 1 ? seniorJuniorList1 : seniorJuniorList
+                    "
                     label="Grade Level Category"
+                    :rules="[formRules.required]"
                     color="#6DB249"
                     dense
                     v-model="formdata.seniorJunior"
@@ -58,11 +61,11 @@
                     :items="
                       formdata.seniorJunior == 'Elementary'
                         ? elementaryList
-                        : formdata.seniorJunior == 'Primary'
-                        ? primaryList
                         : formdata.seniorJunior == 'Junior High'
                         ? juniorList
-                        : seniorList
+                        : formdata.seniorJunior == 'Senior High'
+                        ? seniorList
+                        : []
                     "
                     label="Grades"
                     color="#6DB249"
@@ -252,7 +255,14 @@
                     v-model="formdata.sex"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                <v-col
+                  cols="12"
+                  sm="3"
+                  md="3"
+                  lg="3"
+                  xl="3"
+                  v-if="letStatus == 2"
+                >
                   <v-select
                     :disabled="!isUpdate"
                     :items="cvl_statusItem"
@@ -278,7 +288,6 @@
                   <v-text-field
                     :disabled="!isUpdate"
                     v-model="formdata.height"
-                    :rules="[formRules.hgtInMtrFormat]"
                     dense
                     class="rounded-lg"
                     label="Height (m)"
@@ -290,7 +299,6 @@
                   <v-text-field
                     :disabled="!isUpdate"
                     v-model="formdata.weight"
-                    :rules="[formRules.numberRequired]"
                     dense
                     class="rounded-lg"
                     label="Weight (kg)"
@@ -302,7 +310,6 @@
                   <v-text-field
                     :disabled="!isUpdate"
                     v-model="formdata.blood_type"
-                    :rules="[]"
                     dense
                     class="rounded-lg"
                     label="Blood Type"
@@ -375,10 +382,11 @@
                   <v-text-field
                     :disabled="!isUpdate"
                     v-model="formdata.mobile_no"
-                    :rules="[formRules.required]"
+                    :rules="[formdata.numberOnly]"
                     dense
                     class="rounded-lg"
                     label="Mobile number"
+                    type="number"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -674,6 +682,7 @@
                     class="rounded-lg"
                     label="Phone Number"
                     color="#6DB249"
+                    type="number"
                   >
                   </v-text-field>
                 </v-col>
@@ -724,6 +733,7 @@
                     class="rounded-lg"
                     label="Phone Number"
                     color="#6DB249"
+                    type="number"
                   >
                   </v-text-field>
                 </v-col>
@@ -786,6 +796,7 @@
                     class="rounded-lg"
                     label="Phone Number"
                     color="#6DB249"
+                    type="number"
                   >
                   </v-text-field>
                 </v-col>
@@ -886,7 +897,7 @@
                     class="rounded-lg"
                     label="Good Moral"
                     color="#6DB249"
-                    accept=".pdf"
+                    accept=".pdf, .png, .jpg, .jpeg"
                     :clearable="false"
                   >
                   </v-file-input>
@@ -899,7 +910,7 @@
                     class="rounded-lg"
                     label="School Card/Form137"
                     color="#6DB249"
-                    accept=".pdf"
+                    accept=".pdf, .png, .jpg, .jpeg"
                     :clearable="false"
                   >
                   </v-file-input>
@@ -913,7 +924,7 @@
                     class="rounded-lg"
                     label="Philippines Statistic Authority"
                     color="#6DB249"
-                    accept=".pdf"
+                    accept=".pdf, .png, .jpg, .jpeg"
                     :clearable="false"
                   >
                   </v-file-input>
@@ -927,7 +938,7 @@
                     class="rounded-lg"
                     label="2x2 Picture"
                     color="#6DB249"
-                    accept=".png, .jpeg, .jpg"
+                    accept=".pdf, .png, .jpg, .jpeg"
                     :clearable="false"
                   >
                   </v-file-input>
@@ -941,7 +952,7 @@
           <v-col cols="10" class="white--text rounded-lg">
             <v-btn
               block
-              color="#5a67da"
+              color="#EA7142"
               @click="confirmSave()"
               dense
               class="white--text"
@@ -1024,8 +1035,16 @@ export default {
   components: {},
   data: () => ({
     juniorList: ["Grade 7", "Grade 8", "Grade 9", "Grade 10"],
-    elementaryList: ["Grade 1", "Grade 2", "Grade 3"],
-    primaryList: ["Grade 4", "Grade 5", "Grade 6"],
+    elementaryList: [
+      "Kinder 1",
+      "Kinder 2",
+      "Grade 1",
+      "Grade 2",
+      "Grade 3",
+      "Grade 4",
+      "Grade 5",
+      "Grade 6",
+    ],
     seniorList: ["Grade 11", "Grade 12"],
     sheet: false,
     grade_level: null,
@@ -1056,7 +1075,8 @@ export default {
       { id: 2, type: "By naturalization" },
     ],
     countryList: [],
-    seniorJuniorList: ["Elementary", "Primary", "Junior High", "Senior High"],
+    seniorJuniorList: ["Junior High", "Senior High"],
+    seniorJuniorList1: ["Elementary"],
     status: null,
     formdata: {
       id: null,
@@ -1066,7 +1086,7 @@ export default {
       suffix: null,
       fourPs: "No",
       fourpis: null,
-      seniorJunior: "Junior High",
+      seniorJunior: null,
       transfered: "No",
       email: null,
       bdate: null,
@@ -1131,11 +1151,12 @@ export default {
       guardian_lname: null,
       guardian_number: null,
     },
-
+    levelCheck: null,
     isAllowPrint: false,
     trackList: [],
     strandList: [],
     action: "Add",
+    letStatus: null,
 
     fadeAwayMessage: {
       show: false,
@@ -1149,6 +1170,12 @@ export default {
     remarksData: [],
   }),
   mounted() {
+    this.letStatus = this.$store.state.user.status;
+    if (this.letStatus == 1) {
+      this.formdata.seniorJunior = "Elementary";
+    } else {
+      this.formdata.seniorJunior = "Junior High";
+    }
     this.initialize();
   },
 
@@ -1456,7 +1483,7 @@ export default {
 }
 
 thead th {
-  background-color: #5a67da !important;
+  background-color: #ea7142 !important;
   color: white !important;
 }
 thead th:first-child {

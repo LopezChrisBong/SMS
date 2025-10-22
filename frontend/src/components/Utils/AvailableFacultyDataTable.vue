@@ -8,13 +8,14 @@
             }}</v-tab>
           </v-tabs> -->
         <v-btn
-          class="white--text ml-2 rounded-lg"
+          class="white--text rounded-lg"
+          :class="$vuetify.breakpoint.smAndUp ? 'ml-2' : 'caption'"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="underLoad()"
         >
           <v-icon left> mdi-clipboard-list-outline </v-icon>
-          List of Underload Teachers
+          List of Underload/Overloaded Teachers
         </v-btn>
       </v-col>
       <v-spacer></v-spacer>
@@ -387,7 +388,6 @@ export default {
     },
 
     initialize() {
-      // this.handleAllChanges();
       this.getRoleTeachers();
       this.loading = true;
       let filter = this.$store.getters.getFilterSelected;
@@ -401,7 +401,19 @@ export default {
       );
     },
     underLoad() {
-      alert("underload faculty");
+      // alert("underload faculty");
+      let filter = this.$store.getters.getFilterSelected;
+      let userStatus = this.$store.state.user.status;
+      console.log(userStatus);
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getAllUnderLoadFaculty/" +
+          filter +
+          "/" +
+          userStatus +
+          "",
+        "_blank"
+      );
     },
     changeTab(tab) {
       this.activeTab = tab;

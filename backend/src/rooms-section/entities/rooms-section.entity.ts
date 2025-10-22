@@ -42,6 +42,15 @@ export class RoomsSection {
       )
       strandId:number
 
+      @Column(
+        {  
+          type:'int',
+          nullable:true,
+          default:null
+        }
+      )
+      teacherId:number
+
       @CreateDateColumn({
         nullable: false,
         type: 'datetime',

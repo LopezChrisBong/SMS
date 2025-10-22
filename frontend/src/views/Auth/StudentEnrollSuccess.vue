@@ -3,18 +3,18 @@
     <v-container fluid fill-height class="content">
       <v-row align="center" justify="center">
         <v-col align="center" cols="12" md="6">
-          <v-card max-width="400" class="rounded-card">
+          <v-card max-width="500" class="rounded-card">
             <div class="justify-center pa-4">
-              <h3 style="color: #5A67DA; width: 70%" class="mb-1">
-                You have been success enrolled!
+              <h3 style="color: #EA7142; width: 70%" class="mb-4 mt-4">
+                You have successfully submitted your partial enrollment form!
               </h3>
               <p
                 class="text-caption text-gray-100"
                 style="width: 85%; font-size: 10px"
               >
                 Please submit the following documents on the registrars office!
-                Note that within six days of not submitting you required
-                document to pass your pending enrollment will be deleted!
+                <!-- Note that within six days of not submitting you required
+                document to pass your pending enrollment will be deleted! -->
               </p>
             </div>
 
@@ -64,7 +64,7 @@ export default {
     },
   },
   data: () => ({
-    timerCounts: 20,
+    timerCounts: 10,
   }),
 
   methods: {},
@@ -73,8 +73,8 @@ export default {
 
 <style scoped>
 .content {
-  /* background: url("../../assets/img/new_bg.png"); */
-  background-color: #5a67da;
+  background: url("../../assets/img/bglogin.jpg");
+  /* background-color: #EA7142; */
   background-position: center;
   position: fixed;
   top: 0;

@@ -7,6 +7,7 @@ import { SchoolYear } from 'src/enroll-student/entities/scholl-year.entity';
 import { AddStrand } from 'src/rooms-section/entities/add-strand.entity';
 import { AddTracks } from 'src/rooms-section/entities/add-tracks.entity';
 import { RoomsSection } from 'src/rooms-section/entities/rooms-section.entity';
+import { StudentAttendance } from 'src/rooms-section/entities/student-attendance.entity';
 import { StudentList } from 'src/rooms-section/entities/student-list.entity';
 import { GradeLevel } from 'src/subjects/entities/grade-level.entity';
 import { TeacherGradeLevel } from 'src/subjects/entities/prefered-grade-level.entity';
@@ -34,7 +35,8 @@ const entities = [
   TeacherSubject,
   Subject,
   TeacherGradeLevel,
-  GradeLevel
+  GradeLevel,
+  StudentAttendance
 ];
 
 export {
@@ -54,7 +56,8 @@ export {
   TeacherSubject,
   Subject,
   TeacherGradeLevel,
-  GradeLevel
+  GradeLevel,
+  StudentAttendance
 };
 
 export default entities;

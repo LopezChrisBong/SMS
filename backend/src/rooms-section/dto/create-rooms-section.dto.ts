@@ -10,4 +10,7 @@ export class CreateRoomsSectionDto {
 
     @ApiProperty()
     strandId:number;
+
+    @ApiProperty()
+    teacherId:number;
 }
