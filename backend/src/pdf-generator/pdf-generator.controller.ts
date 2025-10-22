@@ -13,9 +13,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PdfGeneratorService } from './pdf-generator.service';
-import { CreatePdfGeneratorDto } from './dto/create-pdf-generator.dto';
-import { UpdatePdfGeneratorDto } from './dto/update-pdf-generator.dto';
-import { SendNewEmailDto } from './dto/send-new-email.dto';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -53,14 +50,16 @@ export class PdfGeneratorController {
     // console.log(n)
   }
   
-  @Get('/getAllUnderLoadFaculty/:filter')
+  @Get('/getAllUnderLoadFaculty/:filter/:status')
       async getAllUnderLoadFaculty(
         @Res() res,
 
         @Param('filter') filter: number,
+        @Param('status') status: string,
       ): Promise<void> {
         const buffer = await this.pdfGeneratorService.getAllUnderLoadFaculty(
           filter,
+          +status
         );
 
         res.set({
@@ -76,6 +75,39 @@ export class PdfGeneratorController {
 
         res.end(buffer);
       }
+
+  @Get('/getClassProgramm/:filter/:status/:grade/:roomID')
+      async getClassProgramm(
+        @Res() res,
+
+        @Param('filter') filter: number,
+        @Param('status') status: string,
+        @Param('grade') grade: string,
+        @Param('roomID') roomID: string,
+      ): Promise<void> {
+        const buffer = await this.pdfGeneratorService.getClassProgramm(
+          filter,
+          +status,
+          grade,
+          +roomID
+        );
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename=example.pdf',
+          'Content-Length': buffer.length,
+
+          // prevent cache
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: 0,
+        });
+
+        res.end(buffer);
+      }
+
+
+  
 
   @Get('getQRCode/:id')
   async getQRCode(@Res() res, @Param('id') id: string): Promise<void> {
