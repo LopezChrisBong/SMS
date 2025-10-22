@@ -388,7 +388,6 @@ export default {
     },
 
     initialize() {
-      // this.handleAllChanges();
       this.getRoleTeachers();
       this.loading = true;
       let filter = this.$store.getters.getFilterSelected;
@@ -404,10 +403,14 @@ export default {
     underLoad() {
       // alert("underload faculty");
       let filter = this.$store.getters.getFilterSelected;
+      let userStatus = this.$store.state.user.status;
+      console.log(userStatus);
       window.open(
         process.env.VUE_APP_SERVER +
           "/pdf-generator/getAllUnderLoadFaculty/" +
           filter +
+          "/" +
+          userStatus +
           "",
         "_blank"
       );

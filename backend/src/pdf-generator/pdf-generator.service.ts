@@ -475,7 +475,7 @@ export class PdfGeneratorService {
     }
   }
 
-  async getAllUnderLoadFaculty(filter:number){
+  async getAllUnderLoadFaculty(filter:number, status :number){
          let query = this.dataSource.manager
           .createQueryBuilder(UserDetail, 'UD')
           .select([
@@ -487,6 +487,7 @@ export class PdfGeneratorService {
           ])
           .leftJoin(Availability, 'A', 'A.teacherID = UD.id')
           .where('A.school_yearId = :filter', { filter })
+          .andWhere('UD.status = :status', { status: status })
           let rawData = await query.getRawMany();
           // console.log(rawData)
           let load = []
@@ -561,7 +562,137 @@ export class PdfGeneratorService {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async getClassProgramm(filter:number, status :number, grade_level:string, roomID:number){
+    // console.log(filter, status, grade_level, roomID)
+         let roomData = await this.dataSource.manager
+          .createQueryBuilder(RoomsSection,'rs')
+          .select([
+            'rs.*',
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+          ])
+          .leftJoin(UserDetail,'ud','rs.teacherId = ud.id')
+          .where('rs.id = :roomID', { roomID })
+          .getRawOne()
+
+          let schoolYear = await this.dataSource.manager
+          .createQueryBuilder(SchoolYear,'sy')
+          .where('sy.id = '+filter)
+          .getRawOne()
+        // console.log(schoolYear)
+
+         let query = this.dataSource.manager
+          .createQueryBuilder(RoomsSection, 'RS')
+          .select([
+            "A.*",
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+            "S.subject_title as subject_title",
+          ])
+          .leftJoin(Availability, 'A', 'A.roomId = RS.id')
+          .leftJoin(UserDetail, 'UD', 'UD.id = A.teacherID')
+          .leftJoin(Subject, 'S', 'S.id = A.subjectId')
+          .where('A.school_yearId = :filter', { filter })
+          .andWhere('UD.status = :status', { status: status })
+          .andWhere('A.grade_level = :grade_level', { grade_level: grade_level })
+          .andWhere('A.roomID = :roomID', { roomID: roomID })
+          let rawData = await query.getRawMany();
+          // console.log(rawData)
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+          const uniqueTimes = [
+            ...new Set(
+              rawData.map(
+                (item) => `${item.times_slot_from} - ${item.times_slot_to}`
+              )
+            ),
+          ];
+
+          const formatted = uniqueTimes.map((time) => {
+            const [from, to] = time.split(' - ');
+            const row: any = { time };
+
+            days.forEach((day) => {
+              const match = rawData.find(
+                (r) =>
+                  r.day === day &&
+                  r.times_slot_from === from &&
+                  r.times_slot_to === to
+              );
+
+              row[day] = match ? `${match.subject_title}<br><span style='font-size:8px'>${match.name}</span>` : '';
+            });
+
+            return row;
+          });
+
+          console.log(formatted);
+
+
+        let headerImg = join(process.cwd(), '/static/img/header.png');
+        let footerImg = join(process.cwd(), '/static/img/footer.png');
+        
+        // let headerImg = join(process.cwd(), '/../static/img/header.png');
+        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+        const data = [
+        {
+        header_img: this.base64_encode(headerImg, 'headerfooter'),
+        footer_img: this.base64_encode(footerImg, 'headerfooter'),
+        mySched:formatted,
+        schoolYear,
+        roomData,
+        grade_level
+        // name:gradeLevel == 'Grade 11' || gradeLevel == 'Grade 12'? arr[0].name: arr.name,
+        },
+    ];
+    try {
+      const browser = await puppeteer.launch({ 
+        headless: 'new',
+        args: ['--no-sandbox']
+      });
+      const page = await browser.newPage();
+      // compile(template_name, data)
+      const content = await this.compile('classroom-programm', data);
+      await page.setContent(content);
+
+      const buffer = await page.pdf({
+        format: 'legal',
+        margin: {
+          top: '0.20in',
+          left: '0.50in',
+          bottom: '0.20in',
+          right: '0.50in',
+        },
+        landscape: false,
+        printBackground: true,
+        // displayHeaderFooter: true,
+        // footerTemplate:
+        //   '<div style="border: 1px solid black; width:100%;z-index:1">  <div style=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=" style="width:30px;height:30px;"/></div><span style="margin-right: 1cm"><span class="pageNumber"></span> of <span class="totalPages"></span></span></div>',
+      });
+      // console.log('Applicant generated');
+      await browser.close();
+      return buffer;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+ parseTimeToMinutes(timeRange: string): number {
+  // Converts "07:15 - 07:30" or "01:00 - 02:00" into start minutes in 24-hour format
+  if (!timeRange) return 0;
+  const startPart = timeRange.split('-')[0].trim(); // "07:15"
+  const [time, maybeMeridian] = startPart.split(' ');
+  let [hour, minute] = time.split(':').map(Number);
+
+  // Detect AM/PM
+  const isPM = maybeMeridian?.toLowerCase()?.includes('pm') ?? startPart.toLowerCase().includes('pm');
+  const isAM = maybeMeridian?.toLowerCase()?.includes('am') ?? startPart.toLowerCase().includes('am');
+
+  if (isPM && hour < 12) hour += 12;
+  if (isAM && hour === 12) hour = 0;
+
+  return hour * 60 + minute;
 }
+
  
 
   async getQRCode(id: string) {

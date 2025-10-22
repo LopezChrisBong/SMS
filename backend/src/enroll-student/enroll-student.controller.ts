@@ -198,6 +198,11 @@ export class EnrollStudentController {
     return this.enrollStudentService.getClassProgramm(grade, +section,+filter);
   }
 
+    @Get('checkConflict/:data')
+  checkConflict(@Param('data') data: string,) {
+    return this.enrollStudentService.checkConflict(data);
+  }
+
 
   @Get('view/studentFile/:data')
   getFile(

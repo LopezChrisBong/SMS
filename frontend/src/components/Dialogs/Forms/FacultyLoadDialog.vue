@@ -4,9 +4,7 @@
       <v-form ref="UserVerifyFormref" @submit.prevent>
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
-            <span
-              >{{ action }} {{ grade }} {{ className }} Faculty Schedule
-            </span>
+            <span>{{ action }} {{ grade }} {{ className }} Faculty Load </span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
               <v-icon>mdi-close</v-icon>
@@ -38,6 +36,7 @@
                     <v-time-picker
                       v-if="modal1"
                       v-model="time_slot_from"
+                      :readonly="action == 'Update' ? readonly : !readonly"
                       full-width
                     >
                       <v-spacer></v-spacer>
@@ -77,6 +76,7 @@
                     <v-time-picker
                       v-if="modal2"
                       v-model="time_slot_to"
+                      :readonly="action == 'Update' ? readonly : !readonly"
                       full-width
                     >
                       <v-spacer></v-spacer>
@@ -93,11 +93,14 @@
                     </v-time-picker>
                   </v-dialog>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="12">
                   <v-autocomplete
                     v-model="day"
                     :rules="[formRules.required]"
                     dense
+                    multiple
+                    small-chips
+                    deletable-chips
                     class="rounded-lg"
                     item-text="name"
                     item-value="name"
@@ -122,7 +125,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col cols="12" md="12">
+                <v-col cols="12" md="6">
                   <v-autocomplete
                     v-model="subject"
                     dense
@@ -207,7 +210,7 @@ export default {
       TeachersList: [],
       subject: null,
       subjectList: [],
-      day: "Monday",
+      day: [],
       id: null,
       dayList: [
         { id: 1, name: "Monday" },
@@ -246,7 +249,6 @@ export default {
           this.teacher = data.teacherID.toString();
           this.day = data.day;
           this.subject = data.subjectId;
-          this.getAllActiveSubjects(this.teacher);
 
           // this.verifyModel.usertypeID = data.user_usertypeID.toString();
         }
@@ -280,13 +282,13 @@ export default {
       });
     },
     closeD() {
-      this.eventHub.$emit("closeAddScheduleDialog", true);
+      this.eventHub.$emit("closeFacultyLoadDialog", true);
       this.teacher = null;
       this.subject = null;
       this.section = null;
       this.time_slot_from = null;
       this.time_slot_to = null;
-      this.day = null;
+      this.day = [];
       this.grade = null;
       this.dialog = false;
     },

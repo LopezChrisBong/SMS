@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRoomsSectionDto } from './dto/create-rooms-section.dto';
 import { UpdateRoomsSectionDto } from './dto/update-rooms-section.dto';
-import { AddStrand, AddTracks, EnrollStudent, RoomsSection, SchoolYear, StudentAttendance, StudentList, UserDetail } from 'src/entities';
+import { AddStrand, AddTracks, Availability, EnrollStudent, RoomsSection, SchoolYear, StudentAttendance, StudentList, UserDetail } from 'src/entities';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAddTrackDto } from './dto/create-add-track.dto';
@@ -18,6 +18,8 @@ export class RoomsSectionService {
   constructor(private dataSource: DataSource,
     @InjectRepository(RoomsSection)
     private readonly subjectRepository: Repository<RoomsSection>,
+        @InjectRepository(Availability)
+        private readonly availabilityRepository: Repository<Availability>,
     @InjectRepository(AddTracks)
     private readonly addtrackRepository: Repository<AddTracks>,
   ){}
@@ -33,7 +35,22 @@ export class RoomsSectionService {
           teacherId:createRoomsSectionDto.teacherId,
           strandId:createRoomsSectionDto.strandId,
         })
-        await this.dataSource.manager.save(data)
+        let room_data = await this.dataSource.manager.save(data)
+          //   const dayList = ["Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"];
+          //   for (let index = 0; index < dayList.length; index++) {
+          //   let newSchedule = this.dataSource.manager.create(Availability, {
+          //       subjectId: 17,
+          //       grade_level:createRoomsSectionDto.grade_level,
+          //       teacherID:0,
+          //       roomId:room_data.id,
+          //       day:dayList[index],
+          //       times_slot_from:'09:30',
+          //       times_slot_to:'10:00',
+          //       hours:'00.30',
+          //       school_yearId:2,
+          //                     })
+          //       await this.availabilityRepository.save(newSchedule);
+          //  }
         return{
           msg:'Save successfully!', status:HttpStatus.CREATED
         }
