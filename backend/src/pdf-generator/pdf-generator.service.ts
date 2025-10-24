@@ -34,12 +34,40 @@ hbs.registerHelper('dateFormat', function (value) {
   return;
 });
 
-hbs.registerHelper('formatTime', function (time, format = 'h:mm a') {
-  if (time) {
-    return moment(time).format(format);
-  }
-  return;
+hbs.registerHelper('formatTime', function (time) {
+  if (!time) return '';
+  
+  // Example: convert "13:30:00" → "1:30 PM"
+  const date = new Date(`1970-01-01T${time}Z`);
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 });
+
+hbs.registerHelper('formatTimeRange', function (range) {
+  if (!range) return '';
+
+  // Example input: "13:00 - 14:00"
+  const [from, to] = range.split('-').map(t => t.trim());
+  if (!from || !to) return range;
+
+  function formatTime(t) {
+    const [hour, minute] = t.split(':').map(Number);
+    if (isNaN(hour) || isNaN(minute)) return t;
+
+    // Create a local Date object for time formatting
+    const d = new Date(0, 0, 0, hour, minute);
+    return d.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  }
+
+  return `${formatTime(from)} - ${formatTime(to)}`;
+});
+
 
 hbs.registerHelper('formatAlphanumericDate', function (value) {
   if (value) {
@@ -394,7 +422,7 @@ export class PdfGeneratorService {
 
           const fixedBlocks = [
           {
-            time: '7:15 AM - 7:30 AM',
+            time: '7:15 - 7:30',
             Monday: 'CONVOCATION PROGRAM',
             Tuesday: '',
             Wednesday: '',
@@ -403,7 +431,7 @@ export class PdfGeneratorService {
             Saturday: null
           },
           {
-            time: '9:30 AM - 10:00 AM',
+            time: '9:30 - 10:00',
             Monday: 'RECESS - Handwashing Time',
             Tuesday: '',
             Wednesday: '',
@@ -412,7 +440,7 @@ export class PdfGeneratorService {
             Saturday: null
           },
           {
-            time: '12:00 PM - 12:30 PM',
+            time: '12:00 - 12:30',
             Monday: 'LUNCH BREAK',
             Tuesday: '',
             Wednesday: '',
@@ -421,7 +449,7 @@ export class PdfGeneratorService {
             Saturday: null
           },
           {
-            time: '12:30 PM - 1:00 PM',
+            time: '12:30 - 1:00',
             Monday: 'READING REMEDIATION',
             Tuesday: '',
             Wednesday: '',
@@ -724,9 +752,7 @@ export class PdfGeneratorService {
 
         
           let newSchedule = this.sortSchedule(fullSchedule)
-
-
-
+          console.log(newSchedule)
 
         let headerImg = join(process.cwd(), '/static/img/header.png');
         let footerImg = join(process.cwd(), '/static/img/footer.png');

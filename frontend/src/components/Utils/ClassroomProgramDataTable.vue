@@ -98,6 +98,9 @@
                 dense
                 class="elevation-1"
               >
+                <template v-slot:item.time="{ item }">
+                  {{ formatTime(item.time) }}
+                </template>
                 <template v-slot:item.action="{ item }">
                   <div class="text-no-wrap">
                     <!-- Update -->
