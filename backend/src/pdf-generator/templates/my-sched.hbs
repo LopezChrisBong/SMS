@@ -120,15 +120,15 @@
                   <td colspan='2'>
                <table id="mySched" style="width: 100%; table-layout: fixed; border-collapse: collapse;">
                 <tr>
-                  <td align="center" class="font-12" style="width: 10%">Time</td>
+                  <td align="center" class="font-12" style="width: 14%">Time</td>
                   <td align="center" class="font-12" style="width: 12%">Monday</td>
                   <td align="center" class="font-12" style="width: 12%">Tuesday</td>
                   <td align="center" class="font-12" style="width: 12%">Wednesday</td>
                   <td align="center" class="font-12" style="width: 12%">Thursday</td>
                   <td align="center" class="font-12" style="width: 12%">Friday</td>
-                  <td align="center" class="font-12" style="width: 10%; word-wrap:break-word;">Total number of Teaching(hours)</td>
-                  <td align="center" class="font-12" style="width: 10%; word-wrap:break-word;">Auxiliary Functions(hours)</td>
-                  <td align="center" class="font-12" style="width: 10%; word-wrap:break-word;">Total Hours per Week</td>
+                  <td align="center" class="font-12" style="width: 9%; word-wrap:break-word;">Total number of Teaching(hours)</td>
+                  <td align="center" class="font-12" style="width: 8%; word-wrap:break-word;">Auxiliary Functions(hours)</td>
+                  <td align="center" class="font-12" style="width: 9%; word-wrap:break-word;">Total Hours per Week</td>
                 </tr>
                     {{#each mySched}}
                   {{#if (or
@@ -138,14 +138,14 @@
                     (eq Monday 'READING REMEDIATION')
                   )}}
                     <tr class="merged">
-                      <td align="center" class="font-12">{{time}}</td>
+                      <td align="center" class="font-14">{{formatTimeRange time}}</td>
                       <td align="center" class="font-12" colspan="8">
                         {{{Monday}}}
                       </td>
                     </tr>
                   {{else}}
                     <tr>
-                      <td align="center" class="font-12">{{time}}</td>
+                    <td align="center" class="font-14">{{formatTimeRange time}}</td>
                       <td align="center" class="font-12">  
                         {{#if Monday}}
                         {{{Monday}}}
