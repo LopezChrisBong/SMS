@@ -107,6 +107,14 @@ export class UserDetailsController {
     const curr_user = currentUser(head_str);
     return this.userDetailsService.TeachingRoleSched(curr_user);
   }
+  @Get('facultyLoads/allFacultyList')
+  allFacultyList( @Headers() headers ) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.allFacultyList(curr_user);
+  }
+
+  
 
   @UseGuards(JWTAuthGuard)
   @ApiBearerAuth()
