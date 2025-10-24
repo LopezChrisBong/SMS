@@ -18,16 +18,7 @@ import {
   Users,
 } from 'src/entities';
 import { join } from 'path';
-import { log } from 'console';
-import { scale } from 'pdfkit';
-// import {
-//   computeTotal,
-//   formatActualAccompishment,
-//   formatSuccessIndicator,
-//   getTotal,
-//   loadSummaryHeader,
-// } from 'src/ipcr-target/shared-function';
-// import newFs
+
 const hbs = require('handlebars');
 const QRCode = require('qrcode');
 const path = require('path');
@@ -231,6 +222,20 @@ hbs.registerHelper('isNotNull', function (v1, options) {
   return options.inverse(this);
 });
 
+hbs.registerHelper('eq', function (a, b) {
+  return a === b;
+});
+
+hbs.registerHelper('or', function () {
+  const args = Array.prototype.slice.call(arguments, 0, -1); 
+  return args.some(Boolean);
+});
+
+hbs.registerHelper('includes', function (str, substring) {
+  if (!str) return false;
+  return str.includes(substring);
+});
+
 hbs.registerHelper('isNotNullAndNotNAandNotEmpty', function (v1, options) {
   if (
     v1 != null &&
@@ -297,29 +302,7 @@ hbs.registerHelper('formatGovIDDateIssued', function (val) {
   }
 });
 
-// hbs.registerHelper('compute', function (val1, val2, operator) {
-//   //operator must be string;
-//   let toReturn;
 
-//   switch (operator) {
-//     case 'add':
-//       toReturn = val1 + val2;
-//       break;
-//       case 'subtract':
-//         toReturn = val1 - val2;
-//       break;
-//       case 'multiply':
-//         toReturn = val1 * val2;
-//       break;
-
-//       case 'divide':
-//         toReturn = val1 / val2;
-//       break;
-
-//   }
-
-//   return toReturn;
-// });
 
 hbs.registerHelper('math', function (lvalue, operator, rvalue, options) {
   lvalue = parseFloat(lvalue);
@@ -335,14 +318,6 @@ export class PdfGeneratorService {
   constructor(private dataSource: DataSource) {}
 
   async compile(templatename, data) {
-    // //development
-    //   process.cwd(),
-    //   'src/pdf-generator/templates',
-    //   `${templatename}.hbs`,
-    // );
-
-    //hosted filepath for pdf
-
     const filepath = path.join(
       __dirname,
       '../pdf-generator/templates',
@@ -374,7 +349,6 @@ export class PdfGeneratorService {
       }
     }
 
-    // convert binary data to base64 encoded string
     return Buffer.from(bitmap).toString('base64');
   }
   getFirstDate(data: any) {
@@ -398,32 +372,99 @@ export class PdfGeneratorService {
 
 
   async getMySchedule(facultyId: number, filter: number) {
-    console.log(facultyId, filter)
     let mySched = await this.dataSource.manager
-    .createQueryBuilder(Availability, 'A')
-    .select([
-      "A.id as id",
-      "CONCAT(times_slot_from, ' - ', times_slot_to) AS time",
-      "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,'. ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
-      "MAX(CASE WHEN day = 'Monday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ', room.room_section) END) AS Monday",
-      "MAX(CASE WHEN day = 'Tuesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Tuesday",
-      "MAX(CASE WHEN day = 'Wednesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Wednesday",
-      "MAX(CASE WHEN day = 'Thursday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Thursday",
-      "MAX(CASE WHEN day = 'Friday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Friday",
-      "MAX(CASE WHEN day = 'Saturday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Saturday"
+      .createQueryBuilder(Availability, 'A')
+      .select([
+        "A.id AS id",
+        "CONCAT(A.times_slot_from, ' - ', A.times_slot_to) AS time",
+        "MAX(CASE WHEN A.day = 'Monday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Monday",
+        "MAX(CASE WHEN A.day = 'Tuesday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Tuesday",
+        "MAX(CASE WHEN A.day = 'Wednesday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Wednesday",
+        "MAX(CASE WHEN A.day = 'Thursday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Thursday",
+        "MAX(CASE WHEN A.day = 'Friday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Friday",
+        "MAX(CASE WHEN A.day = 'Saturday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Saturday"
+      ])
+      .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
+      .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
+      .where('A.teacherID = :facultyId', { facultyId })
+      .andWhere('A.school_yearId = :filter', { filter })
+      .groupBy('A.times_slot_from, A.times_slot_to, A.teacherID')
+      .orderBy('A.times_slot_from')
+      .getRawMany();
 
-    ])
-    .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
-    .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
-    .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
-    .where('A.teacherID = "'+facultyId+'"')
-    .andWhere('A.school_yearId = "'+filter+'"')
-    .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
-    .orderBy('A.times_slot_from')
-    .getRawMany();
+          const fixedBlocks = [
+          {
+            time: '7:15 AM - 7:30 AM',
+            Monday: 'CONVOCATION PROGRAM',
+            Tuesday: '',
+            Wednesday: '',
+            Thursday: '',
+            Friday: '',
+            Saturday: null
+          },
+          {
+            time: '9:30 AM - 10:00 AM',
+            Monday: 'RECESS - Handwashing Time',
+            Tuesday: '',
+            Wednesday: '',
+            Thursday: '',
+            Friday: '',
+            Saturday: null
+          },
+          {
+            time: '12:00 PM - 12:30 PM',
+            Monday: 'LUNCH BREAK',
+            Tuesday: '',
+            Wednesday: '',
+            Thursday: '',
+            Friday: '',
+            Saturday: null
+          },
+          {
+            time: '12:30 PM - 1:00 PM',
+            Monday: 'READING REMEDIATION',
+            Tuesday: '',
+            Wednesday: '',
+            Thursday: '',
+            Friday: '',
+            Saturday: null
+          }
+        ];
 
-    let teacherName = mySched[0].name
+        function timeToMinutes(timeString: string): number {
+          const firstPart = timeString.split(/[–-]/)[0].trim();
 
+          const match = firstPart.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+          if (!match) return 0;
+
+          const [, hStr, mStr, periodRaw] = match;
+          let h = parseInt(hStr, 10);
+          let m = parseInt(mStr, 10);
+          const period = periodRaw ? periodRaw.toUpperCase() : null;
+
+          if (period === 'PM' && h < 12) h += 12;
+          if (period === 'AM' && h === 12) h = 0;
+
+          // 🩵 NEW LOGIC: if no AM/PM, assume PM for hours between 1–6 (like 1:00–6:00)
+          if (!period && h >= 1 && h <= 6) {
+            h += 12;
+          }
+
+          return h * 60 + m;
+        }
+        mySched = [...fixedBlocks, ...mySched].sort(
+          (a, b) => timeToMinutes(a.time) - timeToMinutes(b.time)
+        );
+
+        let teacherName =  await this.dataSource.manager
+          .createQueryBuilder(UserDetail, 'UD')
+          .select([ 
+            'UD.*',
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+          ])
+          .where('UD.id = :facultyId', { facultyId })
+          .getRawOne()
+        // console.log('teacherName', mySched);
 
     let headerImg = join(process.cwd(), '/static/img/header.png');
     // let headerImg = join(process.cwd(), '/../static/img/header.png');
@@ -597,7 +638,7 @@ export class PdfGeneratorService {
           .andWhere('A.grade_level = :grade_level', { grade_level: grade_level })
           .andWhere('A.roomID = :roomID', { roomID: roomID })
           let rawData = await query.getRawMany();
-          // console.log(rawData)
+          // console.log(rawData) 
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
           const uniqueTimes = [
             ...new Set(
@@ -619,13 +660,72 @@ export class PdfGeneratorService {
                   r.times_slot_to === to
               );
 
-              row[day] = match ? `${match.subject_title}<br><span style='font-size:8px'>${match.name}</span>` : '';
+              row[day] = match ? `${match.subject_title}<br><span style='font-size:10px'>${match.name}</span>` : '';
             });
 
             return row;
           });
+          // console.log(formatted)
+        const breaks = [
+      {
+        time: '07:15 - 07:30',
+        Monday: '',
+        Tuesday: '',
+        Wednesday: 'Flag Ceremony',
+        Thursday: '',
+        Friday: '',
+      },
+      {
+        time: '09:30 - 09:35',
+        Monday: '',
+        Tuesday: '',
+        Wednesday: 'Handwashing Time',
+        Thursday: '',
+        Friday: '',
+      },
+      {
+        time: '09:35 - 09:50',
+        Monday: '',
+        Tuesday: '',
+        Wednesday: 'Recess',
+        Thursday: '',
+        Friday: '',
+      },
+      {
+        time: '09:50 - 10:00',
+        Monday: '',
+        Tuesday: '',
+        Wednesday: 'Reading Remediation',
+        Thursday: '',
+        Friday: '',
+      },
+      {
+        time: '12:00 - 12:30',
+        Monday: '',
+        Tuesday: '',
+        Wednesday: 'Lunch',
+        Thursday: '',
+        Friday: '',
+      },
+      {
+        time: '12:30 - 01:00',
+        Monday: '',
+        Tuesday: '',
+        Wednesday: 'Essential Services',
+        Thursday: '',
+        Friday: '',
+      },
+    ];
 
-          console.log(formatted);
+    // Merge and sort properly using actual time values
+    const fullSchedule = [...breaks, ...formatted].sort(
+      (a, b) => this.getMinutes(a.time) - this.getMinutes(b.time),
+    );
+
+        
+          let newSchedule = this.sortSchedule(fullSchedule)
+
+
 
 
         let headerImg = join(process.cwd(), '/static/img/header.png');
@@ -637,7 +737,7 @@ export class PdfGeneratorService {
         {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
         footer_img: this.base64_encode(footerImg, 'headerfooter'),
-        mySched:formatted,
+        mySched:newSchedule,
         schoolYear,
         roomData,
         grade_level
@@ -658,9 +758,9 @@ export class PdfGeneratorService {
         format: 'legal',
         margin: {
           top: '0.20in',
-          left: '0.50in',
+          left: '0.30in',
           bottom: '0.20in',
-          right: '0.50in',
+          right: '0.30in',
         },
         landscape: false,
         printBackground: true,
@@ -676,23 +776,38 @@ export class PdfGeneratorService {
     }
   }
 
- parseTimeToMinutes(timeRange: string): number {
-  // Converts "07:15 - 07:30" or "01:00 - 02:00" into start minutes in 24-hour format
-  if (!timeRange) return 0;
-  const startPart = timeRange.split('-')[0].trim(); // "07:15"
-  const [time, maybeMeridian] = startPart.split(' ');
-  let [hour, minute] = time.split(':').map(Number);
+  private getMinutes(timeRange: string): number {
+    const start = timeRange.split('-')[0].trim();
+    const [hour, minute] = start.split(':').map(Number);
+    let totalMinutes = hour * 60 + minute;
+    if (timeRange.toLowerCase().includes('pm') && hour < 12) {
+      totalMinutes += 12 * 60;
+    }
+    return totalMinutes;
+  }
 
-  // Detect AM/PM
-  const isPM = maybeMeridian?.toLowerCase()?.includes('pm') ?? startPart.toLowerCase().includes('pm');
-  const isAM = maybeMeridian?.toLowerCase()?.includes('am') ?? startPart.toLowerCase().includes('am');
-
-  if (isPM && hour < 12) hour += 12;
-  if (isAM && hour === 12) hour = 0;
-
-  return hour * 60 + minute;
+ sortSchedule(schedule: any[]) {
+  return schedule.sort((a, b) => {
+    const timeA = this.convertTo24Hour(a.time.split(' - ')[0]);
+    const timeB = this.convertTo24Hour(b.time.split(' - ')[0]);
+    return timeA - timeB;
+  });
 }
 
+convertTo24Hour(time: string): number {
+  // Example input: "01:00", "07:15"
+  const [hours, minutes] = time.split(':').map(Number);
+
+  // Detect AM/PM manually
+  let h = hours;
+  if (time.toLowerCase().includes('pm') && h !== 12) h += 12;
+  if (time.toLowerCase().includes('am') && h === 12) h = 0;
+
+  // Treat times before 7:00 as PM if your schedule starts early (like 7:15 AM)
+  if (h < 7) h += 12; 
+
+  return h * 60 + minutes; // Convert to minutes for easy comparison
+}
  
 
   async getQRCode(id: string) {

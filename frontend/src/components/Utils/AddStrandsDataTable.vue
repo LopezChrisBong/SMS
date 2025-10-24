@@ -281,25 +281,14 @@ export default {
   }),
 
   mounted() {
-    this.loadYear();
-
-    // this.eventHub.$on("closeMyJobApplicationDialog", () => {
-    //   this.initialize();
-    // });
     this.eventHub.$on("closeAddStrandDialog", () => {
       this.initialize();
     });
-
-    // this.eventHub.$on("closeMyDesignationDialog", () => {
-    //   this.initialize();
-    // });
+    this.loadYear();
   },
 
   beforeDestroy() {
-    // this.eventHub.$off("closeMyJobApplicationDialog");
     this.eventHub.$off("closeAddStrandDialog");
-
-    // this.eventHub.$off("closeMyDesignationDialog");
   },
 
   watch: {

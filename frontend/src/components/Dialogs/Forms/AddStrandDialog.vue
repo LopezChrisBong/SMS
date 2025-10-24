@@ -15,17 +15,6 @@
             <v-container>
               <v-row>
                 <v-col cols="12" md="12">
-                  <v-text-field
-                    class="rounded-lg"
-                    v-model="strand_name"
-                    label="Strand Name"
-                    hide-details
-                    outlined
-                    color="#93CB5B"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="12">
                   <v-autocomplete
                     v-model="trackId"
                     :rules="[formRules.required]"
@@ -39,6 +28,18 @@
                     :items="trackList"
                   >
                   </v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-text-field
+                    class="rounded-lg"
+                    v-model="strand_name"
+                    label="Strand Name"
+                    hide-details
+                    outlined
+                    color="#93CB5B"
+                    required
+                    dense
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -148,13 +149,13 @@ export default {
       handler(data) {
         this.dialog = true;
         if (data.id) {
-          this.initialize();
+          this.trackId = data.trackId.toString();
           this.updateID = data.id;
           this.strand_name = data.strand_name;
-          this.trackId = data.trackId.toString();
+          this.getTrackList();
         } else {
           this.$refs.AddSubjectDialog.reset();
-          this.initialize();
+          this.getTrackList();
         }
       },
       deep: true,
@@ -162,10 +163,6 @@ export default {
   },
 
   methods: {
-    initialize() {
-      this.getTrackList();
-    },
-
     closeD() {
       this.confirmSubmissionDialog = false;
       this.confirmSubmit.type = null;

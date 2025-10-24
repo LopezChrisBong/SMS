@@ -37,9 +37,9 @@
             generatedCount != 0
               ? 'd-none'
               : gradeName == 'Grade 11'
-              ? 'd-none'
+              ? ''
               : gradeName == 'Grade 12'
-              ? 'd-none'
+              ? ''
               : ''
           "
           :color="$vuetify.theme.themes.light.submitBtns"
@@ -337,7 +337,7 @@ export default {
       { text: "250", value: 250 },
       { text: "500", value: 500 },
     ],
-    activeTab: { id: 1, name: "Active-Jobs" },
+    activeTab: { id: 1, name: "Grade 7" },
     tab: 1,
     tabList: [
       { id: 1, name: "Grade 7" },
@@ -622,6 +622,7 @@ export default {
           } else {
             if (this.tab == 1) {
               this.gradeName = "Grade 7";
+
               this.axiosCall(
                 "/rooms-section/generateClassRecord/byGrade/level/" +
                   this.gradeName +
@@ -637,7 +638,10 @@ export default {
                     this.fadeAwayMessage.header = "System Message";
                     this.fadeAwayMessage.message = res.data.msg;
                     this.confirmDialog = false;
-                    this.initialize();
+
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 2000);
                   } else if (res.data.status == 400) {
                     this.confirmDialog = false;
                     this.fadeAwayMessage.show = true;
@@ -665,7 +669,10 @@ export default {
                     this.fadeAwayMessage.header = "System Message";
                     this.fadeAwayMessage.message = res.data.msg;
                     this.confirmDialog = false;
-                    this.initialize();
+
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 2000);
                   } else if (res.data.status == 400) {
                     this.confirmDialog = false;
                     this.fadeAwayMessage.show = true;
@@ -693,7 +700,10 @@ export default {
                     this.fadeAwayMessage.header = "System Message";
                     this.fadeAwayMessage.message = res.data.msg;
                     this.confirmDialog = false;
-                    this.initialize();
+
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 2000);
                   } else if (res.data.status == 400) {
                     this.confirmDialog = false;
                     this.fadeAwayMessage.show = true;
@@ -721,7 +731,9 @@ export default {
                     this.fadeAwayMessage.header = "System Message";
                     this.fadeAwayMessage.message = res.data.msg;
                     this.confirmDialog = false;
-                    this.initialize();
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 2000);
                   } else if (res.data.status == 400) {
                     this.confirmDialog = false;
                     this.fadeAwayMessage.show = true;
@@ -749,7 +761,9 @@ export default {
                     this.fadeAwayMessage.header = "System Message";
                     this.fadeAwayMessage.message = res.data.msg;
                     this.confirmDialog = false;
-                    this.initialize();
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 2000);
                   } else if (res.data.status == 400) {
                     this.confirmDialog = false;
                     this.fadeAwayMessage.show = true;
@@ -777,7 +791,9 @@ export default {
                     this.fadeAwayMessage.header = "System Message";
                     this.fadeAwayMessage.message = res.data.msg;
                     this.confirmDialog = false;
-                    this.initialize();
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 2000);
                   } else if (res.data.status == 400) {
                     this.confirmDialog = false;
                     this.fadeAwayMessage.show = true;
@@ -865,32 +881,31 @@ export default {
             this.loading = false;
           }
         });
-      } else if (this.tab == 5) {
-        this.gradeName = "Grade 11";
+      } else {
+        if (this.tab == 5) {
+          this.gradeName = "Grade 11";
 
-        this.axiosCall(
-          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
-        ).then((res) => {
-          if (res) {
-            this.generatedCount = res.data[0].count_gen;
-            console.log(this.generatedCount);
-            this.loading = false;
-          }
-        });
-      } else if (this.tab == 6) {
-        this.gradeName = "Grade 12";
-
-        this.axiosCall(
-          "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
-        ).then((res) => {
-          if (res) {
-            this.generatedCount = res.data[0].count_gen;
-            console.log(this.generatedCount);
-            this.loading = false;
-          }
-        });
+          this.axiosCall(
+            "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+            "GET"
+          ).then((res) => {
+            if (res) {
+              this.generatedCount = res.data[0].count_gen;
+              this.loading = false;
+            }
+          });
+        } else if (this.tab == 6) {
+          this.gradeName = "Grade 12";
+          this.axiosCall(
+            "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
+            "GET"
+          ).then((res) => {
+            if (res) {
+              this.generatedCount = res.data[0].count_gen;
+              this.loading = false;
+            }
+          });
+        }
       }
     },
 

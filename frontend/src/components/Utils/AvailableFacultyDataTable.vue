@@ -43,7 +43,29 @@
         hide-default-footer
       >
          <template v-slot:[`item.name`]="{ item }">
-          <span class="gboFontsTable">{{ item.name }}</span>
+          <span class="gboFontsTable">{{ item.name }}</span></template>
+        <template v-slot:[`item.gradeLevels`]="{ item }">
+          <div v-for="grade in item.gradeLevels" :key="grade.id">
+            <v-chip x-small>{{ grade }}</v-chip>
+          </div>
+        </template>
+        <template v-slot:[`item.subjects`]="{ item }">
+          <div v-for="sub in item.subjects" :key="sub.id">
+            <v-chip x-small>{{ sub }}</v-chip>
+          </div>
+        </template>
+        <template v-slot:[`item.action`]="{ item }">
+          <div class="text-no-wrap" style="padding: 4px;">
+            <v-btn
+              x-small
+              color="blue"
+              class="my-2 mx-2"
+              outlined
+              @click="printMySched(item)"
+            >
+              <v-icon size="14">mdi-printer-outline</v-icon>Loads
+            </v-btn>
+          </div>
         </template>
       </v-data-table>
     </v-card>
@@ -147,69 +169,34 @@ export default {
     teacher: null,
     headers: [
       {
-        text: "Time",
-        value: "time",
-        align: "start",
-        valign: "start",
-        sortable: false,
-      },
-      {
-        text: "Faculty Name",
+        text: "Name",
         value: "name",
         align: "start",
         valign: "start",
         sortable: false,
       },
       {
-        text: "Monday",
-        value: "Monday",
+        text: "Subjects",
+        value: "subjects",
         align: "center",
         valign: "center",
         sortable: false,
       },
       {
-        text: "Tuesday",
-        value: "Tuesday",
+        text: "Grade level",
+        value: "gradeLevels",
         align: "center",
         valign: "center",
         sortable: false,
       },
-      {
-        text: "Wednesday",
-        value: "Wednesday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Thursday",
-        value: "Thursday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Friday",
-        value: "Friday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      // {
-      //   text: "Saturday",
-      //   value: "Saturday",
-      //   align: "center",
-      //   valign: "center",
-      //   sortable: false,
-      // },
 
-      // {
-      //   text: "Action",
-      //   value: "action",
-      //   align: "end",
-      //   valign: "end",
-      //   sortable: false,
-      // },
+      {
+        text: "Action",
+        value: "action",
+        align: "end",
+        valign: "end",
+        sortable: false,
+      },
     ],
 
     data: [],
@@ -339,8 +326,8 @@ export default {
     initialize() {
       this.getRoleTeachers();
       this.loading = true;
-      let filter = this.$store.getters.getFilterSelected;
-      this.axiosCall("/enroll-student/FacultySchedule/" + filter, "GET").then(
+      // let filter = this.$store.getters.getFilterSelected;
+      this.axiosCall("/user-details/facultyLoads/allFacultyList", "GET").then(
         (res) => {
           if (res) {
             this.data = res.data;
@@ -396,26 +383,18 @@ export default {
       });
     },
 
-    printMySched() {
-      console.log("User", this.teacher);
-      if (this.teacher == null) {
-        this.fadeAwayMessage.show = true;
-        this.fadeAwayMessage.type = "error";
-        this.fadeAwayMessage.header = "System Message";
-        this.fadeAwayMessage.message = "Please select teacher to generate!";
-      } else {
-        this.printDialog = false;
-        let filter = this.$store.getters.getFilterSelected;
-        window.open(
-          process.env.VUE_APP_SERVER +
-            "/pdf-generator/getMySchedule/" +
-            this.teacher +
-            "/" +
-            filter +
-            "",
-          "_blank" // <- This is what makes it open in a new window.
-        );
-      }
+    printMySched(item) {
+      this.printDialog = false;
+      let filter = this.$store.getters.getFilterSelected;
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getMySchedule/" +
+          item.id +
+          "/" +
+          filter +
+          "",
+        "_blank" // <- This is what makes it open in a new window.
+      );
     },
 
     // deleteItem() {

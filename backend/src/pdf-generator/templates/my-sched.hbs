@@ -21,12 +21,12 @@
       .to_content{page-break-inside: auto; margin-top: 120px; margin-left: 40px;
       margin-right: 40px; } .to_number{margin-right: 100px;} .employee_table{
       }.recommending_approval{ display: flex; justify-content: space-between; }
-      .underline{ border-bottom:1px solid black } #eval_table tr td, #eval_table
-      tr th{ padding: 8px; } #eval_table{ page-break-after: always; } #f_table
-      th,#f_table td,#eval_table th,#eval_table td{ border: 1px solid black; }
-      #f_table,#eval_table, #mySched{ border-collapse: collapse; } 
-      #eval_table{ border: 1px solid black; } #mySched  td{ border:
-      1px solid black; padding: 2px;width:  11.11%;} 
+      .underline{ border-bottom:1px solid black } #loadTable tr td, #loadTable
+      tr th{ padding: 6px; } #loadTable{ page-break-after: always; } #f_table
+      th,#f_table td,#loadTable th,#loadTable td{ border: 1px solid black; }
+      #f_table,#loadTable, #mySched{ border-collapse: collapse; } 
+      #loadTable{ border: 1px solid black; } #mySched  td{ border:
+      1px solid black; padding: 5px;width:  11.11%;} 
     </style>
   </head>
 
@@ -38,6 +38,7 @@
           <img
             src='data:image/png;base64, {{header_img}}'
             width='100%'
+            height="160px"
             alt=''
           />
 
@@ -61,7 +62,7 @@
               <thead>
                 <tr>
                   <td colspan='2'>
-                    <div style='height: 160px;'></div>
+                    <div style='height: 130px;'></div>
                   </td>
                 </tr>
               </thead>
@@ -75,17 +76,41 @@
               </tfoot>
         
               <tbody class=""> 
-                <tr>
-                    <td colspan="">
-                        <tr class="strong" >
-                     
-                       
-                        <td class="font-12">Name:&nbsp;<u>{{teacherName}}</u></td>
+                 <tr>
+                    <td colspan="2" style="padding-top:1rem; font-weight:bolder" align="center" class="font-18">
+                      <div>TEACHER PROFILE AND LOADS</div>
+                      <div>S.Y 2025-2026</div>
+                    </td>
+                 </tr>
 
+                <tr>
+                    <td colspan="2" style="padding:1rem">
+                      <table id="loadTable" style="width:100%">
+                        <tr>
+                          <td   class="font-12" style="width:15%">Name</td>
+                          <td  align='center' class="font-12" style="text-transform: uppercase;width:30%"><b>{{teacherName.name}}</b></td>
+                          <td class="font-12"style="width:35%" >Teaching Experience</td>
+                          <td  align='center' class="font-12" style="width:20%"></td>
                         </tr>
-                        {{!-- <tr class="strong" >
-                        <td class="font-12">Department unit: &nbsp;<u>{{unit_department}}</u></td>
-                        </tr> --}}
+                        <tr>
+                          <td   class="font-12" >Position</td>
+                          <td  align='center' class="font-12"  style="text-transform: uppercase;"><b>Teacher I</b></td>
+                          <td  class="font-12" >Present Grade Teaching Experience</td>
+                          <td  align='center' class="font-12" ></td>
+                        </tr>
+                        <tr>
+                          <td  class="font-12" >CS Eligibility</td>
+                          <td  align='center' class="font-12" ></td>
+                          <td   class="font-12" >Highest Educational Qualification</td>
+                          <td  align='center' class="font-12" >{{teacherName.education}}</td>
+                        </tr>
+                        <tr>
+                          <td  class="font-12" ></td>
+                          <td  align='center' class="font-12" ></td>
+                          <td   class="font-12" >Specialization</td>
+                          <td  align='center' class="font-12" ></td>
+                        </tr>
+                      </table>
                     
                     </td>
                 </tr>
@@ -93,39 +118,123 @@
 
                 <tr>
                   <td colspan='2'>
-                    <table id="mySched" style="width:100%">
-                  <tr>
-                    <tr>
-                    <td    align='center' class="font-12">Time</td>
-                    <td    align='center' class="font-12">Monday</td>
-                    
-                    <td    align='center' class="font-12">Tuesday</td>
-                    
-                    
-                    <td    align='center' class="font-12">Wednesday</td>
-                    <td    align='center' class="font-12">Thursday</td>
-                    <td    align='center' class="font-12">Friday</td>
-                    
-                </tr>
-                    {{#mySched}}
+               <table id="mySched" style="width: 100%; table-layout: fixed; border-collapse: collapse;">
                 <tr>
-               {{!-- <td   align='center'  class="font-12" >{{toTitleCase fullname}}</td> --}}
-                   <td   align='center' class="font-12">{{time}}</td>
-                  <td   align='center' class="font-12">{{Monday}}</td>
-                  <td   align='center' class="font-12">{{Tuesday}}</td>
-                  <td   align='center' class="font-12">{{Wednesday}}</td>
-                    <td   align='center' class="font-12">{{Thursday}}</td>
-                  <td   align='center' class="font-12">{{Friday}}</td>
+                  <td align="center" class="font-12" style="width: 10%">Time</td>
+                  <td align="center" class="font-12" style="width: 12%">Monday</td>
+                  <td align="center" class="font-12" style="width: 12%">Tuesday</td>
+                  <td align="center" class="font-12" style="width: 12%">Wednesday</td>
+                  <td align="center" class="font-12" style="width: 12%">Thursday</td>
+                  <td align="center" class="font-12" style="width: 12%">Friday</td>
+                  <td align="center" class="font-12" style="width: 10%; word-wrap:break-word;">Total number of Teaching(hours)</td>
+                  <td align="center" class="font-12" style="width: 10%; word-wrap:break-word;">Auxiliary Functions(hours)</td>
+                  <td align="center" class="font-12" style="width: 10%; word-wrap:break-word;">Total Hours per Week</td>
                 </tr>
-                  {{/mySched}}
+                    {{#each mySched}}
+                  {{#if (or
+                    (eq Monday 'CONVOCATION PROGRAM')
+                    (eq Monday 'RECESS - Handwashing Time')
+                    (eq Monday 'LUNCH BREAK')
+                    (eq Monday 'READING REMEDIATION')
+                  )}}
+                    <tr class="merged">
+                      <td align="center" class="font-12">{{time}}</td>
+                      <td align="center" class="font-12" colspan="8">
+                        {{{Monday}}}
+                      </td>
+                    </tr>
+                  {{else}}
+                    <tr>
+                      <td align="center" class="font-12">{{time}}</td>
+                      <td align="center" class="font-12">  
+                        {{#if Monday}}
+                        {{{Monday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>
+                          <td align="center" class="font-12">  
+                        {{#if Tuesday}}
+                        {{{Tuesday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>     <td align="center" class="font-12">  
+                        {{#if Wednesday}}
+                        {{{Wednesday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>     <td align="center" class="font-12">  
+                        {{#if Thursday}}
+                        {{{Thursday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>     <td align="center" class="font-12">  
+                        {{#if Friday}}
+                        {{{Friday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>
+                      <td align="center" class="font-12"></td>
+                      <td align="center" class="font-12"></td>
+                      <td align="center" class="font-12"></td>
+                    </tr>
+                  {{/if}}
+                {{/each}}
                     </table>
                 </tr>
                 <tr class="font-12"> 
-                    <td>
-                      <div style="margin-top: 35px;">
-                        Prepared by:____________________
+                    <td  colspan="2">
+                      <div style="display: flex; justify-content: space-between; padding:1rem">
+                      <div >
+                        <div>
+                           Prepared by:
+                        </div>
+                        <div style="margin-left: 3rem; margin-top:0.5rem; ">
+                          <u style="text-transform:uppercase">{{teacherName.name}}</u><br> Adviser
+                        </div>
+                       
                       </div>
+                      <div>
+                        <div>
+                          Noted by:
+                        </div>
+                        
+                        <div style="margin-left: 3rem; margin-top:0.5rem">
+                          <u>TOMOTEO T. CAPADNGAN</u><br>School Head
+                          
+                        </div>
+                      </div>
+                      
+                      </div>
+                    
                     </td>
+                  
+                </tr>
+                <tr class="font-12"> 
+                    <td  colspan="2">
+                      <div style="display: flex; justify-content:center ;padding: 0.5rem">
+                        <div >
+                          <div>
+                            Prepared by:
+                          </div>
+                          <div style="margin-left: 3rem; margin-top:0.5rem">
+                         
+                            <div>
+                              <u>REYNALDO B. MELLORIDA, CESO V</u>
+                            </div>
+                           <div>
+                            School Division Superintendent
+                           </div>
+                          </div>
+                      </div>
+                      </div>
+                    
+                    </td>
+                  
                 </tr>
              
               </tbody>

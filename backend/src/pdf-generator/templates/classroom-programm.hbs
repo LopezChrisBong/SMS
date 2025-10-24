@@ -21,12 +21,8 @@
       .to_content{page-break-inside: auto; margin-top: 120px; margin-left: 40px;
       margin-right: 40px; } .to_number{margin-right: 100px;} .employee_table{
       }.recommending_approval{ display: flex; justify-content: space-between; }
-      .underline{ border-bottom:1px solid black } #eval_table tr td, #eval_table
-      tr th{ padding: 8px; } #eval_table{ page-break-after: always; } #f_table
-      th,#f_table td,#eval_table th,#eval_table td{ border: 1px solid black; }
-      #f_table,#eval_table, #mySched{ border-collapse: collapse; } 
-      #eval_table{ border: 1px solid black; } #mySched  td{ border:
-      1px solid black; padding: 2px;width:  11.11%;} 
+      .underline{ border-bottom:1px solid black }#mySched{ border-collapse: collapse; } 
+      #mySched  td{ border:1px solid black; padding-bottom: 10px;padding-top: 10px;width:  11.11%;} 
     </style>
   </head>
 
@@ -38,6 +34,7 @@
           <img
             src='data:image/png;base64, {{header_img}}'
             width='100%'
+            height="130px"
             alt=''
           />
 
@@ -61,7 +58,7 @@
               <thead>
                 <tr>
                   <td colspan='2'>
-                    <div style='height: 160px;'></div>
+                    <div style='height: 100px;'></div>
                   </td>
                 </tr>
               </thead>
@@ -80,14 +77,14 @@
                         <tr class="strong" >
                      
                        
-                        <td class="font-24" align="center"  colspan="2" style="padding-top: 2rem; padding-bottom:2rem">
+                        <td class="font-20" align="center"  colspan="2" style="padding-top: 2rem; padding-bottom:2rem">
                             <div style="text-transform: uppercase; font-weight:700">
                                 {{grade_level}} - {{roomData.room_section}}
                             </div>
                             <div style="text-transform: uppercase;">
                                 S.Y {{schoolYear.sy_school_year_from}} - {{schoolYear.sy_school_year_to}}
                             </div>
-                            <div class="font-20" style="margin-top: 20px;">
+                            <div class="font-16" style="margin-top: 20px;">
                                 Adviser: <u> {{roomData.name}}</u>
                             </div>
                         </td>
@@ -106,36 +103,95 @@
                     <table id="mySched" style="width:100%">
                   <tr>
                     <tr>
-                    <td    align='center' class="font-12">Time</td>
-                    <td    align='center' class="font-12">Monday</td>
+                    <td    align='center' class="font-14">Time</td>
+                    <td    align='center' class="font-14">Monday</td>
                     
-                    <td    align='center' class="font-12">Tuesday</td>
+                    <td    align='center' class="font-14">Tuesday</td>
                     
                     
-                    <td    align='center' class="font-12">Wednesday</td>
-                    <td    align='center' class="font-12">Thursday</td>
-                    <td    align='center' class="font-12">Friday</td>
+                    <td    align='center' class="font-14">Wednesday</td>
+                    <td    align='center' class="font-14">Thursday</td>
+                    <td    align='center' class="font-14">Friday</td>
                     
                 </tr>
-                    {{#mySched}}
-                <tr>
-               {{!-- <td   align='center'  class="font-12" >{{toTitleCase fullname}}</td> --}}
-                   <td   align='center' class="font-12">{{time}}</td>
-                  <td   align='center' class="font-12">{{{Monday}}}</td>
-                  <td   align='center' class="font-12">{{{Tuesday}}}</td>
-                  <td   align='center' class="font-12">{{{Wednesday}}}</td>
-                    <td   align='center' class="font-12">{{{Thursday}}}</td>
-                  <td   align='center' class="font-12">{{{Friday}}}</td>
-                </tr>
-                  {{/mySched}}
+                {{#each mySched}}
+                  {{#if (or
+                    (eq Wednesday 'Flag Ceremony')
+                    (eq Wednesday 'Handwashing Time')
+                    (eq Wednesday 'Recess')
+                    (eq Wednesday 'Lunch')
+                    (eq Wednesday 'Essential Services')
+                    (eq Wednesday 'Reading Remediation')
+                  )}}
+                    <tr class="merged">
+                      <td align="center" class="font-14">{{time}}</td>
+                      <td align="center" class="font-14" colspan="5">
+                        {{{Wednesday}}}
+                      </td>
+                    </tr>
+                  {{else}}
+                    <tr>
+                      <td align="center" class="font-14">{{time}}</td>
+                      <td align="center" class="font-14">{{{Monday}}}</td>
+                      <td align="center" class="font-14">{{{Tuesday}}}</td>
+                      <td align="center" class="font-14">{{{Wednesday}}}</td>
+                      <td align="center" class="font-14">{{{Thursday}}}</td>
+                      <td align="center" class="font-14">{{{Friday}}}</td>
+                    </tr>
+                  {{/if}}
+                {{/each}}
+
                     </table>
                 </tr>
                 <tr class="font-12"> 
-                    <td>
-                      <div style="margin-top: 35px;">
-                        Prepared by:____________________
+                    <td  colspan="2">
+                      <div style="display: flex; justify-content: space-between; padding:3rem">
+                      <div >
+                        <div>
+                           Prepared by:
+                        </div>
+                        <div style="margin-left: 3rem; margin-top:1rem">
+                          <u style="text-transform:uppercase">{{roomData.name}}</u><br> Adviser
+                        </div>
+                       
                       </div>
+                      <div>
+                        <div>
+                          Noted by:
+                        </div>
+                        
+                        <div style="margin-left: 3rem; margin-top:1rem">
+                          <u>TOMOTEO T. CAPADNGAN</u><br>School Head
+                          
+                        </div>
+                      </div>
+                      
+                      </div>
+                    
                     </td>
+                  
+                </tr>
+                <tr class="font-12"> 
+                    <td  colspan="2">
+                      <div style="display: flex; justify-content:center ;padding: 1rem">
+                        <div >
+                          <div>
+                            Prepared by:
+                          </div>
+                          <div style="margin-left: 3rem; margin-top:1rem">
+                         
+                            <div>
+                              <u>REYNALDO B. MELLORIDA, CESO V</u>
+                            </div>
+                           <div>
+                            School Division Superintendent
+                           </div>
+                          </div>
+                      </div>
+                      </div>
+                    
+                    </td>
+                  
                 </tr>
              
               </tbody>
