@@ -124,14 +124,14 @@
                     (eq Wednesday 'Reading Remediation')
                   )}}
                     <tr class="merged">
-                      <td align="center" class="font-14">{{time}}</td>
+                      <td align="center" class="font-14">{{formatTimeRange time}}</td>
                       <td align="center" class="font-14" colspan="5">
                         {{{Wednesday}}}
                       </td>
                     </tr>
                   {{else}}
                     <tr>
-                      <td align="center" class="font-14">{{time}}</td>
+                     <td align="center" class="font-14">{{formatTimeRange time}}</td>
                       <td align="center" class="font-14">{{{Monday}}}</td>
                       <td align="center" class="font-14">{{{Tuesday}}}</td>
                       <td align="center" class="font-14">{{{Wednesday}}}</td>
