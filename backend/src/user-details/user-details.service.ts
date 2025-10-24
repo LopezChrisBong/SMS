@@ -302,14 +302,9 @@ export class UserDetailsService {
 
 
   async TeachingRoleSched(curr_user:any) {
-
-
-
     const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
-
-    // console.log(user[0].id)
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
@@ -327,7 +322,52 @@ export class UserDetailsService {
       .andWhere('UD.status = "'+user[0].status+'"')
       .getRawMany();
     return data;
+  }
 
+  async allFacultyList(curr_user:any) {
+    const user = await this.dataSource.query(
+      'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
+    );
+    let data = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', CONCAT(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), CONCAT(UD.fname, ' ', UD.lname)) AS name",
+        'UD.id AS id',
+        'UD.fname AS fname',
+        'UD.mname AS mname',
+        'UD.lname AS lname',
+
+        // Join grade level and subject names
+        "IFNULL(GROUP_CONCAT(DISTINCT gl.description ORDER BY gl.id ASC SEPARATOR ', '), '') AS gradeLevels",
+        "IFNULL(GROUP_CONCAT(DISTINCT subj.subject_title ORDER BY subj.id ASC SEPARATOR ', '), '') AS subjects",
+      ])
+      .leftJoin(Users, 'user', 'UD.userID = user.id')
+      .leftJoin('teacher_grade_level', 'tgl', 'tgl.teachersId = UD.id')
+      .leftJoin('grade_level', 'gl', 'gl.id = tgl.grade_level')
+      .leftJoin('teacher_subject', 'ts', 'ts.teachersId = UD.id')
+      .leftJoin('subject', 'subj', 'subj.id = ts.subjectId')
+      .where('user.isValidated = 1')
+      .andWhere('user.id != 2')
+      .andWhere('user.isAdminApproved = 1')
+      .andWhere('user.user_roleID = 2')
+      .andWhere('UD.status = :status', { status: user[0].status })
+      .groupBy('UD.id')
+      .getRawMany();
+
+    data = data.map(item => ({
+      ...item,
+      gradeLevels: item.gradeLevels
+        ? item.gradeLevels.split(',').map(v => v.trim())
+        : [],
+      subjects: item.subjects
+        ? item.subjects.split(',').map(v => v.trim())
+        : [],
+    }));
+
+    // console.log('datas', data);
+
+
+    return data;
   }
 
   async updateVerifiedUser(updateVU: UpdateVerifiedUser) {

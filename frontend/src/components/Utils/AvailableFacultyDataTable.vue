@@ -31,33 +31,6 @@
           color="#239FAB"
           dense
         ></v-text-field>
-        <v-btn
-          class="white--text ml-2 rounded-lg"
-          :color="$vuetify.theme.themes.light.submitBtns"
-          @click="printDialog = true"
-        >
-          <v-icon left> mdi-printer-outline </v-icon>
-          Print
-        </v-btn>
-        <!-- <v-btn
-          class="white--text ml-2 rounded-lg"
-          :color="$vuetify.theme.themes.light.submitBtns"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
-          @click="add()"
-        >
-          <v-icon left> mdi-plus-box-outline </v-icon>
-          Add New
-        </v-btn> -->
-        <!-- <v-btn
-                  :class="tab == 3 ? '' : 'd-none'"
-                  class="white--text ml-2 rounded-lg"
-                  color="#147452"
-                  v-if="this.$store.state.user.user.isAdminApproved == 1"
-                  @click="printJobApplicants()"
-                >
-                  <v-icon left> mdi-printer-outline </v-icon>
-                  Print
-                </v-btn> -->
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
@@ -71,28 +44,29 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <!--   <template v-slot:[`item.action`]="{ item }">
+        <template v-slot:[`item.gradeLevels`]="{ item }">
+          <div v-for="grade in item.gradeLevels" :key="grade.id">
+            <v-chip x-small>{{ grade }}</v-chip>
+          </div>
+        </template>
+        <template v-slot:[`item.subjects`]="{ item }">
+          <div v-for="sub in item.subjects" :key="sub.id">
+            <v-chip x-small>{{ sub }}</v-chip>
+          </div>
+        </template>
+        <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <v-btn
               x-small
               color="blue"
               class="my-2 mx-2"
               outlined
-              @click="print(item)"
+              @click="printMySched(item)"
             >
-              <v-icon size="14">mdi-printer-outline</v-icon>Print
+              <v-icon size="14">mdi-printer-outline</v-icon>Loads
             </v-btn>
-            <v-btn
-                x-small
-                color="red"
-                class="my-2"
-                outlined
-                @click="confirmDelete(item)"
-              >
-                <v-icon size="14">mdi-delete-off</v-icon>Delete
-              </v-btn> 
           </div>
-        </template>-->
+        </template>
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
@@ -134,42 +108,6 @@
 
     <AddTrackDialog :data="coreTimeData" :action="action" :grade="gradeName" />
 
-    <v-dialog v-model="printDialog" persistent max-width="550">
-      <v-card color="white">
-        <div class="pa-4 #3a3b3a--text">
-          <div class="text-h6 mb-1">Please select faculty to print!</div>
-          <div class="text-body-1 mb-1 mt-5">
-            <v-autocomplete
-              v-model="teacher"
-              :rules="[formRules.required]"
-              dense
-              outlined
-              class="rounded-lg"
-              item-text="name"
-              item-value="id"
-              label="Teacher to assign"
-              color="#93CB5B"
-              :items="TeachersList"
-            >
-            </v-autocomplete>
-          </div>
-        </div>
-
-        <!-- <v-card-title class="text-h5">
-                    Are you sure you want to proceed?
-                  </v-card-title> -->
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="printDialog = false">
-            Close
-          </v-btn>
-          <v-btn color="#147452" class="white--text" @click="printMySched()">
-            Confirm
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -198,69 +136,34 @@ export default {
     teacher: null,
     headers: [
       {
-        text: "Time",
-        value: "time",
-        align: "start",
-        valign: "start",
-        sortable: false,
-      },
-      {
-        text: "Faculty Name",
+        text: "Name",
         value: "name",
         align: "start",
         valign: "start",
         sortable: false,
       },
       {
-        text: "Monday",
-        value: "Monday",
+        text: "Subjects",
+        value: "subjects",
         align: "center",
         valign: "center",
         sortable: false,
       },
       {
-        text: "Tuesday",
-        value: "Tuesday",
+        text: "Grade level",
+        value: "gradeLevels",
         align: "center",
         valign: "center",
         sortable: false,
       },
-      {
-        text: "Wednesday",
-        value: "Wednesday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Thursday",
-        value: "Thursday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      {
-        text: "Friday",
-        value: "Friday",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
-      // {
-      //   text: "Saturday",
-      //   value: "Saturday",
-      //   align: "center",
-      //   valign: "center",
-      //   sortable: false,
-      // },
 
-      // {
-      //   text: "Action",
-      //   value: "action",
-      //   align: "end",
-      //   valign: "end",
-      //   sortable: false,
-      // },
+      {
+        text: "Action",
+        value: "action",
+        align: "end",
+        valign: "end",
+        sortable: false,
+      },
     ],
 
     data: [],
@@ -390,8 +293,8 @@ export default {
     initialize() {
       this.getRoleTeachers();
       this.loading = true;
-      let filter = this.$store.getters.getFilterSelected;
-      this.axiosCall("/enroll-student/FacultySchedule/" + filter, "GET").then(
+      // let filter = this.$store.getters.getFilterSelected;
+      this.axiosCall("/user-details/facultyLoads/allFacultyList", "GET").then(
         (res) => {
           if (res) {
             this.data = res.data;
@@ -447,26 +350,18 @@ export default {
       });
     },
 
-    printMySched() {
-      console.log("User", this.teacher);
-      if (this.teacher == null) {
-        this.fadeAwayMessage.show = true;
-        this.fadeAwayMessage.type = "error";
-        this.fadeAwayMessage.header = "System Message";
-        this.fadeAwayMessage.message = "Please select teacher to generate!";
-      } else {
-        this.printDialog = false;
-        let filter = this.$store.getters.getFilterSelected;
-        window.open(
-          process.env.VUE_APP_SERVER +
-            "/pdf-generator/getMySchedule/" +
-            this.teacher +
-            "/" +
-            filter +
-            "",
-          "_blank" // <- This is what makes it open in a new window.
-        );
-      }
+    printMySched(item) {
+      this.printDialog = false;
+      let filter = this.$store.getters.getFilterSelected;
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getMySchedule/" +
+          item.id +
+          "/" +
+          filter +
+          "",
+        "_blank" // <- This is what makes it open in a new window.
+      );
     },
 
     // deleteItem() {

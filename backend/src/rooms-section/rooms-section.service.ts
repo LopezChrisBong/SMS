@@ -337,94 +337,141 @@ export class RoomsSectionService {
   }
   
   async generateClassRecord(grade:string, filter:number) {
+ console.log('Grade 11,12',grade)
+   if(grade == 'Grade 11' || grade == 'Grade 12'){
+    try {
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+      const gradeRecord = await queryRunner.query(`
+        SELECT * FROM enroll_student 
+        WHERE grade_level = "${grade}" 
+          AND school_yearId = "${filter}" 
+          AND statusEnrolled = 1
+      `);
 
+      const rooms = await queryRunner.query(`
+        SELECT * FROM rooms_section 
+        WHERE grade_level = "${grade}"
+      `);
+
+      const gradeRecordclassList = [];
+
+      gradeRecord.forEach((student) => {
+        // Find a matching room by strandId if it exists
+        let matchedRoom = null;
+
+        if (student.strand && student.strand !== "0") {
+          matchedRoom = rooms.find(r => String(r.strandId) === String(student.strand));
+        }
+
+        // If no match found by strand, just assign the first available room
+        if (!matchedRoom) {
+          matchedRoom = rooms[0];
+        }
+
+        gradeRecordclassList.push({
+          studentId: student.id,
+          roomId: matchedRoom.id,
+          roomName: matchedRoom.room_section,
+          strandId: matchedRoom.strandId || null,
+        });
+      });
+
+      // Save to student_list
+      for (let i = 0; i < gradeRecordclassList.length; i++) {
+        const newTag = this.dataSource.manager.create(StudentList, {
+          studentId: gradeRecordclassList[i].studentId,
+          roomId: gradeRecordclassList[i].roomId,
+          grade_level: grade,
+          school_yearId: filter,
+          strandId: gradeRecordclassList[i].strandId,
+        });
+        await this.dataSource.manager.save(newTag);
+      }
+
+      await queryRunner.release();
+
+      return {
+        msg: `Successfully generated list for "${grade}"!`,
+        status: HttpStatus.CREATED,
+      };
+    } catch (error) {
+      return {
+        msg: `Something went wrong! ${error}`,
+        status: HttpStatus.BAD_REQUEST,
+      };
+}
+
+   }else{
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
-    
-   
-try {
-   const gradeRecord = await queryRunner.query(
-      'SELECT * FROM enroll_student where grade_level = "'+grade+'" and school_yearId = "'+filter+'" and statusEnrolled = 1 ',
-    );
+    try {
+      const gradeRecord = await queryRunner.query(
+          'SELECT * FROM enroll_student where grade_level = "'+grade+'" and school_yearId = "'+filter+'" and statusEnrolled = 1 ',
+        );
 
-    const room = await queryRunner.query(
-      'SELECT *  FROM rooms_section where grade_level = "'+grade+'"',
-    );
+        const room = await queryRunner.query(
+          'SELECT *  FROM rooms_section where grade_level = "'+grade+'"',
+        );
 
-    // const students = Array.from({ length:gradeRecord.length }, (_, i) => ({ id: i + 1, lname: `Student ${i + 1}` }));
-    // const rooms = Array.from({ length: room.length }, (_, i) => ({ id: i + 1, room_section: `Room ${i + 1}` }));
+        const gradeRecordclassList = []
+        let roomIndex = 0;
+        gradeRecord.forEach((student, index) => {
+        gradeRecordclassList.push({
+          studentId: student.id,
+          studentName: student.lname,
+          roomId: room[roomIndex].id,
+          roomName: room[roomIndex].lname,
+        });
 
-    // const gradeRecord = []
-    // for (let index = 0; index < 50; index++) {
-    //   const element ={id: +index , lname:'love'+index};
-    //   gradeRecord.push(element)
-    // }
+        // Move to the next room, cycle back to the first room after the last
+        roomIndex = (roomIndex + 1) % room.length;
+      });
 
-    // const room = []
-    // for (let index = 1; index <= 7; index++) {
-    //   const element ={id: +index , lname:'love'+index};
-    //   room.push(element)
-    // }
-
-   
-    const gradeRecordclassList = []
-    let roomIndex = 0;
-   // Evenly distribute students across rooms
-   gradeRecord.forEach((student, index) => {
-    gradeRecordclassList.push({
-      studentId: student.id,
-      studentName: student.lname,
-      roomId: room[roomIndex].id,
-      roomName: room[roomIndex].lname,
-    });
-
-    // Move to the next room, cycle back to the first room after the last
-    roomIndex = (roomIndex + 1) % room.length;
-  });
-
-//Save
+    //Save
 
 
-for (let i = 0; i < gradeRecordclassList.length; i++) {
-  
-    let newTag = this.dataSource.manager.create(StudentList, {
-      studentId:gradeRecordclassList[i].studentId,
-      roomId:gradeRecordclassList[i].roomId,
-      grade_level:grade,
-      school_yearId:filter
-  })
-  await this.dataSource.manager.save(newTag)
-}
-
-
-  // const groupedByRoomId = gradeRecordclassList.reduce((acc, item) => {
-  //   // If the roomId key doesn't exist in the accumulator, initialize it as an empty array
-  //   if (!acc[item.roomId]) {
-  //     acc[item.roomId] = [];
-  //   }
-  //   // Push the current item into the appropriate group
-  //   acc[item.roomId].push(item);
-  //   return acc;
-  // }, {});
-  // console.log(groupedByRoomId)
-    // return { gradeLevel, classList };
-    await queryRunner.release();
-    // console.log(gradeRecord[0].student_no)
-    
-    
-    return{
-      msg:'Successfully generated list for "'+grade+'"!', 
-      status:HttpStatus.CREATED
+    for (let i = 0; i < gradeRecordclassList.length; i++) {
+      
+        let newTag = this.dataSource.manager.create(StudentList, {
+          studentId:gradeRecordclassList[i].studentId,
+          roomId:gradeRecordclassList[i].roomId,
+          grade_level:grade,
+          school_yearId:filter
+      })
+      await this.dataSource.manager.save(newTag)
     }
-  
-} catch (error) {
-  return{
-    msg:'Something went wrong!'+ error, 
-    status:HttpStatus.BAD_REQUEST
+
+
+      // const groupedByRoomId = gradeRecordclassList.reduce((acc, item) => {
+      //   // If the roomId key doesn't exist in the accumulator, initialize it as an empty array
+      //   if (!acc[item.roomId]) {
+      //     acc[item.roomId] = [];
+      //   }
+      //   // Push the current item into the appropriate group
+      //   acc[item.roomId].push(item);
+      //   return acc;
+      // }, {});
+      // console.log(groupedByRoomId)
+        // return { gradeLevel, classList };
+        await queryRunner.release();
+        // console.log(gradeRecord[0].student_no)
+        
+        
+        return{
+          msg:'Successfully generated list for "'+grade+'"!', 
+          status:HttpStatus.CREATED
+        }
+      
+    } catch (error) {
+      return{
+        msg:'Something went wrong!'+ error, 
+        status:HttpStatus.BAD_REQUEST
+      }
+    }
   }
+  
 }
-  
-  }
 
 
   async genStrandRecord(grade:string, filter:number , strandId:number) {

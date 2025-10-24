@@ -1,6 +1,17 @@
 <template>
   <div>
     <v-row class="mx-2">
+      <v-col cols="12">
+        <v-btn
+          class="white--text ml-2 rounded-lg"
+          :color="$vuetify.theme.themes.light.submitBtns"
+          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          @click="classProgramms()"
+        >
+          <v-icon left> mdi-printer-outline </v-icon>
+          Class Programm
+        </v-btn>
+      </v-col>
       <v-col cols="12" md="8" class="flex-items">
         <v-tabs
           v-model="activeTab"
@@ -53,115 +64,143 @@
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
-      <div v-for="(items, day) in groupedByDay" :key="day" class="mb-6">
-        <v-card outlined class="pa-3">
-          <div class="text-h6 font-weight-bold mb-2">{{ day }}</div>
-
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            :items-per-page="50"
-            dense
-            class="elevation-1"
-            hide-default-footer
+      <v-container fluid>
+        <!-- Tabs -->
+        <v-tabs
+          v-model="activeDay"
+          background-color="transparent"
+          color="orange darken-2"
+          grow
+          slider-color="orange darken-2"
+        >
+          <v-tab
+            v-for="(items, day) in groupedByDay"
+            :key="day"
+            :href="'#' + day"
+            class="text-subtitle-1 font-weight-bold"
           >
-            <template v-slot:[`item.action`]="{ item }">
-              <div class="text-no-wrap">
-                <v-btn
-                  block
-                  x-small
-                  color="blue"
-                  outlined
-                  class="mx-1 my-1"
-                  @click="editItem(item)"
-                >
-                  <v-icon size="14">mdi-pencil-outline</v-icon>Update
-                </v-btn>
+            {{ day }}
+          </v-tab>
+        </v-tabs>
 
-                <v-menu
-                  v-if="item.hasConflict"
-                  v-model="menuStates[item.availId]"
-                  offset-y
-                  transition="scale-transition"
-                  close-on-content-click="false"
-                >
-                  <template v-slot:activator="{ on, attrs }">
+        <v-tabs-items v-model="activeDay" class="mt-4">
+          <v-tab-item
+            v-for="(items, day) in groupedByDay"
+            :key="day"
+            :value="day"
+          >
+            <v-card outlined class="pa-3">
+              <v-data-table
+                :headers="headers"
+                :items="items"
+                :items-per-page="50"
+                dense
+                class="elevation-1"
+              >
+                <template v-slot:item.action="{ item }">
+                  <div class="text-no-wrap">
+                    <!-- Update -->
                     <v-btn
                       block
                       x-small
-                      color="orange"
-                      class="white--text mx-1 my-1"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      @click.stop="toggleMenu(item)"
+                      color="blue"
+                      outlined
+                      class="mx-1 my-1"
+                      @click="editItem(item)"
                     >
-                      <v-icon size="14">mdi-alert-outline</v-icon>Conflict
+                      <v-icon small>mdi-pencil-outline</v-icon> Update
                     </v-btn>
-                  </template>
 
-                  <v-card class="pa-4" max-width="500" style="width: 500px;">
-                    <v-card-title class="headline"
-                      >Conflict Information</v-card-title
+                    <!-- Conflict Menu -->
+                    <v-menu
+                      v-if="item.hasConflict"
+                      v-model="menuStates[item.availId]"
+                      offset-y
+                      transition="scale-transition"
+                      close-on-content-click="false"
                     >
-                    <v-card-text>
-                      <div v-if="conflictData">
-                        <!-- {{ conflictData.conflictData }} -->
-                        <v-row
-                          v-for="(item, index) in conflictData.conflictData"
-                          :key="item.id"
-                          class="elevation-2 mb-2"
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          block
+                          x-small
+                          color="orange"
+                          class="white--text mx-1 my-1"
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          @click.stop="toggleMenu(item)"
                         >
-                          <v-col cols="12">
-                            <v-chip color="red" class="white--text">{{
-                              index + 1
-                            }}</v-chip>
-                            Room Name:
-                            {{ item.room_section }}
-                          </v-col>
-                          <v-col cols="12">
-                            Subject: {{ item.subject_title }}
-                          </v-col>
-                          <v-col cols="12">
-                            Time: {{ item.times_slot_from }} -
-                            {{ item.times_slot_to }}
-                          </v-col>
-                          <v-col cols="12"> Day: {{ item.day }} </v-col>
-                          <v-col cols="12">
-                            Grade: {{ item.grade_level }}
-                          </v-col>
-                        </v-row>
-                      </div>
-                      <div v-else>Loading conflict info...</div>
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        small
-                        text
-                        color="primary"
-                        @click="menuStates[item.id] = false"
-                      >
-                        Close
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-menu>
+                          <v-icon small>mdi-alert-outline</v-icon> Conflict
+                        </v-btn>
+                      </template>
 
-                <v-btn
-                  block
-                  x-small
-                  color="#C62828"
-                  class="white--text mx-1 my-1"
-                  @click="confirmDelete(item)"
-                >
-                  <v-icon size="14">mdi-trash-can-outline</v-icon>Delete
-                </v-btn>
-              </div>
-            </template>
-          </v-data-table>
-        </v-card>
-      </div>
+                      <v-card
+                        class="pa-4"
+                        max-width="500"
+                        style="width: 500px;"
+                      >
+                        <v-card-title class="headline">
+                          Conflict Information
+                        </v-card-title>
+                        <v-card-text>
+                          <div v-if="conflictData">
+                            <v-row
+                              v-for="(c, index) in conflictData.conflictData"
+                              :key="c.id"
+                              class="elevation-2 mb-2 pa-2"
+                            >
+                              <v-col cols="12">
+                                <v-chip color="red" class="white--text">
+                                  {{ index + 1 }}
+                                </v-chip>
+                                Room Name: {{ c.room_section }}
+                              </v-col>
+                              <v-col cols="12"
+                                >Subject: {{ c.subject_title }}</v-col
+                              >
+                              <v-col cols="12"
+                                >Time: {{ c.times_slot_from }} -
+                                {{ c.times_slot_to }}</v-col
+                              >
+                              <v-col cols="12">Day: {{ c.day }}</v-col>
+                              <v-col cols="12"
+                                >Grade: {{ c.grade_level }}</v-col
+                              >
+                            </v-row>
+                          </div>
+                          <div v-else>Loading conflict info...</div>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            small
+                            text
+                            color="primary"
+                            @click="menuStates[item.id] = false"
+                          >
+                            Close
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-menu>
+
+                    <!-- Delete -->
+                    <v-btn
+                      block
+                      x-small
+                      color="#C62828"
+                      class="white--text mx-1 my-1"
+                      @click="confirmDelete(item)"
+                    >
+                      <v-icon small>mdi-trash-can-outline</v-icon> Delete
+                    </v-btn>
+                  </div>
+                </template>
+              </v-data-table>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
+      </v-container>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
       <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
@@ -333,6 +372,7 @@ export default {
       { id: 6, name: "Grade 6" },
     ],
     section: null,
+    activeDay: null,
     firstLoad: true,
     menu: {},
     openMenuId: null,
@@ -741,17 +781,17 @@ export default {
 
     deleteItem() {
       this.axiosCall(
-        "/enroll-student/deleteAvailabilitySchedule" + this.deleteData.availId,
+        "/enroll-student/deleteAvailabilitySchedule/" + this.deleteData.availId,
         "DELETE"
       ).then((res) => {
         if (res.data.status == 200) {
-          this.dialog = false;
+          this.initialize();
+          this.getClassroom(this.section);
           this.fadeAwayMessage.show = true;
           this.fadeAwayMessage.type = "success";
           this.fadeAwayMessage.header = "System Message";
           this.fadeAwayMessage.message = res.data.msg;
           this.confirmDialog = false;
-          this.initialize();
         } else if (res.data.status == 400) {
           this.confirmDialog = false;
           this.fadeAwayMessage.show = true;
@@ -801,6 +841,43 @@ export default {
       this.showOverlay = true;
       await this.checkConflict(item);
       console.log(this.conflictData);
+    },
+    classProgramms() {
+      let filter = this.$store.getters.getFilterSelected;
+      let userStatus = this.$store.state.user.status;
+      let grade;
+      if (this.tab == 1) {
+        grade = "Grade 1";
+      } else if (this.tab == 2) {
+        grade = "Grade 2";
+      } else if (this.tab == 3) {
+        grade = "Grade 3";
+      } else if (this.tab == 4) {
+        grade = "Grade 4";
+      } else if (this.tab == 5) {
+        grade = "Grade 5";
+      } else if (this.tab == 6) {
+        grade = "Grade 6";
+      } else if (this.tab == 7) {
+        grade = "Kinder 1";
+      } else if (this.tab == 8) {
+        grade = "Kinder 2";
+      }
+
+      console.log(userStatus, filter, grade, this.section);
+      window.open(
+        process.env.VUE_APP_SERVER +
+          "/pdf-generator/getClassProgramm/" +
+          filter +
+          "/" +
+          userStatus +
+          "/" +
+          grade +
+          "/" +
+          this.section +
+          "",
+        "_blank"
+      );
     },
   },
 };

@@ -526,6 +526,7 @@ async checkConflict(data: string) {
   }
 
   async getSchoolYearGenerate(grade:string,filter:number) {
+
     let data = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .select([
@@ -538,7 +539,7 @@ async checkConflict(data: string) {
   }
 
   async MySchedule(user:any, filter:number) {
-    let data = await this.dataSource.manager
+      let data = await this.dataSource.manager
       .createQueryBuilder(Availability, 'A')
       .select([
         "A.id as id",
@@ -550,16 +551,22 @@ async checkConflict(data: string) {
         "MAX(CASE WHEN day = 'Thursday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Thursday",
         "MAX(CASE WHEN day = 'Friday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Friday",
         "MAX(CASE WHEN day = 'Saturday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Saturday"
-
       ])
       .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
       .leftJoin(UserDetail, 'ud', 'ud.id = A.teacherID')
-      .where('A.teacherID = "'+user.userdetail.id+'"')
-      .andWhere('A.school_yearId = "'+filter+'"')
+      .where('A.teacherID = :teacherId', { teacherId: user.userdetail.id })
+      .andWhere('A.school_yearId = :filter', { filter })
       .groupBy('A.times_slot_from,A.times_slot_to,A.teacherID')
-      .orderBy('A.times_slot_from')
+      .orderBy(`
+        CASE 
+          WHEN STR_TO_DATE(A.times_slot_from, '%H:%i') < STR_TO_DATE('07:00', '%H:%i')
+          THEN STR_TO_DATE(A.times_slot_from, '%H:%i') + INTERVAL 24 HOUR
+          ELSE STR_TO_DATE(A.times_slot_from, '%H:%i')
+        END
+      `)
       .getRawMany();
+
     return data;
   }
 
@@ -650,28 +657,35 @@ async checkConflict(data: string) {
 }
 
 async getClassProgramm(grade: string, section: number, filter: number) {
-    const query = `
-      SELECT  
-        CONCAT(t1.times_slot_from, ' - ', t1.times_slot_to) AS time,
-        CONCAT(t2.lname, ', ', t2.fname) AS name,
-        t1.id AS availId,
-        t1.*, t2.*, t3.*, t4.*
-      FROM availability t1
-      LEFT JOIN user_detail t2 ON t1.teacherID = t2.id
-      LEFT JOIN rooms_section t3 ON t1.roomId = t3.id
-      LEFT JOIN subject t4 ON t1.subjectId = t4.id
-      WHERE t1.grade_level = ? 
-        AND t1.roomId = ?
-        AND t1.school_yearId = ?
-        AND t1.day IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
-      ORDER BY FIELD(t1.day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'),
-              t1.times_slot_from ASC
-    `;
+        const query = `
+        SELECT  
+          CONCAT(t1.times_slot_from, ' - ', t1.times_slot_to) AS time,
+          CONCAT(t2.lname, ', ', t2.fname) AS name,
+          t1.id AS availId,
+          t1.*, t2.*, t3.*, t4.*
+        FROM availability t1
+        LEFT JOIN user_detail t2 ON t1.teacherID = t2.id
+        LEFT JOIN rooms_section t3 ON t1.roomId = t3.id
+        LEFT JOIN subject t4 ON t1.subjectId = t4.id
+        WHERE t1.grade_level = ? 
+          AND t1.roomId = ?
+          AND t1.school_yearId = ?
+          AND t1.day IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
+        ORDER BY FIELD(t1.day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'),
+                STR_TO_DATE(
+                  CASE 
+                    WHEN CAST(SUBSTRING_INDEX(t1.times_slot_from, ':', 1) AS UNSIGNED) BETWEEN 1 AND 6 
+                    THEN CONCAT(CAST(SUBSTRING_INDEX(t1.times_slot_from, ':', 1) AS UNSIGNED) + 12, ':', SUBSTRING_INDEX(t1.times_slot_from, ':', -1))
+                    ELSE t1.times_slot_from
+                  END,
+                  '%H:%i'
+                )
+      `;
 
-    const params = [grade, section, filter];
-    const toReturn = await this.dataSource.query(query, params);
+      const params = [grade, section, filter];
+      const toReturn = await this.dataSource.query(query, params);
+      return toReturn;
 
-    return toReturn;
   }
 
 async remove(id: number) {
