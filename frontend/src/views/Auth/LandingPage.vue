@@ -32,8 +32,8 @@
                   color="#123E4D"
                   align="center"
                 >
-                  <!-- <b style="color: #EA7142"
-                    >Welcome to <span style="color: #EA7142"></span>LIFE!</b
+                  <!-- <b style="color: #f5b027"
+                    >Welcome to <span style="color: #f5b027"></span>LIFE!</b
                   > -->
                   <v-img
                     src="../../assets/img/Screenshot_2024-12-20_093502-removebg-preview.png"
@@ -147,7 +147,7 @@ export default {
   text-decoration: underline;
 }
 .content {
-  /* background-color: #EA7142; */
+  /* background-color: #f5b027; */
   background: url("../../assets/img/bglogin.jpg");
   background-position: center;
   position: fixed;

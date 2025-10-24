@@ -28,7 +28,7 @@
           item-text="name"
           label="Clients"
           item-value="id"
-          color="#239FAB"
+          color="#f5b027"
           hide-details
           :items="clients"
         >
@@ -41,7 +41,7 @@
           item-text="desc"
           label="Months"
           item-value="val"
-          color="#239FAB"
+          color="#f5b027"
           :rules="[formRules.required]"
           hide-details
           :items="months"
@@ -169,7 +169,7 @@
             v-model="options.page"
             class="rounded-lg"
             :total-visible="7"
-            color="#239FAB"
+            color="#f5b027"
             :length="paginationData.pageCount">
         </v-pagination>
     </v-col>
@@ -204,7 +204,7 @@
                   v-model="csv_label_selected"
                   :label="item.title"
                   :value="index"
-                  color="#239FAB"
+                  color="#f5b027"
                   class="ma-0 mb-2 pa-0"
                   hide-details
                 ></v-checkbox>
@@ -218,7 +218,7 @@
                   v-model="csv_label_selected"
                   :label="item.title"
                   :value="index"
-                  color="#239FAB"
+                  color="#f5b027"
                   class="ma-0 mb-2 pa-0"
                   hide-details
                 ></v-checkbox>
@@ -232,7 +232,7 @@
                   v-model="csv_label_selected"
                   :label="item.title"
                   :value="index"
-                  color="#239FAB"
+                  color="#f5b027"
                   class="ma-0 mb-2 pa-0"
                   hide-details
                 ></v-checkbox>
@@ -246,7 +246,7 @@
                   v-model="csv_label_selected"
                   :label="item.title"
                   :value="index"
-                  color="#239FAB"
+                  color="#f5b027"
                   class="ma-0 mb-2 pa-0"
                   hide-details
                 ></v-checkbox>
@@ -260,7 +260,7 @@
                   v-model="csv_label_selected"
                   :label="item.title"
                   :value="index"
-                  color="#239FAB"
+                  color="#f5b027"
                   class="ma-0 mb-2 pa-0"
                   hide-details
                 ></v-checkbox>

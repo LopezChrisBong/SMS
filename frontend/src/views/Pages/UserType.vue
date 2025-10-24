@@ -10,7 +10,7 @@
             <v-spacer></v-spacer>
             <v-btn
               class="white--text rounded-lg"
-              color="#EA7142"
+              color="#f5b027"
               @click="addRequest()"
             >
               <v-icon left> mdi-plus-box-outline </v-icon>

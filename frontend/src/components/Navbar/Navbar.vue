@@ -1,14 +1,14 @@
 <template>
   <v-app>
-    <!-- Sidebar -->
+    <!-- Sidebar | #F5B027-->
     <v-navigation-drawer
       app
       :mini-variant.sync="mini"
       :permanent="$vuetify.breakpoint.smAndUp"
       :temporary="$vuetify.breakpoint.smAndDown"
-      width="220"
+      width="300"
       mini-variant-width="80"
-      color="#ea7142"
+      color="#F5B027"
       dark
       v-model="sidebarOpen"
       class="sidebar"
@@ -50,7 +50,7 @@
         </v-list-item>
       </v-list> -->
       <!-- Menu Items -->
-      <v-list nav dense class="mt-2">
+      <v-list nav dense class="mt-3">
         <div v-for="(link, i) in links" :key="i">
           <v-list-item
             v-if="!link.subLink"
@@ -66,14 +66,14 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>{{ link.title }}</v-list-item-title>
+              <v-list-item-title style="font-size: medium;">{{ link.title }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
           <v-list-group v-else :key="link" color="#3a3b3a" :value="false">
             <v-icon slot="prependIcon">{{ link.icon }}</v-icon>
             <template v-slot:activator>
-              <v-list-item-title>{{ link.title }}</v-list-item-title>
+              <v-list-item-title style="font-size: medium;">{{ link.title }}</v-list-item-title>
             </template>
             <div class="sub-item">
               <v-list-item
@@ -86,7 +86,7 @@
                 <v-list-item-icon>
                   <!-- <v-icon class="">{{ sublink.icon }}</v-icon> -->
                 </v-list-item-icon>
-                <v-list-item-title class="">{{
+                <v-list-item-title class="" style="font-size: medium;">{{
                   sublink.title
                 }}</v-list-item-title>
               </v-list-item>
@@ -100,27 +100,27 @@
     <v-app-bar
       app
       flat
-      height="70"
+      height="75"
       style="background-color: white; border-bottom: 3px solid #dcdcdc ; box-shadow: 5px 10px 8px 10px #888888;"
     >
       <v-toolbar-title>
         <div v-if="$vuetify.breakpoint.smAndUp" style="margin-bottom: 5px;">
           <v-row>
             <v-col cols="10">
-              <div class="title font-weight-bold">
+              <div class="title font-weight-bold" style="font-family: Segoe UI !important;">
                 <!-- <v-btn icon small color="black" @click="toggleSidebar" v-if="mini">
               <v-icon>mdi-menu</v-icon>
             </v-btn> -->
-                Hello, {{ $store.state.user.fname }}
+              Hello, {{ $store.state.user.fname }}!
               </div>
-              <div class="caption grey--text">
+              <!-- <div class="caption grey--text">
                 {{
                   $vuetify.breakpoint.smAndUp
                     ? "Welcome to Limbaan Integrated Faculty - Loading and Enrollment System (LIFE)"
                     : ""
                 }}
-              </div>
-              <div class="caption grey--text">Today is {{ formattedDate }}</div>
+              </div> -->
+              <div class="caption" style="font-size: 11pt !important; font-family: Segoe UI !important;">Today is {{ formattedDate }}</div>
             </v-col>
             <v-col cols="2"> </v-col>
           </v-row>
@@ -161,14 +161,19 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
+            <div
+        :style="
+          $vuetify.breakpoint.smAndDown ? { width: '0' } : { width: '400px' }
+        "
+      ></div>
       <v-select
         :style="
           $vuetify.breakpoint.smAndDown
-            ? { width: '100px', marginRight: '2rem' }
-            : { width: '90px', marginLeft: '20rem' }
+            ? { width: '35px', marginRight: '2rem' }
+            : { width: '40px', marginLeft: '20rem' }
         "
         label="School Year"
-        color="#EA7142"
+        color="#F5B027"
         @change="changeFilter()"
         outlined
         v-model="selectedFiter"
@@ -178,11 +183,7 @@
         item-value="id"
         :items="schooYearList"
       ></v-select>
-      <div
-        :style="
-          $vuetify.breakpoint.smAndDown ? { width: '0' } : { width: '100px' }
-        "
-      ></div>
+    
       <v-menu>
         <template v-slot:activator="{ on }">
           <v-chip v-on="on" color="white" class="rounded-lg d-flex ">
@@ -192,7 +193,7 @@
             <span
               class="text-uppercase"
               v-show="$vuetify.breakpoint.smAndUp"
-              style="width: 40px; text-align: center ;"
+              style="width: 40px; text-align: center; font-family: Segoe UI !important;"
               ><strong>
                 <v-icon size="30" center class="">
                   mdi-account
@@ -210,8 +211,8 @@
             <!-- <v-icon right class="px-2"> mdi-chevron-down </v-icon> -->
           </v-chip>
         </template>
-        <v-card width="240">
-          <!-- <v-list color="#EA7142">
+        <v-card width="200">
+          <!-- <v-list color="#F5B027">
             <v-list-item>
               <v-list-item-avatar>
                 <img :src="profImg" max-width="60" />
@@ -259,20 +260,25 @@
     </v-app-bar>
 
     <!-- Main Dashboard -->
-    <v-main>
-      <v-container fluid>
-        <v-row>
+    <v-main :style="{
+      backgroundImage: 'url(' + require('@/assets/img/bg104.jpg') + ')',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'right center'
+    }">
+      <v-container fluid >
+        <v-row >
           <v-col
             :cols="$vuetify.breakpoint.smAndUp ? '12' : '12'"
             class="pa-3 border mt-5"
           >
-            <div class=" fill-height pb-6" style="background-color:white; ">
+            <div class=" fill-height pb-6" >
               <!-- <div class="d-flex justify-space-between py-4 px-4  ">
                 <div>
                   <v-select
                     style="width: 150px;"
                     label="School Year"
-                    color="#EA7142"
+                    color="#F5B027"
                     @change="changeFilter()"
                     outlined
                     v-model="selectedFiter"
@@ -506,14 +512,15 @@ export default {
 
 <style scoped>
 .sidebar {
-  border-top-right-radius: 40px;
-  border-bottom-right-radius: 40px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
   overflow: hidden;
 }
 .sidebar-item {
   border-radius: 12px;
   margin: 8px;
   transition: background 0.3s;
+  font-family: 'Segoe UI' !important;
 }
 /* .sidebar-item.active {
   background-color: rgba(253, 252, 252, 0.2);
@@ -525,13 +532,16 @@ export default {
   background-color: #f3c74d !important;
   border-radius: 5px;
   color: rgb(255, 255, 255) !important;
+  font-family: 'Segoe UI' !important;
 }
 .v-list-item--active {
   /* background-color: #ffd560 !important; */
   /* color: #000000 !important; */
+  font-family: 'Segoe UI' !important;
 }
 .v-list-group--active .v-list-item--active {
   background-color: #926c03 !important;
   color: #ffffff !important;
+  font-family: 'Segoe UI' !important;
 }
 </style>

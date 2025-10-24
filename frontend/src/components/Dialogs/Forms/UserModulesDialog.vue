@@ -120,7 +120,7 @@
             </v-btn>
             <v-btn
               v-if="action == 'Add'"
-              color="#EA7142"
+              color="#f5b027"
               class="white--text"
               @click="save()"
             >
@@ -130,7 +130,7 @@
 
             <v-btn
               v-if="action == 'Update'"
-              color="#EA7142"
+              color="#f5b027"
               class="white--text"
               @click="update()"
             >

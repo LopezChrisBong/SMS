@@ -17,11 +17,11 @@
         </v-btn>
           </v-card-title>
         <v-tabs
-        color="#239FAB"
+        color="#f5b027"
         background-color="transparent"
         show-arrows
       >
-        <v-tabs-slider color="#239FAB"></v-tabs-slider>
+        <v-tabs-slider color="#f5b027"></v-tabs-slider>
   
         <v-tab
           v-for="tab in tabs"
@@ -49,7 +49,7 @@
             disabled
             class="rounded-lg"
             label="Work Ticket Order"
-            color="#239FAB">
+            color="#f5b027">
             </v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -62,7 +62,7 @@
             item-text="description"
             item-value="id"
             label="Type of Request"
-            color="#239FAB"
+            color="#f5b027"
             :items="request_types">
             </v-autocomplete>
           </v-col>
@@ -74,7 +74,7 @@
             outlined
             class="rounded-lg"
             label="Work Description"
-            color="#239FAB">
+            color="#f5b027">
             </v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -85,7 +85,7 @@
             outlined
             class="rounded-lg"
             label="Ticket No. (optional)"
-            color="#239FAB">
+            color="#f5b027">
             </v-text-field>
           </v-col>
           <v-col cols="12">
@@ -102,7 +102,7 @@
             item-text="name"
             item-value="id"
             label="Client"
-            color="#239FAB"
+            color="#f5b027"
             :items="clients">
             </v-autocomplete>
           </v-col>
@@ -116,7 +116,7 @@
             item-text="name"
             item-value="id"
             label="End Client/Customer"
-            color="#239FAB"
+            color="#f5b027"
             :items="end_clients">
             </v-autocomplete>
           </v-col>
@@ -129,7 +129,7 @@
             item-text="description"
             label="Location"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="tabs">
             </v-autocomplete>
           </v-col>
@@ -141,7 +141,7 @@
             item-text="description"
             label="Country"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="tabs">
             </v-autocomplete>
           </v-col> -->
@@ -159,7 +159,7 @@
             item-text="lname"
             label="Tech Name"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="technicians">
             </v-autocomplete>
           </v-col>
@@ -173,7 +173,7 @@
             item-text="description"
             label="Status"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="status">
             </v-autocomplete>
           </v-col>
@@ -201,7 +201,7 @@
                 readonly
                 v-bind="attrs"
                 v-on="on"
-                color="#239FAB"
+                color="#f5b027"
                 hide-details
                 class="rounded-lg"
                 dense
@@ -210,14 +210,14 @@
             <v-date-picker
                 v-model="formdata.wdate"
                 no-title
-                color="#239FAB"
+                color="#f5b027"
             >
                 <v-spacer></v-spacer>
-                <v-btn outlined color="#239FAB" @click="work_date_menu =false">
+                <v-btn outlined color="#f5b027" @click="work_date_menu =false">
                 Cancel
                 </v-btn>
                 <v-btn
-                color="#239FAB"
+                color="#f5b027"
                 class="white--text"
                 @click="$refs.work_date_menu.save(formdata.wdate)"
                 >
@@ -236,7 +236,7 @@
             item-text="description"
             label="Schedule of Request"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="request_schedules">
             </v-autocomplete>
           </v-col>
@@ -259,7 +259,7 @@
                 label="Start Time"
                 append-icon="mdi-clock-time-four-outline"
                 readonly
-                color="#239FAB"
+                color="#f5b027"
                 v-bind="attrs"
                 outlined
                 dense
@@ -272,7 +272,7 @@
               v-model="time"
               full-width
               format="24hr"
-              color="#239FAB"
+              color="#f5b027"
               @click:minute="$refs.menu2.save(time)"
             ></v-time-picker>
           </v-menu>
@@ -297,7 +297,7 @@
                 append-icon="mdi-clock-time-four-outline"
                 readonly
                 v-bind="attrs"
-                color="#239FAB"
+                color="#f5b027"
                 outlined
                 dense
                 class="rounded-lg"
@@ -309,7 +309,7 @@
               v-model="time"
               full-width
               format="24hr"
-              color="#239FAB"
+              color="#f5b027"
               @click:minute="$refs.menu3.save(time)"
             ></v-time-picker>
           </v-menu>
@@ -322,7 +322,7 @@
             outlined
             class="rounded-lg"
             label="Break Time"
-            color="#239FAB">
+            color="#f5b027">
             </v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -333,7 +333,7 @@
             outlined
             class="rounded-lg"
             label="Total Work Hours"
-            color="#239FAB">
+            color="#f5b027">
             </v-text-field>
           </v-col>
           <v-col cols="12" md="6">
@@ -344,7 +344,7 @@
             outlined
             class="rounded-lg"
             label="Actual Work Hours"
-            color="#239FAB">
+            color="#f5b027">
             </v-text-field>
           </v-col>
         </v-row>
@@ -358,7 +358,7 @@
             item-text="description"
             label="Whatsapp GC Created?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -371,7 +371,7 @@
             item-text="description"
             label="WO Ticket Provided?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -384,7 +384,7 @@
             item-text="description"
             label="Site Location and POC Confirmed?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -397,7 +397,7 @@
             item-text="description"
             label="Reminded Tech a Day Before?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -412,7 +412,7 @@
             item-text="description"
             label="Work Completed?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -425,7 +425,7 @@
             item-text="description"
             label="Released by RE?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -438,7 +438,7 @@
             item-text="description"
             label="Service Work Report Signed?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -451,7 +451,7 @@
             item-text="description"
             label="FE Report Created?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -464,7 +464,7 @@
             item-text="description"
             label="Service Work Report Sent?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -477,7 +477,7 @@
             item-text="description"
             label="FE Report Sent?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -490,7 +490,7 @@
             item-text="description"
             label="Supportive Photo Sent?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -503,7 +503,7 @@
             item-text="description"
             label="Save Report on GDrive?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -516,7 +516,7 @@
             item-text="description"
             label="Saved Photos on GDrive?"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -529,7 +529,7 @@
             item-text="description"
             label="GDrive Link"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -542,7 +542,7 @@
             item-text="description"
             label="Updated By"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col>
@@ -555,7 +555,7 @@
             item-text="description"
             label="Checked by"
             item-value="id"
-            color="#239FAB"
+            color="#f5b027"
             :items="task_status">
             </v-autocomplete>
           </v-col> -->
@@ -566,7 +566,7 @@
               v-model="formdata.worknote.note"
               outlined
               dense
-              color="#239FAB"
+              color="#f5b027"
               label="Comments"
               class="rounded-lg"
             ></v-textarea>
@@ -578,7 +578,7 @@
               v-model="formdata.workaccount.rates"
               outlined
               dense
-              color="#239FAB"
+              color="#f5b027"
               label="Rates"
               class="rounded-lg"
             ></v-text-field>
@@ -588,7 +588,7 @@
               v-model="formdata.workaccount.travel_time"
               outlined
               dense
-              color="#239FAB"
+              color="#f5b027"
               label="Travel Time"
               class="rounded-lg"
             ></v-text-field>
@@ -598,7 +598,7 @@
               v-model="formdata.workaccount.travel_cost"
               outlined
               dense
-              color="#239FAB"
+              color="#f5b027"
               label="Travel Cost"
               class="rounded-lg"
             ></v-text-field>
@@ -608,7 +608,7 @@
               v-model="formdata.workaccount.other"
               outlined
               dense
-              color="#239FAB"
+              color="#f5b027"
               label="Other Expense"
               class="rounded-lg"
             ></v-text-field>
@@ -622,7 +622,7 @@
         <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
           <v-btn
-            color="#239FAB"
+            color="#f5b027"
             outlined
             @click="closeDialog()"
           >
@@ -630,7 +630,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#239FAB"
+            color="#f5b027"
             class="white--text"
             @click="saveWorkDetails('checked')"
             v-if="data.id"

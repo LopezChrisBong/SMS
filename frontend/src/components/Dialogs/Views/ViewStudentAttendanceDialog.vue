@@ -29,7 +29,7 @@
                   outlined
                   dense
                   hide-details
-                  color="#239FAB"
+                  color="#f5b027"
                   class="rounded-lg"
                   @change="attendance_date ? changeDate() : ''"
                 ></v-text-field>
@@ -52,7 +52,7 @@
                       outlined
                       dense
                       hide-details
-                      color="#239FAB"
+                      color="#f5b027"
                       class="rounded-lg"
                       v-bind="attrs"
                       v-on="on"
@@ -61,7 +61,7 @@
                   </template>
                   <v-date-picker
                     v-model="attendance_date"
-                    color="#239FAB"
+                    color="#f5b027"
                     :allowed-dates="allowedDates"
                     no-title
                     readonly

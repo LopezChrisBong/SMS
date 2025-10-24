@@ -1,6 +1,6 @@
 <template>
   <div class=" mx-2 ">
-    <v-card class="">
+    <v-card class="mt-2" style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8);">
       <v-row class=" mx-2">
         <v-col lg="6" xl="6" md="6" sm="12" xs="12">
           <v-card class="card-style">

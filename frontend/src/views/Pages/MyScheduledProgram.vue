@@ -1,16 +1,8 @@
 <template>
   <div class="mx-2 ">
-    <v-card class="mt-2">
+    <v-card class="mt-2" style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8);">
       <v-row>
         <v-col cols="12">
-          <!-- <v-toolbar flat class="rounded-xl mb-4">
-                        <v-toolbar-title
-                          ><strong class="text-gray-100">{{
-                            $route.meta.title
-                          }}</strong></v-toolbar-title
-                        >
-                        <v-spacer></v-spacer>
-                      </v-toolbar> -->
           <MyScheduledProgramDataTable />
         </v-col>
       </v-row>

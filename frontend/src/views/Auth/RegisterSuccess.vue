@@ -8,9 +8,9 @@
               <v-img src="../../assets/img/limbaanlogo.png"></v-img>
             </div>
             <div class="justify-center pa-4">
-              <h3 style="color: #EA7142; width: 100%" class="mb-1">
+              <h3 style="color: #f5b027; width: 100%" class="mb-1">
                 You have successfully registered your account on
-                <span style="color: #EA7142">LIFE</span>
+                <span style="color: #f5b027">LIFE</span>
               </h3>
               <p
                 class="text-caption text-gray-100"
@@ -76,7 +76,7 @@ export default {
 <style scoped>
 .content {
   background: url("../../assets/img/bglogin.jpg");
-  /* background-color: #EA7142; */
+  /* background-color: #f5b027; */
   background-position: center;
   position: fixed;
   top: 0;

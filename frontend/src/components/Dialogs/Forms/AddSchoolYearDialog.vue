@@ -74,7 +74,7 @@
               Cancel
             </v-btn>
             <v-btn
-              color="#EA7142"
+              color="#f5b027"
               class="white--text"
               v-if="action == 'Add'"
               @click="checkConflict('ADD')"
@@ -83,7 +83,7 @@
               Add
             </v-btn>
             <v-btn
-              color="#EA7142"
+              color="#f5b027"
               class="white--text"
               v-if="action == 'Update'"
               @click="checkConflict('UPDATE')"

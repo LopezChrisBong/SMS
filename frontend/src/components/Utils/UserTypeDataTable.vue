@@ -28,7 +28,7 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#239FAB"
+          color="#f5b027"
           dense
         ></v-text-field>
       </v-col>
@@ -71,7 +71,7 @@
           v-model="options.page"
           class="rounded-lg"
           :total-visible="7"
-          color="#EA7142"
+          color="#f5b027"
           :length="paginationData.pageCount"
         >
         </v-pagination>

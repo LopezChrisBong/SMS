@@ -13,10 +13,10 @@ export default {
   },
   methods: {
     renderGraph(totalWorks, subWorks) {
-      let bgColor = ["#239FAB", "#E4E8EF"];
+      let bgColor = ["#f5b027", "#E4E8EF"];
       let label = [];
       if (this.chartType == 1) {
-        bgColor = ["#239FAB", "#E4E8EF"];
+        bgColor = ["#f5b027", "#E4E8EF"];
         label = ["Scheduled Works", "All Works"];
       } else if (this.chartType == 2) {
         bgColor = ["#FD8539", "#E4E8EF"];

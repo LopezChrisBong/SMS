@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" eager scrollable max-width="600px">
+    <v-dialog v-model="dialog" eager scrollable max-width="550px" class="rounded-lg">
       <v-form ref="UserVerifyFormref" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6 gboFontsTab">
             <span>{{ action }} User</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -19,7 +19,7 @@
                     v-model="verifyModel.usertypeID"
                     :rules="userId == 3 ? [formRules.required] : []"
                     dense
-                    class="rounded-lg"
+                    class="rounded-lg gboFonts"
                     item-text="description"
                     item-value="id"
                     label="User type"
@@ -33,7 +33,7 @@
                     v-model="verifyModel.user_roleID"
                     dense
                     :rules="[formRules.required]"
-                    class="rounded-lg"
+                    class="rounded-lg gboFonts"
                     item-text="description"
                     item-value="id"
                     label="User role"
@@ -48,7 +48,7 @@
                     v-model="verifyModel.assignedModuleID"
                     :rules="userId == 3 ? [formRules.required] : []"
                     dense
-                    class="rounded-lg"
+                    class="rounded-lg gboFonts"
                     item-text="description"
                     item-value="id"
                     label="Modules to assign"
@@ -80,16 +80,14 @@
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
             <v-btn color="red" outlined @click="closeD()">
-              <v-icon>mdi-close-circle-outline</v-icon>
-              Cancel
+              <v-icon>mdi-close-circle-outline</v-icon>&nbsp;Cancel
             </v-btn>
             <v-btn
               :color="$vuetify.theme.themes.light.submitBtns"
               class="white--text"
               @click="accept()"
             >
-              <v-icon>mdi-check-circle</v-icon>
-              {{ action == "Verify" ? "Accept" : "Update" }}
+              <v-icon>mdi-check-circle</v-icon>&nbsp;{{ action == "Verify" ? "Accept" : "Update" }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -239,3 +237,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+</style>

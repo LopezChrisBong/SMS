@@ -4,7 +4,7 @@
       :z-index="zIndex"
       :opacity="opacity"
       :value="overlay"
-      color="#239FAB"
+      color="#f5b027"
     >
       <v-progress-circular
         :size="200"

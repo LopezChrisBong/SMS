@@ -35,7 +35,7 @@ export default new Vuetify({
         white: colors.white,
         DarkWhite: colors.grey.darken4,
         header: colors.white,
-        submitBtns: "#147452",
+        submitBtns: "#f5b027",
       },
     },
   },

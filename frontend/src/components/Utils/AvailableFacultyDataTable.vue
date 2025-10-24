@@ -1,24 +1,6 @@
 <template>
-  <div>
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
-      <v-col cols="12" md="8" class="flex-items">
-        <!-- <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
-            <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-              tab.name
-            }}</v-tab>
-          </v-tabs> -->
-        <v-btn
-          class="white--text rounded-lg"
-          :class="$vuetify.breakpoint.smAndUp ? 'ml-2' : 'caption'"
-          :color="$vuetify.theme.themes.light.submitBtns"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
-          @click="underLoad()"
-        >
-          <v-icon left> mdi-clipboard-list-outline </v-icon>
-          List of Underload/Overloaded Teachers
-        </v-btn>
-      </v-col>
-      <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
           v-model="search"
@@ -27,41 +9,30 @@
           label="Search"
           single-line
           hide-details
-          class="rounded-lg"
-          color="#239FAB"
+          class="rounded-lg gboFonts"
+          color="#F5B027"
           dense
         ></v-text-field>
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
-          class="white--text ml-2 rounded-lg"
-          :color="$vuetify.theme.themes.light.submitBtns"
-          @click="printDialog = true"
-        >
-          <v-icon left> mdi-printer-outline </v-icon>
-          Print
-        </v-btn>
-        <!-- <v-btn
-          class="white--text ml-2 rounded-lg"
+          style="width: 325pt; background-color: #F5B027;"
+          class="white--text rounded-lg gboFonts"
+          :class="$vuetify.breakpoint.smAndUp ? 'ml-2' : 'caption'"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
-          @click="add()"
+          @click="underLoad()"
         >
-          <v-icon left> mdi-plus-box-outline </v-icon>
-          Add New
-        </v-btn> -->
-        <!-- <v-btn
-                  :class="tab == 3 ? '' : 'd-none'"
-                  class="white--text ml-2 rounded-lg"
-                  color="#147452"
-                  v-if="this.$store.state.user.user.isAdminApproved == 1"
-                  @click="printJobApplicants()"
-                >
-                  <v-icon left> mdi-printer-outline </v-icon>
-                  Print
-                </v-btn> -->
+          <v-icon class="gboFonts" left> mdi-clipboard-list-outline </v-icon>
+          List of Underload/Overloaded Teachers
+        </v-btn>
+
       </v-col>
     </v-row>
-    <v-card class="ma-5 dt-container" elevation="0" outlined>
+    <v-card class="ma-5 dt-container gboFontsTable" elevation="0" outlined>
       <v-data-table
+        class="custom-table gboFontsTable"
         :headers="headers"
         :items="data"
         :items-per-page="10"
@@ -71,38 +42,19 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <!--   <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap" style="padding: 4px;">
-            <v-btn
-              x-small
-              color="blue"
-              class="my-2 mx-2"
-              outlined
-              @click="print(item)"
-            >
-              <v-icon size="14">mdi-printer-outline</v-icon>Print
-            </v-btn>
-            <v-btn
-                x-small
-                color="red"
-                class="my-2"
-                outlined
-                @click="confirmDelete(item)"
-              >
-                <v-icon size="14">mdi-delete-off</v-icon>Delete
-              </v-btn> 
-          </div>
-        </template>-->
+         <template v-slot:[`item.name`]="{ item }">
+          <span class="gboFontsTable">{{ item.name }}</span>
+        </template>
       </v-data-table>
     </v-card>
-    <v-row class="mb-2 mx-5" align="center">
-      <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
-        <span class="px-2">Show</span>
+    <v-row class="mb-2 mx-5 gboFontsTable" align="center">
+      <v-col cols="auto" class="mr-auto text-truncate flex-items gboFontsTable" no-gutters>
+        <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
             dense
             outlined
-            color="#147452"
+            color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -112,10 +64,10 @@
           >
           </v-select>
         </span>
-        <span class="px-2"> Entries </span>
+        <span class="px-2 gboFonts"> Entries </span>
       </v-col>
 
-      <v-col cols="auto" class="mr-auto text-truncate" no-gutters>
+      <v-col cols="auto" class="mr-auto text-truncate gboFonts" no-gutters>
         Showing {{ paginationData.pageStart + 1 }} to
         {{ paginationData.pageStop }} of
         {{ paginationData.itemsLength }} entries
@@ -136,7 +88,7 @@
 
     <v-dialog v-model="printDialog" persistent max-width="550">
       <v-card color="white">
-        <div class="pa-4 #3a3b3a--text">
+        <div class="pa-4 #3a3b3a--text gboFontsTable">
           <div class="text-h6 mb-1">Please select faculty to print!</div>
           <div class="text-body-1 mb-1 mt-5">
             <v-autocomplete
@@ -155,15 +107,12 @@
           </div>
         </div>
 
-        <!-- <v-card-title class="text-h5">
-                    Are you sure you want to proceed?
-                  </v-card-title> -->
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="printDialog = false">
+          <v-btn class=" gboFonts" color="red" outlined @click="printDialog = false">
             Close
           </v-btn>
-          <v-btn color="#147452" class="white--text" @click="printMySched()">
+          <v-btn color="#f5b027" class="white--text gboFonts" @click="printMySched()">
             Confirm
           </v-btn>
         </v-card-actions>
@@ -497,3 +446,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>

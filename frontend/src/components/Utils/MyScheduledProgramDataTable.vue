@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items">
-        <!-- <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
+        <!-- <v-tabs v-model="activeTab" color="#f5b027" align-tabs="left">
               <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
                 tab.name
               }}</v-tab>
@@ -18,7 +18,7 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#239FAB"
+          color="#f5b027"
           dense
         ></v-text-field>
         <!-- <v-btn
@@ -82,7 +82,7 @@
           <v-select
             dense
             outlined
-            color="#147452"
+            color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -135,7 +135,7 @@
           <v-btn color="red" outlined @click="confirmDialog = false">
             Close
           </v-btn>
-          <v-btn color="#147452" class="white--text" @click="deleteItem()">
+          <v-btn color="#f5b027" class="white--text" @click="deleteItem()">
             Confirm
           </v-btn>
         </v-card-actions>
@@ -217,8 +217,8 @@ export default {
         sortable: false,
       },
       // {
-      //   text: "#EA7142",
-      //   value: "#EA7142",
+      //   text: "#f5b027",
+      //   value: "#f5b027",
       //   align: "end",
       //   valign: "end",
       //   sortable: false,

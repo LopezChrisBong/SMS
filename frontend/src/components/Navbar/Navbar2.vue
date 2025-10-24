@@ -46,7 +46,7 @@
           </v-chip>
         </template>
         <v-card width="240">
-          <v-list color="#EA7142">
+          <v-list color="#f5b027">
             <v-list-item>
               <v-list-item-avatar>
                 <img :src="profImg" max-width="60" />
@@ -249,7 +249,7 @@
                 <div>
                   <v-select
                     label="School Year"
-                    color="#EA7142"
+                    color="#f5b027"
                     @change="changeFilter()"
                     outlined
                     v-model="selectedFiter"
@@ -629,14 +629,14 @@ export default {
   padding: 5px 0 5px 0;
 }
 .modal_header {
-  background-color: #ea7142;
+  background-color: #f5b027;
   padding: 5px;
 }
 .notifDiv {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: #ea7142;
+  background-color: #f5b027;
   color: white;
   flex: auto;
   justify-content: space-between;
@@ -649,7 +649,7 @@ export default {
 .showAllNotif {
   margin: 0;
   font-size: 12px;
-  background-color: #ea7142;
+  background-color: #f5b027;
   padding: 10px;
   text-align: center;
   max-height: 55vh;

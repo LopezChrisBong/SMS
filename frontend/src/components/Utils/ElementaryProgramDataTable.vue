@@ -5,7 +5,7 @@
         <v-tabs
           v-model="activeTab"
           show-arrows
-          color="#EA7142"
+          color="#f5b027"
           align-tabs="left"
         >
           <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
@@ -38,7 +38,7 @@
             single-line
             hide-details
             class="rounded-lg"
-            color="#239FAB"
+            color="#f5b027"
             dense
           ></v-text-field> -->
         <v-btn
@@ -170,7 +170,7 @@
           <v-select
             dense
             outlined
-            color="#EA7142"
+            color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"

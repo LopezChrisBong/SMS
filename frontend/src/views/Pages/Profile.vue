@@ -1,6 +1,6 @@
 <template>
   <div class="mx-2">
-    <v-card class="mt-2 pt-2 pb-8">
+    <v-card class="mt-2 pt-2" style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8); margin-top: -4pt !important;">
       <v-row style="border-radius: 10px" class="elevation-4 mx-6 mt-6">
         <!-- <v-card class="card-style rounded-xl"> -->
         <v-col cols="12" md="12">
@@ -73,7 +73,7 @@
         <v-col
           cols="12"
           md="12"
-          style="border-left: 1px solid; border-color: #e8dfdf"
+          style="border-left: 1px solid; border-color: #e8dfdf;"
         >
           <div>
             <v-tabs

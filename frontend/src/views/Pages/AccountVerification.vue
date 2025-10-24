@@ -1,26 +1,12 @@
 <template>
-  <div class=" mx-2 ">
-    <!-- <div
-    class="pl-2 pt-2 pr-2 mx-2 fill-height"
-    style="background-color: white; overflow-y: hidden; overflow-x: hidden"
-  > -->
-    <v-card class="mt-2">
+  <div class=" mx-2">
+    <v-card class="mt-2" style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8);">
       <v-row>
         <v-col cols="12">
-          <!-- <v-toolbar flat class="rounded-xl mb-7">
-            <v-toolbar-title
-              ><strong class="text-gray-100">{{
-                $route.meta.title
-              }}</strong></v-toolbar-title
-            >
-            <v-spacer></v-spacer>
-            
-          </v-toolbar> -->
           <AccountVerificationDataTable />
         </v-col>
       </v-row>
     </v-card>
-
     <AccountVerificationDialog :data="typeData" :action="action" />
   </div>
 </template>

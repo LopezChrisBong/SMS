@@ -60,7 +60,7 @@
                 <v-col cols="12" class="elevation-1">
                   <div class="d-flex flex-row-reverse">
                     <v-btn
-                      color="#147452"
+                      color="#f5b027"
                       medium
                       class="mb-2 ma-2 pa-2 "
                       outlined
@@ -73,7 +73,7 @@
                       <v-icon size="14">mdi-pencil</v-icon>Update
                     </v-btn>
                     <v-btn
-                      color="#147452"
+                      color="#f5b027"
                       medium
                       class="mb-2 ma-2 pa-2 "
                       outlined
@@ -116,7 +116,7 @@
               Cancel
             </v-btn>
 
-            <v-btn color="#147452" class="white--text" @click="save()">
+            <v-btn color="#f5b027" class="white--text" @click="save()">
               <v-icon>mdi-check-circle</v-icon>
               Save
             </v-btn>
@@ -174,7 +174,7 @@
               Cancel
             </v-btn>
 
-            <v-btn color="#147452" class="white--text" @click="saveStudent()">
+            <v-btn color="#f5b027" class="white--text" @click="saveStudent()">
               <v-icon>mdi-check-circle</v-icon>
               Save
             </v-btn>
@@ -245,7 +245,7 @@
               Cancel
             </v-btn>
 
-            <v-btn color="#147452" class="white--text" @click="updateStudent()">
+            <v-btn color="#f5b027" class="white--text" @click="updateStudent()">
               <v-icon>mdi-check-circle</v-icon>
               Save
             </v-btn>

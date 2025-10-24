@@ -37,8 +37,8 @@
                   </div>
 
                   <div class="text-subtitle1" color="#123E4D" align="center">
-                    <b class="text-subtitle1" style="color: #EA7142"
-                      >Welcome to <span style="color: #EA7142">LIFE</span>!</b
+                    <b class="text-subtitle1" style="color: #f5b027"
+                      >Welcome to <span style="color: #f5b027">LIFE</span>!</b
                     >
                     | Sign In
                   </div>
@@ -93,7 +93,7 @@
                   >
                     Don't have an account yet?
                     <b
-                      style="color: #147452"
+                      style="color: #f5b027"
                       @click="doRegister()"
                       class="registerLink ml-2"
                       >Register Now</b
@@ -118,7 +118,7 @@
                   >
                     Do you want to enroll?
                     <b
-                      style="color: #147452"
+                      style="color: #f5b027"
                       @click="doEnroll()"
                       class="enrollLink ml-2"
                       >Enroll Now</b
@@ -238,7 +238,7 @@ export default {
   text-decoration: underline;
 }
 .content {
-  /* background-color: #EA7142; */
+  /* background-color: #f5b027; */
   background: url("../../assets/img/bglogin.jpg");
   background-position: center;
   position: fixed;
