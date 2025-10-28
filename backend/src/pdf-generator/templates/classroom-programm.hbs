@@ -130,13 +130,40 @@
                       </td>
                     </tr>
                   {{else}}
-                    <tr>
-                     <td align="center" class="font-14">{{formatTimeRange time}}</td>
-                      <td align="center" class="font-14">{{{Monday}}}</td>
-                      <td align="center" class="font-14">{{{Tuesday}}}</td>
-                      <td align="center" class="font-14">{{{Wednesday}}}</td>
-                      <td align="center" class="font-14">{{{Thursday}}}</td>
-                      <td align="center" class="font-14">{{{Friday}}}</td>
+                 <tr>
+                    <td align="center" class="font-14">{{formatTimeRange time}}</td>
+                      <td align="center" class="font-12">  
+                        {{#if Monday}}
+                        {{{Monday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>
+                          <td align="center" class="font-12">  
+                        {{#if Tuesday}}
+                        {{{Tuesday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>     <td align="center" class="font-12">  
+                        {{#if Wednesday}}
+                        {{{Wednesday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>     <td align="center" class="font-12">  
+                        {{#if Thursday}}
+                        {{{Thursday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>     <td align="center" class="font-12">  
+                        {{#if Friday}}
+                        {{{Friday}}}
+                          {{else}}
+                            Collaborative Expertise Session for Teachers
+                          {{/if}}
+                      </td>
                     </tr>
                   {{/if}}
                 {{/each}}
