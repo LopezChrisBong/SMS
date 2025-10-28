@@ -46,24 +46,24 @@
           <span class="gboFontsTable">{{ item.name }}</span></template>
         <template v-slot:[`item.gradeLevels`]="{ item }">
           <div v-for="grade in item.gradeLevels" :key="grade.id">
-            <v-chip x-small>{{ grade }}</v-chip>
+            <v-chip class="gboFontsTable justify-center" style="width: 100px; height: 30px; background-color: whitesmoke;">{{ grade }}</v-chip>
           </div>
         </template>
         <template v-slot:[`item.subjects`]="{ item }">
           <div v-for="sub in item.subjects" :key="sub.id">
-            <v-chip x-small>{{ sub }}</v-chip>
+            <v-chip class="gboFontsTable justify-center" style="width: 100px; height: 30px; background-color: whitesmoke;">{{ sub }}</v-chip>
           </div>
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <v-btn
-              x-small
+              small
               color="blue"
-              class="my-2 mx-2"
+              class="my-2 mx-2 gboFontsTable"
               outlined
               @click="printMySched(item)"
             >
-              <v-icon size="14">mdi-printer-outline</v-icon>Loads
+              <v-icon size="20">mdi-printer-outline</v-icon>Loads
             </v-btn>
           </div>
         </template>
@@ -80,7 +80,7 @@
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
-            class="rounded-lg"
+            class="rounded-lg gboFonts"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >

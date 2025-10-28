@@ -2,22 +2,26 @@
   <v-app>
     <!-- Sidebar | #F5B027-->
     <v-navigation-drawer
+      :style="{
+        backgroundImage: 'url(' + require('@/assets/img/bg106.jpg') + ')',
+        backgroundSize: 'cover',
+        backgroundPosition: 'left',
+      }"
       app
       :mini-variant.sync="mini"
       :permanent="$vuetify.breakpoint.smAndUp"
       :temporary="$vuetify.breakpoint.smAndDown"
       width="300"
       mini-variant-width="80"
-      color="#F5B027"
       dark
       v-model="sidebarOpen"
       class="sidebar"
     >
       <!-- Logo + Burger Icon -->
       <div class="d-flex align-center justify-space-between px-3 mt-4 mb-6">
-        <div class="white--text font-weight-bold text-h6">
-          <span v-if="!mini">LOGO</span
-          ><span class="font-weight-light">LIFE</span>
+        <div class="white--text font-weight-bold text-h6 text-center">
+          <span class="font-weight-light" v-if="!mini">Welcome to </span>
+          <span class="font-weight-light"><b>LIFE</b>!</span>
         </div>
         <v-btn
           icon
@@ -30,34 +34,15 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
       </div>
-
       <!-- Menu Items -->
-      <!-- <v-list dense nav>
-        <v-list-item
-          v-for="(item, i) in menuItems"
-          :key="i"
-          link
-          class="sidebar-item"
-          @click="selected = i"
-          :class="{ active: selected === i }"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content v-if="!mini">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list> -->
-      <!-- Menu Items -->
-      <v-list nav dense class="mt-3">
+      <v-list nav class="mt-3">
         <div v-for="(link, i) in links" :key="i">
           <v-list-item
             v-if="!link.subLink"
             :key="link.title"
             router
             :to="'/' + userType + link.route"
-            class="sidebar-item"
+            class="sidebar-item gboFontsTab"
             @click="selected = i"
             :class="{ active: selected === i }"
           >
@@ -76,7 +61,7 @@
               <v-list-item-title style="font-size: medium;">{{ link.title }}</v-list-item-title>
             </template>
             <div class="sub-item">
-              <v-list-item
+              <v-list-item style="font-size: medium;"
                 v-for="sublink in link.subLink"
                 router
                 :to="'/' + userType + sublink.route"
@@ -107,11 +92,11 @@
         <div v-if="$vuetify.breakpoint.smAndUp" style="margin-bottom: 5px;">
           <v-row>
             <v-col cols="10">
-              <div class="title font-weight-bold" style="font-family: Segoe UI !important;">
+              <div class="title font-weight-light" style="font-family: Segoe UI !important; font-size: 20pt !important;">
                 <!-- <v-btn icon small color="black" @click="toggleSidebar" v-if="mini">
               <v-icon>mdi-menu</v-icon>
             </v-btn> -->
-              Hello, {{ $store.state.user.fname }}!
+              Hello, <b>{{ $store.state.user.fname }}</b>!
               </div>
               <!-- <div class="caption grey--text">
                 {{
@@ -544,4 +529,27 @@ export default {
   color: #ffffff !important;
   font-family: 'Segoe UI' !important;
 }
+
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 13pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+
 </style>

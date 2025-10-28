@@ -13,7 +13,7 @@
           color="#f5b027"
           dense
         ></v-text-field>
-        <v-btn
+        <!-- <v-btn
           class="white--text ml-2 rounded-lg gboFonts"
           :class="
             generatedCount != 0
@@ -30,8 +30,11 @@
         >
           <v-icon class="gboFonts" left> mdi-database-check-outline </v-icon>
           &nbsp;Generate Class List
-        </v-btn>
-        <v-btn
+        </v-btn> -->
+
+      </v-col>
+      <v-col cols="12" md="8" class="flex-items justify-end">
+                <v-btn
           class="white--text ml-2 rounded-lg gboFonts"
           :class="
             generatedCount != 0
@@ -50,8 +53,6 @@
           <v-icon left> mdi-database-check-outline </v-icon>
           Generate Class List
         </v-btn>
-      </v-col>
-      <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
           style="width: 125pt; background-color: #F5B027;"
           class="white--text ml-2 rounded-lg"

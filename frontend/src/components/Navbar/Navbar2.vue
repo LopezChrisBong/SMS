@@ -828,7 +828,25 @@ export default {
   color: #3a3b3a !important;
 }
 
-/* .v-list-group__header__append-icon {
-  display: none !important;
-} */
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
 </style>
