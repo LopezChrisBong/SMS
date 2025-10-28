@@ -1117,7 +1117,6 @@ async transformSchoolForm2(data: any[], selectedMonth: string) {
       .andWhere('ES.statusEnrolled = 1')
       .orderBy('ES.lname')
       .getRawMany();
-      // console.log(rawData)
 
         let headerImg = join(process.cwd(), '/static/img/header.png');
         let footerImg = join(process.cwd(), '/static/img/footer.png');
