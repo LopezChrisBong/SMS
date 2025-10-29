@@ -53,7 +53,7 @@ export class UserDetailsService {
       let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -71,7 +71,7 @@ export class UserDetailsService {
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -97,7 +97,7 @@ export class UserDetailsService {
       let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -114,7 +114,7 @@ export class UserDetailsService {
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -156,7 +156,7 @@ export class UserDetailsService {
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -175,7 +175,7 @@ export class UserDetailsService {
         let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -218,7 +218,7 @@ export class UserDetailsService {
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -237,7 +237,7 @@ export class UserDetailsService {
         let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -280,7 +280,7 @@ export class UserDetailsService {
       let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -308,7 +308,7 @@ export class UserDetailsService {
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'UD.fname as fname',
         'UD.mname as mname',
@@ -331,7 +331,7 @@ export class UserDetailsService {
     let data = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', CONCAT(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), CONCAT(UD.fname, ' ', UD.lname)) AS name",
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', CONCAT(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), CONCAT(UD.fname, ' ', UD.lname)) AS name",
         'UD.id AS id',
         'UD.fname AS fname',
         'UD.mname AS mname',

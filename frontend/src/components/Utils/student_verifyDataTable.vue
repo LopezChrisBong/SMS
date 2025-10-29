@@ -34,8 +34,8 @@ e<template>
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.fname`]="{ item }">
-          {{ item.fname }} {{ item.lname }}
+        <template v-slot:[`item.name`]="{ item }">
+          <span>{{ item.name }}</span>
         </template>
         <template v-slot:[`item.updated_at`]="{ item }">
           {{ formatDate(item.updated_at) }}

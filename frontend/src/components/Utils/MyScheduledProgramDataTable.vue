@@ -51,28 +51,24 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <!--  <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap" style="padding: 4px;">
-            <v-btn
-              x-small
-              color="blue"
-              class="my-2 mx-2"
-              outlined
-              @click="print(item)"
-            >
-              <v-icon size="14">mdi-printer-outline</v-icon>Print
-            </v-btn>
-             <v-btn
-                  x-small
-                  color="red"
-                  class="my-2"
-                  outlined
-                  @click="confirmDelete(item)"
-                >
-                  <v-icon size="14">mdi-delete-off</v-icon>Delete
-                </v-btn> 
-          </div>
-        </template>-->
+        <template v-slot:[`item.time`]="{ item }">
+          <span>{{ item.time }}</span>
+        </template>
+        <template v-slot:[`item.Monday`]="{ item }">
+          <span>{{ item.Monday }}</span>
+        </template>
+        <template v-slot:[`item.Tuesday`]="{ item }">
+          <span>{{ item.Tuesday }}</span>
+        </template>
+        <template v-slot:[`item.Wednesday`]="{ item }">
+          <span>{{ item.Wednesday }}</span>
+        </template>
+        <template v-slot:[`item.Thursday`]="{ item }">
+          <span>{{ item.Thursday }}</span>
+        </template>
+        <template v-slot:[`item.Friday`]="{ item }">
+          <span>{{ item.Friday }}</span>
+        </template>
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">

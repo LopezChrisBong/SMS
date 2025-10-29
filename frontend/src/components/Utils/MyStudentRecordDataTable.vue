@@ -34,6 +34,9 @@ e<template>
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.room_section`]="{ item }">
+          <span>{{ item.room_section }}</span>
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
             class="mx-2"

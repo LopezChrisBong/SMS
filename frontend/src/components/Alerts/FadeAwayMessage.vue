@@ -29,7 +29,7 @@
         <div :class="headerClasses" v-if="header">{{ header }}</div>
         <div
           class="message "
-          style="color:black; font-weight: 500;"
+          style="color:black; font-weight: 500; font-size: 15px;"
           v-if="message"
         >
           {{ message }}

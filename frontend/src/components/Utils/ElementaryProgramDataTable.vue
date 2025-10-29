@@ -199,6 +199,9 @@
                     </v-btn>
                   </div>
                 </template>
+                <template v-slot:[`item.subject_title`]="{ item }">
+                  <span>{{ item.subject_title }}</span>
+                </template>
               </v-data-table>
             </v-card>
           </v-tab-item>

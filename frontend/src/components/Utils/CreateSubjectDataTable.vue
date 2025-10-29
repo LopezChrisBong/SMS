@@ -41,6 +41,9 @@
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.subject_title`]="{ item }">
+          <span>{{ item.subject_title }}</span>
+        </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
             <v-btn

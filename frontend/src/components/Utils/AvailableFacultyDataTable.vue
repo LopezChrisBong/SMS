@@ -43,7 +43,8 @@
         hide-default-footer
       >
          <template v-slot:[`item.name`]="{ item }">
-          <span class="gboFontsTable">{{ item.name }}</span></template>
+          <span class="gboFontsTable">{{ item.name }}</span>
+        </template>
         <template v-slot:[`item.gradeLevels`]="{ item }">
           <div v-for="grade in item.gradeLevels" :key="grade.id">
             <v-chip class="gboFontsTable justify-center" style="width: 100px; height: 30px; background-color: whitesmoke;">{{ grade }}</v-chip>
