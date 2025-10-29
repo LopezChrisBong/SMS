@@ -1,15 +1,15 @@
-e<template>
-  <div>
+<template>
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <v-tabs v-model="activeTab" color="#f5b027" align-tabs="left">
-          <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
-          }}</v-tab>
+          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">
+            {{tab.name}}
+          </v-tab>
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="12" md="3">
+      <v-col cols="12" md="4">
         <v-text-field
           v-model="search"
           outlined
@@ -17,14 +17,15 @@ e<template>
           label="Search"
           single-line
           hide-details
-          class="rounded-lg"
-          color="#f5b027"
+          class="rounded-lg gboFontsTabs"
+          color="#F5B027"
           dense
         ></v-text-field>
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
+        class="custom-table"
         :headers="tab == 1 ? headers : headers1"
         :items="data"
         :items-per-page="10"
@@ -35,38 +36,40 @@ e<template>
         hide-default-footer
       >
         <template v-slot:[`item.name`]="{ item }">
-          <span>{{ item.name }}</span>
+          <span class="gboFontsTable">{{ item.name }}</span>
         </template>
         <template v-slot:[`item.updated_at`]="{ item }">
-          {{ formatDate(item.updated_at) }}
+          <span class="gboFontsTable">{{ formatDate(item.updated_at) }}</span>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <div class="d-flex">
-            <v-btn x-small color="grey" outlined @click="editItem(item)">
-              <v-icon size="14">{{
+            <v-btn style="width: 80pt;" small class="gboFontsTable" color="grey" outlined @click="editItem(item)">
+              <v-icon size="20">{{
                 tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
               }}</v-icon>
               {{ tab == 1 ? "Verify" : "Update" }}
             </v-btn>
 
             <v-btn
+              style="width: 80pt;"
               class="mx-2"
-              x-small
+              small
               color="green"
               outlined
               @click="viewItem(item)"
             >
-              <v-icon size="14">mdi-eye</v-icon>
+              <v-icon class="gboFontsTable" size="20">mdi-eye</v-icon>
               View
             </v-btn>
             <v-btn
-              x-small
+              style="width: 80pt;"
+              small
               v-if="tab == 2"
               color="orange"
               outlined
               @click="viewQRItem(item)"
             >
-              <v-icon size="14">mdi-qrcode</v-icon>
+              <v-icon class="gboFontsTable" size="20">mdi-qrcode</v-icon>
               QR
             </v-btn>
           </div>
@@ -392,3 +395,29 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>
+

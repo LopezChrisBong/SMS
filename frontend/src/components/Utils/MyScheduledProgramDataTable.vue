@@ -1,14 +1,6 @@
 <template>
-  <div>
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
-      <v-col cols="12" md="8" class="flex-items">
-        <!-- <v-tabs v-model="activeTab" color="#f5b027" align-tabs="left">
-              <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-                tab.name
-              }}</v-tab>
-            </v-tabs> -->
-      </v-col>
-      <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
           v-model="search"
@@ -17,31 +9,27 @@
           label="Search"
           single-line
           hide-details
-          class="rounded-lg"
-          color="#f5b027"
+          class="rounded-lg gboFontsTabs"
+          color="#F5B027"
           dense
         ></v-text-field>
-        <!-- <v-btn
-            class="white--text ml-2 rounded-lg"
-            :color="$vuetify.theme.themes.light.submitBtns"
-            v-if="this.$store.state.user.user.isAdminApproved == 1"
-            @click="add()"
-          >
-            <v-icon left> mdi-plus-box-outline </v-icon>
-            Add New
-          </v-btn> -->
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
+          style="width: 125pt; background-color: #F5B027;"
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
           @click="printMySched()"
         >
-          <v-icon left> mdi-printer-outline </v-icon>
+          <v-icon class="gboFonts" left> mdi-printer-outline </v-icon>
           Print
         </v-btn>
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
+        class="custom-table"
         :headers="headers"
         :items="data"
         :items-per-page="10"
@@ -52,28 +40,28 @@
         hide-default-footer
       >
         <template v-slot:[`item.time`]="{ item }">
-          <span>{{ item.time }}</span>
+          <span class="gboFontsTable">{{ item.time }}</span>
         </template>
         <template v-slot:[`item.Monday`]="{ item }">
-          <span>{{ item.Monday }}</span>
+          <span class="gboFontsTable">{{ item.Monday }}</span>
         </template>
         <template v-slot:[`item.Tuesday`]="{ item }">
-          <span>{{ item.Tuesday }}</span>
+          <span class="gboFontsTable">{{ item.Tuesday }}</span>
         </template>
         <template v-slot:[`item.Wednesday`]="{ item }">
-          <span>{{ item.Wednesday }}</span>
+          <span class="gboFontsTable">{{ item.Wednesday }}</span>
         </template>
         <template v-slot:[`item.Thursday`]="{ item }">
-          <span>{{ item.Thursday }}</span>
+          <span class="gboFontsTable">{{ item.Thursday }}</span>
         </template>
         <template v-slot:[`item.Friday`]="{ item }">
-          <span>{{ item.Friday }}</span>
+          <span class="gboFontsTable">{{ item.Friday }}</span>
         </template>
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
       <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
-        <span class="px-2">Show</span>
+        <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
             dense
@@ -82,16 +70,16 @@
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
-            class="rounded-lg"
+            class="rounded-lg gboFonts"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >
           </v-select>
         </span>
-        <span class="px-2"> Entries </span>
+        <span class="px-2 gboFonts"> Entries </span>
       </v-col>
 
-      <v-col cols="auto" class="mr-auto text-truncate" no-gutters>
+      <v-col cols="auto" class="mr-auto text-truncate gboFonts" no-gutters>
         Showing {{ paginationData.pageStart + 1 }} to
         {{ paginationData.pageStop }} of
         {{ paginationData.itemsLength }} entries
@@ -99,7 +87,7 @@
       <v-col cols="auto">
         <v-pagination
           v-model="options.page"
-          class="rounded-lg"
+          class="rounded-lg gboFonts"
           :total-visible="7"
           :color="$vuetify.theme.themes.light.submitBtns"
           :length="paginationData.pageCount"
@@ -128,10 +116,10 @@
                     </v-card-title> -->
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="confirmDialog = false">
+          <v-btn class="gboFonts" color="red" outlined @click="confirmDialog = false">
             Close
           </v-btn>
-          <v-btn color="#f5b027" class="white--text" @click="deleteItem()">
+          <v-btn color="#f5b027" class="white--text gboFonts" @click="deleteItem()">
             Confirm
           </v-btn>
         </v-card-actions>
@@ -432,3 +420,28 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>

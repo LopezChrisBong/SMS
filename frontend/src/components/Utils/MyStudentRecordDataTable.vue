@@ -1,15 +1,15 @@
 e<template>
-  <div>
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <v-tabs v-model="activeTab" color="#f5b027" align-tabs="left">
-          <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.subject_title
-          }}</v-tab>
+          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">
+            {{tab.subject_title}}
+          </v-tab>
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="12" md="3">
+      <v-col cols="12" md="4">
         <v-text-field
           v-model="search"
           outlined
@@ -17,7 +17,7 @@ e<template>
           label="Search"
           single-line
           hide-details
-          class="rounded-lg"
+          class="rounded-lg gboFontsTab"
           color="#f5b027"
           dense
         ></v-text-field>
@@ -25,6 +25,7 @@ e<template>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
+        class="custom-table"
         :headers="headers"
         :items="data"
         :items-per-page="10"
@@ -35,17 +36,17 @@ e<template>
         hide-default-footer
       >
         <template v-slot:[`item.room_section`]="{ item }">
-          <span>{{ item.room_section }}</span>
+          <span class="gboFontsTable">{{ item.room_section }}</span>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
-            class="mx-2"
-            x-small
+            class="mx-2 gboFontsTable"
+            small
             color="green"
             outlined
             @click="viewItem(item)"
           >
-            <v-icon size="14">mdi-pencil</v-icon>
+            <v-icon class="gboFontsTable" size="20">mdi-pencil</v-icon>
             Attendance
           </v-btn>
         </template>
@@ -53,7 +54,7 @@ e<template>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
       <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
-        <span class="px-2">Show</span>
+        <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
             dense
@@ -62,16 +63,16 @@ e<template>
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
-            class="rounded-lg"
+            class="rounded-lg gboFonts"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >
           </v-select>
         </span>
-        <span class="px-2"> Entries </span>
+        <span class="px-2 gboFonts"> Entries </span>
       </v-col>
 
-      <v-col cols="auto" class="mr-auto text-truncate" no-gutters>
+      <v-col cols="auto" class="mr-auto text-truncate gboFonts" no-gutters>
         Showing {{ paginationData.pageStart + 1 }} to
         {{ paginationData.pageStop }} of
         {{ paginationData.itemsLength }} entries
@@ -79,7 +80,7 @@ e<template>
       <v-col cols="auto">
         <v-pagination
           v-model="options.page"
-          class="rounded-lg"
+          class="rounded-lg gboFonts"
           :total-visible="7"
           :color="$vuetify.theme.themes.light.submitBtns"
           :length="paginationData.pageCount"
@@ -297,3 +298,28 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>

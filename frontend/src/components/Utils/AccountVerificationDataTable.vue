@@ -25,7 +25,7 @@
     </v-row>
     <v-card class="ma-5 dt-container gboFontsTabs" elevation="0" outlined>
       <v-data-table
-        class="custom-table gboFonts"
+        class="custom-table"
         :headers="headers"
         :items="data"
         :items-per-page="10"
