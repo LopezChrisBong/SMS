@@ -247,10 +247,7 @@ async checkConflict(data: string) {
   }
 }
 
-  
   async EnrollStudent(curr_user:any) {
-
-
     const user = await this.dataSource.query(
       'SELECT * FROM user_detail where id ="'+curr_user.userdetail.id+'"',
     );
@@ -779,7 +776,6 @@ async updateClassProgram(id: number,
       day: updateAvailabilityDto.day,
       hours: updateAvailabilityDto.hours,
       grade_level: updateAvailabilityDto.grade_level,
-      // isActive: updateMyCoreTimeDto.isActive,
     });
 
 

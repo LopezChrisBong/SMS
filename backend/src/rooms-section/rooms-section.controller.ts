@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,Headers } from '@nestjs/common';
 import { RoomsSectionService } from './rooms-section.service';
 import { CreateRoomsSectionDto } from './dto/create-rooms-section.dto';
 import { UpdateRoomsSectionDto } from './dto/update-rooms-section.dto';
@@ -10,7 +10,7 @@ import { CreateStudentListDto } from './dto/create-student-list.dto';
 import { CreateAddStudentRoomDto } from './dto/create-add-student-room.dto';
 import { CreateStudentAttendanceDto } from './dto/create-student-attendance.dto';
 import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
-
+import { currentUser } from 'src/shared/jwtDecode';
 @Controller('rooms-section')
 export class RoomsSectionController {
   constructor(private readonly roomsSectionService: RoomsSectionService) {}
@@ -63,8 +63,10 @@ export class RoomsSectionController {
 
   
   @Get('findAllAddedRooms')
-  findAllAddedRooms() {
-    return this.roomsSectionService.findAllAddedRooms();
+  findAllAddedRooms(@Headers() headers) {
+     var head_str = headers.authorization;
+        const curr_user = currentUser(head_str);
+    return this.roomsSectionService.findAllAddedRooms(curr_user);
   }
 
    @Get(':gradeLevel')

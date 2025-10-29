@@ -95,10 +95,13 @@
         hide-default-footer
       >
         <template v-slot:[`item.index`]="{ index }">
-          <span class="gboFontsTable">{{ index + 1 }}</span>
+              <span class="gboFontsTable">{{
+            (options.page - 1) * options.itemsPerPage + index + 1
+          }}</span>
         </template>
         <template v-slot:[`item.grade_level`]="{ item }">
           <span class="gboFontsTable">{{ item.grade_level }}</span>
+      
         </template>
         <template v-slot:[`item.room_section`]="{ item }">
           <span class="gboFontsTable">{{ item.room_section }}</span>
@@ -381,6 +384,7 @@ export default {
     gradeName: null,
     printData: [],
     verified: [],
+
     perPageChoices: [
       { text: "5", value: 5 },
       { text: "10", value: 10 },
@@ -390,6 +394,7 @@ export default {
       { text: "250", value: 250 },
       { text: "500", value: 500 },
     ],
+
     activeTab: { id: 7, name: "All Rooms" },
     tab: 7,
     tabList: [
