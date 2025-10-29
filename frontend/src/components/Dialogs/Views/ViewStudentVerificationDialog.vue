@@ -23,7 +23,7 @@
               <v-col cols="12">
                 <div>
                   <h3>
-                    <strong>{{ name }} Personal Information</strong>
+                    <strong>Personal Information</strong>
                   </h3>
                 </div>
               </v-col>
@@ -581,6 +581,95 @@
                   v-on="on"
                 ></v-text-field>
               </v-col>
+              <v-col cols="12" md="3">
+                <v-btn
+                  color="blue"
+                  block
+                  @click="viewPicture()"
+                  :class="edit ? 'd-none' : ''"
+                >
+                  View picture
+                </v-btn>
+                <v-file-input
+                  outlined
+                  v-model="picture"
+                  dense
+                  class="rounded-lg"
+                  :class="edit ? '' : 'd-none'"
+                  label="2x2 Picture"
+                  color="#6DB249"
+                  accept=".png, .jpeg, .jpg"
+                  :clearable="false"
+                >
+                </v-file-input>
+              </v-col>
+              <v-col cols="12" md="3">
+                <v-btn
+                  color="blue"
+                  block
+                  @click="viewSchoolCard()"
+                  :class="edit ? 'd-none' : ''"
+                >
+                  View Student Card
+                </v-btn>
+                <v-file-input
+                  outlined
+                  v-model="schoolCard"
+                  dense
+                  class="rounded-lg"
+                  :class="edit ? '' : 'd-none'"
+                  label="Student Card"
+                  color="#6DB249"
+                  accept=".pdf"
+                  :clearable="false"
+                >
+                </v-file-input>
+              </v-col>
+
+              <v-col cols="12" md="3">
+                <v-btn
+                  color="blue"
+                  block
+                  @click="viewPSA()"
+                  :class="edit ? 'd-none' : ''"
+                >
+                  View Birth Certificate / PSA
+                </v-btn>
+                <v-file-input
+                  outlined
+                  v-model="birthPSA"
+                  dense
+                  class="rounded-lg"
+                  :class="edit ? '' : 'd-none'"
+                  label="Birth Certificate / PSA"
+                  color="#6DB249"
+                  accept=".pdf"
+                  :clearable="false"
+                >
+                </v-file-input>
+              </v-col>
+              <v-col cols="12" md="3">
+                <v-btn
+                  color="blue"
+                  block
+                  @click="viewGoodMoral()"
+                  :class="edit ? 'd-none' : ''"
+                >
+                  View Good Moral
+                </v-btn>
+                <v-file-input
+                  outlined
+                  v-model="goodMoral"
+                  dense
+                  class="rounded-lg"
+                  :class="edit ? '' : 'd-none'"
+                  label="Good Moral"
+                  color="#6DB249"
+                  accept=".pdf"
+                  :clearable="false"
+                >
+                </v-file-input>
+              </v-col>
             </v-row>
             <AccountVerificationDialog
               :data="updateData"
@@ -715,6 +804,10 @@ export default {
       track: null,
       transfered: null,
       weight: null,
+      picture: null,
+      goodMoral: null,
+      birthPSA: null,
+      schoolCard: null,
       fadeAwayMessage: {
         show: false,
         type: "success",
@@ -787,6 +880,10 @@ export default {
           this.track = data.track;
           this.transfered = data.transfered;
           this.weight = data.weight;
+          this.picture = data.picture;
+          this.goodMoral = data.goodMoral;
+          this.birthPSA = data.birthPSA;
+          this.schoolCard = data.schoolCard;
         }
       },
       deep: true,
@@ -891,6 +988,84 @@ export default {
             this.closeD();
           }
         });
+      }
+    },
+    viewPicture() {
+      let datastring = this.picture.substring(7, 0);
+      // alert(this.verifyModel.picture);
+      if (datastring == "default") {
+        this.fadeAwayMessage.show = true;
+        this.fadeAwayMessage.type = "info";
+        this.fadeAwayMessage.header = "System Message";
+        this.fadeAwayMessage.message =
+          "No file Uploaded, This file is not required";
+      } else {
+        window.open(
+          process.env.VUE_APP_SERVER +
+            "/enroll-student/view/studentFile/" +
+            this.picture +
+            "",
+          "_blank" // <- This is what makes it open in a new window.
+        );
+      }
+    },
+
+    viewGoodMoral() {
+      let datastring = this.goodMoral.substring(7, 0);
+      // alert(this.verifyModel.picture);
+      if (datastring == "default") {
+        this.fadeAwayMessage.show = true;
+        this.fadeAwayMessage.type = "info";
+        this.fadeAwayMessage.header = "System Message";
+        this.fadeAwayMessage.message =
+          "No file Uploaded, This file is not required";
+      } else {
+        window.open(
+          process.env.VUE_APP_SERVER +
+            "/enroll-student/view/studentFile/" +
+            this.goodMoral +
+            "",
+          "_blank" // <- This is what makes it open in a new window.
+        );
+      }
+    },
+
+    viewSchoolCard() {
+      let datastring = this.schoolCard.substring(7, 0);
+      // alert(this.picture);
+      if (datastring == "default") {
+        this.fadeAwayMessage.show = true;
+        this.fadeAwayMessage.type = "info";
+        this.fadeAwayMessage.header = "System Message";
+        this.fadeAwayMessage.message =
+          "No file Uploaded, This file is not required";
+      } else {
+        window.open(
+          process.env.VUE_APP_SERVER +
+            "/enroll-student/view/studentFile/" +
+            this.schoolCard +
+            "",
+          "_blank" // <- This is what makes it open in a new window.
+        );
+      }
+    },
+    viewPSA() {
+      let datastring = this.birthPSA.substring(7, 0);
+      // alert(this.picture);
+      if (datastring == "default") {
+        this.fadeAwayMessage.show = true;
+        this.fadeAwayMessage.type = "info";
+        this.fadeAwayMessage.header = "System Message";
+        this.fadeAwayMessage.message =
+          "No file Uploaded, This file is not required";
+      } else {
+        window.open(
+          process.env.VUE_APP_SERVER +
+            "/enroll-student/view/studentFile/" +
+            this.birthPSA +
+            "",
+          "_blank" // <- This is what makes it open in a new window.
+        );
       }
     },
   },

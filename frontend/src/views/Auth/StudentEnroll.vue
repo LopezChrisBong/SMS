@@ -245,14 +245,21 @@
                   </v-text-field>
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
-                  <v-text-field
+                  <!-- <v-text-field
                     v-model="formdata.blood_type"
                     dense
                     class="rounded-lg"
                     label="Blood Type"
                     color="#6DB249"
                   >
-                  </v-text-field>
+                  </v-text-field> -->
+                  <v-select
+                    :items="bloodTypeList"
+                    label="Blood Type"
+                    dense
+                    color="#6DB249"
+                    v-model="formdata.blood_type"
+                  ></v-select>
                 </v-col>
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-select
@@ -375,10 +382,9 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.residential_house_no"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* House Number"
+                    label="House Number"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -387,10 +393,9 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.residential_street"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Street"
+                    label="Street"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -399,10 +404,9 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.residential_subd"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Subdivision / Village"
+                    label="Subdivision / Village"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -411,10 +415,9 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.residential_brgy"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Barangay"
+                    label="Barangay"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -423,10 +426,9 @@
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
                     v-model="formdata.residential_city"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Municipality / City"
+                    label="Municipality / City"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -435,10 +437,9 @@
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
                     v-model="formdata.residential_prov"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Province"
+                    label="Province"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -472,10 +473,9 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.permanent_house_no"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* House Number"
+                    label="House Number"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -484,10 +484,9 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.permanent_street"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Street"
+                    label="Street"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -496,10 +495,9 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.permanent_subd"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Subdivision / Village"
+                    label="Subdivision / Village"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -508,10 +506,9 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.permanent_brgy"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Barangay"
+                    label="Barangay"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -520,10 +517,9 @@
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
                     v-model="formdata.permanent_city"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Municipality / City"
+                    label="Municipality / City"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -532,10 +528,9 @@
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
                     v-model="formdata.permanent_prov"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Province"
+                    label="Province"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -544,10 +539,9 @@
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
                     v-model="formdata.permanent_zip"
-                    :rules="[formRules.required]"
                     dense
                     class="rounded-lg"
-                    label="* Zip Code"
+                    label="Zip Code"
                     color="#6DB249"
                     @keypress="onlyDigits"
                     :maxlength="4"
@@ -878,7 +872,7 @@
                       v-model="PSA"
                       dense
                       class="rounded-lg"
-                      label="Philippines Statistic Authority"
+                      label="Birth Certificate (PSA)"
                       color="#6DB249"
                       accept=".pdf, .png, .jpg, .jpeg"
                       :clearable="false"
@@ -1051,6 +1045,7 @@ export default {
     seniorJuniorList: ["Junior High", "Senior High"],
     seniorJuniorList1: ["Elementary"],
     status: null,
+    bloodTypeList: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
     formdata: {
       id: null,
       fname: null,

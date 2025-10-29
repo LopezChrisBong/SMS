@@ -237,8 +237,8 @@ export class EnrollStudentController {
     }
 
     const file = createReadStream(
-      // join(process.cwd(), '/student_file/'+data),
-      join(process.cwd(), '/../student_file/' + data),
+      join(process.cwd(), '/student_file/'+data),
+      // join(process.cwd(), '/../student_file/' + data),
     );
     res.set({
       'Content-Type': content_type,
