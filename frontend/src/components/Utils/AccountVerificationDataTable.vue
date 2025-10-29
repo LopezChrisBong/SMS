@@ -88,7 +88,7 @@
       <v-col cols="auto" class="mr-auto text-truncate gboFonts" no-gutters>
         Showing {{ paginationData.pageStart + 1 }} to
         {{ paginationData.pageStop }} of
-        {{ paginationData.itemsLength }} entries
+        {{ paginationData.itemsLength }} Entries
       </v-col>
       <v-col cols="auto">
         <v-pagination
@@ -106,7 +106,7 @@
 
     <v-dialog v-model="dialogConfirmDelete" max-width="500">
       <v-card>
-        <v-card-title class="text-h5 gboFonts"> Confirmation </v-card-title>
+        <v-card-title class="text-h5"> Confirmation </v-card-title>
 
         <v-card-text class="gboFonts" style="font-size: 17px">
           Are you sure you want to delete this item?

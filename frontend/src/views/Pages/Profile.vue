@@ -263,7 +263,7 @@
 
                     <v-col cols="auto"
                       ><v-btn
-                        style="margin-top: -10px;"
+                        style="margin-top: -10px; width: 85pt;"
                         color="blue"
                         class="white--text"
                         @click="readonly = false"

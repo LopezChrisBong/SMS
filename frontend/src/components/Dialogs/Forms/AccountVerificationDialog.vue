@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" eager scrollable max-width="550px" class="rounded-lg">
       <v-form ref="UserVerifyFormref" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6 gboFontsTab">
+          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
             <span>{{ action }} User</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
