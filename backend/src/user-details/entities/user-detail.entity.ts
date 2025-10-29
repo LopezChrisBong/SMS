@@ -331,6 +331,31 @@ export class UserDetail {
   })
   allowedPDSUpdateID: number;
 
+    @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  cs_eligibility: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  grade_experience: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  specialization: string;
+
+  
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  position: string;
+
   @CreateDateColumn({
     nullable: false,
     type: 'datetime',

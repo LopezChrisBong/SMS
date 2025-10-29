@@ -18,6 +18,9 @@ import {
   Users,
 } from 'src/entities';
 import { join } from 'path';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 const hbs = require('handlebars');
 const QRCode = require('qrcode');
@@ -26,6 +29,21 @@ const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const moment = require('moment');
 const fs1 = require('fs');
+
+hbs.registerHelper('teachingExperience', function (dateHired) {
+  if (!dateHired) return 'N/A';
+  const today = dayjs();
+  const hired = dayjs(dateHired);
+  const diffYears = today.diff(hired, 'year');
+  const diffMonths = today.diff(hired.add(diffYears, 'year'), 'month');
+  const diffDays = today.diff(hired.add(diffYears, 'year').add(diffMonths, 'month'), 'day');
+
+  let result = '';
+  if (diffYears > 0) result += `${diffYears} year${diffYears > 1 ? 's, ' : ''} `;
+  if (diffMonths > 0) result += `${diffMonths} month${diffMonths > 1 ? 's &' : ''} `;
+  if (diffDays > 0) result += `${diffDays}  day${diffDays > 1 ? 's' : ''}`;
+  return result.trim() || '0 days';
+});
 
 hbs.registerHelper('dateFormat', function (value) {
   if (value) {

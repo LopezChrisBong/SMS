@@ -29,4 +29,16 @@ export class UpdateUserDetailDto extends PartialType(CreateUserDetailDto) {
 
     @ApiProperty()
     education: string
+
+    @ApiProperty()
+    position: string
+
+    @ApiProperty()
+    specialization: string
+
+    @ApiProperty()
+    grade_experience: string
+
+    @ApiProperty()
+    cs_eligibility: string
 }

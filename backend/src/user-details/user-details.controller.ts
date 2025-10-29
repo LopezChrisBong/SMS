@@ -164,7 +164,8 @@ export class UserDetailsController {
   ): StreamableFile {
     let file;
    
-    file = createReadStream(join(process.cwd(), '/../upload_img/' + filename));
+    // file = createReadStream(join(process.cwd(), '/../upload_img/' + filename));
+    file = createReadStream(join(process.cwd(), '/upload_img/' + filename));
     res.set({
       'Content-Type': 'image/png',
     });
@@ -209,7 +210,8 @@ export class UserDetailsController {
       //   );
       // } else {
       fs.unlink(
-        join(process.cwd(), `/../upload_img/${user.profile_img}`),
+        // join(process.cwd(), `/../upload_img/${user.profile_img}`),
+        join(process.cwd(), `/upload_img/${user.profile_img}`),
         async (err) => {
           if (err) {
             console.log(err);
