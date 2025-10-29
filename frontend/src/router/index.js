@@ -333,8 +333,6 @@ const routes = [
         meta: { title: "My Student Record", authRequired: true },
       },
       
-
-
     ],
   },
   //security

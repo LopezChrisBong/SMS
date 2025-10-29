@@ -206,13 +206,14 @@ export default {
       this.dialog = false;
     },
     loadYearFrom() {
-      let d = new Date();
+      // let d = new Date();
 
-      let yr = d.getFullYear();
+      // let yr = d.getFullYear();
 
-      for (let i = yr; i < yr + 10; i++) {
-        this.year_fromList.push(i);
-      }
+      // for (let i = yr; i < yr + 10; i++) {
+      //   this.year_fromList.push(i);
+      // }
+      this.year_fromList.push(new Date().getFullYear());
     },
     onChangeDateFrom(data) {
       this.school_year_to = data + 1;
@@ -227,21 +228,19 @@ export default {
         // console.log(data);
         this.axiosCall("/enroll-student/addSchoolYear", "POST", data).then(
           (res) => {
-            console.log(res.data);
-            // alert("Successfully Added");
-            this.closeD();
             if (res.data.status == 201) {
+              this.closeD();
               this.fadeAwayMessage.show = true;
               this.fadeAwayMessage.type = "success";
               this.fadeAwayMessage.header = "System Message";
               this.fadeAwayMessage.message = "Successfully Added Subject!";
+              location.reload();
             } else if (res.data.status == 400) {
               this.fadeAwayMessage.show = true;
               this.fadeAwayMessage.type = "error";
               this.fadeAwayMessage.header = "System Message";
               this.fadeAwayMessage.message = res.data.msg;
             }
-            location.reload();
           }
         );
       } else if (type == "UPDATE") {

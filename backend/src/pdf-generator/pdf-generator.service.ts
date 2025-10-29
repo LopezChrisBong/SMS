@@ -307,6 +307,10 @@ hbs.registerHelper('getPercentage', function (val, totalVal) {
   return percentage.toFixed(2);
 });
 
+hbs.registerHelper('plusOne', function (value) {
+  return value + 1;
+});
+
 hbs.registerHelper('formatGovIDDateIssued', function (val) {
   if (val) {
     let dump = val.split('/');
@@ -488,7 +492,7 @@ export class PdfGeneratorService {
           .createQueryBuilder(UserDetail, 'UD')
           .select([ 
             'UD.*',
-            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
           ])
           .where('UD.id = :facultyId', { facultyId })
           .getRawOne()
@@ -551,7 +555,7 @@ export class PdfGeneratorService {
             "A.*",
             "A.id as id",
             "UD.education as education",
-            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
            
           ])
           .leftJoin(Availability, 'A', 'A.teacherID = UD.id')
@@ -639,7 +643,7 @@ export class PdfGeneratorService {
           .createQueryBuilder(RoomsSection,'rs')
           .select([
             'rs.*',
-            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
           ])
           .leftJoin(UserDetail,'ud','rs.teacherId = ud.id')
           .where('rs.id = :roomID', { roomID })
@@ -655,7 +659,7 @@ export class PdfGeneratorService {
           .createQueryBuilder(RoomsSection, 'RS')
           .select([
             "A.*",
-            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), '. ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
             "S.subject_title as subject_title",
           ])
           .leftJoin(Availability, 'A', 'A.roomId = RS.id')
@@ -919,7 +923,7 @@ convertTo24Hour(time: string): number {
     let teacherData = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
       .select([
-        "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,'. ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
+        "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'RS.room_section as room_section',
         'RS.grade_level as grade_level'
@@ -1101,22 +1105,76 @@ async transformSchoolForm2(data: any[], selectedMonth: string) {
 }
 
   async getAllStudenList(filter:number, id:number, grade:string){
-    let rawData = await this.dataSource.manager
+    let rawData_male = await this.dataSource.manager
       .createQueryBuilder(StudentList, 'SL')
       .select([
         "*",
         "SL.id as studentListId",
-        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name", 
-        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,'. ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
+       "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",  
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
             ])
       .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
       .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
       .where('SL.school_yearId = "'+filter+'"')
+      .andWhere('ES.sex = "Male"')
       .andWhere('SL.grade_level = "'+grade+'"')
       .andWhere('SL.roomId = "'+id+'"')
       .andWhere('ES.statusEnrolled = 1')
       .orderBy('ES.lname')
       .getRawMany();
+    let count_male = await this.dataSource.manager
+      .createQueryBuilder(StudentList, 'SL')
+      .select([
+        "*",
+        "SL.id as studentListId",
+       "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name", 
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
+            ])
+      .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
+      .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
+      .where('SL.school_yearId = "'+filter+'"')
+      .andWhere('ES.sex = "Male"')
+      .andWhere('SL.grade_level = "'+grade+'"')
+      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('ES.statusEnrolled = 1')
+      .orderBy('ES.lname')
+      .getCount();
+
+       let rawData_female = await this.dataSource.manager
+      .createQueryBuilder(StudentList, 'SL')
+      .select([
+        "*",
+        "SL.id as studentListId",
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name", 
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
+            ])
+      .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
+      .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
+      .where('SL.school_yearId = "'+filter+'"')
+      .andWhere('ES.sex = "Female"')
+      .andWhere('SL.grade_level = "'+grade+'"')
+      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('ES.statusEnrolled = 1')
+      .orderBy('ES.lname')
+      .getRawMany();
+
+      let count_female = await this.dataSource.manager
+      .createQueryBuilder(StudentList, 'SL')
+      .select([
+        "*",
+        "SL.id as studentListId",
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name", 
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
+            ])
+      .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
+      .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
+      .where('SL.school_yearId = "'+filter+'"')
+      .andWhere('ES.sex = "Female"')
+      .andWhere('SL.grade_level = "'+grade+'"')
+      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('ES.statusEnrolled = 1')
+      .orderBy('ES.lname')
+      .getCount();
 
         let headerImg = join(process.cwd(), '/static/img/header.png');
         let footerImg = join(process.cwd(), '/static/img/footer.png');
@@ -1127,7 +1185,11 @@ async transformSchoolForm2(data: any[], selectedMonth: string) {
         {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
         footer_img: this.base64_encode(footerImg, 'headerfooter'),
-        studentData:rawData ? rawData:[]
+        rawData_male:rawData_male ? rawData_male:[],
+        rawData_female:rawData_female ? rawData_female:[],
+        count_male,
+        count_female,
+        total_student:count_female+ count_male
         },
     ];
     try {

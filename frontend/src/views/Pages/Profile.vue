@@ -161,7 +161,9 @@
                         label="Mobile Number"
                         dense
                         color="#6DB249"
-                        type="number"
+                        type="text"
+                        maxlength="11"
+                        @keypress="onlyDigits"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="6" sm="6" v-if="readonly == false">
@@ -517,7 +519,12 @@ export default {
       this.filter = filter;
       this.toAdd;
     },
-
+    onlyDigits(event) {
+      const char = String.fromCharCode(event.keyCode);
+      if (!/[0-9]/.test(char)) {
+        event.preventDefault(); // ⛔ block letter from appearing
+      }
+    },
     totalYearService() {
       let d = new Date();
       let yr = d.getFullYear();

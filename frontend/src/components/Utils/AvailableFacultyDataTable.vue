@@ -44,6 +44,9 @@
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.name`]="{ item }">
+          <span>{{ item.name }}</span>
+        </template>
         <template v-slot:[`item.gradeLevels`]="{ item }">
           <div v-for="grade in item.gradeLevels" :key="grade.id">
             <v-chip x-small>{{ grade }}</v-chip>

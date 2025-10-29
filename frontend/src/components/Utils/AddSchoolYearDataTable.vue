@@ -53,6 +53,9 @@
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.schoo_year`]="{ item }">
+          <span>{{ item.schoo_year }}</span>
+        </template>
         <template v-slot:[`item.status`]="{ item }">
           <v-chip :color="item.status == 0 ? 'warning' : 'green'">
             {{ item.status == 0 ? "Inactive" : "Active" }}

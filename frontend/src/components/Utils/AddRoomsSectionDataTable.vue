@@ -98,7 +98,7 @@
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
-        :headers="headers"
+        :headers="tab == 7 ? header1 : headers"
         :items="data"
         :items-per-page="10"
         :search="search"
@@ -107,6 +107,15 @@
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.index`]="{ index }">
+          <span>{{ index + 1 }}</span>
+        </template>
+        <template v-slot:[`item.room_section`]="{ item }">
+          <span>{{ item.room_section }}</span>
+        </template>
+        <template v-slot:[`item.name`]="{ item }">
+          <span>{{ item.name }}</span>
+        </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <v-btn
@@ -314,10 +323,18 @@ export default {
     generateSeniorClassRecord: false,
     headers: [
       {
-        text: "Room Name",
-        value: "room_section",
+        text: "#",
+        value: "index",
         align: "start",
         valign: "start",
+        sortable: false,
+        width: 20,
+      },
+      {
+        text: "Room Name",
+        value: "room_section",
+        align: "center",
+        valign: "center",
         sortable: false,
       },
 
@@ -337,6 +354,38 @@ export default {
         sortable: false,
       },
     ],
+    header1: [
+      {
+        text: "#",
+        value: "index",
+        align: "start",
+        valign: "start",
+        sortable: false,
+        width: 20,
+      },
+      {
+        text: "Grade Level",
+        value: "grade_level",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+      {
+        text: "Room Name",
+        value: "room_section",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+
+      {
+        text: "Adviser",
+        value: "name",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+    ],
 
     data: [],
     gradeName: null,
@@ -351,9 +400,10 @@ export default {
       { text: "250", value: 250 },
       { text: "500", value: 500 },
     ],
-    activeTab: { id: 1, name: "Grade 7" },
-    tab: 1,
+    activeTab: { id: 7, name: "All Rooms" },
+    tab: 7,
     tabList: [
+      { id: 7, name: "All Rooms" },
       { id: 1, name: "Grade 7" },
       { id: 2, name: "Grade 8" },
       { id: 3, name: "Grade 9" },
@@ -537,6 +587,16 @@ export default {
             this.loading = false;
           }
         });
+      } else if (this.tab == 7) {
+        this.axiosCall("/rooms-section/findAllAddedRooms", "GET").then(
+          (res) => {
+            if (res) {
+              console.log("Love", res.data);
+              this.data = res.data;
+              this.loading = false;
+            }
+          }
+        );
       }
     },
     dummyGenerate() {

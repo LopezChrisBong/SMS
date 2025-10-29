@@ -81,6 +81,12 @@
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.room_section`]="{ item }">
+          <span>{{ item.room_section }}</span>
+        </template>
+        <template v-slot:[`item.name`]="{ item }">
+          <span>{{ item.name }}</span>
+        </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <v-btn

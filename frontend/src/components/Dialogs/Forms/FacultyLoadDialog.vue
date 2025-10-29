@@ -127,13 +127,29 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-autocomplete
+                    v-if="!trueOthers"
                     v-model="subject"
+                    @change="subjectAssign(subject)"
                     dense
                     :rules="[formRules.required]"
                     class="rounded-lg"
                     item-text="subject_title"
                     item-value="id"
                     label="Subject Title Name"
+                    color="#93CB5B"
+                    :items="subjectList"
+                  >
+                  </v-autocomplete>
+                  <v-autocomplete
+                    v-else
+                    v-model="subject"
+                    @change="subjectAssign(subject)"
+                    dense
+                    :rules="[formRules.required]"
+                    class="rounded-lg"
+                    item-text="subject_title"
+                    item-value="id"
+                    label="Other Subject Title"
                     color="#93CB5B"
                     :items="subjectList"
                   >
@@ -208,6 +224,7 @@ export default {
       class_room: null,
       teacher: null,
       TeachersList: [],
+      trueOthers: false,
       subject: null,
       subjectList: [],
       day: [],
@@ -295,6 +312,19 @@ export default {
 
     teacherAssign(teacher) {
       this.getAllActiveSubjects(teacher);
+    },
+    subjectAssign(others) {
+      if (others == 0) {
+        this.axiosCall("/subjects/getAllSubjects/Others", "GET").then((res) => {
+          if (res) {
+            console.log("Subject List", res.data);
+            this.trueOthers = true;
+            this.subjectList = res.data;
+            this.subject = null;
+            // this.subjectList.push({ id: 0, subject_title: "Others" });
+          }
+        });
+      }
     },
     accept() {
       if (this.$refs.UserVerifyFormref.validate()) {
@@ -411,6 +441,7 @@ export default {
         if (res) {
           console.log("Subject List", res.data);
           this.subjectList = res.data;
+          this.subjectList.push({ id: 0, subject_title: "Others" });
         }
       });
     },

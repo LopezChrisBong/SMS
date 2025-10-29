@@ -73,6 +73,15 @@ export class SubjectsService {
     return data
   }
 
+  async getAllSubjects(curr_user:any){
+    let data = await this.dataSource.manager.createQueryBuilder(Subject,'sub')
+    .where('status ="'+curr_user.userdetail.status+'"')
+    .orderBy('created_at', 'DESC')
+    .getMany()
+    console.log(data)
+    return data
+  }
+
   async getMySubjects(curr_user:any){
     try {
           let subjects = await this.dataSource.manager
