@@ -738,35 +738,25 @@ async remove(id: number) {
   }
 }
 
-async updateClassProgram(id: number,
+async updateClassProgram(
+  id: number,
   updateAvailabilityDto: UpdateAvailabilityDto,
-  user: any,) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+  user: any,
+) {
+  const queryRunner = this.dataSource.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
 
   try {
-    // Check for conflicts
-    // const conflict = await this.checkConflictUpdate(updateAvailabilityDto);
+    const conflict = await this.checkConflictUpdate(updateAvailabilityDto, id);
 
-    // if (conflict) {
-    //   return {
-    //     msg: 'Conflict detected. Schedule cannot be updated.',
-    //     status: HttpStatus.CONFLICT,
-    //     conflictDetails: conflict,
-    //   };
-    // }
-
-    // let hours =  await this.dataSource.query('SELECT '+id+', SUM(hours) AS total_hours_per_weekFROM availability GROUP BY '+id+';')
-    // if(hours >= 31){
-    //   return {
-    //     msg: 'Update conflict faculty already reach 30 hours in total of loading!',
-    //     status: HttpStatus.CONFLICT,
-    //     conflictDetails: hours,
-    //   };
-    // }
-
-    // update the schedule
+    if (conflict && conflict.length > 0) {
+      return {
+        msg: 'Conflict detected. Schedule cannot be updated.',
+        status: HttpStatus.CONFLICT,
+        conflictDetails: conflict,
+      };
+    }
     await queryRunner.manager.update(Availability, id, {
       teacherID: updateAvailabilityDto.teacherID,
       subjectId: updateAvailabilityDto.subjectId,
@@ -778,22 +768,23 @@ async updateClassProgram(id: number,
       grade_level: updateAvailabilityDto.grade_level,
     });
 
+    await queryRunner.commitTransaction();
+    return {
+      msg: 'Schedule updated successfully!',
+      status: HttpStatus.OK,
+    };
+  } catch (error) {
+    await queryRunner.rollbackTransaction();
+    console.error('Error updating schedule:', error);
+    return {
+      msg: 'Update failed! ' + error.message,
+      status: HttpStatus.BAD_REQUEST,
+    };
+  } finally {
+    await queryRunner.release();
+  }
+}
 
-  await queryRunner.commitTransaction();
-  return {
-    msg: 'Schedule updated successfully!',
-    status: HttpStatus.OK,
-  };
-} catch (error) {
-  await queryRunner.rollbackTransaction();
-  return {
-    msg: 'Update failed!' + error,
-    status: HttpStatus.BAD_REQUEST,
-  };
-} finally {
-  await queryRunner.release();
-}
-}
 
 
 async updateSchoolYear(id: number,
@@ -828,37 +819,51 @@ async updateSchoolYear(id: number,
 }
 
 
-async checkConflictUpdate(data: any){
+async checkConflictUpdate(data: any, currentId?: number) {
   try {
     const conflicts = await this.availabilityRepository
-    .createQueryBuilder('availability')
-    .where('availability.day = :day', { day: data.day })
-    .andWhere(
-      new Brackets((qb) => {
+      .createQueryBuilder('availability')
+      .where('availability.day = :day', { day: data.day })
+      .andWhere(currentId ? 'availability.id != :id' : '1=1', { id: currentId })
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where(
+            'availability.roomId = :roomId AND availability.subjectId = :subjectId',
+            {
+              roomId: data.roomId,
+              subjectId: data.subjectId,
+            },
+          );
 
-        // Dili mag repeat ang subject in the same room per day
-        qb.where('availability.roomId = :roomId AND availability.subjectId = :subjectId', {
-          roomId: data.roomId,
-          subjectId: data.subjectId,
-        });
+          qb.orWhere(
+            'availability.roomId = :roomId AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+            {
+              roomId: data.roomId,
+              from: data.times_slot_from,
+              to: data.times_slot_to,
+            },
+          );
 
-        // No overlapping of time slots in the same room per day
-        qb.orWhere(
-          'availability.roomId = :roomId AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
-          { roomId: data.roomId, from: data.times_slot_from, to: data.times_slot_to }
-        );
+          qb.orWhere(
+            'availability.subjectId = :subjectId AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+            {
+              subjectId: data.subjectId,
+              from: data.times_slot_from,
+              to: data.times_slot_to,
+            },
+          );
 
-        // No duplicate subjects across different faculty or rooms per day
-        qb.orWhere('availability.subjectId = :subjectId', { subjectId: data.subjectId });
-
-        // Dapat walay conflicts ang faculty in time slots per room per day
-        qb.orWhere(
-          'availability.teacherID = :teacherID AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
-          { teacherID: data.teacherID, from: data.times_slot_from, to: data.times_slot_to }
-        );
-      })
-    )
-    .getMany();
+          qb.orWhere(
+            'availability.teacherID = :teacherID AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
+            {
+              teacherID: data.teacherID,
+              from: data.times_slot_from,
+              to: data.times_slot_to,
+            },
+          );
+        }),
+      )
+      .getMany();
 
     return conflicts.length > 0 ? conflicts : null;
   } catch (error) {
@@ -866,6 +871,7 @@ async checkConflictUpdate(data: any){
     throw error;
   }
 }
+
 
 
 async enrollStudentWithFile( body:any, filename: any){
