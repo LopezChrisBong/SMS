@@ -41,11 +41,21 @@ export class EnrollStudentService {
 
   async addSchoolYear(createSchoolYearDto: CreateSchoolYearDto) {
     try {
-     let addYear = this.schooyearRepository.create(createSchoolYearDto);
-     await this.schooyearRepository.save(addYear);
+        const count = await this.dataSource.query(
+          'SELECT COUNT(*) as count FROM school_year where school_year_from ="'+createSchoolYearDto.school_year_from+'"',
+          );
+            if(count[0].count == 0){
+              
+            let addYear = this.schooyearRepository.create(createSchoolYearDto);
+            await this.schooyearRepository.save(addYear);
+            return {
+              msg: 'Saved successfully.',
+              status: HttpStatus.CREATED,
+            };
+            }
      return {
-       msg: 'Saved successfully.',
-       status: HttpStatus.CREATED,
+       msg: 'School year already exist!',
+       status: HttpStatus.BAD_REQUEST,
      };
    } catch (error) {
      return {
@@ -57,96 +67,115 @@ export class EnrollStudentService {
 
 
 
-  async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
-    try {
-      // Check for conflicts
-      // const conflict = await this.checkConflict(createAvailabilityDto);
-  
-      // if (conflict) {
-      //   return {
-      //     msg: 'Conflict detected. Schedule cannot be added.',
-      //     status: HttpStatus.CONFLICT,
-      //     conflictDetails: conflict,
-      //   };
-      // }
+async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
+  const savedDays: string[] = [];
+  const skippedDays: string[] = [];
 
-      // Save the schedule
-      for (let index = 0; index < createAvailabilityDto.day.length; index++) {
-          console.log(createAvailabilityDto.day[index])
-        // const newSchedule = this.availabilityRepository.create(createAvailabilityDto);
-          let newSchedule = this.dataSource.manager.create(Availability, {
-                      teacherID: createAvailabilityDto.teacherID,
-                      subjectId:createAvailabilityDto.subjectId,
-                      roomId:createAvailabilityDto.roomId,
-                      grade_level:createAvailabilityDto.grade_level,
-                      day:createAvailabilityDto.day[index],
-                      times_slot_from:createAvailabilityDto.times_slot_from,
-                      times_slot_to:createAvailabilityDto.times_slot_to,
-                      hours:createAvailabilityDto.hours,
-                      school_yearId:createAvailabilityDto.school_yearId
-                  })
+  try {
+    for (const day of createAvailabilityDto.day) {
+      const data = {
+        teacherID: createAvailabilityDto.teacherID,
+        subjectId: createAvailabilityDto.subjectId,
+        roomId: createAvailabilityDto.roomId,
+        grade_level: createAvailabilityDto.grade_level,
+        day: day,
+        times_slot_from: createAvailabilityDto.times_slot_from,
+        times_slot_to: createAvailabilityDto.times_slot_to,
+        hours: createAvailabilityDto.hours,
+        school_yearId: createAvailabilityDto.school_yearId,
+      };
+      const conflict = await this.newCheckConflict(JSON.stringify(data));
+
+      if (!conflict.conflict) {
+        const newSchedule = this.dataSource.manager.create(Availability, data);
         await this.availabilityRepository.save(newSchedule);
+        savedDays.push(day);
+      } else {
+        skippedDays.push(day);
       }
- 
-  
-     
-      return {
-        msg: 'Schedule added successfully.',
-        status: HttpStatus.CREATED,
-      };
-    } catch (error) {
-      console.error('Error adding schedule:', error);
-      return {
-        msg: 'Failed to add schedule.',
-        status: HttpStatus.BAD_REQUEST,
-      };
     }
-  }
-  
-  // async checkConflict(data: string){
-  //   console.log('checkConflict',JSON.parse(data))
-  //   // try {
-  //   //   const conflicts = await this.availabilityRepository
-  //   //     .createQueryBuilder('availability')
-  //   //     .where('availability.day = :dayaZ', { day: data.day })
-  //   //     .andWhere(
-  //   //       new Brackets((qb) => {
 
-  //   //         // Dili mag repeat ang subject in the same room per day
-  //   //         qb.where('availability.roomId = :roomId AND availability.subjectId = :subjectId', {
-  //   //           roomId: data.roomId,
-  //   //           subjectId: data.subjectId,
-  //   //         });
+    return {
+      msg: `Schedules added successfully for days: ${savedDays.join(', ')}` +
+           (skippedDays.length ? `. Skipped due to conflict: ${skippedDays.join(', ')}` : ''),
+      savedDays,
+      skippedDays,
+      status: HttpStatus.CREATED,
+    };
+  } catch (error) {
+    console.error('Error adding schedule:', error);
+    return {
+      msg: 'Failed to add schedule.',
+      status: HttpStatus.BAD_REQUEST,
+    };
+  }
+}
   
-  //   //         // No overlapping of time slots in the same room per day
-  //   //         qb.orWhere(
-  //   //           'availability.roomId = :roomId AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
-  //   //           { roomId: data.roomId, from: data.times_slot_from, to: data.times_slot_to }
-  //   //         );
-  
-  //   //         // No duplicate subjects across different faculty or rooms per day
-  //   //         qb.orWhere('availability.subjectId = :subjectId', { subjectId: data.subjectId });
-  
-  //   //         // Dapat walay conflicts ang faculty in time slots per room per day
-  //   //         qb.orWhere(
-  //   //           'availability.teacherID = :teacherID AND :from < availability.times_slot_to AND :to > availability.times_slot_from',
-  //   //           { teacherID: data.teacherID, from: data.times_slot_from, to: data.times_slot_to }
-  //   //         );
-  //   //       })
-  //   //     )
-  //   //     .getMany();
-  
-  //   //   return conflicts.length > 0 ? conflicts : null;
-  //   // } catch (error) {
-  //   //   console.error('Error checking conflict:', error);
-  //   //   throw error;
-  //   // }
-  // }
+async newCheckConflict(data: string) {
+  try {
+    const newData = JSON.parse(data);
+    console.log(newData)
+    const conflicts = await this.availabilityRepository
+      .createQueryBuilder('availability')
+      .select([
+        'availability.*',
+        'room.room_section as room_section',
+        'sub.subject_title as subject_title',
+      ])
+      .leftJoin(RoomsSection, 'room', 'room.id = availability.roomId')
+      .leftJoin(Subject, 'sub', 'sub.id = availability.subjectId')
+      .where('availability.day = :day', { day: newData.day })
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where(
+            'availability.roomId = :roomId AND availability.subjectId = :subjectId',
+            { roomId: newData.roomId, subjectId: newData.subjectId }
+          );
+
+          qb.orWhere(
+            `availability.roomId = :roomId 
+             AND :from < availability.times_slot_to 
+             AND :to > availability.times_slot_from`,
+            {
+              roomId: newData.roomId,
+              from: newData.times_slot_from,
+              to: newData.times_slot_to,
+            }
+          );
+
+          qb.orWhere(
+            `availability.teacherID = :teacherID 
+             AND :from < availability.times_slot_to 
+             AND :to > availability.times_slot_from`,
+            {
+              teacherID: newData.teacherID,
+              from: newData.times_slot_from,
+              to: newData.times_slot_to,
+            }
+          );
+        })
+      )
+      .andWhere('availability.id != :id', { id: newData.availId || 0 })
+      .getRawMany();
+
+    const hasConflict = conflicts.length > 0;
+
+    return {
+      status: hasConflict ? 409 : 200,
+      message: hasConflict ? 'Schedule conflict detected.' : 'No conflicts.',
+      conflictData: conflicts,
+      conflict: hasConflict,
+    };
+  } catch (error) {
+    console.error('Error checking conflict:', error);
+    throw new Error('Error checking schedule conflict');
+  }
+}
 
 async checkConflict(data: string) {
   try {
     const newData = JSON.parse(data);
-    // console.log(newData)
+    
     const conflicts = await this.availabilityRepository
       .createQueryBuilder('availability')
       .select([
@@ -242,7 +271,7 @@ async checkConflict(data: string) {
     let data = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .select([
-        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name",
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",
         'ES.id as id',
         'ES.fname as fname',
         'ES.mname as mname',
@@ -334,7 +363,7 @@ async checkConflict(data: string) {
     }
     let data = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
-      .select(["IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name",
+      .select(["IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.lname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",
         'ES.id as id',
         'ES.fname as fname',
         'ES.mname as mname',
@@ -410,7 +439,7 @@ async checkConflict(data: string) {
   async AddClassStudent(grade:string) {
     let data = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
-      .select(["IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name",
+      .select(["IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.fname, ' ', ES.lname)) as name",
         'ES.id as id',
         'ES.fname as fname',
         'ES.mname as mname',
@@ -476,6 +505,7 @@ async checkConflict(data: string) {
       ])
       .where('ES.statusEnrolled = 1')
       .andWhere('ES.grade_level = "'+grade+'"')
+      .orderBy('')
       .getRawMany();
     return data;
   }
@@ -491,7 +521,7 @@ async checkConflict(data: string) {
       .select([
         "A.id as id",
         "CONCAT(times_slot_from, ' - ', times_slot_to) AS time",
-        "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,'. ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
+        "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,' ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
         "MAX(CASE WHEN day = 'Monday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ', room.room_section) END) AS Monday",
         "MAX(CASE WHEN day = 'Tuesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Tuesday",
         "MAX(CASE WHEN day = 'Wednesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Wednesday",
@@ -544,7 +574,7 @@ async checkConflict(data: string) {
       .select([
         "A.id as id",
         "CONCAT(times_slot_from, ' - ', times_slot_to) AS time",
-        "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,'. ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
+        "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,' ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
         "MAX(CASE WHEN day = 'Monday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ', room.room_section) END) AS Monday",
         "MAX(CASE WHEN day = 'Tuesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Tuesday",
         "MAX(CASE WHEN day = 'Wednesday' THEN CONCAT('Subject: ', sub.subject_title, ', Room: ',  room.room_section) END) AS Wednesday",

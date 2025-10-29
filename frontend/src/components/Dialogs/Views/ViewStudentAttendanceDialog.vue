@@ -105,6 +105,10 @@
                   :options="options"
                   :loading="loading"
                 >
+                  <template v-slot:[`item.name`]="{ item }">
+                    <span>{{ item.name }}</span>
+                  </template>
+
                   <template v-slot:[`item.attendance`]="{ item }">
                     <div class="d-flex">
                       <v-radio-group

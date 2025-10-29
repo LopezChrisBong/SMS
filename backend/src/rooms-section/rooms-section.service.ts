@@ -29,31 +29,25 @@ export class RoomsSectionService {
     // console.log(createRoomsSectionDto)
 
       try {
-        let data = this.dataSource.manager.create(RoomsSection,{
+          const count = await this.dataSource.query(
+          'SELECT COUNT(*) as count FROM rooms_section where room_section ="'+createRoomsSectionDto.room_section+'"',
+          );
+          if(count[0].count == 0){
+              let data = this.dataSource.manager.create(RoomsSection,{
           room_section: createRoomsSectionDto.room_section,
           grade_level:createRoomsSectionDto.grade_level,
           teacherId:createRoomsSectionDto.teacherId,
           strandId:createRoomsSectionDto.strandId,
         })
         let room_data = await this.dataSource.manager.save(data)
-          //   const dayList = ["Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"];
-          //   for (let index = 0; index < dayList.length; index++) {
-          //   let newSchedule = this.dataSource.manager.create(Availability, {
-          //       subjectId: 17,
-          //       grade_level:createRoomsSectionDto.grade_level,
-          //       teacherID:0,
-          //       roomId:room_data.id,
-          //       day:dayList[index],
-          //       times_slot_from:'09:30',
-          //       times_slot_to:'10:00',
-          //       hours:'00.30',
-          //       school_yearId:2,
-          //                     })
-          //       await this.availabilityRepository.save(newSchedule);
-          //  }
         return{
           msg:'Save successfully!', status:HttpStatus.CREATED
         }
+          }
+           return{
+          msg:'Duplicate room name, please check if the room already exist!', status:HttpStatus.BAD_REQUEST
+        }
+      
       } catch (error) {
         return{
           msg:'Something went wrong!'+ error, status:HttpStatus.BAD_REQUEST
@@ -169,10 +163,25 @@ export class RoomsSectionService {
     .select([
       "*",
       'RS.id as id',
-      "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,'. ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name", 
+      "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,' ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name", 
     ])
     .leftJoin(UserDetail, 'ud', 'ud.id = RS.teacherId')
     .where('RS.grade_level = "'+gradeLevel+'"')
+    .getRawMany();
+
+    return data
+  }
+
+   async findAllAddedRooms() {
+    let data = await this.dataSource.manager
+    .createQueryBuilder(RoomsSection, 'RS')
+    .select([
+      "*",
+      'RS.id as id',
+      "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,' ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name", 
+    ])
+    .leftJoin(UserDetail, 'ud', 'ud.id = RS.teacherId')
+    .orderBy('RS.room_section')
     .getRawMany();
 
     return data
@@ -219,7 +228,7 @@ export class RoomsSectionService {
       .select([
         "*",
         "ES.id as id",
-        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name", 
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name", 
             ])
       .leftJoin(StudentList, 'SL', 'ES.id = SL.studentId')
       .leftJoin(RoomsSection, 'RS', 'RS.id = SL.roomId')
@@ -250,7 +259,7 @@ export class RoomsSectionService {
     .createQueryBuilder(StudentAttendance, 'SA')
     .select([
       "*",
-      "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name",  
+      "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",  
     ])
     .leftJoin(EnrollStudent, 'ES', 'ES.id = SA.studentID')
      .where('SA.attendanceDate = :date', { date :date})
@@ -289,7 +298,7 @@ export class RoomsSectionService {
   // Step 3: Build and run final pivot query
   const sql = `
     SELECT 
-      CONCAT(s.fname, ' ', s.lname) AS student_name,
+      CONCAT(s.lname, ' ', s.fname) AS student_name,
       ${dateColumns}
     FROM student_attendance a
     JOIN enroll_student s ON a.studentID = s.id
@@ -323,7 +332,7 @@ export class RoomsSectionService {
       .select([
         "*",
         "SL.id as studentListId",
-        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name", 
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name", 
             ])
       .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
       .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')

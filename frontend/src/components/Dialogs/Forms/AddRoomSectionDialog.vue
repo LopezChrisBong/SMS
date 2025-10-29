@@ -4,7 +4,7 @@
       <v-form ref="AddSubjectDialog" @submit.prevent>
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
-            <span>{{ action }} Subject</span>
+            <span>{{ action }} Room</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
               <v-icon>mdi-close</v-icon>
@@ -338,7 +338,7 @@ export default {
                 this.fadeAwayMessage.show = true;
                 this.fadeAwayMessage.type = "success";
                 this.fadeAwayMessage.header = "System Message";
-                this.fadeAwayMessage.message = "Successfully Added Subject!";
+                this.fadeAwayMessage.message = "Successfully Added Room!";
                 this.closeD();
                 // location.reload();
               } else if (res.data.status == 400) {

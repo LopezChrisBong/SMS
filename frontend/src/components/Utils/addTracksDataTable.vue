@@ -53,6 +53,9 @@
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.tracks_name`]="{ item }">
+          <span>{{ item.tracks_name }}</span>
+        </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <v-btn

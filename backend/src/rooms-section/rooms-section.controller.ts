@@ -62,7 +62,12 @@ export class RoomsSectionController {
 
 
   
-  @Get(':gradeLevel')
+  @Get('findAllAddedRooms')
+  findAllAddedRooms() {
+    return this.roomsSectionService.findAllAddedRooms();
+  }
+
+   @Get(':gradeLevel')
   findAll(@Param('gradeLevel') gradeLevel: string) {
     return this.roomsSectionService.findAll(gradeLevel);
   }
