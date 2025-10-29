@@ -42,7 +42,7 @@
         hide-default-footer
       >
         <template v-slot:[`item.subject_title`]="{ item }">
-          <span>{{ item.subject_title }}</span>
+          <span class="gboFontsTable">{{ item.subject_title }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
@@ -152,7 +152,7 @@ export default {
     applicantData: null,
     headers: [
       {
-        text: "Subject Title",
+        text: "Subject",
         value: "subject_title",
         align: "start",
         valign: "center",

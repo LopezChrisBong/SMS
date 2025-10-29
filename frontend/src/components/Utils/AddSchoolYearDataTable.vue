@@ -40,11 +40,11 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.schoo_year`]="{ item }">
-          <span>{{ item.schoo_year }}</span>
+        <template v-slot:[`item.school_year`]="{ item }">
+          <span class="gboFontsTable">{{ item.school_year }}</span>
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <v-chip class="gboFonts justify-center" style="width: 73px; height: 30px;"
+          <v-chip class="gboFontsTable justify-center" style="width: 73px; height: 30px;"
             :color="item.status == 0 ? '#F9BEC1' : '#BAFDBF'">
             {{ item.status == 0 ? "Inactive" : "Active" }}
           </v-chip>

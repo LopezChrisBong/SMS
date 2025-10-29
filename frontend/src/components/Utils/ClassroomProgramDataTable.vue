@@ -90,10 +90,16 @@
               >
               
                 <template v-slot:item.time="{ item }">
-                  {{ formatTime(item.times_slot_from)}} -  {{ formatTime(item.times_slot_to)}}
+                  <span class="gboFontsTable">{{ formatTime(item.times_slot_from)}} -  {{ formatTime(item.times_slot_to)}}</span>
+                </template>
+                <template v-slot:[`item.subject_title`]="{ item }">
+                  <span class="gboFontsTable">{{ item.subject_title }}</span>
+                </template>
+                <template v-slot:[`item.name`]="{ item }">
+                  <span class="gboFontsTable">{{ item.name }}</span>
                 </template>
                 <template v-slot:item.action="{ item }">
-                  <div class="text-no-wrap">
+                  <div class="text-no-wrap gboFontsTable">
                     <!-- Update -->
                     <v-btn
                       block
@@ -192,12 +198,7 @@
                     </v-btn>
                   </div>
                 </template>
-                <template v-slot:[`item.name`]="{ item }">
-                  <span>{{ item.name }}</span>
-                </template>
-                <template v-slot:[`item.subject_title`]="{ item }">
-                  <span>{{ item.subject_title }}</span>
-                </template>
+
               </v-data-table>
             </v-card>
           </v-tab-item>
@@ -286,31 +287,22 @@ export default {
     conflictData: null,
     headers: [
       {
-        text: "Time",
+        text: "Meeting Time",
         value: "time",
         align: "start",
         valign: "start",
         sortable: false,
       },
       {
-        text: "Faculty Name",
-        value: "name",
+        text: "Subject",
+        value: "subject_title",
         align: "center",
         valign: "center",
         sortable: false,
       },
-
-      // {
-      //   text: "Day",
-      //   value: "day",
-      //   align: "center",
-      //   valign: "center",
-      //   sortable: false,
-      // },
-
       {
-        text: "Subject",
-        value: "subject_title",
+        text: "Faculty Name",
+        value: "name",
         align: "center",
         valign: "center",
         sortable: false,

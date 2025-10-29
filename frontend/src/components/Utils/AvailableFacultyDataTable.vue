@@ -170,7 +170,7 @@ export default {
     teacher: null,
     headers: [
       {
-        text: "Name",
+        text: "Faculty Name",
         value: "name",
         align: "start",
         valign: "start",
@@ -184,7 +184,7 @@ export default {
         sortable: false,
       },
       {
-        text: "Grade level",
+        text: "Grade Level",
         value: "gradeLevels",
         align: "center",
         valign: "center",

@@ -41,10 +41,10 @@
         hide-default-footer
       >
         <template v-slot:[`item.strand_name`]="{ item }">
-          <span>{{ item.strand_name }}</span>
+          <span class="gboFontsTable">{{ item.strand_name }}</span>
         </template>
         <template v-slot:[`item.tracks_name`]="{ item }">
-          <span>{{ item.tracks_name }}</span>
+          <span class="gboFontsTable">{{ item.tracks_name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
@@ -211,7 +211,7 @@ export default {
         sortable: false,
       },
       {
-        text: "Tracks Name",
+        text: "Track Name",
         value: "tracks_name",
         align: "center",
         valign: "center",

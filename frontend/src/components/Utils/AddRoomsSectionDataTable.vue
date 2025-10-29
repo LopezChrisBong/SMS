@@ -95,13 +95,16 @@
         hide-default-footer
       >
         <template v-slot:[`item.index`]="{ index }">
-          <span>{{ index + 1 }}</span>
+          <span class="gboFontsTable">{{ index + 1 }}</span>
+        </template>
+        <template v-slot:[`item.grade_level`]="{ item }">
+          <span class="gboFontsTable">{{ item.grade_level }}</span>
         </template>
         <template v-slot:[`item.room_section`]="{ item }">
-          <span>{{ item.room_section }}</span>
+          <span class="gboFontsTable">{{ item.room_section }}</span>
         </template>
         <template v-slot:[`item.name`]="{ item }">
-          <span>{{ item.name }}</span>
+          <span class="gboFontsTable">{{ item.name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
@@ -318,7 +321,7 @@ export default {
         width: 20,
       },
       {
-        text: "Room Name",
+        text: "Room/Section",
         value: "room_section",
         align: "center",
         valign: "center",
@@ -358,7 +361,7 @@ export default {
         sortable: false,
       },
       {
-        text: "Room Name",
+        text: "Room/Section",
         value: "room_section",
         align: "center",
         valign: "center",
