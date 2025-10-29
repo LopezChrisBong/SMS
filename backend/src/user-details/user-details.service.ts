@@ -450,6 +450,10 @@ export class UserDetailsService {
         'ud.mobile_no as mobile_no',
         'ud.profile_img as profile_img',
         'ud.status as status',
+        'ud.position as position',
+        'ud.specialization as specialization',
+        'ud.grade_experience as grade_experience',
+        'ud.cs_eligibility as cs_eligibility',
       ])
       .where('ud.id = :id', { id })
       .getRawOne();
@@ -495,6 +499,10 @@ export class UserDetailsService {
         mobile_no: updateUserDetailDto.mobile_no,
         hired: updateUserDetailDto.hired,
         education: updateUserDetailDto.education,
+        position:updateUserDetailDto.position,
+        specialization:updateUserDetailDto.specialization,
+        grade_experience:updateUserDetailDto.grade_experience,
+        cs_eligibility:updateUserDetailDto.cs_eligibility
       });
 
       if (upd.affected == 1) {

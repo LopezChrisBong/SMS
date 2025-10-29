@@ -226,6 +226,42 @@
                         color="#6DB249"
                       ></v-text-field>
                     </v-col>
+                    <v-col cols="6" md="6">
+                      <v-text-field
+                        v-model="data.position"
+                        :readonly="readonly"
+                        label="Position"
+                        dense
+                        color="#6DB249"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6" md="6">
+                      <v-text-field
+                        v-model="data.specialization"
+                        :readonly="readonly"
+                        label="Specialization"
+                        dense
+                        color="#6DB249"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6" md="6">
+                      <v-text-field
+                        v-model="data.grade_experience"
+                        :readonly="readonly"
+                        label="Present Grade Experience"
+                        dense
+                        color="#6DB249"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6" md="6">
+                      <v-text-field
+                        v-model="data.cs_eligibility"
+                        :readonly="readonly"
+                        label="CS Eligibility"
+                        dense
+                        color="#6DB249"
+                      ></v-text-field>
+                    </v-col>
                   </v-row>
                 </v-form>
                 <v-card-actions v-if="readonly == true" class="pa-5">
@@ -457,6 +493,10 @@ export default {
         hired: null,
         education: null,
         status: null,
+        cs_eligibility: null,
+        grade_experience: null,
+        specialization: null,
+        position: null,
       },
       oldPass: null,
       sexItem: ["Male", "Female"],
@@ -558,6 +598,10 @@ export default {
           this.data.suffix = res.data.suffix;
           this.data.hired = res.data.hired;
           this.data.education = res.data.education;
+          this.data.position = res.data.position;
+          this.data.specialization = res.data.specialization;
+          this.data.grade_experience = res.data.grade_experience;
+          this.data.cs_eligibility = res.data.cs_eligibility;
           this.data.sex = res.data.sex;
           this.data.status = res.data.status;
           this.data.mobile_no = res.data.mobile_no;

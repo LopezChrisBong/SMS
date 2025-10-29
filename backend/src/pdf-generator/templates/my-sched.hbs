@@ -90,17 +90,17 @@
                           <td   class="font-12" style="width:15%">Name</td>
                           <td  align='center' class="font-12" style="text-transform: uppercase;width:30%"><b>{{teacherName.name}}</b></td>
                           <td class="font-12"style="width:35%" >Teaching Experience</td>
-                          <td  align='center' class="font-12" style="width:20%"></td>
+                          <td  align='center' class="font-12" style="width:20%"> {{teachingExperience teacherName.hired}}</td>
                         </tr>
                         <tr>
                           <td   class="font-12" >Position</td>
-                          <td  align='center' class="font-12"  style="text-transform: uppercase;"><b>Teacher I</b></td>
+                          <td  align='center' class="font-12"  style="text-transform: uppercase;"><b>{{teacherName.position}}</b></td>
                           <td  class="font-12" >Present Grade Teaching Experience</td>
-                          <td  align='center' class="font-12" ></td>
+                          <td  align='center' class="font-12" >{{teacherName.grade_experience}}</td>
                         </tr>
                         <tr>
                           <td  class="font-12" >CS Eligibility</td>
-                          <td  align='center' class="font-12" ></td>
+                          <td  align='center' class="font-12" >{{teacherName.cs_eligibility}}</td>
                           <td   class="font-12" >Highest Educational Qualification</td>
                           <td  align='center' class="font-12" >{{teacherName.education}}</td>
                         </tr>
@@ -108,7 +108,7 @@
                           <td  class="font-12" ></td>
                           <td  align='center' class="font-12" ></td>
                           <td   class="font-12" >Specialization</td>
-                          <td  align='center' class="font-12" ></td>
+                          <td  align='center' class="font-12" >{{teacherName.specialization}}</td>
                         </tr>
                       </table>
                     
