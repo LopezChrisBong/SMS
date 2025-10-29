@@ -172,20 +172,38 @@ export class RoomsSectionService {
     return data
   }
 
-   async findAllAddedRooms() {
-    let data = await this.dataSource.manager
-    .createQueryBuilder(RoomsSection, 'RS')
-    .select([
-      "*",
-      'RS.id as id',
-      "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,' ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name", 
-    ])
-    .leftJoin(UserDetail, 'ud', 'ud.id = RS.teacherId')
-    .orderBy('RS.room_section')
-    .getRawMany();
+   async findAllAddedRooms(curr_user: any) {
+      let grade: string[];
 
-    return data
-  }
+      console.log(curr_user.userdetail.status);
+
+      if (curr_user.userdetail.status == 2) {
+        grade = ['Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'];
+      } else {
+        grade = ['Kinder 1', 'Kinder 2', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6'];
+      }
+
+      const data = await this.dataSource.manager
+        .createQueryBuilder(RoomsSection, 'RS')
+        .select([
+          '*',
+          'RS.id as id',
+          `IF(
+            !ISNULL(ud.mname) AND LOWER(ud.mname) != 'n/a',
+            CONCAT(ud.fname, ' ', SUBSTRING(ud.mname, 1, 1), '. ', ud.lname),
+            CONCAT(ud.fname, ' ', ud.lname)
+          ) as name`,
+        ])
+        .leftJoin(UserDetail, 'ud', 'ud.id = RS.teacherId')
+        .where('RS.grade_level IN (:...grade)', { grade })
+        .orderBy(`FIELD(RS.grade_level, ${grade.map(g => `'${g}'`).join(', ')})`)
+        .addOrderBy('RS.room_section', 'ASC')
+        .getRawMany();
+
+      return data;
+    }
+
+
 
   async findSectionName(gradeLevel:string, section:number) {
     let data = await this.dataSource.manager

@@ -72,7 +72,7 @@
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
-        :headers="headers"
+        :headers="tab == 9 ? header1 : headers"
         :items="data"
         :items-per-page="10"
         :search="search"
@@ -81,6 +81,11 @@
         @pagination="pagination"
         hide-default-footer
       >
+        <template v-slot:[`item.index`]="{ index }">
+          <span>{{
+            (options.page - 1) * options.itemsPerPage + index + 1
+          }}</span>
+        </template>
         <template v-slot:[`item.room_section`]="{ item }">
           <span>{{ item.room_section }}</span>
         </template>
@@ -280,10 +285,18 @@ export default {
     dialogConfirmGenerate: false,
     headers: [
       {
-        text: "Room Name",
-        value: "room_section",
+        text: "#",
+        value: "index",
         align: "start",
         valign: "start",
+        sortable: false,
+        width: 20,
+      },
+      {
+        text: "Room Name",
+        value: "room_section",
+        align: "center",
+        valign: "center",
         sortable: false,
       },
 
@@ -303,7 +316,38 @@ export default {
         sortable: false,
       },
     ],
+    header1: [
+      {
+        text: "#",
+        value: "index",
+        align: "start",
+        valign: "start",
+        sortable: false,
+        width: 20,
+      },
+      {
+        text: "Grade Level",
+        value: "grade_level",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+      {
+        text: "Room Name",
+        value: "room_section",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
 
+      {
+        text: "Adviser",
+        value: "name",
+        align: "center",
+        valign: "center",
+        sortable: false,
+      },
+    ],
     data: [],
     gradeName: null,
     printData: [],
@@ -317,9 +361,10 @@ export default {
       { text: "250", value: 250 },
       { text: "500", value: 500 },
     ],
-    activeTab: { id: 7, name: "Kinder 1" },
-    tab: 7,
+    activeTab: { id: 9, name: "Kinder 1" },
+    tab: 9,
     tabList: [
+      { id: 9, name: "ALL ROOMS" },
       { id: 7, name: "Kinder 1" },
       { id: 8, name: "Kinder 2" },
       { id: 1, name: "Grade 1" },
@@ -514,6 +559,16 @@ export default {
         this.gradeName = "Kinder 2";
 
         this.axiosCall("/rooms-section/" + this.gradeName, "GET").then(
+          (res) => {
+            if (res) {
+              console.log("Love", res.data);
+              this.data = res.data;
+              this.loading = false;
+            }
+          }
+        );
+      } else if (this.tab == 9) {
+        this.axiosCall("/rooms-section/findAllAddedRooms", "GET").then(
           (res) => {
             if (res) {
               console.log("Love", res.data);
