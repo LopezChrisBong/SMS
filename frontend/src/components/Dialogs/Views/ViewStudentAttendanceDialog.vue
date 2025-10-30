@@ -30,7 +30,7 @@
                   dense
                   hide-details
                   color="#f5b027"
-                  class="rounded-lg"
+                  class="rounded-lg gboFonts"
                   @change="attendance_date ? changeDate() : ''"
                 ></v-text-field>
                 <!-- <v-menu
@@ -76,7 +76,7 @@
                   outlined
                   @click="viewAttendance()"
                 >
-                  <v-icon size="18" class="mx-2">mdi-printer-eye</v-icon>
+                  <v-icon size="20" class="mx-2 gboFonts">mdi-printer-eye</v-icon>
                   Atendance
                 </v-btn>
               </v-col>
@@ -99,6 +99,7 @@
                 </div> -->
 
                 <v-data-table
+                  class="custom-table"
                   :headers="headers"
                   :items="studentAttendance"
                   :search="search"
@@ -106,12 +107,12 @@
                   :loading="loading"
                 >
                   <template v-slot:[`item.name`]="{ item }">
-                    <span>{{ item.name }}</span>
+                    <span class="gboFontsTable">{{ item.name }}</span>
                   </template>
 
                   <template v-slot:[`item.attendance`]="{ item }">
-                    <div class="d-flex">
-                      <v-radio-group
+                    <div class="d-flex center">
+                      <v-radio-group class="gboFonts"
                         v-model="item.attendance"
                         row
                         :disabled="!attendance_date"
@@ -125,14 +126,15 @@
                   </template>
                   <template v-slot:[`item.actions`]="{ item }">
                     <v-btn
+                      style="width: 80pt;"
                       class="mx-2"
-                      x-small
+                      small
                       color="orange"
                       outlined
                       @click="viewQRItem(item)"
                     >
-                      <v-icon size="14">mdi-qrcode</v-icon>
-                      QR
+                      <v-icon size="20">mdi-qrcode</v-icon>
+                      <span class="gboFontsTable"> QR</span>
                     </v-btn>
                   </template>
                 </v-data-table>
@@ -410,11 +412,11 @@ export default {
         {
           text: "Attendance",
           value: "attendance",
-          align: "end",
+          align: "center",
           sortable: false,
           width: 250,
         },
-        { text: "QR Code", value: "actions", align: "end", width: 100 },
+        { text: "QR Code", value: "actions", align: "center", width: 100 },
       ],
       fadeAwayMessage: {
         show: false,
@@ -600,7 +602,7 @@ export default {
       this.eventHub.$emit("closeStudentAttendanceDialog", true);
       this.dialog = false;
       this.readonly = true;
-      this.attendance_date = null;
+      // this.attendance_date = null;
       this.edit = false;
       this.update = false;
     },
