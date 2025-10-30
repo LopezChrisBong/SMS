@@ -600,7 +600,7 @@ export default {
       this.eventHub.$emit("closeStudentAttendanceDialog", true);
       this.dialog = false;
       this.readonly = true;
-      this.attendance_date = null;
+      // this.attendance_date = null;
       this.edit = false;
       this.update = false;
     },
