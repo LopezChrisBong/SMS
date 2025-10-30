@@ -395,7 +395,7 @@
                     v-model="formdata.residential_street"
                     dense
                     class="rounded-lg"
-                    label="Street"
+                    label="Street/Purok"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -416,8 +416,9 @@
                   <v-text-field
                     v-model="formdata.residential_brgy"
                     dense
+                    :rules="[formRules.required]"
                     class="rounded-lg"
-                    label="Barangay"
+                    label="* Barangay"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -428,7 +429,8 @@
                     v-model="formdata.residential_city"
                     dense
                     class="rounded-lg"
-                    label="Municipality / City"
+                    :rules="[formRules.required]"
+                    label="* Municipality / City"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -439,7 +441,8 @@
                     v-model="formdata.residential_prov"
                     dense
                     class="rounded-lg"
-                    label="Province"
+                    :rules="[formRules.required]"
+                    label="* Province"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -486,7 +489,7 @@
                     v-model="formdata.permanent_street"
                     dense
                     class="rounded-lg"
-                    label="Street"
+                    label="Street/Purok"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -507,8 +510,9 @@
                   <v-text-field
                     v-model="formdata.permanent_brgy"
                     dense
+                    :rules="[formRules.required]"
                     class="rounded-lg"
-                    label="Barangay"
+                    label="* Barangay"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -518,8 +522,9 @@
                   <v-text-field
                     v-model="formdata.permanent_city"
                     dense
+                    :rules="[formRules.required]"
                     class="rounded-lg"
-                    label="Municipality / City"
+                    label="* Municipality / City"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -529,8 +534,9 @@
                   <v-text-field
                     v-model="formdata.permanent_prov"
                     dense
+                    :rules="[formRules.required]"
                     class="rounded-lg"
-                    label="Province"
+                    label="* Province"
                     color="#6DB249"
                   >
                   </v-text-field>
@@ -539,12 +545,14 @@
                 <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                   <v-text-field
                     v-model="formdata.permanent_zip"
+                    :rules="[(v) => v.length === 4 || 'Must be 4 digits']"
                     dense
                     class="rounded-lg"
-                    label="Zip Code"
-                    color="#6DB249"
+                    type="tel"
                     @keypress="onlyDigits"
                     :maxlength="4"
+                    label="* Zip Code"
+                    color="#6DB249"
                   >
                   </v-text-field>
                 </v-col>
@@ -831,7 +839,6 @@
                 <v-row
                   v-if="
                     grade_level == 'Grade 7' ||
-                      grade_level == 'Grade 11' ||
                       grade_level == 'Grade 1' ||
                       formdata.transfered == 'Yes'
                   "
@@ -1198,16 +1205,17 @@ export default {
   },
   methods: {
     changeGuardian() {
-      if (
-        (this.family_background.father_fname == null ||
-          this.family_background.father_fname == "") &&
-        (this.family_background.mother_fname == null ||
-          this.family_background.mother_fname == "")
-      ) {
-        this.guardianNeed = true;
-      } else {
-        this.guardianNeed = false;
-      }
+      console.log("");
+      // if (
+      //   (this.family_background.father_fname == null ||
+      //     this.family_background.father_fname == "") &&
+      //   (this.family_background.mother_fname == null ||
+      //     this.family_background.mother_fname == "")
+      // ) {
+      //   this.guardianNeed = true;
+      // } else {
+      //   this.guardianNeed = false;
+      // }
     },
     onlyDigits(event) {
       const char = String.fromCharCode(event.keyCode);
