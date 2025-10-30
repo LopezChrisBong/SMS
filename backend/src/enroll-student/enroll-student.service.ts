@@ -78,12 +78,13 @@ async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
         subjectId: createAvailabilityDto.subjectId,
         roomId: createAvailabilityDto.roomId,
         grade_level: createAvailabilityDto.grade_level,
-        day: day,
+        day,
         times_slot_from: createAvailabilityDto.times_slot_from,
         times_slot_to: createAvailabilityDto.times_slot_to,
         hours: createAvailabilityDto.hours,
         school_yearId: createAvailabilityDto.school_yearId,
       };
+
       const conflict = await this.newCheckConflict(JSON.stringify(data));
 
       if (!conflict.conflict) {
@@ -95,6 +96,14 @@ async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
       }
     }
 
+    if (savedDays.length === 0) {
+      return {
+        msg: `No schedules were added. All selected days have conflicts: ${skippedDays.join(', ')}`,
+        savedDays,
+        skippedDays,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
     return {
       msg: `Schedules added successfully for days: ${savedDays.join(', ')}` +
            (skippedDays.length ? `. Skipped due to conflict: ${skippedDays.join(', ')}` : ''),
@@ -102,6 +111,7 @@ async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
       skippedDays,
       status: HttpStatus.CREATED,
     };
+
   } catch (error) {
     console.error('Error adding schedule:', error);
     return {
@@ -110,6 +120,7 @@ async AddSchedule(createAvailabilityDto: CreateAvailabilityDto) {
     };
   }
 }
+
   
 async newCheckConflict(data: string) {
   try {
