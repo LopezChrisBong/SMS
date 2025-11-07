@@ -910,7 +910,7 @@
           <v-col cols="4" class="white--text rounded-lg">
             <v-btn
               block
-              color="#EA7142"
+              color="#f5b027"
               @click="confirmSave()"
               dense
               class="white--text"
@@ -980,7 +980,7 @@
       <template v-slot:activator="{ on, attrs }">
         <!-- Add Contribution Button -->
         <v-btn
-          color="#EA7142"
+          color="#f5b027"
           fab
           dark
           md
@@ -1506,7 +1506,7 @@ export default {
 }
 
 thead th {
-  background-color: #ea7142 !important;
+  background-color: #f5b027 !important;
   color: white !important;
 }
 thead th:first-child {

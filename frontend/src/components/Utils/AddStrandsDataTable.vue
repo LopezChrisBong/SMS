@@ -1,14 +1,6 @@
 <template>
-  <div>
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
-      <v-col cols="12" md="8" class="flex-items">
-        <!-- <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
-          <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
-          }}</v-tab>
-        </v-tabs> -->
-      </v-col>
-      <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
           v-model="search"
@@ -17,33 +9,28 @@
           label="Search"
           single-line
           hide-details
-          class="rounded-lg"
-          color="#239FAB"
+          class="rounded-lg gboFonts" 
+          color="#F5B027"
           dense
         ></v-text-field>
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
+          style="width: 125pt; background-color: #F5B027;"
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
         >
-          <v-icon left> mdi-plus-box-outline </v-icon>
+          <v-icon class="gboFonts" left> mdi-plus-box-outline </v-icon>
           Add New
         </v-btn>
-        <!-- <v-btn
-                  :class="tab == 3 ? '' : 'd-none'"
-                  class="white--text ml-2 rounded-lg"
-                  color="#147452"
-                  v-if="this.$store.state.user.user.isAdminApproved == 1"
-                  @click="printJobApplicants()"
-                >
-                  <v-icon left> mdi-printer-outline </v-icon>
-                  Print
-                </v-btn> -->
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
+        class="custom-table"
         :headers="headers"
         :items="data"
         :items-per-page="10"
@@ -54,30 +41,30 @@
         hide-default-footer
       >
         <template v-slot:[`item.strand_name`]="{ item }">
-          <span>{{ item.strand_name }}</span>
+          <span class="gboFontsTable">{{ item.strand_name }}</span>
         </template>
         <template v-slot:[`item.tracks_name`]="{ item }">
-          <span>{{ item.tracks_name }}</span>
+          <span class="gboFontsTable">{{ item.tracks_name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap" style="padding: 4px;">
+          <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
             <v-btn
-              x-small
+              small
               color="blue"
-              class="my-2 mx-2"
+              class="my-2 mx-2 gboFontsTable"
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Update
+              <v-icon size="20" class="gboFontsTable">mdi-pencil-outline</v-icon>&nbsp;Update
             </v-btn>
             <v-btn
-              x-small
+              small
               color="red"
-              class="my-2"
+              class="my-2 gboFontsTable"
               outlined
               @click="confirmDelete(item)"
             >
-              <v-icon size="14">mdi-delete-off</v-icon>Delete
+              <v-icon size="20" class="gboFontsTable">mdi-delete-off</v-icon>&nbsp;Delete
             </v-btn>
           </div>
         </template>
@@ -85,25 +72,25 @@
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
       <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
-        <span class="px-2">Show</span>
+        <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
             dense
             outlined
-            color="#147452"
+            color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
-            class="rounded-lg"
+            class="rounded-lg gboFonts"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >
           </v-select>
         </span>
-        <span class="px-2"> Entries </span>
+        <span class="px-2 gboFonts"> Entries </span>
       </v-col>
 
-      <v-col cols="auto" class="mr-auto text-truncate" no-gutters>
+      <v-col cols="auto" class="mr-auto text-truncate gboFonts" no-gutters>
         Showing {{ paginationData.pageStart + 1 }} to
         {{ paginationData.pageStop }} of
         {{ paginationData.itemsLength }} entries
@@ -144,7 +131,7 @@
           <v-btn color="red" outlined @click="confirmDialog = false">
             Close
           </v-btn>
-          <v-btn color="#147452" class="white--text" @click="deleteItem()">
+          <v-btn color="#f5b027" class="white--text" @click="deleteItem()">
             Confirm
           </v-btn>
         </v-card-actions>
@@ -177,11 +164,7 @@
               </v-col>
             </v-row>
             <v-card-title> </v-card-title>
-            <!-- <v-data-table :headers="headers3" :items="printData">
-                    <template v-slot:[`item.birth`]="{ item }">
-                      {{ formatDate(item.birth) }}
-                    </template>
-                  </v-data-table> -->
+
           </v-form>
         </v-card-text>
 
@@ -228,7 +211,7 @@ export default {
         sortable: false,
       },
       {
-        text: "Tracks Name",
+        text: "Track Name",
         value: "tracks_name",
         align: "center",
         valign: "center",
@@ -335,13 +318,6 @@ export default {
       return this.$store.getters.getFilterSelected;
     },
 
-    // filterPrintData() {
-    //   return this.paginate(
-    //     this.data.filter((data) =>
-    //       data.employee.toLowerCase().match(this.search.toLowerCase())
-    //     )
-    //   );
-    // },
   },
   methods: {
     tag(item) {
@@ -448,3 +424,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>

@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
-        <v-tabs v-model="activeTab" color="#EA7142" align-tabs="left">
-          <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
-          }}</v-tab>
+        <v-tabs v-model="activeTab" color="#F5B027" align-tabs="left">
+          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">
+            {{tab.name}}
+          </v-tab>
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="12" md="3">
+      <v-col cols="12" md="4">
         <v-text-field
           v-model="search"
           outlined
@@ -17,14 +17,15 @@
           label="Search"
           single-line
           hide-details
-          class="rounded-lg"
-          color="#EA7142"
+          class="rounded-lg gboFontsTabs"
+          color="#F5B027"
           dense
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-card class="ma-5 dt-container" elevation="0" outlined>
+    <v-card class="ma-5 dt-container gboFontsTabs" elevation="0" outlined>
       <v-data-table
+        class="custom-table"
         :headers="headers"
         :items="data"
         :items-per-page="10"
@@ -34,21 +35,22 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.fname`]="{ item }">
-          {{ item.fname }} {{ item.lname }}
+
+        <template v-slot:[`item.name`]="{ item }">
+          <span class="gboFontsTable">{{ item.name }}</span>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
-            x-small
+            small
             color="blue"
             outlined
             @click="editItem(item)"
-            class="mx-2"
+            class="mx-2 gboFontsTable"
           >
-            <v-icon size="14">{{
+            <v-icon size="20">{{
               tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
             }}</v-icon>
-            {{ tab == 1 ? "Verify" : "View" }}
+            &nbsp;{{ tab == 1 ? "Verify" : "View" }}
           </v-btn>
 
           <v-btn
@@ -58,40 +60,40 @@
             :class="tab == 2 ? 'd-none' : ''"
             @click="deleteItem(item)"
           >
-            <v-icon size="14">mdi-delete-off</v-icon>Delete
+            <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon>&nbsp;Delete
           </v-btn>
         </template>
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
       <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
-        <span class="px-2">Show</span>
-        <span>
+        <span class="px-2 gboFonts">Show</span>
+        <span class="gboFonts">
           <v-select
             dense
             outlined
-            color="#EA7142"
+            color="#F5B027"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
-            class="rounded-lg"
+            class="rounded-lg gboFonts"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >
           </v-select>
         </span>
-        <span class="px-2"> Entries </span>
+        <span class="px-2 gboFonts"> Entries </span>
       </v-col>
 
-      <v-col cols="auto" class="mr-auto text-truncate" no-gutters>
+      <v-col cols="auto" class="mr-auto text-truncate gboFonts" no-gutters>
         Showing {{ paginationData.pageStart + 1 }} to
         {{ paginationData.pageStop }} of
-        {{ paginationData.itemsLength }} entries
+        {{ paginationData.itemsLength }} Entries
       </v-col>
       <v-col cols="auto">
         <v-pagination
           v-model="options.page"
-          class="rounded-lg"
+          class="rounded-lg gboFonts"
           :total-visible="7"
           :color="$vuetify.theme.themes.light.submitBtns"
           :length="paginationData.pageCount"
@@ -106,14 +108,15 @@
       <v-card>
         <v-card-title class="text-h5"> Confirmation </v-card-title>
 
-        <v-card-text style="font-size: 17px">
-          Are you sure you want to delete this item ?
+        <v-card-text class="gboFonts" style="font-size: 17px">
+          Are you sure you want to delete this item?
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
 
           <v-btn
+            class="gboFonts"
             color="teal darken-3"
             outlined
             @click="dialogConfirmDelete = false"
@@ -122,8 +125,8 @@
           </v-btn>
 
           <v-btn
+            class="white--text gboFonts"
             :color="$vuetify.theme.themes.light.submitBtns"
-            class="white--text"
             @click="
               confirmDelete();
               dialogConfirmDelete = false;
@@ -143,6 +146,7 @@
       :type="fadeAwayMessage.type"
     ></fade-away-message-component>
   </div>
+
 </template>
 <script>
 export default {
@@ -153,7 +157,7 @@ export default {
   data: () => ({
     search: "",
     headers: [
-      { text: "Name", value: "name", align: "start" },
+      { text: "Name", value: "name", align: "start", color: "#F5B027" },
       {
         text: "Actions",
         value: "actions",
@@ -302,3 +306,28 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>

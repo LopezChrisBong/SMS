@@ -27,7 +27,6 @@
                         v-model="time_slot_from"
                         label="Select time from:"
                         prepend-icon="mdi-clock-time-four-outline"
-                        readonly
                         v-bind="attrs"
                         :rules="[formRules.required]"
                         v-on="on"
@@ -67,7 +66,6 @@
                         v-model="time_slot_to"
                         label="Select time to:"
                         prepend-icon="mdi-clock-time-four-outline"
-                        readonly
                         v-bind="attrs"
                         :rules="[formRules.required]"
                         v-on="on"

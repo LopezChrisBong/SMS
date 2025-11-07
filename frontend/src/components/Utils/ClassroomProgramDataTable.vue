@@ -1,31 +1,6 @@
 <template>
-  <div>
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
-      <v-spacer></v-spacer>
-      <v-col cols="12">
-        <v-btn
-          class="white--text ml-2 rounded-lg"
-          :color="$vuetify.theme.themes.light.submitBtns"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
-          @click="classProgramms()"
-        >
-          <v-icon left> mdi-printer-outline </v-icon>
-          Class Programm
-        </v-btn>
-      </v-col>
-      <v-col cols="12" md="8" class="flex-items">
-        <v-tabs
-          v-model="activeTab"
-          show-arrows
-          color="#EA7142"
-          align-tabs="left"
-        >
-          <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
-          }}</v-tab>
-        </v-tabs>
-      </v-col>
-      <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-autocomplete
           v-model="section"
@@ -34,34 +9,50 @@
           outlined
           @change="changeValueSection($event)"
           label="Section"
-          class="rounded-lg"
+          class="rounded-lg gboFonts"
           item-text="room_section"
           item-value="id"
           color="#93CB5B"
           :items="sectionList"
         >
         </v-autocomplete>
-
-        <!-- <v-text-field
-          v-model="search"
-          outlined
-          prepend-inner-icon="search"
-          label="Search"
-          single-line
-          hide-details
-          class="rounded-lg"
-          color="#239FAB"
-          dense
-        ></v-text-field> -->
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="12" md="8" class="d-flex justify-end">
         <v-btn
-          class="white--text ml-2 rounded-lg"
+          style="width: 150pt; background-color: #F5B027;"
+          class="white--text ml-2 rounded-lg gboFonts"
+          :color="$vuetify.theme.themes.light.submitBtns"
+          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          @click="classProgramms()"
+        >
+          <v-icon class="gboFonts" left> mdi-printer-outline </v-icon>
+          Class Program
+        </v-btn>
+        <v-btn
+          style="width: 125pt; background-color: #F5B027;"
+          class="white--text ml-2 rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
         >
-          <v-icon left> mdi-plus-box-outline </v-icon>
+          <v-icon class="gboFonts" left> mdi-plus-box-outline </v-icon>
           Add New
         </v-btn>
+      </v-col>
+    </v-row>
+    <v-row class="mx-2" style="margin-top: -40px;">
+      <v-col cols="12" md="8" class="flex-items">
+        <v-tabs
+          v-model="activeTab"
+          show-arrows
+          color="#f5b027"
+          align-tabs="left"
+        >
+          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
+            tab.name
+          }}</v-tab>
+        </v-tabs>
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
@@ -70,7 +61,7 @@
         <v-tabs
           v-model="activeDay"
           background-color="transparent"
-          color="orange darken-2"
+          color="orange darken-2 gboFontsTable"
           grow
           slider-color="orange darken-2"
         >
@@ -78,7 +69,7 @@
             v-for="(items, day) in groupedByDay"
             :key="day"
             :href="'#' + day"
-            class="text-subtitle-1 font-weight-bold"
+            class="gboFontsTable"
           >
             {{ day }}
           </v-tab>
@@ -90,29 +81,35 @@
             :key="day"
             :value="day"
           >
-            <v-card outlined class="pa-3">
+            <v-card class="ma-1 dt-container" elevation="3" outlined>
               <v-data-table
+                class="custom-table"
                 :headers="headers"
                 :items="items"
-                :items-per-page="50"
-                dense
-                class="elevation-1"
+                :items-per-page="10"
               >
+              
                 <template v-slot:item.time="{ item }">
-                  {{ formatTime(item.time) }}
+                  <span class="gboFontsTable">{{ formatTime(item.times_slot_from)}} -  {{ formatTime(item.times_slot_to)}}</span>
+                </template>
+                <template v-slot:[`item.subject_title`]="{ item }">
+                  <span class="gboFontsTable">{{ item.subject_title }}</span>
+                </template>
+                <template v-slot:[`item.name`]="{ item }">
+                  <span class="gboFontsTable">{{ item.name }}</span>
                 </template>
                 <template v-slot:item.action="{ item }">
-                  <div class="text-no-wrap">
+                  <div class="text-no-wrap gboFontsTable">
                     <!-- Update -->
                     <v-btn
                       block
-                      x-small
+                      small
                       color="blue"
                       outlined
-                      class="mx-1 my-1"
+                      class="mx-1 my-1 gboFontsTable"
                       @click="editItem(item)"
                     >
-                      <v-icon small>mdi-pencil-outline</v-icon> Update
+                      <v-icon class="gboFontsTable" small>mdi-pencil-outline</v-icon>&nbsp;Update
                     </v-btn>
 
                     <!-- Conflict Menu -->
@@ -126,15 +123,15 @@
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn
                           block
-                          x-small
+                          small
                           color="orange"
-                          class="white--text mx-1 my-1"
+                          class="white--text mx-1 my-1 gboFontsTable"
                           dark
                           v-bind="attrs"
                           v-on="on"
                           @click.stop="toggleMenu(item)"
                         >
-                          <v-icon small>mdi-alert-outline</v-icon> Conflict
+                          <v-icon class="gboFontsTable" small>mdi-alert-outline</v-icon>&nbsp;Conflict
                         </v-btn>
                       </template>
 
@@ -143,7 +140,7 @@
                         max-width="500"
                         style="width: 500px;"
                       >
-                        <v-card-title class="headline">
+                        <v-card-title class="headline gboFonts">
                           Conflict Information
                         </v-card-title>
                         <v-card-text>
@@ -153,21 +150,21 @@
                               :key="c.id"
                               class="elevation-2 mb-2 pa-2"
                             >
-                              <v-col cols="12">
-                                <v-chip color="red" class="white--text">
+                              <v-col cols="12" class="gboFonts">
+                                <v-chip color="red" class="white--text gboFonts">
                                   {{ index + 1 }}
                                 </v-chip>
                                 Room Name: {{ c.room_section }}
                               </v-col>
-                              <v-col cols="12"
+                              <v-col cols="12" class="gboFonts"
                                 >Subject: {{ c.subject_title }}</v-col
                               >
-                              <v-col cols="12"
+                              <v-col cols="12" class="gboFonts"
                                 >Time: {{ c.times_slot_from }} -
                                 {{ c.times_slot_to }}</v-col
                               >
-                              <v-col cols="12">Day: {{ c.day }}</v-col>
-                              <v-col cols="12"
+                              <v-col cols="12" class="gboFonts">Day: {{ c.day }}</v-col>
+                              <v-col cols="12" class="gboFonts"
                                 >Grade: {{ c.grade_level }}</v-col
                               >
                             </v-row>
@@ -177,6 +174,7 @@
                         <v-card-actions>
                           <v-spacer></v-spacer>
                           <v-btn
+                          class="gboFonts"
                             small
                             text
                             color="primary"
@@ -191,21 +189,16 @@
                     <!-- Delete -->
                     <v-btn
                       block
-                      x-small
+                      small
                       color="#C62828"
-                      class="white--text mx-1 my-1"
+                      class="white--text mx-1 my-1 gboFontsTable"
                       @click="confirmDelete(item)"
                     >
-                      <v-icon small>mdi-trash-can-outline</v-icon> Delete
+                      <v-icon class="gboFontsTable" small>mdi-trash-can-outline</v-icon>&nbsp;Delete
                     </v-btn>
                   </div>
                 </template>
-                <template v-slot:[`item.name`]="{ item }">
-                  <span>{{ item.name }}</span>
-                </template>
-                <template v-slot:[`item.subject_title`]="{ item }">
-                  <span>{{ item.subject_title }}</span>
-                </template>
+
               </v-data-table>
             </v-card>
           </v-tab-item>
@@ -294,31 +287,22 @@ export default {
     conflictData: null,
     headers: [
       {
-        text: "Time",
+        text: "Meeting Time",
         value: "time",
         align: "start",
         valign: "start",
         sortable: false,
       },
       {
-        text: "Faculty Name",
-        value: "name",
+        text: "Subject",
+        value: "subject_title",
         align: "center",
         valign: "center",
         sortable: false,
       },
-
-      // {
-      //   text: "Day",
-      //   value: "day",
-      //   align: "center",
-      //   valign: "center",
-      //   sortable: false,
-      // },
-
       {
-        text: "Subject",
-        value: "subject_title",
+        text: "Faculty Name",
+        value: "name",
         align: "center",
         valign: "center",
         sortable: false,
@@ -765,3 +749,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>

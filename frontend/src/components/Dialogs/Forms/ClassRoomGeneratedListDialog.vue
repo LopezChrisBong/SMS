@@ -60,9 +60,10 @@
                 <v-col cols="12" class="elevation-1">
                   <div class="d-flex flex-row-reverse">
                     <v-btn
-                      color="#147452"
+                      style="width: 85pt;"
+                      color="#f5b027"
                       medium
-                      class="mb-2 ma-2 pa-2 "
+                      class="mb-2 ma-2 pa-2"
                       outlined
                       @click="
                         grade == 'Grade 10' || grade == 'Grade 6'
@@ -70,16 +71,17 @@
                           : updateable()
                       "
                     >
-                      <v-icon size="14">mdi-pencil</v-icon>Update
+                      <v-icon size="20">mdi-pencil</v-icon><span class="gboFontsTab"> Update</span>
                     </v-btn>
                     <v-btn
-                      color="#147452"
+                      style="width: 85pt;"
+                      color="#f5b027"
                       medium
                       class="mb-2 ma-2 pa-2 "
                       outlined
                       @click="employeeDialog = true"
                     >
-                      <v-icon size="14">mdi-plus</v-icon>Add
+                      <v-icon size="25">mdi-plus</v-icon><span class="gboFontsTab"> Add</span>
                     </v-btn>
                   </div>
                   <v-data-table
@@ -87,17 +89,21 @@
                     :items="studentList"
                     :items-per-page="10"
                     hide-default-footer
+                    class="custom-table"
                   >
+                    <template v-slot:[`item.name`]="{ item }">
+                      <span class="gboFontsTable">{{ item.name }}</span>
+                    </template>
                     <template v-slot:[`item.action`]="{ item, index }">
                       <div class="text-no-wrap">
                         <v-btn
-                          x-small
+                          small
                           color="red"
-                          class="mx-1"
+                          class="mx-1 gboFontsTable"
                           outlined
                           @click="deleteItem(item, index)"
                         >
-                          <v-icon size="14">mdi-trash-can</v-icon>Delete
+                          <v-icon size="20">mdi-trash-can</v-icon><span class="gboFontsTab"> Delete</span>
                         </v-btn>
                       </div>
                     </template>
@@ -111,14 +117,14 @@
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
 
-            <v-btn color="red" outlined @click="closeD()">
+            <v-btn color="red" style="width: 85pt;" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
-              Cancel
+              <span class="gboFontsTab"> Cancel</span>
             </v-btn>
 
-            <v-btn color="#147452" class="white--text" @click="save()">
+            <v-btn color="#f5b027" style="width: 85pt;" class="white--text" @click="save()">
               <v-icon>mdi-check-circle</v-icon>
-              Save
+              <span class="gboFontsTab"> Save</span>
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -174,7 +180,7 @@
               Cancel
             </v-btn>
 
-            <v-btn color="#147452" class="white--text" @click="saveStudent()">
+            <v-btn color="#f5b027" class="white--text" @click="saveStudent()">
               <v-icon>mdi-check-circle</v-icon>
               Save
             </v-btn>
@@ -245,7 +251,7 @@
               Cancel
             </v-btn>
 
-            <v-btn color="#147452" class="white--text" @click="updateStudent()">
+            <v-btn color="#f5b027" class="white--text" @click="updateStudent()">
               <v-icon>mdi-check-circle</v-icon>
               Save
             </v-btn>
@@ -295,7 +301,7 @@ export default {
 
       headers: [
         {
-          text: "Name",
+          text: "Student Name",
           value: "name",
           align: "start",
           valign: "center",
@@ -559,3 +565,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>

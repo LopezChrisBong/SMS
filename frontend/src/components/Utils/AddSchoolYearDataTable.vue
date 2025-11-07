@@ -1,14 +1,6 @@
 <template>
-  <div>
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
-      <v-col cols="12" md="8" class="flex-items">
-        <!-- <v-tabs v-model="activeTab" color="#147452" align-tabs="left">
-            <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-              tab.name
-            }}</v-tab>
-          </v-tabs> -->
-      </v-col>
-      <v-spacer></v-spacer>
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
           v-model="search"
@@ -18,32 +10,27 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#239FAB"
+          color="#f5b027"
           dense
         ></v-text-field>
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
+          style="width: 125pt; background-color: #F5B027;"
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
         >
-          <v-icon left> mdi-plus-box-outline </v-icon>
+          <v-icon class="gboFonts" left> mdi-plus-box-outline </v-icon>
           Add New
         </v-btn>
-        <!-- <v-btn
-                    :class="tab == 3 ? '' : 'd-none'"
-                    class="white--text ml-2 rounded-lg"
-                    color="#147452"
-                    v-if="this.$store.state.user.user.isAdminApproved == 1"
-                    @click="printJobApplicants()"
-                  >
-                    <v-icon left> mdi-printer-outline </v-icon>
-                    Print
-                  </v-btn> -->
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
+        class="custom-table"
         :headers="headers"
         :items="data"
         :items-per-page="10"
@@ -53,59 +40,51 @@
         @pagination="pagination"
         hide-default-footer
       >
-        <template v-slot:[`item.schoo_year`]="{ item }">
-          <span>{{ item.schoo_year }}</span>
+        <template v-slot:[`item.school_year`]="{ item }">
+          <span class="gboFontsTable">{{ item.school_year }}</span>
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <v-chip :color="item.status == 0 ? 'warning' : 'green'">
+          <v-chip class="gboFontsTable justify-center" style="width: 73px; height: 30px;"
+            :color="item.status == 0 ? '#F9BEC1' : '#BAFDBF'">
             {{ item.status == 0 ? "Inactive" : "Active" }}
           </v-chip>
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px;">
             <v-btn
-              x-small
+              small
               color="blue"
-              class="my-2 mx-2"
+              class="my-2 mx-2 gboFontsTable"
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Update
+              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon>Update
             </v-btn>
-            <!-- <v-btn
-                  x-small
-                  color="red"
-                  class="my-2"
-                  outlined
-                  @click="confirmDelete(item)"
-                >
-                  <v-icon size="14">mdi-delete-off</v-icon>Delete
-                </v-btn> -->
           </div>
         </template>
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
       <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
-        <span class="px-2">Show</span>
+        <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
             dense
             outlined
-            color="#147452"
+            color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
-            class="rounded-lg"
+            class="rounded-lg gboFonts"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >
           </v-select>
         </span>
-        <span class="px-2"> Entries </span>
+        <span class="px-2 gboFonts"> Entries </span>
       </v-col>
 
-      <v-col cols="auto" class="mr-auto text-truncate" no-gutters>
+      <v-col cols="auto gboFonts" class="mr-auto text-truncate" no-gutters>
         Showing {{ paginationData.pageStart + 1 }} to
         {{ paginationData.pageStop }} of
         {{ paginationData.itemsLength }} entries
@@ -113,7 +92,7 @@
       <v-col cols="auto">
         <v-pagination
           v-model="options.page"
-          class="rounded-lg"
+          class="rounded-lg gboFonts"
           :total-visible="7"
           :color="$vuetify.theme.themes.light.submitBtns"
           :length="paginationData.pageCount"
@@ -150,7 +129,7 @@
           <v-btn color="red" outlined @click="confirmDialog = false">
             Close
           </v-btn>
-          <v-btn color="#147452" class="white--text" @click="deleteItem()">
+          <v-btn color="#f5b027" class="white--text" @click="deleteItem()">
             Confirm
           </v-btn>
         </v-card-actions>
@@ -234,21 +213,21 @@ export default {
         sortable: false,
       },
 
-      {
-        text: "From:",
-        value: "school_year_from",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
+      // {
+      //   text: "From:",
+      //   value: "school_year_from",
+      //   align: "center",
+      //   valign: "center",
+      //   sortable: false,
+      // },
 
-      {
-        text: "To:",
-        value: "school_year_to",
-        align: "center",
-        valign: "center",
-        sortable: false,
-      },
+      // {
+      //   text: "To:",
+      //   value: "school_year_to",
+      //   align: "center",
+      //   valign: "center",
+      //   sortable: false,
+      // },
       {
         text: "Status",
         value: "status",
@@ -477,3 +456,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>

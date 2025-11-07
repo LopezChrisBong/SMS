@@ -9,7 +9,7 @@
       <v-spacer></v-spacer>
       <v-btn
       class="white--text rounded-lg"
-      color="#239FAB"
+      color="#f5b027"
       @click="addStatus()"
       >
       <v-icon left>

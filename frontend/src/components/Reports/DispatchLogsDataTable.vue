@@ -29,7 +29,7 @@
           item-text="description"
           item-value="id"
           label="Status"
-          color="#239FAB"
+          color="#f5b027"
           :items="dispatch_status"
         >
         </v-autocomplete>
@@ -43,7 +43,7 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#239FAB"
+          color="#f5b027"
           dense
         ></v-text-field>
       </v-col>
@@ -85,7 +85,7 @@
               </v-btn>
               <v-btn
                 x-small
-                color="#239FAB"
+                color="#f5b027"
                 class="mr-2 white--text"
                 @click="logs(item)"
               >
@@ -103,7 +103,7 @@
             v-model="options.page"
             class="rounded-lg"
             :total-visible="7"
-            color="#239FAB"
+            color="#f5b027"
             :length="paginationData.pageCount">
         </v-pagination>
     </v-col>

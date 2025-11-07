@@ -1,7 +1,7 @@
 <template>
   <div class="mx-2">
-    <v-card class="mt-2 pt-2 pb-8">
-      <v-row style="border-radius: 10px" class="elevation-4 mx-6 mt-6">
+    <v-card class="mt-2 pt-2" style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8); margin-top: -4pt !important;">
+      <v-row style="border-radius: 10px;" class="elevation-3 mx-6 mt-4">
         <!-- <v-card class="card-style rounded-xl"> -->
         <v-col cols="12" md="12">
           <v-img align="center">
@@ -73,7 +73,7 @@
         <v-col
           cols="12"
           md="12"
-          style="border-left: 1px solid; border-color: #e8dfdf"
+          style="border-left: 1px solid; border-color: #e8dfdf;"
         >
           <div>
             <v-tabs
@@ -89,7 +89,7 @@
             </v-tabs>
             <v-divider class="ml-2 mr-2"></v-divider>
           </div>
-          <v-tabs-items v-model="tab">
+          <v-tabs-items v-model="tab" style="max-height: 43vh !important;">
             <v-tab-item>
               <v-container class="mt-10">
                 <v-form ref="personalInfo" @submit.prevent>
@@ -296,19 +296,10 @@
                         Grade Level
                       </v-btn>
                     </v-col>
-                    <!-- <v-col cols="auto">
-                      <v-btn
-                        size="x-small"
-                        color="blue"
-                        class="white--text"
-                        @click="addGradeLevel(data)"
-                      >
-                        Grade
-                      </v-btn>
-                    </v-col> -->
 
                     <v-col cols="auto"
                       ><v-btn
+                        style="margin-top: -10px; width: 85pt;"
                         color="blue"
                         class="white--text"
                         @click="readonly = false"
@@ -708,6 +699,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .profile-row {
   border-radius: 15px !important;

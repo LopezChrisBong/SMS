@@ -28,7 +28,7 @@
           item-text="name"
           label="Clients"
           item-value="id"
-          color="#239FAB"
+          color="#f5b027"
           hide-details
           :items="clients"
         >
@@ -41,7 +41,7 @@
           item-text="desc"
           label="Months"
           item-value="val"
-          color="#239FAB"
+          color="#f5b027"
           :rules="[formRules.required]"
           hide-details
           :items="months"
@@ -162,7 +162,7 @@
             v-model="options.page"
             class="rounded-lg"
             :total-visible="7"
-            color="#239FAB"
+            color="#f5b027"
             :length="paginationData.pageCount">
         </v-pagination>
     </v-col>

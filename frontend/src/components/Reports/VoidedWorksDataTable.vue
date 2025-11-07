@@ -39,7 +39,7 @@
                 single-line
                 v-bind="attrs"
                 v-on="on"
-                color="#239FAB"
+                color="#f5b027"
                 class="rounded-lg"
                 hide-details
                 dense
@@ -50,14 +50,14 @@
                 no-title
                 scrollable
                 range
-                color="#239FAB"
+                color="#f5b027"
             >
                 <v-spacer></v-spacer>
-                <v-btn outlined color="#239FAB" @click="work_dates_menu = false">
+                <v-btn outlined color="#f5b027" @click="work_dates_menu = false">
                 Cancel
                 </v-btn>
                 <v-btn
-                color="#239FAB"
+                color="#f5b027"
                 class="white--text"
                 @click="$refs.work_dates_menu.save(formdata.work_dates)"
                 >
@@ -75,7 +75,7 @@
           single-line
           hide-details
           class="rounded-lg"
-          color="#239FAB"
+          color="#f5b027"
           dense
         ></v-text-field>
       </v-col>
@@ -139,7 +139,7 @@
             v-model="options.page"
             class="rounded-lg"
             :total-visible="7"
-            color="#239FAB"
+            color="#f5b027"
             :length="paginationData.pageCount">
         </v-pagination>
     </v-col>

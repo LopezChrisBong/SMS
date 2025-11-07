@@ -30,7 +30,7 @@
                     outlined
                     required
                     class="rounded-lg mt-5"
-                    color="#239FAB"
+                    color="#f5b027"
                     label="Remarks"
                     ></v-textarea>
                 </v-col>
@@ -51,7 +51,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="#239FAB"
+            color="#f5b027"
             class="white--text"
             @click="cancelTask()"
           >

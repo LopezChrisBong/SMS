@@ -16,8 +16,8 @@
             </div>
             <div v-else>LIMBAAN National High School</div>
             <div class="justify-center pa-4">
-              <h3 style="color: #EA7142">
-                Create your <span style="color: #EA7142">Account</span>
+              <h3 style="color: #f5b027">
+                Create your <span style="color: #f5b027">Account</span>
                 <span class="text-subtitle-1 black--text"> | Sign In</span>
               </h3>
               <p class="text-caption text-gray-100">
@@ -584,7 +584,7 @@ export default {
 
 <style scoped>
 .content {
-  /* background-color: #EA7142; */
+  /* background-color: #f5b027; */
   background: url("../../assets/img/bglogin.jpg");
   background-position: center;
   position: fixed;

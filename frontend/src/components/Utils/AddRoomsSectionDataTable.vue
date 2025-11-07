@@ -1,30 +1,7 @@
-<template>
-  <div>
+<template >
+  <div style="margin-top: 8pt;">
     <v-row class="mx-2">
-      <v-col cols="12" md="8" class="flex-items">
-        <v-tabs
-          v-model="activeTab"
-          show-arrows
-          color="#147452"
-          align-tabs="left"
-        >
-          <v-tab v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
-          }}</v-tab>
-        </v-tabs>
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="12" md="4" class="d-flex justify-space-between">
-        <!--   <v-btn
-          v-else
-          class="white--text ml-2 rounded-lg"
-          color="green"
-          @click="Print()"
-        >
-          <v-icon left> mdi-printer </v-icon>
-          Print
-        </v-btn> -->
-
+      <v-col cols="12" md="4" class="d-flex justify-space-between gboFonts">
         <v-text-field
           v-model="search"
           outlined
@@ -32,13 +9,12 @@
           label="Search"
           single-line
           hide-details
-          class="rounded-lg"
-          :class="generatedCount == 0 ? 'd-none' : ''"
-          color="#239FAB"
+          class="rounded-lg gboFonts"
+          color="#f5b027"
           dense
         ></v-text-field>
         <!-- <v-btn
-          class="white--text ml-2 rounded-lg"
+          class="white--text ml-2 rounded-lg gboFonts"
           :class="
             generatedCount != 0
               ? 'd-none'
@@ -52,11 +28,14 @@
           :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           @click="dummyGenerate()"
         >
-          <v-icon left> mdi-database-check-outline </v-icon>
-          Generate Class List
+          <v-icon class="gboFonts" left> mdi-database-check-outline </v-icon>
+          &nbsp;Generate Class List
         </v-btn> -->
-        <v-btn
-          class="white--text ml-2 rounded-lg"
+
+      </v-col>
+      <v-col cols="12" md="8" class="flex-items justify-end">
+                <v-btn
+          class="white--text ml-2 rounded-lg gboFonts"
           :class="
             generatedCount != 0
               ? 'd-none'
@@ -75,29 +54,37 @@
           Generate Class List
         </v-btn>
         <v-btn
+          style="width: 125pt; background-color: #F5B027;"
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           @click="add()"
         >
-          <v-icon left> mdi-plus-box-outline </v-icon>
+          <v-icon class="gboFonts" left> mdi-plus-box-outline </v-icon>
           Add New
         </v-btn>
-        <!-- <v-btn
-              :class="tab == 3 ? '' : 'd-none'"
-              class="white--text ml-2 rounded-lg"
-              color="#147452"
-              v-if="this.$store.state.user.user.isAdminApproved == 1"
-              @click="printJobApplicants()"
-            >
-              <v-icon left> mdi-printer-outline </v-icon>
-              Print
-            </v-btn> -->
       </v-col>
     </v-row>
-    <v-card class="ma-5 dt-container" elevation="0" outlined>
+    <v-row class="mx-2">
+      <v-col cols="12" md="8" class="flex-items gboFonts">
+        <v-tabs
+          v-model="activeTab"
+          show-arrows
+          color="#f5b027"
+          align-tabs="left"
+        >
+          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
+            tab.name
+          }}</v-tab>
+        </v-tabs>
+      </v-col>
+      <v-spacer></v-spacer>
+
+    </v-row>
+    <v-card class="ma-5 dt-container" elevation="0" outlined >
       <v-data-table
+        class="custom-table"
         :headers="tab == 7 ? header1 : headers"
         :items="data"
         :items-per-page="10"
@@ -108,56 +95,60 @@
         hide-default-footer
       >
         <template v-slot:[`item.index`]="{ index }">
-          <span>{{
+              <span class="gboFontsTable">{{
             (options.page - 1) * options.itemsPerPage + index + 1
           }}</span>
         </template>
+        <template v-slot:[`item.grade_level`]="{ item }">
+          <span class="gboFontsTable">{{ item.grade_level }}</span>
+      
+        </template>
         <template v-slot:[`item.room_section`]="{ item }">
-          <span>{{ item.room_section }}</span>
+          <span class="gboFontsTable">{{ item.room_section }}</span>
         </template>
         <template v-slot:[`item.name`]="{ item }">
-          <span>{{ item.name }}</span>
+          <span class="gboFontsTable">{{ item.name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap" style="padding: 4px;">
+          <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
             <v-btn
-              x-small
+              small
               color="blue"
               :class="generatedCount == 0 ? 'd-none' : ''"
-              class="my-2 mx-2"
+              class="my-2 mx-2 gboFontsTable"
               outlined
               @click="addStudent(item)"
             >
-              <v-icon size="14">mdi-eye-outline</v-icon>Students
+              <v-icon class="gboFontsTable" size="20">mdi-eye-outline</v-icon>&nbsp;Students
             </v-btn>
             <v-btn
-              x-small
+              small
               color="blue"
               :class="generatedCount == 0 ? 'd-none' : ''"
-              class="my-2 mx-2"
+              class="my-2 mx-2 gboFontsTable"
               outlined
               @click="printClassList(item)"
             >
-              <v-icon size="14">mdi-printer-outline</v-icon>Print
+              <v-icon class="gboFontsTable" size="20">mdi-printer-outline</v-icon>&nbsp;Print
             </v-btn>
             <v-btn
-              x-small
+              small
               color="blue"
-              class="my-2 mx-2"
+              class="my-2 mx-2 gboFontsTable"
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Update
+              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon>&nbsp;Update
             </v-btn>
             <v-btn
               v-if="generatedCount == 0"
-              x-small
+              small
               color="red"
               outlined
-              class="my-2 mx-2"
+              class="my-2 mx-2 gboFontsTable"
               @click="confirmDelete(item)"
             >
-              <v-icon size="14">mdi-delete-off</v-icon>Delete
+              <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon>&nbsp;Delete
             </v-btn>
           </div>
         </template>
@@ -165,25 +156,25 @@
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
       <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
-        <span class="px-2">Show</span>
+        <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
             dense
             outlined
-            color="#147452"
+            color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
-            class="rounded-lg"
+            class="rounded-lg gboFonts"
             @change="options.itemsPerPage = parseInt($event, 10)"
             :items="perPageChoices"
           >
           </v-select>
         </span>
-        <span class="px-2"> Entries </span>
+        <span class="px-2 gboFonts"> Entries </span>
       </v-col>
 
-      <v-col cols="auto" class="mr-auto text-truncate" no-gutters>
+      <v-col cols="auto" class="mr-auto text-truncate gboFonts" no-gutters>
         Showing {{ paginationData.pageStart + 1 }} to
         {{ paginationData.pageStop }} of
         {{ paginationData.itemsLength }} entries
@@ -191,7 +182,7 @@
       <v-col cols="auto">
         <v-pagination
           v-model="options.page"
-          class="rounded-lg"
+          class="rounded-lg gboFonts"
           :total-visible="7"
           :color="$vuetify.theme.themes.light.submitBtns"
           :length="paginationData.pageCount"
@@ -250,7 +241,7 @@
             Close
           </v-btn>
           <v-btn
-            color="#147452"
+            color="#f5b027"
             class="white--text"
             @click="generateByStrand()"
           >
@@ -282,7 +273,7 @@
           <v-btn color="red" outlined @click="confirmDelete = false">
             Close
           </v-btn>
-          <v-btn color="#147452" class="white--text" @click="deleteItem()">
+          <v-btn color="#f5b027" class="white--text" @click="deleteItem()">
             Confirm
           </v-btn>
         </v-card-actions>
@@ -333,7 +324,7 @@ export default {
         width: 20,
       },
       {
-        text: "Room Name",
+        text: "Room/Section",
         value: "room_section",
         align: "center",
         valign: "center",
@@ -373,7 +364,7 @@ export default {
         sortable: false,
       },
       {
-        text: "Room Name",
+        text: "Room/Section",
         value: "room_section",
         align: "center",
         valign: "center",
@@ -1090,3 +1081,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.gboFonts{
+  font-family: 'Segoe UI', !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab{
+  font-family: 'Segoe UI', !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable{
+  font-family: 'Segoe UI', !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) { 
+  font-size: 11pt !important; 
+  line-height: 1.5;
+} 
+
+</style>
