@@ -1,6 +1,9 @@
 <template>
   <div class="mx-2">
-    <v-card class="mt-2 pt-2" style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8); margin-top: -4pt !important;">
+    <v-card
+      class="mt-2 pt-2"
+      style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8); margin-top: -4pt !important;"
+    >
       <v-row style="border-radius: 10px;" class="elevation-3 mx-6 mt-4">
         <!-- <v-card class="card-style rounded-xl"> -->
         <v-col cols="12" md="12">
@@ -89,9 +92,9 @@
             </v-tabs>
             <v-divider class="ml-2 mr-2"></v-divider>
           </div>
-          <v-tabs-items v-model="tab" style="max-height: 43vh !important;">
+          <v-tabs-items v-model="tab">
             <v-tab-item>
-              <v-container class="mt-10">
+              <v-container class="">
                 <v-form ref="personalInfo" @submit.prevent>
                   <v-row class="ml-2 mr-2 mt-1">
                     <v-col cols="6" md="6">
@@ -299,9 +302,10 @@
 
                     <v-col cols="auto"
                       ><v-btn
+                        size="x-small"
                         style="margin-top: -10px; width: 85pt;"
                         color="blue"
-                        class="white--text"
+                        class="white--text ma-1"
                         @click="readonly = false"
                       >
                         Edit
