@@ -1,0 +1,611 @@
+<template>
+  <div>
+    <v-dialog
+      fullscreen
+      v-model="dialog"
+      persistent
+      eager
+      scrollable
+      max-width="900px"
+    >
+      <v-form ref="ShortListAccess" @submit.prevent>
+        <v-card>
+          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+            <span
+              >{{ action }} {{ grade }} {{ room_section }} Student List</span
+            >
+            <v-spacer></v-spacer>
+            <v-btn icon dark @click="closeD()">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+
+          <v-card-text style="max-height: 700px" class="my-4">
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="room_section"
+                    dense
+                    outlined
+                    required
+                    :rules="[formRules.required]"
+                    deletable-chips
+                    label="Class Name"
+                    item-text="room_section"
+                    item-value="id"
+                    class="rounded-lg"
+                    readonly
+                    color="#6DB249"
+                  ></v-text-field>
+                </v-col>
+
+                <!-- <v-col cols="12">
+                      <v-autocomplete
+                        v-model="employee"
+                        multiple
+                        small-chips
+                        deletable-chips
+                        dense
+                        outlined
+                        required
+                        label="Employee"
+                        :items="student_activeList"
+                        item-text="name"
+                        item-value="id"
+                        class="rounded-lg"
+                        color="#6DB249"
+                      ></v-autocomplete>
+                    </v-col> -->
+                <v-col cols="12" class="elevation-1">
+                  <div class="d-flex flex-row-reverse">
+                    <v-btn
+                      style="width: 85pt;"
+                      color="#f5b027"
+                      medium
+                      class="mb-2 ma-2 pa-2"
+                      outlined
+                      @click="
+                        data
+                          ? data.grade_level == 'Grade 12'
+                            ? notUpdateable()
+                            : updateable()
+                          : notUpdateable()
+                      "
+                    >
+                      <v-icon center medium> mdi-chart-line-variant </v-icon>
+                      <span class="gboFontsTab"> Upgrade</span>
+                    </v-btn>
+                    <v-btn
+                      style="width: 85pt;"
+                      color="#f5b027"
+                      medium
+                      class="mb-2 ma-2 pa-2 "
+                      outlined
+                      @click="employeeDialog = true"
+                    >
+                      <v-icon size="25">mdi-plus</v-icon
+                      ><span class="gboFontsTab"> Add</span>
+                    </v-btn>
+                  </div>
+                  <v-data-table
+                    :headers="headers"
+                    :items="studentList"
+                    :items-per-page="10"
+                    hide-default-footer
+                    class="custom-table"
+                  >
+                    <template v-slot:[`item.name`]="{ item }">
+                      <span class="gboFontsTable">{{ item.name }}</span>
+                    </template>
+                    <template v-slot:[`item.action`]="{ item, index }">
+                      <div class="text-no-wrap">
+                        <v-btn
+                          small
+                          color="red"
+                          class="mx-1 gboFontsTable"
+                          outlined
+                          @click="deleteItem(item, index)"
+                        >
+                          <v-icon size="20">mdi-trash-can</v-icon
+                          ><span class="gboFontsTab"> Delete</span>
+                        </v-btn>
+                      </div>
+                    </template>
+                  </v-data-table>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-divider></v-divider>
+
+          <v-card-actions class="pa-5">
+            <v-spacer></v-spacer>
+
+            <v-btn color="red" style="width: 85pt;" outlined @click="closeD()">
+              <v-icon>mdi-close-circle-outline</v-icon>
+              <span class="gboFontsTab"> Cancel</span>
+            </v-btn>
+
+            <v-btn
+              color="#f5b027"
+              style="width: 85pt;"
+              class="white--text"
+              @click="save()"
+            >
+              <v-icon>mdi-check-circle</v-icon>
+              <span class="gboFontsTab"> Save</span>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
+    <v-dialog
+      v-model="employeeDialog"
+      persistent
+      eager
+      scrollable
+      max-width="700px"
+    >
+      <v-form ref="employeeDialogForm" @submit.prevent>
+        <v-card>
+          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+            <span>Add Student</span>
+            <v-spacer></v-spacer>
+            <v-btn icon dark @click="employeeDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+
+          <v-card-text style="max-height: 700px" class="my-4">
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="studentData"
+                    multiple
+                    small-chips
+                    deletable-chips
+                    dense
+                    outlined
+                    required
+                    label="Students"
+                    :items="student_activeList"
+                    item-text="name"
+                    item-value="id"
+                    class="rounded-lg"
+                    color="#6DB249"
+                  ></v-autocomplete>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-divider></v-divider>
+
+          <v-card-actions class="pa-5">
+            <v-spacer></v-spacer>
+
+            <v-btn color="red" outlined @click="employeeDialog = false">
+              <v-icon>mdi-close-circle-outline</v-icon>
+              Cancel
+            </v-btn>
+
+            <v-btn color="#f5b027" class="white--text" @click="saveStudent()">
+              <v-icon>mdi-check-circle</v-icon>
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
+
+    <v-dialog
+      v-model="updateClassListDialog"
+      persistent
+      eager
+      scrollable
+      max-width="700px"
+    >
+      <v-form ref="updateClassListDialogForm" @submit.prevent>
+        <v-card>
+          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+            <span>Upgrade Class List</span>
+            <v-spacer></v-spacer>
+            <v-btn icon dark @click="updateClassListDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+
+          <v-card-text style="max-height: 700px" class="my-4">
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="nextSchoolYear"
+                    dense
+                    outlined
+                    required
+                    label="School Year"
+                    :items="nextSchoolYearList"
+                    item-text="school_year"
+                    item-value="id"
+                    class="rounded-lg"
+                    color="#6DB249"
+                  ></v-autocomplete>
+                </v-col>
+                <v-col cols="12">
+                  <v-autocomplete
+                    v-model="nextClass"
+                    dense
+                    outlined
+                    required
+                    small-chips
+                    deletable-chips
+                    chips
+                    :rules="[formRules.required]"
+                    label="Room List"
+                    :items="nextClassRoomList"
+                    item-text="room_section"
+                    item-value="id"
+                    class="rounded-lg"
+                    color="#6DB249"
+                  ></v-autocomplete>
+                </v-col>
+                <!-- <v-col cols="12">
+                  <v-autocomplete
+                    v-model="unUpgradeStudents"
+                    small-chips
+                    deletable-chips
+                    dense
+                    outlined
+                    :rules="[formRules.required]"
+                    label="Remove Students to Upgrade"
+                    :items="student_activeList"
+                    item-text="name"
+                    item-value="id"
+                    class="rounded-lg"
+                    multiple
+                    color="#6DB249"
+                  ></v-autocomplete>
+                </v-col> -->
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-divider></v-divider>
+
+          <v-card-actions class="pa-5">
+            <v-spacer></v-spacer>
+
+            <v-btn color="red" outlined @click="updateClassListDialog = false">
+              <v-icon>mdi-close-circle-outline</v-icon>
+              Cancel
+            </v-btn>
+
+            <v-btn color="#f5b027" class="white--text" @click="updateStudent()">
+              <v-icon>mdi-check-circle</v-icon>
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
+    <fade-away-message-component
+      displayType="variation2"
+      v-model="fadeAwayMessage.show"
+      :message="fadeAwayMessage.message"
+      :header="fadeAwayMessage.header"
+      :top="fadeAwayMessage.top"
+      :type="fadeAwayMessage.type"
+      :timeout="3000"
+    ></fade-away-message-component>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    data: null,
+    action: null,
+  },
+
+  data() {
+    return {
+      employeeDialog: false,
+      unUpgradeStudents: null,
+      originalStudentList: [],
+      effective_date: null,
+      id: null,
+      dialog: false,
+      resolution_list: [],
+      filter: null,
+      studentList: [],
+      studentData: [],
+      student_activeList: [],
+      remove_item: [],
+      room_section: null,
+      updateClassListDialog: false,
+      nextSchoolYearList: [],
+      nextSchoolYear: null,
+      nextGradeLevel: null,
+      nextClass: null,
+      nextClassRoomList: [],
+
+      headers: [
+        {
+          text: "Student Name",
+          value: "name",
+          align: "start",
+          valign: "center",
+          sortable: false,
+        },
+
+        {
+          text: "Action",
+          value: "action",
+          align: "end",
+          valign: "center",
+          sortable: false,
+        },
+      ],
+      fadeAwayMessage: {
+        show: false,
+        type: "success",
+        header: "Successfully Added!",
+        message: "",
+        top: 10,
+      },
+    };
+  },
+  watch: {
+    data: {
+      handler(data) {
+        this.initialize();
+        this.dialog = true;
+        this.$refs.updateClassListDialogForm.resetValidation();
+        // console.log("DATA", data);
+        if (data.id) {
+          console.log("Data Title", data);
+          this.getTaggedStudent(data.id);
+          this.studentData = [];
+          this.room_section = data.room_section;
+        }
+      },
+
+      deep: true,
+    },
+  },
+
+  methods: {
+    initialize() {
+      this.filter = this.$store.getters.getFilterSelected;
+      this.nextSchoolYear = this.filter;
+      this.getEnrolledStudent();
+      this.getSchoolYear();
+    },
+
+    getEnrolledStudent() {
+      this.axiosCall(
+        "/enroll-student/AddClassStudent/EnrolledStudent/" +
+          this.data.grade_level,
+        "GET",
+      ).then((res) => {
+        if (res.data) {
+          let data = res.data;
+
+          for (let i = 0; i < data.length; i++) {
+            data[i].name = this.toTitleCase(data[i].name);
+          }
+          this.student_activeList = data;
+        }
+      });
+    },
+
+    getTaggedStudent(id) {
+      this.axiosCall(
+        "/rooms-section/getRoomClassList/" +
+          id +
+          "/" +
+          this.data.grade_level +
+          "/" +
+          this.filter,
+        "GET",
+      ).then((res) => {
+        if (res.data) {
+          let data = res.data;
+          console.log("Data", data);
+
+          for (let i = 0; i < data.length; i++) {
+            data[i].name = this.toTitleCase(data[i].name);
+            this.studentData.push(data[i].id);
+          }
+          this.studentList = data;
+          this.originalStudentList = data;
+        }
+      });
+    },
+    notUpdateable() {
+      alert("This grade level is  not updatable!");
+    },
+
+    updateable() {
+      const currentGrade = this.data.grade_level?.trim();
+
+      this.nextGradeLevel =
+        currentGrade === "Grade 1"
+          ? "Grade 2"
+          : currentGrade === "Grade 2"
+          ? "Grade 3"
+          : currentGrade === "Grade 3"
+          ? "Grade 4"
+          : currentGrade === "Grade 4"
+          ? "Grade 5"
+          : currentGrade === "Grade 5"
+          ? "Grade 6"
+          : currentGrade === "Grade 6"
+          ? "Grade 7"
+          : currentGrade === "Grade 7"
+          ? "Grade 8"
+          : currentGrade === "Grade 8"
+          ? "Grade 9"
+          : currentGrade === "Grade 9"
+          ? "Grade 10"
+          : currentGrade === "Grade 10"
+          ? "Grade 11"
+          : "Grade 12";
+      this.updateClassListDialog = true;
+      this.getAllRooms();
+    },
+
+    getAllRooms() {
+      this.axiosCall("/rooms-section/" + this.nextGradeLevel, "GET").then(
+        (res) => {
+          if (res) {
+            console.log("Love", res.data);
+            this.nextClassRoomList = res.data;
+          }
+        },
+      );
+    },
+    saveStudent() {
+      for (let i = 0; i < this.student_activeList.length; i++) {
+        for (let j = 0; j < this.studentData.length; j++) {
+          if (this.student_activeList[i].id == this.studentData[j]) {
+            if (
+              this.studentList.filter((e) => e.id == this.studentData[j])
+                .length == 0
+            ) {
+              this.studentList.push(this.student_activeList[i]);
+            }
+          }
+        }
+      }
+
+      this.employeeDialog = false;
+    },
+    deleteItem(item, index) {
+      console.log(item.id, index);
+      if (item.id) {
+        this.remove_item.push(this.studentList[index]);
+        this.studentList.splice(index, 1);
+        this.studentData.splice(index, 1);
+      } else {
+        this.studentList.splice(index, 1);
+        this.studentData.splice(index, 1);
+      }
+    },
+
+    closeD() {
+      this.eventHub.$emit("closeadviserStudentListDialog", false);
+      this.initialize();
+      this.dialog = false;
+      this.updateClassListDialog = false;
+    },
+
+    save() {
+      // if (this.studentList.length > 0) {
+      let data = {
+        classID: this.data.id,
+        stundent_list: JSON.stringify(this.studentList),
+        removed_student: JSON.stringify(this.remove_item),
+      };
+
+      this.axiosCall("/rooms-section/addStudentClassRoom", "POST", data).then(
+        (res) => {
+          console.log(res);
+          if (res.data.status == 201) {
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "success";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = res.data.msg;
+            this.closeD();
+          } else {
+            this.fadeAwayMessage.show = true;
+            this.fadeAwayMessage.type = "error";
+            this.fadeAwayMessage.header = "System Message";
+            this.fadeAwayMessage.message = res.data.msg;
+          }
+        },
+      );
+      // } else {
+      //   this.fadeAwayMessage.show = true;
+      //   this.fadeAwayMessage.type = "error";
+      //   this.fadeAwayMessage.header = "System Message";
+      //   this.fadeAwayMessage.message = "Cannot save without employee tagged!";
+      // }
+    },
+
+    async updateStudent() {
+      if (this.$refs.updateClassListDialogForm.validate()) {
+        let StudentID = [];
+        for (let index = 0; index < this.studentList.length; index++) {
+          await StudentID.push(this.studentList[index].studentId);
+        }
+
+        this.axiosCall(
+          "/rooms-section/updateAddRecords/" +
+            this.nextGradeLevel +
+            "/" +
+            this.nextSchoolYear +
+            "/" +
+            this.nextClass +
+            "/" +
+            JSON.stringify(this.unUpgradeStudents),
+          "POST",
+          StudentID,
+        ).then((res) => {
+          if (res) {
+            if (res.data.status == 201) {
+              this.dialog = false;
+              this.fadeAwayMessage.show = true;
+              this.fadeAwayMessage.type = "success";
+              this.fadeAwayMessage.header = "System Message";
+              this.fadeAwayMessage.message = res.data.msg;
+              this.confirmDialog = false;
+              this.updateClassListDialog = false;
+              this.initialize();
+            } else if (res.data.status == 400) {
+              this.updateClassListDialog = false;
+              this.confirmDialog = false;
+              this.fadeAwayMessage.show = true;
+              this.fadeAwayMessage.type = "error";
+              this.fadeAwayMessage.header = "System Message";
+              this.fadeAwayMessage.message = res.data.msg;
+            }
+          }
+        });
+      }
+    },
+
+    getSchoolYear() {
+      this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
+        if (res) {
+          this.nextSchoolYearList = res.data;
+          this.nextSchoolYear = res.data[0].id;
+        }
+      });
+    },
+  },
+};
+</script>
+
+<style scoped>
+.gboFonts {
+  font-family: "Segoe UI" !important;
+  font-size: 11pt;
+}
+
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
+  font-size: 12pt;
+}
+
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
+  font-size: 10.5pt;
+}
+
+.custom-table :deep(th) {
+  font-size: 11pt !important;
+  line-height: 1.5;
+}
+</style>
