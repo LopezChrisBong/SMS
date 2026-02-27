@@ -2,8 +2,8 @@
   <div>
     <v-dialog v-model="dialog" persistent eager scrollable max-width="600px">
       <v-form ref="AddSchoolYear" @submit.prevent>
-        <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+        <v-card class="rounded-xl">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>{{ action }} School Year</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -11,14 +11,13 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-text style="max-height: 700px" class="my-4">
+          <v-card-text style="max-height: 300px" class="my-4">
             <v-container>
               <v-row>
                 <v-col cols="12" md="12" v-if="action != 'Update'">
                   <v-autocomplete
                     v-model="school_year_from"
                     :rules="[formRules.required]"
-                    dense
                     outlined
                     class="rounded-lg"
                     item-text="description"
@@ -33,7 +32,6 @@
                 <v-col cols="12" md="12" v-if="action != 'Update'">
                   <v-text-field
                     v-model="school_year_to"
-                    dense
                     outlined
                     readonly
                     label="School Year To:"
@@ -48,7 +46,6 @@
                   <v-autocomplete
                     v-model="status"
                     :rules="[formRules.required]"
-                    dense
                     outlined
                     class="rounded-lg"
                     item-text="name"
@@ -69,13 +66,13 @@
 
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
-            <v-btn color="red" outlined @click="closeD()">
+            <v-btn color="red" class="rounded-lg" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
             <v-btn
               color="#f5b027"
-              class="white--text"
+              class="white--text rounded-lg"
               v-if="action == 'Add'"
               @click="checkConflict('ADD')"
             >
@@ -241,7 +238,7 @@ export default {
               this.fadeAwayMessage.header = "System Message";
               this.fadeAwayMessage.message = res.data.msg;
             }
-          }
+          },
         );
       } else if (type == "UPDATE") {
         // alert("UPDATED");
@@ -255,7 +252,7 @@ export default {
         this.axiosCall(
           "/enroll-student/updateSchoolYear/" + this.updateID,
           "PATCH",
-          data
+          data,
         ).then((res) => {
           console.log(res.data);
           if (res.data.status == 200) {
@@ -279,7 +276,7 @@ export default {
       this.axiosCall("/rooms-section/getAlltracks/Data/tracks", "GET").then(
         (res) => {
           this.trackList = res.data;
-        }
+        },
       );
     },
   },

@@ -1,10 +1,15 @@
 <template>
-  <div style="margin-top: 8pt;">
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <v-tabs v-model="activeTab" color="#F5B027" align-tabs="left">
-          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">
-            {{tab.name}}
+          <v-tab
+            class="gboFontsTab"
+            v-for="tab in tabList"
+            :key="tab.id"
+            @click="changeTab(tab)"
+          >
+            {{ tab.name }}
           </v-tab>
         </v-tabs>
       </v-col>
@@ -35,17 +40,16 @@
         @pagination="pagination"
         hide-default-footer
       >
-
         <template v-slot:[`item.name`]="{ item }">
           <span class="gboFontsTable">{{ item.name }}</span>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
             small
-            color="blue"
+            color="#758A93"
             outlined
             @click="editItem(item)"
-            class="mx-2 gboFontsTable"
+            class="mx-2 gboFontsTablewhite--text rounded-lg"
           >
             <v-icon size="20">{{
               tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
@@ -60,7 +64,8 @@
             :class="tab == 2 ? 'd-none' : ''"
             @click="deleteItem(item)"
           >
-            <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon>&nbsp;Delete
+            <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon
+            >&nbsp;Delete
           </v-btn>
         </template>
       </v-data-table>
@@ -146,7 +151,6 @@
       :type="fadeAwayMessage.type"
     ></fade-away-message-component>
   </div>
-
 </template>
 <script>
 export default {
@@ -300,34 +304,31 @@ export default {
           this.fadeAwayMessage.header = "System Message";
           this.fadeAwayMessage.message = "Account deleted successfully!";
           this.initialize();
-        }
+        },
       );
     },
   },
 };
 </script>
 
-
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
-  font-size: 12pt;
-}
-
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
-  line-height: 1.5;
-} 
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
+  font-size: 10.5pt;
+}
 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
+  line-height: 1.5;
+}
 </style>

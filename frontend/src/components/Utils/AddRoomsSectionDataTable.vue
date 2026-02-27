@@ -1,5 +1,5 @@
-<template >
-  <div style="margin-top: 8pt;">
+<template>
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="4" class="d-flex justify-space-between gboFonts">
         <v-text-field
@@ -31,10 +31,9 @@
           <v-icon class="gboFonts" left> mdi-database-check-outline </v-icon>
           &nbsp;Generate Class List
         </v-btn> -->
-
       </v-col>
       <v-col cols="12" md="8" class="flex-items justify-end">
-                <v-btn
+        <v-btn
           class="white--text ml-2 rounded-lg gboFonts"
           :class="
             generatedCount != 0
@@ -54,8 +53,9 @@
           Generate Class List
         </v-btn>
         <v-btn
-          style="width: 125pt; background-color: #F5B027;"
-          class="white--text ml-2 rounded-lg"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
@@ -74,15 +74,18 @@
           color="#f5b027"
           align-tabs="left"
         >
-          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
-          }}</v-tab>
+          <v-tab
+            class="gboFontsTab"
+            v-for="tab in tabList"
+            :key="tab.id"
+            @click="changeTab(tab)"
+            >{{ tab.name }}</v-tab
+          >
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-
     </v-row>
-    <v-card class="ma-5 dt-container" elevation="0" outlined >
+    <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
         class="custom-table"
         :headers="tab == 7 ? header1 : headers"
@@ -95,13 +98,12 @@
         hide-default-footer
       >
         <template v-slot:[`item.index`]="{ index }">
-              <span class="gboFontsTable">{{
+          <span class="gboFontsTable">{{
             (options.page - 1) * options.itemsPerPage + index + 1
           }}</span>
         </template>
         <template v-slot:[`item.grade_level`]="{ item }">
           <span class="gboFontsTable">{{ item.grade_level }}</span>
-      
         </template>
         <template v-slot:[`item.room_section`]="{ item }">
           <span class="gboFontsTable">{{ item.room_section }}</span>
@@ -110,45 +112,51 @@
           <span class="gboFontsTable">{{ item.name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
+          <div class="text-no-wrap gboFontsTable" style="padding: 4px">
             <v-btn
               small
-              color="blue"
-              :class="generatedCount == 0 ? 'd-none' : ''"
-              class="my-2 mx-2 gboFontsTable"
-              outlined
-              @click="addStudent(item)"
-            >
-              <v-icon class="gboFontsTable" size="20">mdi-eye-outline</v-icon>&nbsp;Students
-            </v-btn>
-            <v-btn
-              small
-              color="blue"
-              :class="generatedCount == 0 ? 'd-none' : ''"
-              class="my-2 mx-2 gboFontsTable"
-              outlined
-              @click="printClassList(item)"
-            >
-              <v-icon class="gboFontsTable" size="20">mdi-printer-outline</v-icon>&nbsp;Print
-            </v-btn>
-            <v-btn
-              small
-              color="blue"
-              class="my-2 mx-2 gboFontsTable"
+              color="#48A111"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="editItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon>&nbsp;Update
+              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon
+              >&nbsp;Update
+            </v-btn>
+            <v-btn
+              small
+              color="#758A93"
+              :class="generatedCount == 0 ? 'd-none' : ''"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
+              outlined
+              @click="addStudent(item)"
+            >
+              <v-icon class="gboFontsTable" size="20">mdi-eye-outline</v-icon
+              >&nbsp;Students
+            </v-btn>
+
+            <v-btn
+              small
+              color="blue"
+              :class="generatedCount == 0 ? 'd-none' : ''"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
+              outlined
+              @click="printClassList(item)"
+            >
+              <v-icon class="gboFontsTable" size="20"
+                >mdi-printer-outline</v-icon
+              >&nbsp;Print
             </v-btn>
             <v-btn
               v-if="generatedCount == 0"
               small
               color="red"
               outlined
-              class="my-2 mx-2 gboFontsTable"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               @click="confirmDelete(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon>&nbsp;Delete
+              <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon
+              >&nbsp;Delete
             </v-btn>
           </div>
         </template>
@@ -590,7 +598,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       }
     },
@@ -601,7 +609,7 @@ export default {
           this.gradeName +
           "/" +
           filter,
-        "GET"
+        "GET",
       ).then((res) => {
         this.conflict = res.data[0].conflict;
 
@@ -627,7 +635,7 @@ export default {
           filter +
           "/" +
           this.strandId,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("conflict", res.data);
 
@@ -646,7 +654,7 @@ export default {
               filter +
               "/" +
               this.strandId,
-            "POST"
+            "POST",
           ).then((res) => {
             if (res) {
               if (res.data.status == 201) {
@@ -677,7 +685,7 @@ export default {
           this.gradeName +
           "/" +
           filter,
-        "GET"
+        "GET",
       ).then((res) => {
         if (res) {
           this.conflict = res.data[0].conflict;
@@ -697,7 +705,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -728,7 +736,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -759,7 +767,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -790,7 +798,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -820,7 +828,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -850,7 +858,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -903,7 +911,7 @@ export default {
         this.gradeName = "Grade 7";
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -916,7 +924,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -929,7 +937,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -942,7 +950,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -956,7 +964,7 @@ export default {
 
           this.axiosCall(
             "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-            "GET"
+            "GET",
           ).then((res) => {
             if (res) {
               this.generatedCount = res.data[0].count_gen;
@@ -967,7 +975,7 @@ export default {
           this.gradeName = "Grade 12";
           this.axiosCall(
             "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-            "GET"
+            "GET",
           ).then((res) => {
             if (res) {
               this.generatedCount = res.data[0].count_gen;
@@ -1003,7 +1011,7 @@ export default {
           "/" +
           this.gradeName +
           "",
-        "_blank"
+        "_blank",
       );
     },
 
@@ -1049,7 +1057,7 @@ export default {
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        }
+        },
       );
     },
     confirmDelete(item) {
@@ -1075,7 +1083,7 @@ export default {
             this.strandList = data;
             console.log("All Strand", res.data);
           }
-        }
+        },
       );
     },
   },
@@ -1083,25 +1091,23 @@ export default {
 </script>
 
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
-  font-size: 12pt;
-}
-
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
-  line-height: 1.5;
-} 
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
+  font-size: 10.5pt;
+}
 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
+  line-height: 1.5;
+}
 </style>

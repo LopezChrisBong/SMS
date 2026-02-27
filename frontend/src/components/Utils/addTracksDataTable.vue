@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 8pt;">
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
@@ -9,7 +9,7 @@
           label="Search"
           single-line
           hide-details
-          class="rounded-lg gboFonts" 
+          class="rounded-lg gboFonts"
           color="#F5B027"
           dense
         ></v-text-field>
@@ -17,8 +17,9 @@
       <v-spacer></v-spacer>
       <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
-          style="width: 125pt; background-color: #F5B027;"
-          class="white--text ml-2 rounded-lg"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
@@ -44,17 +45,17 @@
           <span class="gboFontsTable">{{ item.tracks_name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
+          <div class="text-no-wrap gboFontsTable" style="padding: 4px">
             <v-btn
               small
-              color="blue"
-              class="my-2 mx-2 gboFontsTable"
+              color="#48A111"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="20" class="gboFontsTable">mdi-pencil-outline</v-icon>&nbsp;Update
+              <v-icon size="20" class="gboFontsTable">mdi-pencil-outline</v-icon
+              >&nbsp;Update
             </v-btn>
-
           </div>
         </template>
       </v-data-table>
@@ -116,10 +117,19 @@
                 </v-card-title> -->
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="confirmDialog = false" class="gboFonts">
+          <v-btn
+            color="red"
+            outlined
+            @click="confirmDialog = false"
+            class="gboFonts"
+          >
             Close
           </v-btn>
-          <v-btn color="#f5b027" class="white--text gboFonts" @click="deleteItem()">
+          <v-btn
+            color="#f5b027"
+            class="white--text gboFonts"
+            @click="deleteItem()"
+          >
             Confirm
           </v-btn>
         </v-card-actions>
@@ -301,7 +311,7 @@ export default {
             this.data = res.data;
             this.loading = false;
           }
-        }
+        },
       );
     },
 
@@ -357,25 +367,23 @@ export default {
 </script>
 
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>

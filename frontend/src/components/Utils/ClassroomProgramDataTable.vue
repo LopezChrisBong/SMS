@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 8pt;">
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-autocomplete
@@ -20,8 +20,9 @@
       <v-spacer></v-spacer>
       <v-col cols="12" md="8" class="d-flex justify-end">
         <v-btn
-          style="width: 150pt; background-color: #F5B027;"
-          class="white--text ml-2 rounded-lg gboFonts"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="classProgramms()"
@@ -30,7 +31,8 @@
           Class Program
         </v-btn>
         <v-btn
-          style="width: 125pt; background-color: #F5B027;"
+          height="40"
+          style="width: auto; background-color: #f5b027"
           class="white--text ml-2 rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
@@ -41,7 +43,7 @@
         </v-btn>
       </v-col>
     </v-row>
-    <v-row class="mx-2" style="margin-top: -40px;">
+    <v-row class="mx-2" style="margin-top: -40px">
       <v-col cols="12" md="8" class="flex-items">
         <v-tabs
           v-model="activeTab"
@@ -49,9 +51,13 @@
           color="#f5b027"
           align-tabs="left"
         >
-          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">{{
-            tab.name
-          }}</v-tab>
+          <v-tab
+            class="gboFontsTab"
+            v-for="tab in tabList"
+            :key="tab.id"
+            @click="changeTab(tab)"
+            >{{ tab.name }}</v-tab
+          >
         </v-tabs>
       </v-col>
     </v-row>
@@ -88,9 +94,11 @@
                 :items="items"
                 :items-per-page="10"
               >
-              
                 <template v-slot:item.time="{ item }">
-                  <span class="gboFontsTable">{{ formatTime(item.times_slot_from)}} -  {{ formatTime(item.times_slot_to)}}</span>
+                  <span class="gboFontsTable"
+                    >{{ formatTime(item.times_slot_from) }} -
+                    {{ formatTime(item.times_slot_to) }}</span
+                  >
                 </template>
                 <template v-slot:[`item.subject_title`]="{ item }">
                   <span class="gboFontsTable">{{ item.subject_title }}</span>
@@ -100,18 +108,6 @@
                 </template>
                 <template v-slot:item.action="{ item }">
                   <div class="text-no-wrap gboFontsTable">
-                    <!-- Update -->
-                    <v-btn
-                      block
-                      small
-                      color="blue"
-                      outlined
-                      class="mx-1 my-1 gboFontsTable"
-                      @click="editItem(item)"
-                    >
-                      <v-icon class="gboFontsTable" small>mdi-pencil-outline</v-icon>&nbsp;Update
-                    </v-btn>
-
                     <!-- Conflict Menu -->
                     <v-menu
                       v-if="item.hasConflict"
@@ -125,21 +121,19 @@
                           block
                           small
                           color="orange"
-                          class="white--text mx-1 my-1 gboFontsTable"
+                          class="my-2 mx-2 gboFontsTable rounded-lg"
                           dark
                           v-bind="attrs"
                           v-on="on"
                           @click.stop="toggleMenu(item)"
                         >
-                          <v-icon class="gboFontsTable" small>mdi-alert-outline</v-icon>&nbsp;Conflict
+                          <v-icon class="gboFontsTable" small
+                            >mdi-alert-outline</v-icon
+                          >&nbsp;Conflict
                         </v-btn>
                       </template>
 
-                      <v-card
-                        class="pa-4"
-                        max-width="500"
-                        style="width: 500px;"
-                      >
+                      <v-card class="pa-4" max-width="500" style="width: 500px">
                         <v-card-title class="headline gboFonts">
                           Conflict Information
                         </v-card-title>
@@ -151,7 +145,10 @@
                               class="elevation-2 mb-2 pa-2"
                             >
                               <v-col cols="12" class="gboFonts">
-                                <v-chip color="red" class="white--text gboFonts">
+                                <v-chip
+                                  color="red"
+                                  class="white--text gboFonts"
+                                >
                                   {{ index + 1 }}
                                 </v-chip>
                                 Room Name: {{ c.room_section }}
@@ -163,7 +160,9 @@
                                 >Time: {{ c.times_slot_from }} -
                                 {{ c.times_slot_to }}</v-col
                               >
-                              <v-col cols="12" class="gboFonts">Day: {{ c.day }}</v-col>
+                              <v-col cols="12" class="gboFonts"
+                                >Day: {{ c.day }}</v-col
+                              >
                               <v-col cols="12" class="gboFonts"
                                 >Grade: {{ c.grade_level }}</v-col
                               >
@@ -174,7 +173,7 @@
                         <v-card-actions>
                           <v-spacer></v-spacer>
                           <v-btn
-                          class="gboFonts"
+                            class="gboFonts"
                             small
                             text
                             color="primary"
@@ -185,20 +184,35 @@
                         </v-card-actions>
                       </v-card>
                     </v-menu>
-
-                    <!-- Delete -->
-                    <v-btn
-                      block
-                      small
-                      color="#C62828"
-                      class="white--text mx-1 my-1 gboFontsTable"
-                      @click="confirmDelete(item)"
+                    <div
+                      class="text-no-wrap gboFontsTable"
+                      style="padding: 4px"
                     >
-                      <v-icon class="gboFontsTable" small>mdi-trash-can-outline</v-icon>&nbsp;Delete
-                    </v-btn>
+                      <v-btn
+                        small
+                        color="#48A111"
+                        class="my-2 mx-2 gboFontsTable rounded-lg"
+                        outlined
+                        @click="editItem(item)"
+                      >
+                        <v-icon size="20" class="gboFontsTable"
+                          >mdi-pencil-outline</v-icon
+                        >&nbsp;Update
+                      </v-btn>
+                      <v-btn
+                        small
+                        color="red"
+                        class="my-2 mx-2 gboFontsTable rounded-lg"
+                        outlined
+                        @click="confirmDelete(item)"
+                      >
+                        <v-icon size="20" class="gboFontsTable"
+                          >mdi-delete-off</v-icon
+                        >&nbsp;Delete
+                      </v-btn>
+                    </div>
                   </div>
                 </template>
-
               </v-data-table>
             </v-card>
           </v-tab-item>
@@ -440,7 +454,7 @@ export default {
       try {
         const res = await this.axiosCall(
           "/rooms-section/" + this.activeTab.name,
-          "GET"
+          "GET",
         );
 
         if (res.data.length > 0) {
@@ -485,7 +499,7 @@ export default {
       try {
         const res = await this.axiosCall(
           `/enroll-student/getClassProgramm/${grade}/${section}/${filter}`,
-          "GET"
+          "GET",
         );
 
         if (res) {
@@ -495,7 +509,7 @@ export default {
             this.data.map(async (item, index) => {
               const hasConflict = await this.checkConflict(item);
               this.$set(this.data[index], "hasConflict", hasConflict);
-            })
+            }),
           );
         }
       } catch (error) {
@@ -527,7 +541,7 @@ export default {
                 this.fadeAwayMessage.message = res.data.msg;
               }
             }
-          }
+          },
         );
       } else if (this.tab == 2) {
         this.axiosCall("/my-designation/toggleActive/" + item.id, "PATCH").then(
@@ -546,7 +560,7 @@ export default {
                 this.fadeAwayMessage.message = res.data.msg;
               }
             }
-          }
+          },
         );
       }
     },
@@ -652,7 +666,7 @@ export default {
     deleteItem() {
       this.axiosCall(
         "/enroll-student/deleteAvailabilitySchedule/" + this.deleteData.availId,
-        "DELETE"
+        "DELETE",
       ).then((res) => {
         if (res.data.status == 200) {
           this.dialog = false;
@@ -695,7 +709,7 @@ export default {
       try {
         const res = await this.axiosCall(
           "/enroll-student/checkConflict/" + JSON.stringify(item),
-          "GET"
+          "GET",
         );
         this.conflictData = res.data;
         if (res.data.status == 200) {
@@ -743,7 +757,7 @@ export default {
           "/" +
           this.section +
           "",
-        "_blank"
+        "_blank",
       );
     },
   },
@@ -751,25 +765,23 @@ export default {
 </script>
 
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>

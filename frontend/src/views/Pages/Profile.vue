@@ -2,9 +2,14 @@
   <div class="mx-2">
     <v-card
       class="mt-2 pt-2"
-      style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8); margin-top: -4pt !important;"
+      style="
+        min-height: 85vh;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.4);
+        margin-top: -4pt !important;
+      "
     >
-      <v-row style="border-radius: 10px;" class="elevation-3 mx-6 mt-4">
+      <v-row style="border-radius: 10px" class="elevation-3 mx-6 mt-4">
         <!-- <v-card class="card-style rounded-xl"> -->
         <v-col cols="12" md="12">
           <v-img align="center">
@@ -76,7 +81,7 @@
         <v-col
           cols="12"
           md="12"
-          style="border-left: 1px solid; border-color: #e8dfdf;"
+          style="border-left: 1px solid; border-color: #e8dfdf"
         >
           <div>
             <v-tabs
@@ -303,7 +308,7 @@
                     <v-col cols="auto"
                       ><v-btn
                         size="x-small"
-                        style="margin-top: -10px; width: 85pt;"
+                        style="margin-top: -10px; width: 85pt"
                         color="blue"
                         class="white--text ma-1"
                         @click="readonly = false"
@@ -656,7 +661,7 @@ export default {
                       this.fadeAwayMessage.show = true;
                       this.readonly = true;
                     }
-                  }
+                  },
                 );
               } else {
                 this.initialize();
@@ -670,7 +675,7 @@ export default {
               this.fadeAwayMessage.show = true;
               this.readonly = true;
             }
-          }
+          },
         );
       }
     },

@@ -10,7 +10,7 @@
     >
       <v-form ref="ShortListAccess" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span
               >{{ action }} {{ grade }} {{ room_section }} Student List</span
             >
@@ -59,8 +59,8 @@
                     </v-col> -->
                 <v-col cols="12" class="elevation-1">
                   <div class="d-flex flex-row-reverse">
-                    <!-- <v-btn
-                      style="width: 85pt;"
+                    <v-btn
+                      style="width: 85pt"
                       color="#f5b027"
                       medium
                       class="mb-2 ma-2 pa-2"
@@ -73,12 +73,12 @@
                     >
                       <v-icon size="20">mdi-pencil</v-icon
                       ><span class="gboFontsTab"> Update</span>
-                    </v-btn> -->
+                    </v-btn>
                     <v-btn
-                      style="width: 85pt;"
+                      style="width: 85pt"
                       color="#f5b027"
                       medium
-                      class="mb-2 ma-2 pa-2 "
+                      class="mb-2 ma-2 pa-2"
                       outlined
                       @click="employeeDialog = true"
                     >
@@ -120,14 +120,14 @@
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
 
-            <v-btn color="red" style="width: 85pt;" outlined @click="closeD()">
+            <v-btn color="red" style="width: 85pt" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               <span class="gboFontsTab"> Cancel</span>
             </v-btn>
 
             <v-btn
               color="#f5b027"
-              style="width: 85pt;"
+              style="width: 85pt"
               class="white--text"
               @click="save()"
             >
@@ -147,7 +147,7 @@
     >
       <v-form ref="employeeDialogForm" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>Add Student</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="employeeDialog = false">
@@ -206,7 +206,7 @@
     >
       <v-form ref="updateClassListDialogForm" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>Update Class List</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="updateClassListDialog = false">
