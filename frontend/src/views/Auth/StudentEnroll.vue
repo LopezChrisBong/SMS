@@ -1,11 +1,49 @@
 <template>
-  <div class="ma-12">
+  <div class="ma-12 ">
+    <!-- Loading Overlay -->
+    <div v-if="loadingState" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Loading, please wait...</p>
+    </div>
     <v-card class="">
       <v-form ref="myPdsForm">
         <v-row>
           <v-col class="mt-2 px-8" cols="12">
             <div v-if="tab.id == 1">
               <v-row>
+                <v-col cols="12" md="6">
+                  <div class="d-flex">
+                    <v-text-field
+                      v-model="code"
+                      dense
+                      class="rounded-lg"
+                      label="Code"
+                      color="#6DB249"
+                    >
+                    </v-text-field>
+                    <v-btn
+                      class="mx-4"
+                      small
+                      color="orange"
+                      outlined
+                      @click="searchStudent()"
+                    >
+                      <v-icon>mdi-magnify</v-icon> Search</v-btn
+                    >
+                  </div>
+                </v-col>
+                <v-col cols="12" md="6"></v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="formdata.lrn"
+                    :rules="[formRules.required]"
+                    dense
+                    class="rounded-lg"
+                    label="LRN ID"
+                    color="#6DB249"
+                  >
+                  </v-text-field> </v-col
+                ><v-col cols="12" md="6"></v-col>
                 <v-col cols="12"> <v-divider></v-divider></v-col>
 
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
@@ -839,8 +877,8 @@
                 <v-row
                   v-if="
                     grade_level == 'Grade 7' ||
-                    grade_level == 'Grade 1' ||
-                    formdata.transfered == 'Yes'
+                      grade_level == 'Grade 1' ||
+                      formdata.transfered == 'Yes'
                   "
                 >
                   <v-col cols="12">
@@ -905,71 +943,121 @@
             </div>
           </v-col>
         </v-row>
-        <v-row class="my-4">
-          <v-col cols="4"> </v-col>
-          <v-col cols="4" class="white--text rounded-lg">
+        <v-row class="my-4 mx-2">
+          <v-col
+            cols="6"
+            class="white--text rounded-lg"
+            v-if="action != 'Update'"
+          >
             <v-btn
               block
               color="#f5b027"
-              @click="confirmSave()"
+              @click="confirmSave(1)"
               dense
               class="white--text"
             >
-              Submit
+              Save
             </v-btn>
           </v-col>
-          <v-col cols="4"> </v-col>
+          <v-col :cols="action != 'Update' ? '6' : '12'">
+            <v-btn
+              block
+              color="#f5b027"
+              @click="confirmSave(2)"
+              dense
+              class="white--text"
+            >
+              {{ action == "Add" ? "Submit" : "Update" }}
+            </v-btn>
+          </v-col>
         </v-row>
       </v-form>
     </v-card>
 
-    <!-- saving confirmation -->
-    <v-dialog v-model="confirmDialog" persistent max-width="390">
-      <v-card color="white">
-        <div class="pa-4 #3a3b3a--text">
-          <div class="text-overline mb-1">Notification!</div>
-          <div class="text-body-1 mb-1" v-if="confirmAction == 'SAVE'">
-            <p style="text-align: justify">
-              You are about to enroll this student. Do you want to continue?
-            </p>
-          </div>
-        </div>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="confirmDialog = false">
-            Close
-          </v-btn>
-          <v-btn
-            v-if="confirmAction == 'SAVE'"
-            color="green"
-            class="white--text"
-            @click="saveUpdate()"
+    <v-dialog v-model="confirmDialog" persistent max-width="420">
+      <v-card class="rounded-lg elevation-8">
+        <!-- <v-card-title class="pink white--text"> -->
+        <v-card-title class=" black--text">
+          <!-- <v-icon left>mdi-alert-circle-outline</v-icon> -->
+          {{ action == "Update" ? "Update" : confirmAction }} Confirmation
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="text-center py-6">
+          <div
+            v-if="confirmAction == 'Submit'"
+            class="text-body-1 grey--text text--darken-2"
           >
-            Confirm
+            You are about to enroll this student.
+            <br />
+            <strong>Do you want to continue?</strong>
+          </div>
+          <div v-else class="text-body-1 grey--text text--darken-2">
+            Please click <strong>Save</strong> to partially save your input.
+            <br />
+            <strong class="text-justify">
+              After saving, a code will appear. Please make sure to copy it, as
+              you will need it to submit your enrollment.
+            </strong>
+          </div>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions class="px-4 py-3">
+          <v-spacer></v-spacer>
+
+          <v-btn outlined color="grey darken-1" @click="confirmDialog = false">
+            Cancel
+          </v-btn>
+
+          <v-btn color="pink" class="white--text ml-2" @click="saveUpdate">
+            <v-icon left small>mdi-check</v-icon>
+            {{ action == "Update" ? "Update" : confirmAction }}
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <!-- delete confirmation -->
-    <v-dialog v-model="deleteConfirmDialog" persistent max-width="300">
-      <v-card>
-        <v-card-title class="text-h6 red white--text"> Warning! </v-card-title>
-        <div class="pa-4 #3a3b3a--text">
-          <div class="text-body-1 mb-1">
-            <p style="text-align: justify">
-              <v-icon class="mt-n2" color="white">mdi-alert</v-icon> &nbsp; Are
-              you sure you want to <b>REMOVE</b> this data?
-            </p>
+    <v-dialog v-model="saveConfirmation" persistent max-width="500">
+      <v-card class="rounded-xl pa-2">
+        <v-card-title class="d-flex align-center gap-2 pb-2">
+          <span class="text-h6 font-weight-bold">
+            Saved Success
+          </span>
+        </v-card-title>
+
+        <v-divider></v-divider>
+
+        <v-card-text class="text-center py-6">
+          <div class="text-body-1 mb-4">
+            Please take a screenshot or photo of the code below. You will use
+            this code to update your details later.
           </div>
-        </div>
-        <v-card-actions>
+
+          <v-sheet
+            class="pa-4 mx-auto"
+            max-width="320"
+            rounded="lg"
+            elevation="2"
+            color="grey-lighten-4"
+          >
+            <div class="text-caption text-grey mb-1">Your Code</div>
+            <div class="text-h5 font-weight-bold text-primary">
+              {{ savedData.CODE }}
+            </div>
+          </v-sheet>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions class="px-6 py-4">
+          <v-btn @click="copyCode()" outlined color="blue"
+            ><v-icon>mdi-content-copy</v-icon>Copy</v-btn
+          >
           <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="deleteConfirmDialog = false">
-            Close
-          </v-btn>
-          <v-btn color="green" class="white--text" @click="proceedRemove()">
-            Confirm
+
+          <v-btn @click="proceedLandingPage()" color="pink" outlined>
+            Confirm Save
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -1010,6 +1098,7 @@ export default {
   components: {},
   data: () => ({
     juniorList: ["Grade 7", "Grade 8", "Grade 9", "Grade 10"],
+    savedData: [],
     elementaryList: [
       "Kinder 1",
       "Kinder 2",
@@ -1030,7 +1119,7 @@ export default {
     isUpdateAllowed: false,
     confirmAction: null,
     confirmDialog: false,
-    deleteConfirmDialog: false,
+    saveConfirmation: false,
     itemData: null,
     indexToRemove: null,
     arrToRemove: null,
@@ -1050,6 +1139,7 @@ export default {
     seniorJuniorList: ["Junior High", "Senior High"],
     seniorJuniorList1: ["Elementary"],
     status: null,
+    code: null,
     bloodTypeList: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
     formdata: {
       id: null,
@@ -1066,6 +1156,7 @@ export default {
       is_IP: "No",
       ip_Name: null,
       birth_place: null,
+      lrn: null,
       sex: null,
       civil_status: "Single",
       civil_status1: "Single",
@@ -1129,10 +1220,12 @@ export default {
     },
 
     GoodMoral: null,
+    loadingState: false,
+    levelCheck: null,
     PSA: null,
     SchoolCard: null,
     Picture: null,
-
+    updateData: null,
     isAllowPrint: false,
     trackList: [],
     strandList: [],
@@ -1161,10 +1254,10 @@ export default {
 
   computed: {
     computedSameAddress: {
-      get: function () {
+      get: function() {
         return this.formdata.isSameAddress;
       },
-      set: function (val) {
+      set: function(val) {
         this.formdata.isSameAddress = val ? true : false;
 
         this.formdata.permanent_zip = val
@@ -1196,12 +1289,16 @@ export default {
     },
 
     computedNoSpouse: {
-      get: function () {
+      get: function() {
         return this.family_background.noSpouse;
       },
     },
   },
   methods: {
+    copyCode() {
+      navigator.clipboard.writeText(this.savedData.CODE);
+      alert("saved");
+    },
     changeGuardian() {
       console.log("");
       // if (
@@ -1218,7 +1315,7 @@ export default {
     onlyDigits(event) {
       const char = String.fromCharCode(event.keyCode);
       if (!/[0-9]/.test(char)) {
-        event.preventDefault(); // ⛔ block letter from appearing
+        event.preventDefault(); //  block letter from appearing
       }
     },
     prependData(val, arr) {
@@ -1247,35 +1344,10 @@ export default {
         },
       );
     },
-    getCountry() {
-      this.axiosCall("/country", "GET").then((res) => {
-        this.countryList = res.data;
-      });
-    },
-    print(withPic) {
-      if (withPic) {
-        this.axiosCall("/user-details/getUser", "GET").then((res) => {
-          window.open(
-            process.env.VUE_APP_SERVER +
-              "/pdf-generator/generateMyPDS/" +
-              res.data +
-              "/true",
-          );
-        });
-      } else {
-        this.axiosCall("/user-details/getUser", "GET").then((res) => {
-          window.open(
-            process.env.VUE_APP_SERVER +
-              "/pdf-generator/generateMyPDS/" +
-              res.data +
-              "/false",
-          );
-        });
-      }
-    },
-    confirmSave() {
+
+    confirmSave(item) {
       if (this.$refs.myPdsForm.validate()) {
-        this.confirmAction = "SAVE";
+        this.confirmAction = item == 1 ? "Save" : "Submit";
         this.confirmDialog = true;
       } else {
         this.fadeAwayMessage.show = true;
@@ -1386,30 +1458,101 @@ export default {
         last_school_attended: this.transfer.last_school_attended,
         last_school_ID: this.transfer.last_school_ID,
         track: this.transfer.track,
-        semester: this.transfer.track,
-        strand: this.transfer.track,
-        school_yearId: this.selectedFiter,
+        semester: this.transfer.semester,
+        strand: this.transfer.strand,
+        school_yearId:
+          this.action == "Add" ? this.selectedFiter : this.selectedFiter.id,
+        LRN: this.formdata.lrn,
+        confirmAction: this.confirmAction,
       };
-
+      this.loadingState = true;
       fd.append("body", JSON.stringify(data));
       console.log("FD", fd);
-      this.axiosCall("/enroll-student/enrollStudentWithFile", "POST", fd).then(
-        (res) => {
+      if (this.action == "Add") {
+        this.axiosCall(
+          "/enroll-student/enrollStudentWithFile",
+          "POST",
+          fd,
+        ).then((res) => {
+          console.log(res.data.savedData);
           if (res.data.status == 201) {
+            if (this.confirmAction == "Save") {
+              setTimeout(() => {
+                this.loadingState = false;
+                this.savedData = res.data.savedData;
+                this.saveConfirmation = true;
+              }, 1500);
+            } else {
+              setTimeout(() => {
+                this.fadeAwayMessage.show = true;
+                this.fadeAwayMessage.type = "success";
+                this.fadeAwayMessage.header = "System Message Enrollment";
+                this.fadeAwayMessage.message = res.data.msg;
+                this.initialize();
+                this.$router.push("/enroll-success");
+              }, 1500);
+            }
+          } else {
+            this.loadingState = false;
             this.fadeAwayMessage.show = true;
-            this.fadeAwayMessage.type = "success";
-            this.fadeAwayMessage.header = "System Message Enrollment";
+            this.fadeAwayMessage.type = "error";
+            this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
-            this.initialize();
-            this.$router.push("/enroll-success");
+          }
+        });
+      } else if (this.action == "Update") {
+        // alert(this.updateData.id);
+        // console.log(arrFile, this.updateData.schoolCard, this.updateData.birthPSA,this.updateData.goodMoral,this.updateData.picture, );
+        let files = [
+          {
+            fileName: this.updateData.goodMoral,
+          },
+          { fileName: this.updateData.schoolCard },
+          { fileName: this.updateData.picture },
+          { fileName: this.updateData.birthPSA },
+        ];
+        this.axiosCall(
+          "/enroll-student/updateStudentWithFile/" + this.updateData.id,
+          "PATCH",
+          fd,
+        ).then((res) => {
+          if (res.data.status == 200 || res.data.status == 201) {
+            setTimeout(() => {
+              this.loadingState = false;
+              this.fadeAwayMessage.show = true;
+              this.fadeAwayMessage.type = "success";
+              this.fadeAwayMessage.header = "System Message Enrollment";
+              this.fadeAwayMessage.message = res.data.msg;
+            }, 1500);
+            for (let index = 0; index < files.length; index++) {
+              this.axiosCall(
+                "/enroll-student/deleteApplicantsFile/" + files[index].fileName,
+                "DELETE",
+              ).then((resp) => {
+                if (resp) {
+                  setTimeout(() => {
+                    this.initialize();
+                    this.$router.push("/enroll-success");
+                  }, 1500);
+                }
+              });
+            }
           } else {
             this.fadeAwayMessage.show = true;
             this.fadeAwayMessage.type = "error";
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        },
-      );
+        });
+      }
+    },
+
+    proceedLandingPage() {
+      setTimeout(() => {
+        this.loadingState = false;
+        this.initialize();
+        this.$router.push("/landing");
+      }, 1500);
     },
 
     getAllTracks() {
@@ -1440,6 +1583,53 @@ export default {
           });
           console.log("Filtered", filteredData[0].id);
           this.selectedFiter = filteredData[0];
+        }
+      });
+    },
+    searchStudent() {
+      this.axiosCall(
+        "/enroll-student/getStudentDataByCode/" +
+          this.selectedFiter.id +
+          "/" +
+          this.code +
+          "/" +
+          this.levelCheck,
+        "GET",
+      ).then((res) => {
+        if (res.data) {
+          const data = res.data;
+          this.updateData = res.data;
+          this.formdata = {
+            ...this.formdata,
+            ...data,
+
+            lrn: data.LRN,
+
+            fourPs: data.fourPs == 1 ? "Yes" : "No",
+            transfered: data.transfered == 1 ? "Yes" : "No",
+            is_IP: data.is_IP == 1 ? "Yes" : "No",
+            disability: data.disability == 1 ? "Yes" : "No",
+
+            bdate: data.bdate ? data.bdate.substr(0, 10) : null,
+          };
+          this.family_background = {
+            ...this.family_background,
+            ...data,
+          };
+
+          this.transfer = {
+            ...this.transfer,
+            ...data,
+          };
+          this.grade_level = data.grade_level;
+          this.action = "Update";
+          console.log("Mapped StudentData", this.formdata);
+        } else {
+          alert(
+            "Your code is not correct, or wrong portal this is Enrollment for " +
+              this.levelCheck +
+              "!",
+          );
         }
       });
     },
@@ -1512,5 +1702,35 @@ thead th:first-child {
 }
 thead th:last-child {
   border-radius: 0 5px 0 0;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

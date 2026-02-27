@@ -13,6 +13,7 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 async function bootstrap() {
   var whitelist = [
     'http://localhost:8080',
+    'http://localhost:8081',
     'http://localhost:3000',
     'https://limbaan.life:3000',
     'https://limbaan.life:8080',

@@ -83,6 +83,22 @@
             </div>
           </v-list-group>
         </div>
+        <div v-if="adviser == true">
+          <v-list-item
+            :to="'/' + 'employee/my-advisory'"
+            router
+            class="rounded-lg mx-2"
+            active-class="active-link"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-account-details</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Advisory</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
       </v-list>
     </v-navigation-drawer>
 
@@ -331,6 +347,7 @@ export default {
   data() {
     return {
       search: "",
+      adviser: false,
       formattedDate: "",
       mini: false,
       drawer: true,
@@ -348,6 +365,7 @@ export default {
       schooYearList: [],
       sidebarOpen: true,
       selectedFiter: null,
+      selected: null,
     };
   },
 
@@ -355,7 +373,7 @@ export default {
     this.getSchoolYear();
     this.loadImg();
     this.formattedDate = this.getFormattedDate();
-
+    this.findAllRoomsSection();
     if (this.$vuetify.breakpoint.xs) {
       this.drawer = false;
       this.mini = false;
@@ -473,6 +491,16 @@ export default {
         }
       });
     },
+    findAllRoomsSection() {
+      this.axiosCall(
+        "/rooms-section/findAllRoomsSection/" + this.$store.state.user.id,
+        "GET",
+      ).then((res) => {
+        if (res.data) {
+          this.adviser = true;
+        }
+      });
+    },
 
     loadMenu(userType, userRole) {
       this.axiosCall("/assigned-modules/getMyAssignedModules/my", "GET").then(
@@ -508,7 +536,7 @@ export default {
     clearInterval(this.interval);
   },
 
-  created: function () {
+  created: function() {
     // this.getMyAssignedModules();
     let userType = this.$store.state.user.user.usertypeID;
 
