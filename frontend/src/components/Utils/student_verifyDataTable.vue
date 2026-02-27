@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 8pt;">
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <v-tabs v-model="activeTab" color="#f5b027" align-tabs="left">
@@ -49,7 +49,7 @@
         <template v-slot:[`item.actions`]="{ item }">
           <div class="d-flex">
             <v-btn
-              style="width: 80pt;"
+              style="width: 80pt"
               small
               class="gboFontsTable"
               color="grey"
@@ -63,7 +63,7 @@
             </v-btn>
 
             <v-btn
-              style="width: 80pt;"
+              style="width: 80pt"
               class="mx-2"
               small
               color="green"
@@ -74,7 +74,7 @@
               View
             </v-btn>
             <v-btn
-              style="width: 80pt;"
+              style="width: 80pt"
               small
               v-if="tab == 2"
               color="orange"
@@ -93,8 +93,8 @@
         <span class="px-2">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
@@ -179,7 +179,7 @@
             <v-col class="mt-2 mb-1 d-flex justify-center">
               <qr-code :size="150" :text="qrText"></qr-code>
             </v-col>
-            <v-col class=" d-flex justify-center" cols="12" v-if="viewQRData"
+            <v-col class="d-flex justify-center" cols="12" v-if="viewQRData"
               ><h2>Student: {{ "  " + viewQRData.name }}</h2></v-col
             >
           </v-row>

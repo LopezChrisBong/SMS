@@ -139,6 +139,7 @@
                     v-else
                     v-model="subject"
                     @change="subjectAssign(subject)"
+                    outlined
                     dense
                     :rules="[formRules.required]"
                     class="rounded-lg"
@@ -155,7 +156,8 @@
                   <v-autocomplete
                     v-model="class_room"
                     :rules="[formRules.required]"
-                    dense
+                   outlined
+              dense
                     class="rounded-lg"
                     item-text="room_section"
                     item-value="id"

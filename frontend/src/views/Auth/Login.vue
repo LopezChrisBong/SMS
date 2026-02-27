@@ -25,7 +25,7 @@
                   >
                     <b> Loading and Enrollment System</b>
                   </div>
-                  <div style="margin:0 auto; width:45%" class="pa-2">
+                  <div style="margin: 0 auto; width: 45%" class="pa-2">
                     <v-img
                       v-if="limbaanimg == 'Elementary'"
                       src="../../assets/img/limbaanelementary.png"
@@ -59,22 +59,22 @@
                 <v-col cols="12" class="pa-0 px-4 mt-n2">
                   <v-text-field
                     color="#93CB5B"
-                    class="font-size-14 rounded-lg "
+                    class="font-size-14 rounded-lg"
                     v-model="password"
                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                     :rules="[formRules.required]"
                     :type="show1 ? 'text' : 'password'"
                     name="input-10-1"
+                    outlined
                     dense
                     label="Password"
-                    outlined
                     @keyup.enter="dologin()"
                     @click:append="show1 = !show1"
                   ></v-text-field>
                 </v-col>
 
                 <v-col cols="12" class="pa-0 px-4 mt-n2">
-                  <div class="d-flex justify-center ">
+                  <div class="d-flex justify-center">
                     <v-btn
                       block
                       :color="$vuetify.theme.themes.light.submitBtns"
@@ -86,10 +86,10 @@
                   </div>
                 </v-col>
 
-                <v-col cols="12" class="mt-5 ">
+                <v-col cols="12" class="mt-5">
                   <div
-                    style="font-size:14px; "
-                    class="d-flex justify-center  text-gray-100"
+                    style="font-size: 14px"
+                    class="d-flex justify-center text-gray-100"
                   >
                     Don't have an account yet?
                     <b
@@ -113,8 +113,8 @@
                 </v-col>
                 <v-col cols="12" class="">
                   <div
-                    style="font-size:14px;"
-                    class="d-flex justify-center  text-gray-100"
+                    style="font-size: 14px"
+                    class="d-flex justify-center text-gray-100"
                   >
                     Do you want to enroll?
                     <b
@@ -164,7 +164,7 @@ export default {
     if (this.$store.state.user) {
       if (!this.$store.state.user.usertype.id) {
         //this.deleteToken();
-        setTimeout(function() {
+        setTimeout(function () {
           location.reload();
         }, 0);
       }

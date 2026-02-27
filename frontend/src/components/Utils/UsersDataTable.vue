@@ -5,8 +5,8 @@
         <span class="px-2">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             hide-details
             :value="options.itemsPerPage"
             style="max-width: 90px"
@@ -230,7 +230,7 @@ export default {
           this.fadeAwayMessage.show = true;
           this.itemData = null;
           this.initialize();
-        }
+        },
       );
     },
   },

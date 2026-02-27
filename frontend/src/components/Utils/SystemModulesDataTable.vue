@@ -13,7 +13,8 @@
           hide-details
           class="rounded-lg"
           color="#6DB249"
-          dense
+         outlined
+              dense
         ></v-text-field>
         <v-btn
           class="white--text ml-2 rounded-lg"
@@ -235,7 +236,7 @@ export default {
           this.fadeAwayMessage.show = true;
           this.itemData = null;
           this.initialize();
-        }
+        },
       );
     },
   },

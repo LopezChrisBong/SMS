@@ -108,6 +108,7 @@
                   <v-autocomplete
                     v-model="verifyModel.schoo_yearId"
                     :rules="action == 'Update' ? [formRules.required] : []"
+                    outlined
                     dense
                     class="rounded-lg"
                     item-text="school_year"
@@ -123,6 +124,7 @@
                   <v-autocomplete
                     v-model="seniorJunior"
                     :rules="action == 'Update' ? [formRules.required] : []"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="School Year"
@@ -136,6 +138,7 @@
                   <v-autocomplete
                     v-model="verifyModel.grade_level"
                     :rules="action == 'Update' ? [formRules.required] : []"
+                    outlined
                     dense
                     class="rounded-lg"
                     :class="edit ? 'd-none' : ''"

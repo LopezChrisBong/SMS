@@ -24,6 +24,7 @@
                   <v-autocomplete
                     v-model="verifyModel.usertypeID"
                     :rules="userId == 3 ? [formRules.required] : []"
+                    outlined
                     dense
                     class="rounded-lg gboFonts"
                     item-text="description"
@@ -37,6 +38,7 @@
                 <v-col cols="12">
                   <v-autocomplete
                     v-model="verifyModel.user_roleID"
+                    outlined
                     dense
                     :rules="[formRules.required]"
                     class="rounded-lg gboFonts"
@@ -53,6 +55,7 @@
                   <v-autocomplete
                     v-model="verifyModel.assignedModuleID"
                     :rules="userId == 3 ? [formRules.required] : []"
+                    outlined
                     dense
                     class="rounded-lg gboFonts"
                     item-text="description"
@@ -68,7 +71,8 @@
                   <v-autocomplete
                     v-model="verifyModel.newStatus"
                     :rules="userId == 3 ? [formRules.required] : []"
-                    dense
+                   outlined
+              dense
                     class="rounded-lg"
                     item-text="description"
                     item-value="id"

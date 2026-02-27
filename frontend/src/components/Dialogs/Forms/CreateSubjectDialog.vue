@@ -32,14 +32,16 @@
                     :items="seniorJuniorList"
                     label="Senior High / Junior High"
                     color="#93CB5B"
-                    dense
+                   outlined
+              dense
                   ></v-select>
                 </v-col> -->
                 <!-- <v-col cols="12">
                   <v-autocomplete
                     v-model="newStatus"
                     :rules="[formRules.required]"
-                    dense
+                   outlined
+              dense
                     class="rounded-lg"
                     item-text="description"
                     item-value="id"

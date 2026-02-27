@@ -107,6 +107,7 @@
                         :rules="[formRules.required]"
                         v-model="data.fname"
                         :readonly="readonly"
+                        outlined
                         dense
                         required
                         label="First Name"
@@ -117,6 +118,7 @@
                       <v-text-field
                         v-model="data.mname"
                         :readonly="readonly"
+                        outlined
                         dense
                         required
                         label="Middle Name"
@@ -128,6 +130,7 @@
                         v-model="data.lname"
                         :rules="[formRules.required]"
                         :readonly="readonly"
+                        outlined
                         dense
                         label="Last Name"
                         required
@@ -139,6 +142,7 @@
                         v-model="data.suffix"
                         :readonly="readonly"
                         label="Suffix"
+                        outlined
                         dense
                         color="#6DB249"
                       ></v-text-field>
@@ -148,7 +152,8 @@
                         v-model="data.sex"
                         :readonly="readonly"
                         label="Sex"
-                        dense
+                       outlined
+              dense
                         color="#6DB249"
                       ></v-text-field>
                     </v-col> -->
@@ -159,6 +164,7 @@
                         :readonly="readonly"
                         label="Sex"
                         color="#6DB249"
+                        outlined
                         dense
                       ></v-select>
                     </v-col>
@@ -167,6 +173,7 @@
                         v-model="data.mobile_no"
                         :readonly="readonly"
                         label="Mobile Number"
+                        outlined
                         dense
                         color="#6DB249"
                         type="text"
@@ -186,6 +193,7 @@
                       >
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
+                            outlined
                             dense
                             v-model="data.hired"
                             :readonly="readonly"
@@ -221,6 +229,7 @@
                         v-model="totalYears"
                         :readonly="readonly"
                         label="Total years on service"
+                        outlined
                         dense
                         color="#6DB249"
                       ></v-text-field>
@@ -230,6 +239,7 @@
                         v-model="data.education"
                         :readonly="readonly"
                         label="Highest Education Attainment"
+                        outlined
                         dense
                         color="#6DB249"
                       ></v-text-field>
@@ -239,6 +249,7 @@
                         v-model="data.position"
                         :readonly="readonly"
                         label="Position"
+                        outlined
                         dense
                         color="#6DB249"
                       ></v-text-field>
@@ -248,6 +259,7 @@
                         v-model="data.specialization"
                         :readonly="readonly"
                         label="Specialization"
+                        outlined
                         dense
                         color="#6DB249"
                       ></v-text-field>
@@ -257,6 +269,7 @@
                         v-model="data.grade_experience"
                         :readonly="readonly"
                         label="Present Grade Experience"
+                        outlined
                         dense
                         color="#6DB249"
                       ></v-text-field>
@@ -266,6 +279,7 @@
                         v-model="data.cs_eligibility"
                         :readonly="readonly"
                         label="CS Eligibility"
+                        outlined
                         dense
                         color="#6DB249"
                       ></v-text-field>
@@ -353,6 +367,7 @@
                         placeholder="************"
                         class="font-size-14"
                         color="#93CB5B"
+                        outlined
                         dense
                         :disabled="credentialReadonly"
                         v-model="oldPass"
@@ -369,6 +384,7 @@
                         placeholder="************"
                         class="font-size-14"
                         color="#93CB5B"
+                        outlined
                         dense
                         :disabled="credentialReadonly"
                         v-model="password"
@@ -386,6 +402,7 @@
                         class="font-size-14"
                         color="#93CB5B"
                         :disabled="credentialReadonly"
+                        outlined
                         dense
                         v-model="confirmPassword"
                         :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"

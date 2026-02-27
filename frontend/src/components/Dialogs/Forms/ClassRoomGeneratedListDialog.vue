@@ -46,7 +46,8 @@
                         multiple
                         small-chips
                         deletable-chips
-                        dense
+                       outlined
+              dense
                         outlined
                         required
                         label="Employee"

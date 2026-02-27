@@ -41,7 +41,8 @@
                   offset-y
                   max-width="290px"
                   min-width="auto"
-                  dense
+                 outlined
+              dense
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
@@ -50,7 +51,8 @@
                       prepend-inner-icon="mdi-calendar"
                       readonly
                       outlined
-                      dense
+                     outlined
+              dense
                       hide-details
                       color="#f5b027"
                       class="rounded-lg"
@@ -76,7 +78,9 @@
                   outlined
                   @click="viewAttendance()"
                 >
-                  <v-icon size="20" class="mx-2 gboFonts">mdi-printer-eye</v-icon>
+                  <v-icon size="20" class="mx-2 gboFonts"
+                    >mdi-printer-eye</v-icon
+                  >
                   Atendance
                 </v-btn>
               </v-col>
@@ -112,7 +116,8 @@
 
                   <template v-slot:[`item.attendance`]="{ item }">
                     <div class="d-flex center">
-                      <v-radio-group class="gboFonts"
+                      <v-radio-group
+                        class="gboFonts"
                         v-model="item.attendance"
                         row
                         :disabled="!attendance_date"
@@ -126,7 +131,7 @@
                   </template>
                   <template v-slot:[`item.actions`]="{ item }">
                     <v-btn
-                      style="width: 80pt;"
+                      style="width: 80pt"
                       class="mx-2"
                       small
                       color="orange"
@@ -216,6 +221,7 @@
                   :headers="filteredHeaders"
                   :items="filteredItems"
                   item-key="student_name"
+                  outlined
                   dense
                 >
                   <template v-slot:body="{ items }">
@@ -226,7 +232,7 @@
                         </td>
                         <td
                           v-for="header in filteredHeaders.filter(
-                            (h) => h.key !== 'student_name'
+                            (h) => h.key !== 'student_name',
                           )"
                           :key="header.key"
                         >
@@ -274,7 +280,7 @@
             <v-col class="mt-2 mb-1 d-flex justify-center">
               <qr-code :size="150" :text="qrText"></qr-code>
             </v-col>
-            <v-col class=" d-flex justify-center" cols="12" v-if="viewData"
+            <v-col class="d-flex justify-center" cols="12" v-if="viewData"
               ><h2>Student: {{ "  " + viewData.name }}</h2></v-col
             >
           </v-row>
@@ -309,17 +315,28 @@
           <div class="d-flex justify-center align-center">
             <div
               v-if="scannerLoad == true"
-              style="position: absolute;   width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 100; top: 0; left: 0;background-color: rgba(0, 0, 0, 0.7); "
+              style="
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 100;
+                top: 0;
+                left: 0;
+                background-color: rgba(0, 0, 0, 0.7);
+              "
             >
               <v-row>
                 <v-col cols="12">
                   <div class="d-flex justify-center">
-                    <h1 style="color: white;">{{ student_name }}</h1>
+                    <h1 style="color: white">{{ student_name }}</h1>
                   </div>
                 </v-col>
                 <v-col cols="12">
                   <div class="d-flex justify-center">
-                    <h5 style="color: white;">
+                    <h5 style="color: white">
                       Successfully scanned, please wait for the next scan.
                     </h5>
                   </div>
@@ -339,7 +356,7 @@
               ref="video"
               autoplay
               playsinline
-              style="width: 100%; max-width: 500px;"
+              style="width: 100%; max-width: 500px"
             />
             <div v-else>
               <div class="d-flex justify-center">
@@ -510,7 +527,7 @@ export default {
             preferredCamera: "environment",
             highlightScanRegion: true,
             highlightCodeOutline: true,
-          }
+          },
         );
 
         await this.qrScanner.start();
@@ -595,7 +612,7 @@ export default {
           "/" +
           this.data.teacherID +
           "",
-        "_blank"
+        "_blank",
       );
     },
     closeD() {
@@ -610,14 +627,14 @@ export default {
       this.currentMonth = new Date(
         this.currentMonth.getFullYear(),
         this.currentMonth.getMonth() - 1,
-        1
+        1,
       );
     },
     nextMonth() {
       this.currentMonth = new Date(
         this.currentMonth.getFullYear(),
         this.currentMonth.getMonth() + 1,
-        1
+        1,
       );
     },
     getTaggedStudent() {
@@ -628,7 +645,7 @@ export default {
           this.filter +
           "/" +
           this.data.roomId,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("Data Students", res.data);
         if (res.data) {
@@ -667,7 +684,7 @@ export default {
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        }
+        },
       );
     },
     updateAttendance() {
@@ -682,7 +699,7 @@ export default {
         "/rooms-section/updateAttendance/" +
           this.formatDate3(this.attendance_date),
         "PATCH",
-        data
+        data,
       ).then((res) => {
         console.log(res.data);
         if (res.data.status == 200) {
@@ -717,19 +734,16 @@ export default {
                 : newRow[key] === "1"
                 ? {
                     text: "✔",
-                    cls:
-                      "text-h6 green--text d-flex justify-center align-center",
+                    cls: "text-h6 green--text d-flex justify-center align-center",
                   }
                 : newRow[key] === "2"
                 ? {
                     text: "◩",
-                    cls:
-                      "text-h4 black--text d-flex justify-center align-center",
+                    cls: "text-h4 black--text d-flex justify-center align-center",
                   }
                 : {
                     text: "◪",
-                    cls:
-                      "text-h4 blue--text d-flex justify-center align-center",
+                    cls: "text-h4 blue--text d-flex justify-center align-center",
                   };
           }
         }
@@ -740,9 +754,9 @@ export default {
       const dates = Array.from(
         new Set(
           rawData.flatMap((r) =>
-            Object.keys(r).filter((k) => k !== "student_name")
-          )
-        )
+            Object.keys(r).filter((k) => k !== "student_name"),
+          ),
+        ),
       );
       const grouped = {};
       rawData.forEach((row) => {
@@ -790,7 +804,7 @@ export default {
           this.data.roomId +
           "/" +
           this.data.subjectId,
-        "GET"
+        "GET",
       ).then((res) => {
         let data = res.data;
         this.changeData(data);
@@ -844,7 +858,7 @@ export default {
           this.data.roomId +
           "/" +
           this.data.subjectId,
-        "GET"
+        "GET",
       ).then((res) => {
         // console.log("Data Students", res.data);
 
@@ -907,27 +921,24 @@ export default {
 }
 </style>
 
-
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>

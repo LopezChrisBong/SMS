@@ -63,7 +63,8 @@
                   label="Date of Birth"
                   readonly
                   outlined
-                  dense
+                 outlined
+              dense
                   v-bind="attrs"
                   v-on="on"
                   :rules="[rules.required]"
@@ -114,8 +115,8 @@
             </v-btn>
             <v-col cols="12" class="">
               <div
-                style="font-size:14px;"
-                class="d-flex justify-center  text-gray-100"
+                style="font-size: 14px"
+                class="d-flex justify-center text-gray-100"
               >
                 Do you want to enroll?
                 <b
@@ -133,22 +134,20 @@
     <v-dialog v-model="openModalEnroll" persistent max-width="400">
       <v-card class="rounded-xl pa-2">
         <v-card-title class="d-flex align-center gap-2 pb-2">
-          <span class="text-h6 font-weight-bold">
-            Select Grade Level
-          </span>
+          <span class="text-h6 font-weight-bold"> Select Grade Level </span>
         </v-card-title>
 
         <v-divider></v-divider>
 
-        <v-card-text class=" py-3">
+        <v-card-text class="py-3">
           <div
-            class=" text-justify text-body-1 mb-4 pa-2"
-            style="border: 1px solid orange; border-radius: 10px;"
+            class="text-justify text-body-1 mb-4 pa-2"
+            style="border: 1px solid orange; border-radius: 10px"
           >
             Please select grade level accordingly beacuse it is the basis for
             your enrollment.
           </div>
-          <div class=" pa-6">
+          <div class="pa-6">
             <v-btn
               @click="doEnroll('Elementary')"
               block

@@ -144,7 +144,7 @@ export default {
         this.axiosCall(
           "/user-type/" + this.data.id,
           "PATCH",
-          this.userTypeModel
+          this.userTypeModel,
         ).then((res) => {
           if (res) {
             this.dialog = false;

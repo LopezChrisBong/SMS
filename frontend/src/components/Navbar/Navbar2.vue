@@ -27,7 +27,7 @@
             <span
               class="text-uppercase"
               v-show="$vuetify.breakpoint.smAndUp"
-              style="width: 130px; text-align: center ;"
+              style="width: 130px; text-align: center"
               ><strong>
                 <v-icon size="30" right class="mx-3">
                   mdi-account-arrow-right
@@ -168,7 +168,7 @@
           <v-col
             :cols="$vuetify.breakpoint.smAndUp ? '2' : '0'"
             class="pa-3"
-            style="border-right: 1px solid #ddd; position: fixed;"
+            style="border-right: 1px solid #ddd; position: fixed"
             v-if="$vuetify.breakpoint.smAndUp"
           >
             <v-list nav dense class="sidebar mt-2">
@@ -244,8 +244,8 @@
           >
           </v-col>
           <v-col :cols="$vuetify.breakpoint.smAndUp ? '10' : '12'" class="pa-3">
-            <div class=" fill-height pb-6" style="background-color:white; ">
-              <div class="d-flex justify-space-between py-4 px-4  ">
+            <div class="fill-height pb-6" style="background-color: white">
+              <div class="d-flex justify-space-between py-4 px-4">
                 <div>
                   <v-select
                     label="School Year"
@@ -253,6 +253,7 @@
                     @change="changeFilter()"
                     outlined
                     v-model="selectedFiter"
+                    outlined
                     dense
                     item-text="school_year"
                     item-value="id"
@@ -508,7 +509,7 @@ export default {
 
               break;
           }
-        }
+        },
       );
 
       // if (this.isActiveOIC) {
@@ -609,7 +610,7 @@ export default {
     clearInterval(this.interval);
   },
 
-  created: function() {
+  created: function () {
     // this.getMyAssignedModules();
     let userType = this.$store.state.user.user.usertypeID;
 
@@ -828,25 +829,23 @@ export default {
   color: #3a3b3a !important;
 }
 
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>

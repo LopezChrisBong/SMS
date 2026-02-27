@@ -97,6 +97,7 @@
                   <v-autocomplete
                     v-model="day"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     item-text="name"
@@ -111,6 +112,7 @@
                   <v-autocomplete
                     v-model="teacher"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     item-text="name"
@@ -125,6 +127,7 @@
                 <v-col cols="12" md="12">
                   <v-autocomplete
                     v-model="subject"
+                    outlined
                     dense
                     :rules="[formRules.required]"
                     class="rounded-lg"
@@ -141,7 +144,8 @@
                   <v-autocomplete
                     v-model="class_room"
                     :rules="[formRules.required]"
-                    dense
+                   outlined
+              dense
                     class="rounded-lg"
                     item-text="room_section"
                     item-value="id"

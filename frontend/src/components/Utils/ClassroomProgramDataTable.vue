@@ -5,8 +5,8 @@
         <v-autocomplete
           v-model="section"
           :rules="[formRules.required]"
-          dense
           outlined
+          dense
           @change="changeValueSection($event)"
           label="Section"
           class="rounded-lg gboFonts"
