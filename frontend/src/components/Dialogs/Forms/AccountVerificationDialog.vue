@@ -1,9 +1,15 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" eager scrollable max-width="550px" class="rounded-lg">
+    <v-dialog
+      v-model="dialog"
+      eager
+      scrollable
+      max-width="500px"
+      class="rounded-lg"
+    >
       <v-form ref="UserVerifyFormref" @submit.prevent>
-        <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+        <v-card class="rounded-xl">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>{{ action }} User</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -11,7 +17,7 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-text style="max-height: 700px" class="my-4">
+          <v-card-text style="max-height: 300px" class="my-4">
             <v-container>
               <v-row>
                 <v-col cols="12" v-if="userId == 3">
@@ -79,15 +85,18 @@
 
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
-            <v-btn color="red" outlined @click="closeD()">
-              <v-icon>mdi-close-circle-outline</v-icon>&nbsp;Cancel
+            <v-btn color="red " class="rounded-lg" outlined @click="closeD()">
+              <v-icon>mdi-close-circle-outline</v-icon>
+              Cancel
             </v-btn>
             <v-btn
               :color="$vuetify.theme.themes.light.submitBtns"
-              class="white--text"
+              class="white--text rounded-lg"
               @click="accept()"
             >
-              <v-icon>mdi-check-circle</v-icon>&nbsp;{{ action == "Verify" ? "Accept" : "Update" }}
+              <v-icon>mdi-check-circle</v-icon>&nbsp;{{
+                action == "Verify" ? "Accept" : "Update"
+              }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -219,7 +228,7 @@ export default {
               this.$refs.PositionFormref.reset();
               this.closeD();
             }
-          }
+          },
         );
       }
     },
@@ -239,15 +248,13 @@ export default {
 </script>
 
 <style scoped>
-
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
-
 </style>

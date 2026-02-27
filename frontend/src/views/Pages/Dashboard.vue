@@ -1,9 +1,16 @@
 <template>
-  <div class=" mx-2">
-    <v-card class="mt-2" style="min-height: 85vh; width: 100%; background-color: rgba(255, 255, 255, 0.8);">
+  <div class="mx-2">
+    <v-card
+      class="mt-2 rounded-xl"
+      style="
+        min-height: 85vh;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.4);
+      "
+    >
       <v-row class="mx-4">
         <v-col lg="6" xl="6" md="6" sm="12" xs="12">
-          <v-card class="card-style" style="margin-top: 10pt;">
+          <v-card class="card-style" style="margin-top: 10pt">
             <v-row>
               <v-col cols="12" class="pt-16 text-center">
                 <p class="text-h1">{{ enrollData }}/{{ verifyData }}</p>
@@ -12,7 +19,7 @@
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
-                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                  class="grey--text px-2 py-3 py-3 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
                   >Overall Enrolled Student
                 </v-list-item-title>
               </v-col>
@@ -20,18 +27,16 @@
           </v-card>
         </v-col>
         <v-col lg="6" xl="6" md="6" sm="12" xs="12">
-          <v-card class="card-style" style="margin-top: 10pt;">
+          <v-card class="card-style" style="margin-top: 10pt">
             <v-row>
               <v-col cols="12" class="pt-16 text-center">
-                <p class="text-h1">
-                  15
-                </p>
+                <p class="text-h1">15</p>
               </v-col>
               <v-col cols="12 ">
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
-                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                  class="grey--text px-2 py-3 py-3 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
                   >Average Number of Enrollees per Day per Year Level
                 </v-list-item-title>
               </v-col>
@@ -49,7 +54,7 @@
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
-                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                  class="grey--text px-2 py-3 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
                   >Teaching Employee/ Non-Teaching Employee
                 </v-list-item-title>
               </v-col>
@@ -66,7 +71,7 @@
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
-                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                  class="grey--text px-2 py-3 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
                   >Male Employee / Female Employee
                 </v-list-item-title>
               </v-col>
@@ -84,7 +89,7 @@
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
-                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                  class="grey--text px-2 py-3 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
                 >
                   Number of teachers to be hired
                 </v-list-item-title>
@@ -102,7 +107,7 @@
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
-                  class="grey--text px-2 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
+                  class="grey--text px-2 py-3 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
                 >
                   Enrollee Demographics
                 </v-list-item-title>
@@ -323,7 +328,7 @@ export default {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
     },
 
@@ -341,7 +346,7 @@ export default {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
     },
 
@@ -350,7 +355,7 @@ export default {
       let userData = this.$store.state.user.status;
       this.axiosCall(
         "/enroll-student/getTotalEnrolledStudent/" + filter + "/" + userData,
-        "GET"
+        "GET",
       ).then(
         (res) => {
           if (res.data) {
@@ -362,7 +367,7 @@ export default {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
     },
   },

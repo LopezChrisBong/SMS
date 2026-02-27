@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 8pt;">
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
@@ -9,7 +9,7 @@
           label="Search"
           single-line
           hide-details
-          class="rounded-lg gboFonts" 
+          class="rounded-lg gboFonts"
           color="#F5B027"
           dense
         ></v-text-field>
@@ -17,8 +17,9 @@
       <v-spacer></v-spacer>
       <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
-          style="width: 125pt; background-color: #F5B027;"
-          class="white--text ml-2 rounded-lg"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
@@ -47,24 +48,26 @@
           <span class="gboFontsTable">{{ item.tracks_name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
+          <div class="text-no-wrap gboFontsTable" style="padding: 4px">
             <v-btn
               small
-              color="blue"
-              class="my-2 mx-2 gboFontsTable"
+              color="#48A111"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="20" class="gboFontsTable">mdi-pencil-outline</v-icon>&nbsp;Update
+              <v-icon size="20" class="gboFontsTable">mdi-pencil-outline</v-icon
+              >&nbsp;Update
             </v-btn>
             <v-btn
               small
               color="red"
-              class="my-2 gboFontsTable"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="confirmDelete(item)"
             >
-              <v-icon size="20" class="gboFontsTable">mdi-delete-off</v-icon>&nbsp;Delete
+              <v-icon size="20" class="gboFontsTable">mdi-delete-off</v-icon
+              >&nbsp;Delete
             </v-btn>
           </div>
         </template>
@@ -109,9 +112,9 @@
 
     <AddStrandDialog :data="coreTimeData" :action="action" :grade="gradeName" />
 
-    <v-dialog v-model="confirmDialog" persistent max-width="350">
-      <v-card color="white">
-        <div class="pa-4 #3a3b3a--text">
+    <v-dialog v-model="confirmDialog" persistent max-width="400">
+      <v-card color="white rounded-xl">
+        <div class="pa-5 #3a3b3a--text">
           <div class="text-h6 mb-1">WARNING!</div>
           <div class="text-body-1 mb-1">
             <p style="text-align: justify">
@@ -128,10 +131,14 @@
                   </v-card-title> -->
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="confirmDialog = false">
+          <v-btn color="red rounded-lg" outlined @click="confirmDialog = false">
             Close
           </v-btn>
-          <v-btn color="#f5b027" class="white--text" @click="deleteItem()">
+          <v-btn
+            color="#f5b027"
+            class="white--text rounded-lg"
+            @click="deleteItem()"
+          >
             Confirm
           </v-btn>
         </v-card-actions>
@@ -164,13 +171,17 @@
               </v-col>
             </v-row>
             <v-card-title> </v-card-title>
-
           </v-form>
         </v-card-text>
 
         <v-card-actions class="pa-5">
           <v-spacer></v-spacer>
-          <v-btn color="red" outlined @click="JobPostPrint = false">
+          <v-btn
+            color="red"
+            class="rounded-lg"
+            outlined
+            @click="JobPostPrint = false"
+          >
             <v-icon>mdi-close-circle-outline</v-icon>
             Cancel
           </v-btn>
@@ -317,7 +328,6 @@ export default {
     filterYear() {
       return this.$store.getters.getFilterSelected;
     },
-
   },
   methods: {
     tag(item) {
@@ -351,7 +361,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       }
     },
@@ -398,7 +408,7 @@ export default {
     deleteItem() {
       this.axiosCall(
         "/rooms-section/deleteStrand/" + this.deleteData.id,
-        "DELETE"
+        "DELETE",
       ).then((res) => {
         if (res.data.status == 200) {
           this.dialog = false;
@@ -426,25 +436,23 @@ export default {
 </script>
 
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>

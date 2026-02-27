@@ -10,7 +10,7 @@
     >
       <v-form ref="dataGradeSubjects" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span v-if="toAdd == 1">{{ action }} My Subject List</span>
             <span v-else>{{ action }} My Grade Level List</span>
             <v-spacer></v-spacer>
@@ -27,7 +27,7 @@
                     <v-btn
                       color="#f5b027"
                       medium
-                      class="mb-2 ma-2 pa-2 "
+                      class="mb-2 ma-2 pa-2"
                       outlined
                       @click="employeeDialog = true"
                     >
@@ -94,7 +94,7 @@
     >
       <v-form ref="employeeDialogForm" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span v-if="toAdd == 1">Add Subjects To Teach</span>
             <span v-else>Add Grade Level To Teach</span>
             <v-spacer></v-spacer>
@@ -285,7 +285,7 @@ export default {
               }
               this.subject_list = data;
             }
-          }
+          },
         );
       } else {
         this.axiosCall("/subjects/getGradeTaagged/" + id, "GET").then((res) => {
@@ -378,7 +378,7 @@ export default {
               this.fadeAwayMessage.header = "System Message";
               this.fadeAwayMessage.message = res.data.msg;
             }
-          }
+          },
         );
       } else {
         let data = {
@@ -401,7 +401,7 @@ export default {
               this.fadeAwayMessage.header = "System Message";
               this.fadeAwayMessage.message = res.data.msg;
             }
-          }
+          },
         );
       }
     },

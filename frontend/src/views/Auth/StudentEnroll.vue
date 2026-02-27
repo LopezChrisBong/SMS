@@ -1,5 +1,5 @@
 <template>
-  <div class="ma-12 ">
+  <div class="ma-12">
     <v-card class="">
       <v-form ref="myPdsForm">
         <v-row>
@@ -839,8 +839,8 @@
                 <v-row
                   v-if="
                     grade_level == 'Grade 7' ||
-                      grade_level == 'Grade 1' ||
-                      formdata.transfered == 'Yes'
+                    grade_level == 'Grade 1' ||
+                    formdata.transfered == 'Yes'
                   "
                 >
                   <v-col cols="12">
@@ -954,9 +954,7 @@
     <!-- delete confirmation -->
     <v-dialog v-model="deleteConfirmDialog" persistent max-width="300">
       <v-card>
-        <v-card-title class="text-h6 red white--text">
-          Warning!
-        </v-card-title>
+        <v-card-title class="text-h6 red white--text"> Warning! </v-card-title>
         <div class="pa-4 #3a3b3a--text">
           <div class="text-body-1 mb-1">
             <p style="text-align: justify">
@@ -1163,10 +1161,10 @@ export default {
 
   computed: {
     computedSameAddress: {
-      get: function() {
+      get: function () {
         return this.formdata.isSameAddress;
       },
-      set: function(val) {
+      set: function (val) {
         this.formdata.isSameAddress = val ? true : false;
 
         this.formdata.permanent_zip = val
@@ -1198,7 +1196,7 @@ export default {
     },
 
     computedNoSpouse: {
-      get: function() {
+      get: function () {
         return this.family_background.noSpouse;
       },
     },
@@ -1246,7 +1244,7 @@ export default {
             console.log("All Strand", res.data);
             this.strandList = res.data;
           }
-        }
+        },
       );
     },
     getCountry() {
@@ -1261,7 +1259,7 @@ export default {
             process.env.VUE_APP_SERVER +
               "/pdf-generator/generateMyPDS/" +
               res.data +
-              "/true"
+              "/true",
           );
         });
       } else {
@@ -1270,7 +1268,7 @@ export default {
             process.env.VUE_APP_SERVER +
               "/pdf-generator/generateMyPDS/" +
               res.data +
-              "/false"
+              "/false",
           );
         });
       }
@@ -1410,7 +1408,7 @@ export default {
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        }
+        },
       );
     },
 
@@ -1422,7 +1420,7 @@ export default {
             this.trackList = res.data;
             this.loading = false;
           }
-        }
+        },
       );
     },
     goLanding() {

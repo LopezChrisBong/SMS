@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" eager scrollable max-width="600px">
       <v-form ref="UserVerifyFormref" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>{{ action == "Verify" ? "Enroll" : action }} Student</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -339,11 +339,11 @@ export default {
       } else {
         this.arrayFileIndex.splice(
           this.arrayFileIndex.indexOf(this.changeGoodMoral),
-          1
+          1,
         );
         this.deleteFileArray.splice(
           this.deleteFileArray.indexOf(this.goodMoralOldValue),
-          1
+          1,
         );
         console.log("deleteFileArray", this.deleteFileArray);
       }
@@ -378,11 +378,11 @@ export default {
       } else {
         this.arrayFileIndex.splice(
           this.arrayFileIndex.indexOf(this.changepicture),
-          1
+          1,
         );
         this.deleteFileArray.splice(
           this.deleteFileArray.indexOf(this.pictureOldValue),
-          1
+          1,
         );
         console.log("deleteFileArray", this.deleteFileArray);
       }
@@ -417,11 +417,11 @@ export default {
       } else {
         this.arrayFileIndex.splice(
           this.arrayFileIndex.indexOf(this.changeschoolCard),
-          1
+          1,
         );
         this.deleteFileArray.splice(
           this.deleteFileArray.indexOf(this.schoolCardOldValue),
-          1
+          1,
         );
         console.log("deleteFileArray", this.deleteFileArray);
       }
@@ -456,11 +456,11 @@ export default {
       } else {
         this.arrayFileIndex.splice(
           this.arrayFileIndex.indexOf(this.changebirthPSA),
-          1
+          1,
         );
         this.deleteFileArray.splice(
           this.deleteFileArray.indexOf(this.birthPSAOldValue),
-          1
+          1,
         );
         console.log("deleteFileArray", this.deleteFileArray);
       }
@@ -518,7 +518,7 @@ export default {
         this.axiosCall(
           "/enroll-student/updateEnrolledStudent",
           "POST",
-          data
+          data,
         ).then((res) => {
           if (res.data.status == 200) {
             this.dialog = false;
@@ -613,7 +613,7 @@ export default {
                   this.axiosCall(
                     "/enroll-student/getArrayFile/",
                     "POST",
-                    items
+                    items,
                   ).then((res) => {
                     console.log(res.data);
                     this.dialog = false;
@@ -637,7 +637,7 @@ export default {
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        }
+        },
       );
     },
 
@@ -676,7 +676,7 @@ export default {
             "/enroll-student/view/studentFile/" +
             this.picture +
             "",
-          "_blank" // <- This is what makes it open in a new window.
+          "_blank", // <- This is what makes it open in a new window.
         );
       }
     },
@@ -696,7 +696,7 @@ export default {
             "/enroll-student/view/studentFile/" +
             this.goodMoral +
             "",
-          "_blank" // <- This is what makes it open in a new window.
+          "_blank", // <- This is what makes it open in a new window.
         );
       }
     },
@@ -716,7 +716,7 @@ export default {
             "/enroll-student/view/studentFile/" +
             this.schoolCard +
             "",
-          "_blank" // <- This is what makes it open in a new window.
+          "_blank", // <- This is what makes it open in a new window.
         );
       }
     },
@@ -735,7 +735,7 @@ export default {
             "/enroll-student/view/studentFile/" +
             this.birthPSA +
             "",
-          "_blank" // <- This is what makes it open in a new window.
+          "_blank", // <- This is what makes it open in a new window.
         );
       }
     },

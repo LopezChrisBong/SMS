@@ -9,9 +9,9 @@
       v-on:closeNav="mini = false"
     />
     <!--  <v-main style="background-color: #f5b027;overflow-y:hidden "> -->
-    <v-main style="background-color: #f5b027; ">
-      <div class=" mx-2 fill-height pb-6" style="background-color:white; ">
-        <div class="d-flex justify-space-between pt-4 px-4  ">
+    <v-main style="background-color: #f5b027">
+      <div class="mx-2 fill-height pb-6" style="background-color: white">
+        <div class="d-flex justify-space-between pt-4 px-4">
           <div>
             <v-select
               label="Year"
