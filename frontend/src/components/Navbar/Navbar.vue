@@ -51,17 +51,22 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title style="font-size: medium;">{{ link.title }}</v-list-item-title>
+              <v-list-item-title style="font-size: medium;">{{
+                link.title
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
           <v-list-group v-else :key="link" color="#3a3b3a" :value="false">
             <v-icon slot="prependIcon">{{ link.icon }}</v-icon>
             <template v-slot:activator>
-              <v-list-item-title style="font-size: medium;">{{ link.title }}</v-list-item-title>
+              <v-list-item-title style="font-size: medium;">{{
+                link.title
+              }}</v-list-item-title>
             </template>
             <div class="sub-item">
-              <v-list-item style="font-size: medium;"
+              <v-list-item
+                style="font-size: medium;"
                 v-for="sublink in link.subLink"
                 router
                 :to="'/' + userType + sublink.route"
@@ -78,6 +83,22 @@
             </div>
           </v-list-group>
         </div>
+        <div v-if="adviser == true">
+          <v-list-item
+            :to="'/' + 'employee/my-advisory'"
+            router
+            class="rounded-lg mx-2"
+            active-class="active-link"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-account-details</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Advisory</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
       </v-list>
     </v-navigation-drawer>
 
@@ -92,11 +113,15 @@
         <div v-if="$vuetify.breakpoint.smAndUp" style="margin-bottom: 5px;">
           <v-row>
             <v-col cols="10">
-              <div class="title font-weight-light" style="font-family: Segoe UI !important; font-size: 20pt !important;">
+              <div
+                class="title font-weight-light"
+                style="font-family: Segoe UI !important; font-size: 20pt !important;"
+              >
                 <!-- <v-btn icon small color="black" @click="toggleSidebar" v-if="mini">
               <v-icon>mdi-menu</v-icon>
             </v-btn> -->
-              Hello, <b>{{ $store.state.user.fname }}</b>!
+                Hello, <b>{{ $store.state.user.fname }}</b
+                >!
               </div>
               <!-- <div class="caption grey--text">
                 {{
@@ -105,7 +130,12 @@
                     : ""
                 }}
               </div> -->
-              <div class="caption" style="font-size: 11pt !important; font-family: Segoe UI !important;">Today is {{ formattedDate }}</div>
+              <div
+                class="caption"
+                style="font-size: 11pt !important; font-family: Segoe UI !important;"
+              >
+                Today is {{ formattedDate }}
+              </div>
             </v-col>
             <v-col cols="2"> </v-col>
           </v-row>
@@ -146,7 +176,7 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
-            <div
+      <div
         :style="
           $vuetify.breakpoint.smAndDown ? { width: '0' } : { width: '400px' }
         "
@@ -168,7 +198,7 @@
         item-value="id"
         :items="schooYearList"
       ></v-select>
-    
+
       <v-menu>
         <template v-slot:activator="{ on }">
           <v-chip v-on="on" color="white" class="rounded-lg d-flex ">
@@ -245,19 +275,21 @@
     </v-app-bar>
 
     <!-- Main Dashboard -->
-    <v-main :style="{
-      backgroundImage: 'url(' + require('@/assets/img/bg104.jpg') + ')',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
-      backgroundPosition: 'right center'
-    }">
-      <v-container fluid >
-        <v-row >
+    <v-main
+      :style="{
+        backgroundImage: 'url(' + require('@/assets/img/bg104.jpg') + ')',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'right center',
+      }"
+    >
+      <v-container fluid>
+        <v-row>
           <v-col
             :cols="$vuetify.breakpoint.smAndUp ? '12' : '12'"
             class="pa-3 border mt-5"
           >
-            <div class=" fill-height pb-6" >
+            <div class=" fill-height pb-6">
               <!-- <div class="d-flex justify-space-between py-4 px-4  ">
                 <div>
                   <v-select
@@ -303,6 +335,7 @@ export default {
   data() {
     return {
       search: "",
+      adviser: false,
       formattedDate: "",
       mini: false,
       drawer: true,
@@ -320,6 +353,7 @@ export default {
       schooYearList: [],
       sidebarOpen: true,
       selectedFiter: null,
+      selected: null,
     };
   },
 
@@ -327,7 +361,7 @@ export default {
     this.getSchoolYear();
     this.loadImg();
     this.formattedDate = this.getFormattedDate();
-
+    this.findAllRoomsSection();
     if (this.$vuetify.breakpoint.xs) {
       this.drawer = false;
       this.mini = false;
@@ -445,6 +479,16 @@ export default {
         }
       });
     },
+    findAllRoomsSection() {
+      this.axiosCall(
+        "/rooms-section/findAllRoomsSection/" + this.$store.state.user.id,
+        "GET",
+      ).then((res) => {
+        if (res.data) {
+          this.adviser = true;
+        }
+      });
+    },
 
     loadMenu(userType, userRole) {
       this.axiosCall("/assigned-modules/getMyAssignedModules/my", "GET").then(
@@ -471,7 +515,7 @@ export default {
 
               break;
           }
-        }
+        },
       );
     },
   },
@@ -505,7 +549,7 @@ export default {
   border-radius: 12px;
   margin: 8px;
   transition: background 0.3s;
-  font-family: 'Segoe UI' !important;
+  font-family: "Segoe UI" !important;
 }
 /* .sidebar-item.active {
   background-color: rgba(253, 252, 252, 0.2);
@@ -517,39 +561,36 @@ export default {
   background-color: #f3c74d !important;
   border-radius: 5px;
   color: rgb(255, 255, 255) !important;
-  font-family: 'Segoe UI' !important;
+  font-family: "Segoe UI" !important;
 }
 .v-list-item--active {
   /* background-color: #ffd560 !important; */
   /* color: #000000 !important; */
-  font-family: 'Segoe UI' !important;
+  font-family: "Segoe UI" !important;
 }
 .v-list-group--active .v-list-item--active {
   background-color: #926c03 !important;
   color: #ffffff !important;
-  font-family: 'Segoe UI' !important;
+  font-family: "Segoe UI" !important;
 }
 
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 13pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
-
+}
 </style>

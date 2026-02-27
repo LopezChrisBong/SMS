@@ -155,6 +155,9 @@
 export default {
   name: "login",
   mounted() {
+    if (!localStorage.getItem("level")) {
+      this.$router.push("/");
+    }
     this.limbaanimg = localStorage.getItem("level");
     console.log("Limbaan", this.limbaanimg);
     this.getSchoolYear();
@@ -198,7 +201,7 @@ export default {
           } else {
             this.fadeAwayMessage.show = true;
             this.fadeAwayMessage.type = "error";
-            this.fadeAwayMessage.message = res.data.message;
+            this.fadeAwayMessage.message = res.data.msg;
             this.fadeAwayMessage.header = "System Message";
           }
         });

@@ -87,6 +87,24 @@
                   >
                 </div>
               </v-col>
+              <v-col cols="12">
+                <div class="d-flex justify-center mb-3">
+                  <v-btn
+                    :color="$vuetify.theme.themes.light.submitBtns"
+                    class="white--text font-size-14 rounded-lg"
+                    :class="$vuetify.breakpoint.smAndDown ? 'pa-5' : ' pa-8'"
+                    :loading="isLoading"
+                    style="width: 300px;"
+                    :style="
+                      $vuetify.breakpoint.smAndDown
+                        ? 'margin-top:0px'
+                        : 'width: 300px;'
+                    "
+                    @click="studentPortal()"
+                    >Student Portal</v-btn
+                  >
+                </div>
+              </v-col>
             </v-row>
           </v-form>
         </v-col>
@@ -122,6 +140,9 @@ export default {
     dologin(item) {
       localStorage.setItem("level", item);
       this.$router.push("/login");
+    },
+    studentPortal() {
+      this.$router.push("/student-login");
     },
   },
   data: () => ({

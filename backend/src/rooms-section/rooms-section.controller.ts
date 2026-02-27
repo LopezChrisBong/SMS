@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,Headers } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Headers,
+} from '@nestjs/common';
 import { RoomsSectionService } from './rooms-section.service';
 import { CreateRoomsSectionDto } from './dto/create-rooms-section.dto';
 import { UpdateRoomsSectionDto } from './dto/update-rooms-section.dto';
@@ -31,85 +40,139 @@ export class RoomsSectionController {
   }
 
   @Post('generateClassRecord/byGrade/level/:grade/:filter')
-  generateClassRecord(@Param('grade') grade: string,@Param('filter') filter: string) {
+  generateClassRecord(
+    @Param('grade') grade: string,
+    @Param('filter') filter: string,
+  ) {
     return this.roomsSectionService.generateClassRecord(grade, +filter);
   }
 
   @Post('genStrandRecord/seniorHigh/:grade/:filter/:strand')
-  genStrandRecord(@Param('grade') grade: string,@Param('filter') filter: string, @Param('strand') strand: string) {
-    return this.roomsSectionService.genStrandRecord(grade, +filter ,+strand);
+  genStrandRecord(
+    @Param('grade') grade: string,
+    @Param('filter') filter: string,
+    @Param('strand') strand: string,
+  ) {
+    return this.roomsSectionService.genStrandRecord(grade, +filter, +strand);
   }
 
-  @Post('updateAddRecords/:grade/:sy/:room')
-  updateAddRecords(@Body() createStudentListDto: CreateStudentListDto,@Param('grade') grade: string,@Param('sy') sy: string,@Param('room') room: string) {
-    return this.roomsSectionService.updateAddRecords(createStudentListDto, grade, +sy, +room );
+  @Post('updateAddRecords/:grade/:sy/:room/:data')
+  updateAddRecords(
+    @Body() createStudentListDto: CreateStudentListDto,
+    @Param('grade') grade: string,
+    @Param('sy') sy: string,
+    @Param('room') room: string,
+    @Param('data') data: string,
+  ) {
+    return this.roomsSectionService.updateAddRecords(
+      createStudentListDto,
+      grade,
+      +sy,
+      +room,
+      data,
+    );
   }
 
   @Post('addStudentClassRoom')
-  addStudentClassRoom(@Body() createAddStudentRoomDto: CreateAddStudentRoomDto) {
-    return this.roomsSectionService.addStudentClassRoom(createAddStudentRoomDto);
+  addStudentClassRoom(
+    @Body() createAddStudentRoomDto: CreateAddStudentRoomDto,
+  ) {
+    return this.roomsSectionService.addStudentClassRoom(
+      createAddStudentRoomDto,
+    );
   }
 
-    @Post('studentAttendance')
-  studentAttendance(@Body() createStudentAttendanceDto:CreateStudentAttendanceDto) {
-    return this.roomsSectionService.studentAttendance(createStudentAttendanceDto);
+  @Post('studentAttendance')
+  studentAttendance(
+    @Body() createStudentAttendanceDto: CreateStudentAttendanceDto,
+  ) {
+    return this.roomsSectionService.studentAttendance(
+      createStudentAttendanceDto,
+    );
   }
 
-    @Get('getAllAttendanceByDate/:date/:roomID/:subjectID')
-  getAllAttendanceByDate(@Param('date') date: string,@Param('roomID') roomID: string,@Param('subjectID') subjectID: string) {
-    return this.roomsSectionService.getAllAttendanceByDate(date,+roomID,+subjectID);
+  @Get('getAllAttendanceByDate/:date/:roomID/:subjectID')
+  getAllAttendanceByDate(
+    @Param('date') date: string,
+    @Param('roomID') roomID: string,
+    @Param('subjectID') subjectID: string,
+  ) {
+    return this.roomsSectionService.getAllAttendanceByDate(
+      date,
+      +roomID,
+      +subjectID,
+    );
   }
 
+  @Get('getMyClassList/:id/:filter')
+  getMyClassList(@Param('id') id: string, @Param('filter') filter: string) {
+    return this.roomsSectionService.getMyClassList(+id, +filter);
+  }
 
-  
+  @Get('findAllRoomsSection/:id')
+  findAllRoomsSection(@Param('id') id: string) {
+    return this.roomsSectionService.findAllRoomsSection(+id);
+  }
+
   @Get('findAllAddedRooms')
   findAllAddedRooms(@Headers() headers) {
-     var head_str = headers.authorization;
-        const curr_user = currentUser(head_str);
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
     return this.roomsSectionService.findAllAddedRooms(curr_user);
   }
 
-   @Get(':gradeLevel')
+  @Get(':gradeLevel')
   findAll(@Param('gradeLevel') gradeLevel: string) {
     return this.roomsSectionService.findAll(gradeLevel);
   }
 
   @Get(':gradeLevel/:section')
-  findSectionName(@Param('gradeLevel') gradeLevel: string,@Param('section') section: string) {
-    return this.roomsSectionService.findSectionName(gradeLevel,+section);
+  findSectionName(
+    @Param('gradeLevel') gradeLevel: string,
+    @Param('section') section: string,
+  ) {
+    return this.roomsSectionService.findSectionName(gradeLevel, +section);
   }
 
-
-  
   @Get('getAlltracks/Data/tracks')
   getAlltracks() {
-
     return this.roomsSectionService.getAlltracks();
   }
 
   @Get('getCountGen/:grade/:filter')
-  getCountGen(@Param('grade') grade: string,@Param('filter') filter: string) {
-
+  getCountGen(@Param('grade') grade: string, @Param('filter') filter: string) {
     return this.roomsSectionService.getCountGen(grade, +filter);
   }
 
   @Get('getConflictStrand/:grade/:filter/:strand')
-  getConflictStrand(@Param('grade') grade: string,@Param('filter') filter: string ,@Param('strand') strand: string) {
-
+  getConflictStrand(
+    @Param('grade') grade: string,
+    @Param('filter') filter: string,
+    @Param('strand') strand: string,
+  ) {
     return this.roomsSectionService.getConflictStrand(grade, +filter, +strand);
   }
-    @Get('getMyStudentAttendance/:id/:filter/:roomID')
-  getMyStudentAttendance(@Param('id') id: string,@Param('filter') filter: string,@Param('roomID') roomID: string) {
-  return this.roomsSectionService.getMyStudentAttendance(+id, +filter, +roomID);
+  @Get('getMyStudentAttendance/:id/:filter/:roomID')
+  getMyStudentAttendance(
+    @Param('id') id: string,
+    @Param('filter') filter: string,
+    @Param('roomID') roomID: string,
+  ) {
+    return this.roomsSectionService.getMyStudentAttendance(
+      +id,
+      +filter,
+      +roomID,
+    );
   }
 
   @Get('getRoomClassList/:id/:grade/:filter')
-  getRoomClassList(@Param('id') id: string,@Param('grade') grade: string,@Param('filter') filter: string) {
-
+  getRoomClassList(
+    @Param('id') id: string,
+    @Param('grade') grade: string,
+    @Param('filter') filter: string,
+  ) {
     return this.roomsSectionService.getRoomClassList(+id, grade, +filter);
   }
-
-
 
   @Get('AllStrand/Data/strand')
   AllStrand() {
@@ -120,35 +183,54 @@ export class RoomsSectionController {
   AllStrandEnroll(@Param('id') id: string) {
     return this.roomsSectionService.AllStrandEnroll(+id);
   }
- 
- 
-      @Get('getAllAttendanceWholeSemester/:roomID/:subjectID')
-  getAllAttendanceWholeSemester(@Param('roomID') roomID: string,@Param('subjectID') subjectID: string) {
-    return this.roomsSectionService.getAllAttendanceWholeSemester(+roomID,+subjectID);
+
+  @Get('getAllAttendanceWholeSemester/:roomID/:subjectID')
+  getAllAttendanceWholeSemester(
+    @Param('roomID') roomID: string,
+    @Param('subjectID') subjectID: string,
+  ) {
+    return this.roomsSectionService.getAllAttendanceWholeSemester(
+      +roomID,
+      +subjectID,
+    );
   }
 
-  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.roomsSectionService.findOne(+id);
   }
-  
-   @Patch('updateAttendance/:date')
-  updateAttendance(@Param('date') date: string, @Body() updateStudentAttendanceDto: UpdateStudentAttendanceDto) {
-    return this.roomsSectionService.updateAttendance(date, updateStudentAttendanceDto);
+
+  @Patch('updateAttendance/:date')
+  updateAttendance(
+    @Param('date') date: string,
+    @Body() updateStudentAttendanceDto: UpdateStudentAttendanceDto,
+  ) {
+    return this.roomsSectionService.updateAttendance(
+      date,
+      updateStudentAttendanceDto,
+    );
   }
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoomsSectionDto: UpdateRoomsSectionDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRoomsSectionDto: UpdateRoomsSectionDto,
+  ) {
     return this.roomsSectionService.update(+id, updateRoomsSectionDto);
   }
 
   @Patch('updateTrack/:id')
-  updateTrack(@Param('id') id: string, @Body() updateAddTrackDto: UpdateAddTrackDto) {
+  updateTrack(
+    @Param('id') id: string,
+    @Body() updateAddTrackDto: UpdateAddTrackDto,
+  ) {
     return this.roomsSectionService.updateTrack(+id, updateAddTrackDto);
   }
 
   @Patch('updateStrand/:id')
-  updateStrand(@Param('id') id: string, @Body() updateAddStrandDto: UpdateAddStrandDto) {
+  updateStrand(
+    @Param('id') id: string,
+    @Body() updateAddStrandDto: UpdateAddStrandDto,
+  ) {
     return this.roomsSectionService.updateStrand(+id, updateAddStrandDto);
   }
 
@@ -157,7 +239,7 @@ export class RoomsSectionController {
     return this.roomsSectionService.remove(+id);
   }
 
-    @Delete('deleteStrand/:id')
+  @Delete('deleteStrand/:id')
   deleteStrand(@Param('id') id: string) {
     return this.roomsSectionService.deleteStrand(+id);
   }

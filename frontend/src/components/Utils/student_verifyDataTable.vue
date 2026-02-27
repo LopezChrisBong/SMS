@@ -3,8 +3,13 @@
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <v-tabs v-model="activeTab" color="#f5b027" align-tabs="left">
-          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">
-            {{tab.name}}
+          <v-tab
+            class="gboFontsTab"
+            v-for="tab in tabList"
+            :key="tab.id"
+            @click="changeTab(tab)"
+          >
+            {{ tab.name }}
           </v-tab>
         </v-tabs>
       </v-col>
@@ -43,7 +48,14 @@
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <div class="d-flex">
-            <v-btn style="width: 80pt;" small class="gboFontsTable" color="grey" outlined @click="editItem(item)">
+            <v-btn
+              style="width: 80pt;"
+              small
+              class="gboFontsTable"
+              color="grey"
+              outlined
+              @click="editItem(item)"
+            >
               <v-icon size="20">{{
                 tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
               }}</v-icon>
@@ -396,28 +408,24 @@ export default {
 };
 </script>
 
-
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>
-

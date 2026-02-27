@@ -34,7 +34,9 @@ import LandingPage from "../views/Auth/LandingPage.vue";
 import TeachersListGradeLevel from "../views/Pages/TeachersListGradeLevel.vue";
 import ElementaryTeacherListGradeLevel from "../views/Pages/ElementaryTeacherListGradeLevel.vue";
 import MyStudentRecord from "../views/Pages/MyStudentRecord.vue";
-
+import StudentLogin from "../views/Auth/StudentLogin.vue";
+import StudentDashboard from "../views/Auth/StudentDashboard.vue";
+import Advisory from "../views/Pages/Advisory.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -81,6 +83,18 @@ const routes = [
         component: StudentEnroll,
         meta: {authRequired: false },
       },
+      {
+        path: "student-login",
+        component: StudentLogin,
+        meta: {authRequired: false },
+      },
+      {
+        path: "student-dashboard",
+        alias:'/student-dashboard',
+        component: StudentDashboard,
+        meta: {authRequired: false },
+      },
+      
     ],
   },
   {
@@ -332,6 +346,13 @@ const routes = [
         component: MyStudentRecord,
         meta: { title: "My Student Record", authRequired: true },
       },
+      {
+        path: "my-advisory",
+        component: Advisory,
+        meta: { title: "My Student Record", authRequired: true },
+      },
+      
+
       
     ],
   },
@@ -400,6 +421,18 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const isLockedMode = localStorage.getItem("lockedAccount") === "true";
+  const isStudentDashboard = to.path === "/student-dashboard";
+  // const isStudentLogin = to.path === "/student-login";
+
+  if (isLockedMode && !isStudentDashboard) {
+    return next("/student-dashboard");
+  }
+
+  if (!isLockedMode && isStudentDashboard) {
+    return next("/student-login");
+  }
+
   // let user = store.state.user;
   const isAuthenticated = store.getters.getIsAuthenticated;
   // console.log(to);
