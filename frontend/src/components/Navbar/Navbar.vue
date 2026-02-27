@@ -42,7 +42,7 @@
             :key="link.title"
             router
             :to="'/' + userType + link.route"
-            class="sidebar-item gboFontsTab"
+            class="sidebar-item gboFontsTab rounded-xl"
             @click="selected = i"
             :class="{ active: selected === i }"
           >
@@ -51,17 +51,22 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title style="font-size: medium;">{{ link.title }}</v-list-item-title>
+              <v-list-item-title style="font-size: medium">{{
+                link.title
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
           <v-list-group v-else :key="link" color="#3a3b3a" :value="false">
             <v-icon slot="prependIcon">{{ link.icon }}</v-icon>
             <template v-slot:activator>
-              <v-list-item-title style="font-size: medium;">{{ link.title }}</v-list-item-title>
+              <v-list-item-title style="font-size: medium">{{
+                link.title
+              }}</v-list-item-title>
             </template>
             <div class="sub-item">
-              <v-list-item style="font-size: medium;"
+              <v-list-item
+                style="font-size: medium"
                 v-for="sublink in link.subLink"
                 router
                 :to="'/' + userType + sublink.route"
@@ -71,7 +76,7 @@
                 <v-list-item-icon>
                   <!-- <v-icon class="">{{ sublink.icon }}</v-icon> -->
                 </v-list-item-icon>
-                <v-list-item-title class="" style="font-size: medium;">{{
+                <v-list-item-title class="" style="font-size: medium">{{
                   sublink.title
                 }}</v-list-item-title>
               </v-list-item>
@@ -86,17 +91,28 @@
       app
       flat
       height="75"
-      style="background-color: white; border-bottom: 3px solid #dcdcdc ; box-shadow: 5px 10px 8px 10px #888888;"
+      style="
+        background-color: white;
+        border-bottom: 3px solid #dcdcdc;
+        box-shadow: 5px 10px 8px 10px #888888;
+      "
     >
       <v-toolbar-title>
-        <div v-if="$vuetify.breakpoint.smAndUp" style="margin-bottom: 5px;">
+        <div v-if="$vuetify.breakpoint.smAndUp" style="margin-bottom: 5px">
           <v-row>
             <v-col cols="10">
-              <div class="title font-weight-light" style="font-family: Segoe UI !important; font-size: 20pt !important;">
+              <div
+                class="title font-weight-light"
+                style="
+                  font-family: Segoe UI !important;
+                  font-size: 20pt !important;
+                "
+              >
                 <!-- <v-btn icon small color="black" @click="toggleSidebar" v-if="mini">
               <v-icon>mdi-menu</v-icon>
             </v-btn> -->
-              Hello, <b>{{ $store.state.user.fname }}</b>!
+                Hello, <b>{{ $store.state.user.fname }}</b
+                >!
               </div>
               <!-- <div class="caption grey--text">
                 {{
@@ -105,7 +121,15 @@
                     : ""
                 }}
               </div> -->
-              <div class="caption" style="font-size: 11pt !important; font-family: Segoe UI !important;">Today is {{ formattedDate }}</div>
+              <div
+                class="caption"
+                style="
+                  font-size: 11pt !important;
+                  font-family: Segoe UI !important;
+                "
+              >
+                Today is {{ formattedDate }}
+              </div>
             </v-col>
             <v-col cols="2"> </v-col>
           </v-row>
@@ -146,7 +170,7 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
-            <div
+      <div
         :style="
           $vuetify.breakpoint.smAndDown ? { width: '0' } : { width: '400px' }
         "
@@ -168,21 +192,23 @@
         item-value="id"
         :items="schooYearList"
       ></v-select>
-    
+
       <v-menu>
         <template v-slot:activator="{ on }">
-          <v-chip v-on="on" color="white" class="rounded-lg d-flex ">
+          <v-chip v-on="on" color="white" class="rounded-lg d-flex">
             <!-- <v-avatar left :size="$vuetify.breakpoint.smAndUp ? 100 : 100">
               <img :src="profImg" max-width="100" />
             </v-avatar> -->
             <span
               class="text-uppercase"
               v-show="$vuetify.breakpoint.smAndUp"
-              style="width: 40px; text-align: center; font-family: Segoe UI !important;"
+              style="
+                width: 40px;
+                text-align: center;
+                font-family: Segoe UI !important;
+              "
               ><strong>
-                <v-icon size="30" center class="">
-                  mdi-account
-                </v-icon>
+                <v-icon size="30" center class=""> mdi-account </v-icon>
               </strong>
               <!-- {{ $store.state.user.fname }} -->
             </span>
@@ -245,19 +271,21 @@
     </v-app-bar>
 
     <!-- Main Dashboard -->
-    <v-main :style="{
-      backgroundImage: 'url(' + require('@/assets/img/bg104.jpg') + ')',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
-      backgroundPosition: 'right center'
-    }">
-      <v-container fluid >
-        <v-row >
+    <v-main
+      :style="{
+        backgroundImage: 'url(' + require('@/assets/img/bg104.jpg') + ')',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'right center',
+      }"
+    >
+      <v-container fluid>
+        <v-row>
           <v-col
             :cols="$vuetify.breakpoint.smAndUp ? '12' : '12'"
             class="pa-3 border mt-5"
           >
-            <div class=" fill-height pb-6" >
+            <div class="fill-height pb-6">
               <!-- <div class="d-flex justify-space-between py-4 px-4  ">
                 <div>
                   <v-select
@@ -471,7 +499,7 @@ export default {
 
               break;
           }
-        }
+        },
       );
     },
   },
@@ -480,7 +508,7 @@ export default {
     clearInterval(this.interval);
   },
 
-  created: function() {
+  created: function () {
     // this.getMyAssignedModules();
     let userType = this.$store.state.user.user.usertypeID;
 
@@ -502,10 +530,10 @@ export default {
   overflow: hidden;
 }
 .sidebar-item {
-  border-radius: 12px;
+  border-radius: 20px;
   margin: 8px;
   transition: background 0.3s;
-  font-family: 'Segoe UI' !important;
+  font-family: "Segoe UI" !important;
 }
 /* .sidebar-item.active {
   background-color: rgba(253, 252, 252, 0.2);
@@ -515,41 +543,39 @@ export default {
 }
 .v-list-group--active {
   background-color: #f3c74d !important;
-  border-radius: 5px;
+  border-radius: 40px;
   color: rgb(255, 255, 255) !important;
-  font-family: 'Segoe UI' !important;
+  font-family: "Segoe UI" !important;
 }
 .v-list-item--active {
   /* background-color: #ffd560 !important; */
   /* color: #000000 !important; */
-  font-family: 'Segoe UI' !important;
+  font-family: "Segoe UI" !important;
 }
 .v-list-group--active .v-list-item--active {
   background-color: #926c03 !important;
   color: #ffffff !important;
-  font-family: 'Segoe UI' !important;
+  font-family: "Segoe UI" !important;
+  border-radius: 40px;
 }
 
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 13pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
-
+}
 </style>

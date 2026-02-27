@@ -10,7 +10,7 @@
     >
       <v-form ref="UserModuleFormref" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>Assign Modules</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -18,7 +18,7 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-text style="max-height: 900px" class=" pa-4">
+          <v-card-text style="max-height: 900px" class="pa-4">
             <v-row>
               <v-col cols="12" class="px-2 mt-2">
                 <v-text-field
@@ -28,7 +28,7 @@
                   outlined
                   required
                   label="Description"
-                  class="rounded-lg "
+                  class="rounded-lg"
                   color="#6DB249"
                 ></v-text-field>
               </v-col>
@@ -44,7 +44,7 @@
                       group="my-group"
                     >
                       <div
-                        style="cursor:pointer"
+                        style="cursor: pointer"
                         class="drag-list-item main_module text-body-1"
                         v-for="element in assignedlist"
                         :key="element.id"
@@ -62,15 +62,15 @@
                       <h4 class="my-2 white--text">Sub-modules</h4>
                     </div>
                     <draggable
-                      class="draggable-list div_drag_foot py-2 "
+                      class="draggable-list div_drag_foot py-2"
                       :class="hasSublistClicked ? '' : 'disable_drag'"
                       :list="sublist"
                       :group="hasSublistClicked ? 'my-group' : ''"
                       @change="afterAdd"
                     >
                       <div
-                        style="cursor:pointer"
-                        class="drag-list-item  text-body-1"
+                        style="cursor: pointer"
+                        class="drag-list-item text-body-1"
                         v-for="element in sublist"
                         :key="element.title"
                       >
@@ -91,8 +91,8 @@
                       :group="{ name: 'my-group', put: true }"
                     >
                       <div
-                        style="cursor:pointer"
-                        class="drag-list-item  text-body-1"
+                        style="cursor: pointer"
+                        class="drag-list-item text-body-1"
                         v-for="modList in moduleslist"
                         :key="modList.id"
                       >
@@ -266,7 +266,7 @@ export default {
             // console.log(res.data);
             this.moduleslist = res.data;
           }
-        }
+        },
       );
     },
     closeD() {
@@ -326,7 +326,7 @@ export default {
               this.$refs.PositionFormref.reset();
               this.closeD();
             }
-          }
+          },
         );
       }
     },

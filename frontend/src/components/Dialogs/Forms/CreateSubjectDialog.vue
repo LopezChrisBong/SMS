@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" persistent eager scrollable max-width="900px">
+    <v-dialog v-model="dialog" persistent eager scrollable max-width="600px">
       <v-form ref="AddSubjectDialog" @submit.prevent>
-        <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+        <v-card class="rounded-xl">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>{{ action }} Subject</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -16,13 +16,13 @@
               <v-row>
                 <v-col cols="12" md="12">
                   <v-text-field
-                    style="border: 1px solid gray; border-radius: 4px;"
-                    class="px-2"
+                    outlined
                     v-model="subject_title"
                     label="Subject Title"
-                    hide-details
                     required
-                  ></v-text-field>
+                    color="#6DB249"
+                    class="rounded-lg"
+                  />
                 </v-col>
                 <!-- <v-col cols="12" md="6">
                   <v-select
@@ -123,13 +123,13 @@
 
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
-            <v-btn color="red" outlined @click="closeD()">
+            <v-btn color="red" class="rounded-lg" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
             <v-btn
               color="#f5b027"
-              class="white--text"
+              class="white--text rounded-lg"
               v-if="action == 'Add'"
               @click="checkConflict('ADD')"
             >
@@ -403,7 +403,7 @@ export default {
                 this.fadeAwayMessage.header = "System Message";
                 this.fadeAwayMessage.message = res.data.msg;
               }
-            }
+            },
           );
         }
       }

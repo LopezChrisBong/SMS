@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 8pt;">
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
@@ -17,7 +17,8 @@
       <v-spacer></v-spacer>
       <v-col cols="12" md="8" class="d-flex justify-end">
         <v-btn
-          style="width: 125pt; background-color: #F5B027;"
+          height="40"
+          style="width: auto; background-color: #f5b027"
           :class="tab == 3 ? 'd-none' : ''"
           class="white--text ml-2 rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
@@ -45,15 +46,16 @@
           <span class="gboFontsTable">{{ item.subject_title }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap gboFontsTable" style="padding: 4px;">
+          <div class="text-no-wrap gboFontsTable" style="padding: 4px">
             <v-btn
               small
-              color="blue"
-              class="my-2 gboFontsTable"
+              color="#48A111"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="editItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon>&nbsp;Update
+              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon
+              >&nbsp;Update
             </v-btn>
           </div>
         </template>
@@ -108,8 +110,8 @@
           <div class="text-h6 mb-1 gboFontsTab">WARNING!</div>
           <div class="text-body-1 mb-1">
             <p style="text-align: justify">
-              <v-icon class="mt-n2 gboFonts" color="white">mdi-alert</v-icon> &nbsp;Are
-              you sure you want to delete this information?<br /><br />
+              <v-icon class="mt-n2 gboFonts" color="white">mdi-alert</v-icon>
+              &nbsp;Are you sure you want to delete this information?<br /><br />
               Please note that
               <b>this action is irreversible.</b>
             </p>
@@ -118,11 +120,20 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="gboFonts" color="red" outlined @click="confirmDialog = false">
-          &nbsp;Close
+          <v-btn
+            class="gboFonts"
+            color="red"
+            outlined
+            @click="confirmDialog = false"
+          >
+            &nbsp;Close
           </v-btn>
-          <v-btn color="#f5b027" class="white--text gboFonts" @click="deleteItem()">
-          &nbsp;Confirm
+          <v-btn
+            color="#f5b027"
+            class="white--text gboFonts"
+            @click="deleteItem()"
+          >
+            &nbsp;Confirm
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -300,7 +311,7 @@ export default {
           "/" +
           filter +
           "",
-        "_blank" // <- This is what makes it open in a new window.
+        "_blank", // <- This is what makes it open in a new window.
       );
     },
 
@@ -337,7 +348,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       }
     },
@@ -397,7 +408,7 @@ export default {
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        }
+        },
       );
     },
     confirmDelete(item) {
@@ -408,28 +419,24 @@ export default {
 };
 </script>
 
-
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>
-

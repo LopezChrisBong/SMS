@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" eager scrollable max-width="900px">
       <v-form ref="UserVerifyFormref" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span
               >{{ action }} {{ grade }} {{ className }} Faculty Schedule
             </span>
@@ -299,7 +299,7 @@ export default {
         let filter = this.$store.getters.getFilterSelected;
         let hours = this.calculateHoursDifference(
           this.time_slot_from,
-          this.time_slot_to
+          this.time_slot_to,
         );
         if (hours < 1) {
           this.fadeAwayMessage.show = true;
@@ -338,7 +338,7 @@ export default {
                   this.$refs.UserVerifyFormref.reset();
                   this.closeD();
                 }
-              }
+              },
             );
           } else if (this.action == "Update") {
             let data = {
@@ -355,7 +355,7 @@ export default {
             this.axiosCall(
               "/enroll-student/updateClassProgram/" + this.id,
               "PATCH",
-              data
+              data,
             ).then((res) => {
               if (res.data.status == 200) {
                 this.fadeAwayMessage.show = true;
@@ -404,7 +404,7 @@ export default {
       }
       this.axiosCall(
         "/subjects/getSpicificSubject/" + id + "/" + this.filter + "/" + grade,
-        "GET"
+        "GET",
       ).then((res) => {
         if (res) {
           console.log("Subject List", res.data);
@@ -417,7 +417,7 @@ export default {
       //   let grade = this.grade.toString();
       this.axiosCall(
         "/rooms-section/" + this.grade + "/" + this.section,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("ClassName", res.data[0].teacherId);
         // this.adviser = res.data[0].teacherId;
@@ -428,7 +428,7 @@ export default {
     getRoleTeachers() {
       this.axiosCall(
         "/user-details/getAllVerifiedUser/TeachingRole/" + this.grade,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("Teacher Role1", res.data);
         this.TeachersList = res.data;
@@ -441,7 +441,7 @@ export default {
           this.adviser +
           "/" +
           this.grade,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("Teacher Role2", res.data);
         this.TeachersList = res.data;

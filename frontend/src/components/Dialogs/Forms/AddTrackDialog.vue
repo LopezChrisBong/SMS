@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" persistent eager scrollable max-width="900px">
+    <v-dialog v-model="dialog" persistent eager scrollable max-width="600px">
       <v-form ref="AddSubjectDialog" @submit.prevent>
-        <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+        <v-card class="rounded-xl">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>{{ action }} Track</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -14,15 +14,16 @@
           <v-card-text style="max-height: 700px" class="my-4">
             <v-container>
               <v-row>
-                <v-col cols="12" md="12">
+                <v-col cols="12">
                   <v-text-field
-                    style="border: 1px solid gray; border-radius: 4px;"
-                    class="px-2"
+                    outlined
                     v-model="track_name"
                     label="Track Name"
-                    hide-details
+                    :rules="[formRules.required]"
                     required
-                  ></v-text-field>
+                    color="#6DB249"
+                    class="rounded-lg"
+                  />
                 </v-col>
               </v-row>
             </v-container>
@@ -31,13 +32,13 @@
 
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
-            <v-btn color="red" outlined @click="closeD()">
+            <v-btn color="red" class="rounded-lg" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
             <v-btn
               color="#f5b027"
-              class="white--text"
+              class="white--text rounded-lg"
               v-if="action == 'Add'"
               @click="checkConflict('ADD')"
             >
@@ -201,7 +202,7 @@ export default {
                 this.fadeAwayMessage.header = "System Message";
                 this.fadeAwayMessage.message = res.data.msg;
               }
-            }
+            },
           );
         }
       } else if (type == "UPDATE") {
@@ -219,7 +220,7 @@ export default {
           this.axiosCall(
             "/rooms-section/updateTrack/" + this.updateID,
             "PATCH",
-            data
+            data,
           ).then((res) => {
             console.log(res.data);
             if (res.data.status == 201) {

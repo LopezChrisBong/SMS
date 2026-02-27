@@ -10,7 +10,7 @@
     >
       <v-form ref="ShortListAccess" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span
               >{{ action }} {{ grade }} {{ room_section }} Student List</span
             >
@@ -60,7 +60,7 @@
                 <v-col cols="12" class="elevation-1">
                   <div class="d-flex flex-row-reverse">
                     <v-btn
-                      style="width: 85pt;"
+                      style="width: 85pt"
                       color="#f5b027"
                       medium
                       class="mb-2 ma-2 pa-2"
@@ -71,17 +71,19 @@
                           : updateable()
                       "
                     >
-                      <v-icon size="20">mdi-pencil</v-icon><span class="gboFontsTab"> Update</span>
+                      <v-icon size="20">mdi-pencil</v-icon
+                      ><span class="gboFontsTab"> Update</span>
                     </v-btn>
                     <v-btn
-                      style="width: 85pt;"
+                      style="width: 85pt"
                       color="#f5b027"
                       medium
-                      class="mb-2 ma-2 pa-2 "
+                      class="mb-2 ma-2 pa-2"
                       outlined
                       @click="employeeDialog = true"
                     >
-                      <v-icon size="25">mdi-plus</v-icon><span class="gboFontsTab"> Add</span>
+                      <v-icon size="25">mdi-plus</v-icon
+                      ><span class="gboFontsTab"> Add</span>
                     </v-btn>
                   </div>
                   <v-data-table
@@ -103,7 +105,8 @@
                           outlined
                           @click="deleteItem(item, index)"
                         >
-                          <v-icon size="20">mdi-trash-can</v-icon><span class="gboFontsTab"> Delete</span>
+                          <v-icon size="20">mdi-trash-can</v-icon
+                          ><span class="gboFontsTab"> Delete</span>
                         </v-btn>
                       </div>
                     </template>
@@ -117,12 +120,17 @@
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
 
-            <v-btn color="red" style="width: 85pt;" outlined @click="closeD()">
+            <v-btn color="red" style="width: 85pt" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               <span class="gboFontsTab"> Cancel</span>
             </v-btn>
 
-            <v-btn color="#f5b027" style="width: 85pt;" class="white--text" @click="save()">
+            <v-btn
+              color="#f5b027"
+              style="width: 85pt"
+              class="white--text"
+              @click="save()"
+            >
               <v-icon>mdi-check-circle</v-icon>
               <span class="gboFontsTab"> Save</span>
             </v-btn>
@@ -139,7 +147,7 @@
     >
       <v-form ref="employeeDialogForm" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>Add Student</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="employeeDialog = false">
@@ -198,7 +206,7 @@
     >
       <v-form ref="updateClassListDialogForm" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>Update Class List</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="updateClassListDialog = false">
@@ -353,7 +361,7 @@ export default {
     getEnrolledStudent() {
       this.axiosCall(
         "/enroll-student/AddClassStudent/EnrolledStudent/" + this.grade,
-        "GET"
+        "GET",
       ).then((res) => {
         if (res.data) {
           let data = res.data;
@@ -374,7 +382,7 @@ export default {
           this.grade +
           "/" +
           this.filter,
-        "GET"
+        "GET",
       ).then((res) => {
         if (res.data) {
           let data = res.data;
@@ -426,7 +434,7 @@ export default {
             console.log("Love", res.data);
             this.nextClassRoomList = res.data;
           }
-        }
+        },
       );
     },
     saveStudent() {
@@ -487,7 +495,7 @@ export default {
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        }
+        },
       );
       // } else {
       //   this.fadeAwayMessage.show = true;
@@ -512,7 +520,7 @@ export default {
             "/" +
             this.nextClass,
           "POST",
-          this.studentList
+          this.studentList,
         ).then((res) => {
           if (res) {
             if (res.data.status == 201) {
@@ -567,25 +575,23 @@ export default {
 </script>
 
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>

@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" eager scrollable max-width="600px">
       <v-form ref="ChildFormref" @submit.prevent>
         <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span v-if="action == 'Add'"> Add children</span>
             <span v-if="action == 'Update'"> Update children</span>
             <v-spacer></v-spacer>

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" eager scrollable max-width="900px">
+    <v-dialog v-model="dialog" eager scrollable max-width="600px">
       <v-form ref="UserVerifyFormref" @submit.prevent>
-        <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+        <v-card class="rounded-xl">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>{{ action }} {{ grade }} {{ className }} Faculty Load </span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -95,7 +95,6 @@
                   <v-autocomplete
                     v-model="day"
                     :rules="[formRules.required]"
-                    dense
                     multiple
                     small-chips
                     deletable-chips
@@ -112,7 +111,6 @@
                   <v-autocomplete
                     v-model="teacher"
                     :rules="[formRules.required]"
-                    dense
                     class="rounded-lg"
                     item-text="name"
                     item-value="id"
@@ -128,7 +126,6 @@
                     v-if="!trueOthers"
                     v-model="subject"
                     @change="subjectAssign(subject)"
-                    dense
                     :rules="[formRules.required]"
                     class="rounded-lg"
                     item-text="subject_title"
@@ -175,13 +172,13 @@
 
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
-            <v-btn color="red" outlined @click="closeD()">
+            <v-btn color="red" class="rounded-lg" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
             <v-btn
-              :color="$vuetify.theme.themes.light.submitBtns"
-              class="white--text"
+              color="#f5b027"
+              class="white--text rounded-lg"
               @click="accept()"
             >
               <v-icon>mdi-check-circle</v-icon>
@@ -329,7 +326,7 @@ export default {
         let filter = this.$store.getters.getFilterSelected;
         let hours = this.calculateHoursDifference(
           this.time_slot_from,
-          this.time_slot_to
+          this.time_slot_to,
         );
         if (hours < 1) {
           this.fadeAwayMessage.show = true;
@@ -368,7 +365,7 @@ export default {
                   this.$refs.UserVerifyFormref.reset();
                   this.closeD();
                 }
-              }
+              },
             );
           } else if (this.action == "Update") {
             let data = {
@@ -385,7 +382,7 @@ export default {
             this.axiosCall(
               "/enroll-student/updateClassProgram/" + this.id,
               "PATCH",
-              data
+              data,
             ).then((res) => {
               if (res.data.status == 200) {
                 this.fadeAwayMessage.show = true;
@@ -434,7 +431,7 @@ export default {
       }
       this.axiosCall(
         "/subjects/getSpicificSubject/" + id + "/" + this.filter + "/" + grade,
-        "GET"
+        "GET",
       ).then((res) => {
         if (res) {
           console.log("Subject List", res.data);
@@ -448,7 +445,7 @@ export default {
       //   let grade = this.grade.toString();
       this.axiosCall(
         "/rooms-section/" + this.grade + "/" + this.section,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("ClassName", res.data[0].teacherId);
         // this.adviser = res.data[0].teacherId;
@@ -459,7 +456,7 @@ export default {
     getRoleTeachers() {
       this.axiosCall(
         "/user-details/getAllVerifiedUser/TeachingRole/" + this.grade,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("Teacher Role1", res.data);
         this.TeachersList = res.data;
@@ -472,7 +469,7 @@ export default {
           this.adviser +
           "/" +
           this.grade,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("Teacher Role2", res.data);
         this.TeachersList = res.data;

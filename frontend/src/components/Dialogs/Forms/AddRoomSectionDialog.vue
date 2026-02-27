@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" persistent eager scrollable max-width="900px">
+    <v-dialog v-model="dialog" persistent eager scrollable max-width="600px">
       <v-form ref="AddSubjectDialog" @submit.prevent>
-        <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+        <v-card class="rounded-xl">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>{{ action }} Room</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -11,28 +11,24 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-text style="max-height: 700px" class="my-4">
+          <v-card-text style="max-height: 350px" class="my-4">
             <v-container>
               <v-row>
                 <v-col cols="12">
                   <v-text-field
                     outlined
-                    dense
                     v-model="room_section"
                     label="Room Name"
                     :rules="[formRules.required]"
                     required
-                    class="rounded-lg"
                     color="#6DB249"
-                  ></v-text-field>
+                    class="rounded-lg"
+                  />
                 </v-col>
                 <v-col>
                   <v-autocomplete
                     v-model="adviser"
                     outlined
-                    chips
-                    deletable-chips
-                    dense
                     label="Select Advider"
                     :items="adviserList"
                     item-text="name"
@@ -54,7 +50,6 @@
                   <v-autocomplete
                     v-model="strandId"
                     outlined
-                    dense
                     :rules="
                       grade == 'Grade 11'
                         ? [formRules.required]
@@ -77,13 +72,13 @@
 
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
-            <v-btn color="red" outlined @click="closeD()">
+            <v-btn color="red" class="rounded-lg" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
             <v-btn
               color="#f5b027"
-              class="white--text"
+              class="white--text rounded-lg"
               v-if="action == 'Add'"
               @click="checkConflict('ADD')"
             >
@@ -92,7 +87,7 @@
             </v-btn>
             <v-btn
               color="#f5b027"
-              class="white--text"
+              class="white--text rounded-lg"
               v-if="action == 'Update'"
               @click="checkConflict('UPDATE')"
             >
@@ -375,7 +370,7 @@ export default {
             this.axiosCall(
               "/rooms-section/" + this.updateID,
               "PATCH",
-              data
+              data,
             ).then((res) => {
               console.log(res.data);
               if (res.data.status == 201) {
@@ -415,7 +410,7 @@ export default {
             this.strandList = data;
             console.log("All Strand", res.data);
           }
-        }
+        },
       );
     },
 
@@ -425,7 +420,7 @@ export default {
           this.grade +
           "/" +
           this.data.id,
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("Teacher Role", res.data);
         this.adviserList = res.data;

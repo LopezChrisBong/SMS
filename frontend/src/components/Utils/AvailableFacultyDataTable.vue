@@ -1,8 +1,10 @@
 <template>
-  <div style="margin-top: 8pt;">
-    <v-row class="mx-2">
-      <v-col cols="12" md="4" class="d-flex justify-space-between">
+  <div style="margin-top: 8pt">
+    <v-row class="mx-2 align-center justify-space-between">
+      <!-- Search -->
+      <v-col cols="12" md="4" class="d-flex">
         <v-text-field
+          height="40"
           v-model="search"
           outlined
           prepend-inner-icon="search"
@@ -12,22 +14,23 @@
           class="rounded-lg gboFonts"
           color="#F5B027"
           dense
-        ></v-text-field>
+        />
       </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="12" md="8" class="flex-items justify-end">
+
+      <!-- Button -->
+      <v-col cols="12" md="8" class="d-flex justify-end">
         <v-btn
-          style="width: 325pt; background-color: #F5B027;"
+          height="40"
+          style="width: 325pt; background-color: #f5b027"
           class="white--text rounded-lg gboFonts"
           :class="$vuetify.breakpoint.smAndUp ? 'ml-2' : 'caption'"
           :color="$vuetify.theme.themes.light.submitBtns"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          v-if="$store.state.user.user.isAdminApproved == 1"
           @click="underLoad()"
         >
           <v-icon class="gboFonts" left> mdi-clipboard-list-outline </v-icon>
           List of Underload/Overloaded Teachers
         </v-btn>
-
       </v-col>
     </v-row>
     <v-card class="ma-5 dt-container gboFontsTable" elevation="0" outlined>
@@ -42,36 +45,62 @@
         @pagination="pagination"
         hide-default-footer
       >
-         <template v-slot:[`item.name`]="{ item }">
+        <!-- Name -->
+        <template v-slot:[`item.name`]="{ item }">
           <span class="gboFontsTable">{{ item.name }}</span>
         </template>
+
+        <!-- Grade Levels -->
         <template v-slot:[`item.gradeLevels`]="{ item }">
-          <div v-for="grade in item.gradeLevels" :key="grade.id">
-            <v-chip class="gboFontsTable justify-center" style="width: 100px; height: 30px; background-color: whitesmoke;">{{ grade }}</v-chip>
+          <div class="d-flex flex-wrap align-center justify-center">
+            <v-chip
+              v-for="grade in item.gradeLevels"
+              :key="grade.id || grade"
+              class="ma-1 gboFontsTable d-flex align-center justify-center"
+              style="width: 80px; height: 30px; background-color: whitesmoke"
+            >
+              {{ grade }}
+            </v-chip>
           </div>
         </template>
+
+        <!-- Subjects -->
         <template v-slot:[`item.subjects`]="{ item }">
-          <div v-for="sub in item.subjects" :key="sub.id">
-            <v-chip class="gboFontsTable justify-center" style="width: 100px; height: 30px; background-color: whitesmoke;">{{ sub }}</v-chip>
+          <div class="d-flex flex-wrap align-center justify-center">
+            <v-chip
+              v-for="sub in item.subjects"
+              :key="sub.id || sub"
+              class="ma-1 gboFontsTable d-flex align-center justify-center"
+              style="width: 80px; height: 30px; background-color: whitesmoke"
+            >
+              {{ sub }}
+            </v-chip>
           </div>
         </template>
+
+        <!-- Action -->
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap" style="padding: 4px;">
+          <div class="text-no-wrap pa-1">
             <v-btn
               small
               color="blue"
-              class="my-2 mx-2 gboFontsTable"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="printMySched(item)"
             >
-              <v-icon size="20">mdi-printer-outline</v-icon>Loads
+              <v-icon size="20">mdi-printer-outline</v-icon>
+              Loads
             </v-btn>
           </div>
         </template>
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5 gboFontsTable" align="center">
-      <v-col cols="auto" class="mr-auto text-truncate flex-items gboFontsTable" no-gutters>
+      <v-col
+        cols="auto"
+        class="mr-auto text-truncate flex-items gboFontsTable"
+        no-gutters
+      >
         <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
@@ -132,10 +161,19 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class=" gboFonts" color="red" outlined @click="printDialog = false">
+          <v-btn
+            class="gboFonts"
+            color="red"
+            outlined
+            @click="printDialog = false"
+          >
             Close
           </v-btn>
-          <v-btn color="#f5b027" class="white--text gboFonts" @click="printMySched()">
+          <v-btn
+            color="#f5b027"
+            class="white--text gboFonts"
+            @click="printMySched()"
+          >
             Confirm
           </v-btn>
         </v-card-actions>
@@ -334,7 +372,7 @@ export default {
             this.data = res.data;
             this.loading = false;
           }
-        }
+        },
       );
     },
     underLoad() {
@@ -349,7 +387,7 @@ export default {
           "/" +
           userStatus +
           "",
-        "_blank"
+        "_blank",
       );
     },
     changeTab(tab) {
@@ -377,7 +415,7 @@ export default {
     getRoleTeachers() {
       this.axiosCall(
         "/user-details/getAllVerifiedUser/TeachingRoleSched",
-        "GET"
+        "GET",
       ).then((res) => {
         console.log("Teacher Role", res.data);
         this.TeachersList = res.data;
@@ -394,7 +432,7 @@ export default {
           "/" +
           filter +
           "",
-        "_blank" // <- This is what makes it open in a new window.
+        "_blank", // <- This is what makes it open in a new window.
       );
     },
 
@@ -428,25 +466,23 @@ export default {
 </script>
 
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>

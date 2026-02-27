@@ -79,7 +79,7 @@ const routes = [
       {
         path: "student-enroll",
         component: StudentEnroll,
-        meta: {authRequired: false },
+        meta: { authRequired: false },
       },
     ],
   },
@@ -117,7 +117,6 @@ const routes = [
         meta: { title: "Add Elementary Rooms", authRequired: true },
       },
 
-
       {
         path: "add-tracks",
         component: AddTracks,
@@ -149,12 +148,12 @@ const routes = [
         component: Profile,
         meta: { title: "My Profile", authRequired: true },
       },
-      
+
       {
         path: "enroll-student",
         component: EnrollStudents,
         meta: { title: "Enroll Students", authRequired: true },
-      },    
+      },
       {
         path: "modules-list",
         component: ModulesList,
@@ -277,10 +276,6 @@ const routes = [
         component: Users,
         meta: { title: "Utilities - Users", authRequired: true },
       },
-      
-
-
-
     ],
   },
   //employee
@@ -300,7 +295,7 @@ const routes = [
         component: Profile,
         meta: { title: "My Profile", authRequired: true },
       },
-      
+
       {
         path: "student_verify",
         component: Student_verify,
@@ -327,12 +322,11 @@ const routes = [
         component: AddElementaryRooms,
         meta: { title: "Add Elementary Rooms", authRequired: true },
       },
-       {
+      {
         path: "my-student-record",
         component: MyStudentRecord,
         meta: { title: "My Student Record", authRequired: true },
       },
-      
     ],
   },
   //security
@@ -387,8 +381,7 @@ const routes = [
   //       component: AuditTravelOrder,
   //       meta: { title: "Travel Orders", authRequired: true },
   //     },
-  
-     
+
   //   ],
   // },
 ];

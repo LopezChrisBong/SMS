@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 8pt;">
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
@@ -17,7 +17,8 @@
       <v-spacer></v-spacer>
       <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
-          style="width: 125pt; background-color: #F5B027;"
+          height="40"
+          style="width: auto; background-color: #f5b027"
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
@@ -44,21 +45,29 @@
           <span class="gboFontsTable">{{ item.school_year }}</span>
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <v-chip class="gboFontsTable justify-center" style="width: 73px; height: 30px;"
-            :color="item.status == 0 ? '#F9BEC1' : '#BAFDBF'">
-            {{ item.status == 0 ? "Inactive" : "Active" }}
-          </v-chip>
+          <div class="gboFontsTable d-flex align-center justify-center">
+            <v-chip
+              outlined
+              class="ma-1 gboFontsTable d-flex align-center justify-center"
+              style="width: 73px; height: 30px; background-color: white"
+              :class="item.status == 0 ? 'inactive-chip' : 'active-chip'"
+            >
+              {{ item.status == 0 ? "Inactive" : "Active" }}
+            </v-chip>
+          </div>
         </template>
+
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap" style="padding: 4px;">
+          <div class="text-no-wrap" style="padding: 4px">
             <v-btn
               small
-              color="blue"
-              class="my-2 mx-2 gboFontsTable"
+              color="#48A111"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="editItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon>Update
+              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon
+              >Update
             </v-btn>
           </div>
         </template>
@@ -446,7 +455,7 @@ export default {
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        }
+        },
       );
     },
     confirmDelete(item) {
@@ -458,25 +467,32 @@ export default {
 </script>
 
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
+}
+.inactive-chip {
+  border: 1px solid #f44336;
+  color: #f44336;
+}
 
+.active-chip {
+  border: 1px solid #4caf50;
+  color: #4caf50;
+}
 </style>
