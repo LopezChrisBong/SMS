@@ -428,30 +428,13 @@ export default {
     },
 
     updateable() {
-      const currentGrade = this.data.grade_level?.trim();
+      const currentGrade = this.data.grade_level;
 
-      this.nextGradeLevel =
-        currentGrade === "Grade 1"
-          ? "Grade 2"
-          : currentGrade === "Grade 2"
-          ? "Grade 3"
-          : currentGrade === "Grade 3"
-          ? "Grade 4"
-          : currentGrade === "Grade 4"
-          ? "Grade 5"
-          : currentGrade === "Grade 5"
-          ? "Grade 6"
-          : currentGrade === "Grade 6"
-          ? "Grade 7"
-          : currentGrade === "Grade 7"
-          ? "Grade 8"
-          : currentGrade === "Grade 8"
-          ? "Grade 9"
-          : currentGrade === "Grade 9"
-          ? "Grade 10"
-          : currentGrade === "Grade 10"
-          ? "Grade 11"
-          : "Grade 12";
+      if (currentGrade) {
+        const gradeNumber = parseInt(currentGrade.replace("Grade ", ""));
+        this.nextGradeLevel =
+          gradeNumber < 12 ? `Grade ${gradeNumber + 1}` : "Grade 12";
+      }
       this.updateClassListDialog = true;
       this.getAllRooms();
     },
