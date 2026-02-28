@@ -969,7 +969,7 @@ export default {
         this.axiosCall(
           "/enroll-student/updateEnrolledStudent",
           "POST",
-          data
+          data,
         ).then((res) => {
           if (res.data.status == 200) {
             this.dialog = false;
@@ -1005,7 +1005,7 @@ export default {
             "/enroll-student/view/studentFile/" +
             this.picture +
             "",
-          "_blank" // <- This is what makes it open in a new window.
+          "_blank", // <- This is what makes it open in a new window.
         );
       }
     },
@@ -1025,7 +1025,7 @@ export default {
             "/enroll-student/view/studentFile/" +
             this.goodMoral +
             "",
-          "_blank" // <- This is what makes it open in a new window.
+          "_blank", // <- This is what makes it open in a new window.
         );
       }
     },
@@ -1045,7 +1045,7 @@ export default {
             "/enroll-student/view/studentFile/" +
             this.schoolCard +
             "",
-          "_blank" // <- This is what makes it open in a new window.
+          "_blank", // <- This is what makes it open in a new window.
         );
       }
     },
@@ -1064,7 +1064,7 @@ export default {
             "/enroll-student/view/studentFile/" +
             this.birthPSA +
             "",
-          "_blank" // <- This is what makes it open in a new window.
+          "_blank", // <- This is what makes it open in a new window.
         );
       }
     },

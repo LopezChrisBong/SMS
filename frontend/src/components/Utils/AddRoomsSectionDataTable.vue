@@ -167,8 +167,8 @@
         <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
@@ -223,8 +223,8 @@
             <v-autocomplete
               v-model="strandId"
               :rules="[formRules.required]"
-              dense
               outlined
+              dense
               label="Strand"
               class="rounded-lg"
               item-text="strand_name"

@@ -4,13 +4,13 @@
       <v-col cols="12" md="4" class="d-flex justify-space-between">
         <v-text-field
           v-model="search"
-          outlined
           prepend-inner-icon="search"
           label="Search"
           single-line
           hide-details
           class="rounded-lg gboFonts"
           color="#F5B027"
+          outlined
           dense
         ></v-text-field>
       </v-col>
@@ -65,8 +65,8 @@
         <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             color="#f5b027"
             hide-details
             :value="options.itemsPerPage"

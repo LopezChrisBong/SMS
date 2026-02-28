@@ -19,6 +19,7 @@
               @change="changeFilter()"
               outlined
               v-model="selectedFiter"
+              outlined
               dense
               :items="filterYears"
             ></v-select>

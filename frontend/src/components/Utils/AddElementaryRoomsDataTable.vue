@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 8pt;">
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="8" class="flex-items" style="overflow: auto">
         <v-tabs
@@ -35,7 +35,8 @@
           class="rounded-lg"
           :class="generatedCount == 0 ? 'd-none' : ''"
           color="#f5b027"
-          dense
+         outlined
+              dense
         ></v-text-field> -->
         <v-btn
           class="white--text ml-2 rounded-lg"
@@ -93,7 +94,7 @@
           <span>{{ item.name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
-          <div class="text-no-wrap" style="padding: 4px;">
+          <div class="text-no-wrap" style="padding: 4px">
             <v-btn
               x-small
               color="blue"
@@ -142,8 +143,8 @@
         <span class="px-2">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
@@ -481,7 +482,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       } else if (this.tab == 2) {
         this.gradeName = "Grade 2";
@@ -493,7 +494,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       } else if (this.tab == 3) {
         this.gradeName = "Grade 3";
@@ -505,7 +506,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       } else if (this.tab == 4) {
         this.gradeName = "Grade 4";
@@ -517,7 +518,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       } else if (this.tab == 5) {
         this.gradeName = "Grade 5";
@@ -529,7 +530,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       } else if (this.tab == 6) {
         this.gradeName = "Grade 6";
@@ -541,7 +542,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       } else if (this.tab == 7) {
         this.gradeName = "Kinder 1";
@@ -553,7 +554,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       } else if (this.tab == 8) {
         this.gradeName = "Kinder 2";
@@ -565,7 +566,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       } else if (this.tab == 9) {
         this.axiosCall("/rooms-section/findAllAddedRooms", "GET").then(
@@ -575,7 +576,7 @@ export default {
               this.data = res.data;
               this.loading = false;
             }
-          }
+          },
         );
       }
     },
@@ -587,7 +588,7 @@ export default {
           this.gradeName +
           "/" +
           filter,
-        "GET"
+        "GET",
       ).then((res) => {
         if (res) {
           this.conflict = res.data[0].conflict;
@@ -606,7 +607,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -634,7 +635,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -662,7 +663,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -690,7 +691,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -718,7 +719,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -746,7 +747,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -774,7 +775,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -802,7 +803,7 @@ export default {
                   this.gradeName +
                   "/" +
                   filter,
-                "POST"
+                "POST",
               ).then((res) => {
                 if (res) {
                   if (res.data.status == 201) {
@@ -853,7 +854,7 @@ export default {
         this.gradeName = "Grade 1";
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -866,7 +867,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -879,7 +880,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -892,7 +893,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -905,7 +906,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -918,7 +919,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -931,7 +932,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -944,7 +945,7 @@ export default {
 
         this.axiosCall(
           "/rooms-section/getCountGen/" + this.gradeName + "/" + filter,
-          "GET"
+          "GET",
         ).then((res) => {
           if (res) {
             this.generatedCount = res.data[0].count_gen;
@@ -979,7 +980,7 @@ export default {
           "/" +
           this.gradeName +
           "",
-        "_blank"
+        "_blank",
       );
     },
 
@@ -1025,7 +1026,7 @@ export default {
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
           }
-        }
+        },
       );
     },
     confirmGenerate() {

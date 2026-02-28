@@ -49,9 +49,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-chip color="primary" text-color="white" small>
-        Active
-      </v-chip>
+      <v-chip color="primary" text-color="white" small> Active </v-chip>
 
       <v-avatar size="36" class="ml-4">
         <v-icon>mdi-account-circle</v-icon>
@@ -73,6 +71,7 @@
           :headers="headers"
           :items="schedule"
           :loading="loading"
+          outlined
           dense
           class="elevation-0"
         >

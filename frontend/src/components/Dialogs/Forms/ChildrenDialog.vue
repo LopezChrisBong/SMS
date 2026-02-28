@@ -40,6 +40,7 @@
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
                         outlined
+                        outlined
                         dense
                         v-model="childModel.bdate"
                         :rules="[formRules.required]"
