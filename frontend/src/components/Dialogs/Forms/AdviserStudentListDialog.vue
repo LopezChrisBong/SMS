@@ -12,7 +12,8 @@
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
             <span
-              >{{ action }} {{ grade }} {{ room_section }} Student List</span
+              >{{ action }} {{ data ? data.grade_level : "" }}
+              {{ data ? data.room_section : "" }} Student List</span
             >
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -111,6 +112,16 @@
                           <v-icon size="20">mdi-trash-can</v-icon
                           ><span class="gboFontsTab"> Delete</span>
                         </v-btn>
+                        <!-- <v-btn
+                          small
+                          color="red"
+                          class="mx-1 gboFontsTable"
+                          outlined
+                          @click="removeStudent(item, index)"
+                        >
+                          <v-icon size="20">mdi-trash-can</v-icon
+                          ><span class="gboFontsTab"> remove</span>
+                        </v-btn> -->
                       </div>
                     </template>
                   </v-data-table>
@@ -479,6 +490,10 @@ export default {
       }
     },
 
+    removeStudent(item, index) {
+      console.log(item, index);
+    },
+
     closeD() {
       this.eventHub.$emit("closeadviserStudentListDialog", false);
       this.initialize();
@@ -564,8 +579,12 @@ export default {
     getSchoolYear() {
       this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
         if (res) {
-          this.nextSchoolYearList = res.data;
-          this.nextSchoolYear = res.data[0].id;
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].status == 1) {
+              this.nextSchoolYearList.push(res.data[i]);
+              this.nextSchoolYear = res.data[i].id;
+            }
+          }
         }
       });
     },

@@ -17,13 +17,13 @@
           </div>
 
           <v-form ref="form" v-model="valid">
-            <v-text-field
+            <!-- <v-text-field
               v-model="form.firstName"
               label="First Name"
               outlined
               dense
               :rules="[rules.required]"
-            ></v-text-field>
+            ></v-text-field> 
 
             <v-text-field
               v-model="form.middleInitial"
@@ -47,7 +47,7 @@
               outlined
               clearable
               dense
-            ></v-select>
+            ></v-select>-->
 
             <!-- <v-menu
               ref="menu"
@@ -94,13 +94,13 @@
               :rules="[rules.required]"
             ></v-text-field>
 
-            <v-text-field
+            <!-- <v-text-field
               v-model="form.code"
               label="Code"
               outlined
               dense
               :rules="[rules.required]"
-            ></v-text-field>
+            ></v-text-field> -->
 
             <v-btn
               block
@@ -111,7 +111,7 @@
               :loading="loading"
               @click="submit"
             >
-              Verify & Access
+              Sign In
             </v-btn>
             <v-col cols="12" class="">
               <div
@@ -228,17 +228,24 @@ export default {
     submit() {
       if (this.$refs.form.validate()) {
         this.loading = true;
+        // this.axiosCall(
+        //   "/enroll-student/studentPortalLogin/" +
+        //     this.form.firstName.toLowerCase() +
+        //     "/" +
+        //     this.form.lastName.toLowerCase() +
+        //     "/" +
+        //     this.form.dob +
+        //     "/" +
+        //     this.form.studentId +
+        //     "/" +
+        //     this.form.code,
+        //   "GET",
+        // )
         this.axiosCall(
           "/enroll-student/studentPortalLogin/" +
-            this.form.firstName.toLowerCase() +
-            "/" +
-            this.form.lastName.toLowerCase() +
-            "/" +
             this.form.dob +
             "/" +
-            this.form.studentId +
-            "/" +
-            this.form.code,
+            this.form.studentId,
           "GET",
         ).then((res) => {
           if (res.data.data) {

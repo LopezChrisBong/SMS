@@ -3,11 +3,18 @@ e
   <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
-        <div class="pa-5" style="text-transform: uppercase; font-weight: 600">
-          {{
-            roomData ? roomData.grade_level + " " + roomData.room_section : ""
-          }}
-          Student List
+        <div class="pa-3">
+          <v-autocomplete
+            v-model="classRoom"
+            item-text="room_section"
+            item-value="roomId"
+            outlined
+            color="#f5b027"
+            dense
+            class="rounded-lg gboFontsTab"
+            :items="roomList"
+            @change="changeRoom"
+          ></v-autocomplete>
         </div>
       </v-col>
       <v-spacer></v-spacer>
@@ -28,6 +35,7 @@ e
             class="white--text ml-2 rounded-lg"
             color="orange"
             @click="upgrade()"
+            v-if="classRoom ? classRoom == roomData.id : ''"
           >
             <v-icon center medium> mdi-eye-outline </v-icon>
             View
@@ -166,16 +174,17 @@ export default {
         sortable: false,
         width: 200,
       },
-      {
-        text: "CODE",
-        value: "CODE",
-        align: "center",
-        sortable: false,
-        width: 200,
-      },
+      // {
+      //   text: "CODE",
+      //   value: "CODE",
+      //   align: "center",
+      //   sortable: false,
+      //   width: 200,
+      // },
     ],
     data: [],
-    verified: [],
+    roomList: [],
+    classRoom: null,
     perPageChoices: [
       { text: "5", value: 5 },
       { text: "10", value: 10 },
@@ -241,13 +250,18 @@ export default {
 
     initialize() {
       this.filter = this.$store.getters.getFilterSelected;
+      this.getListClassRooms();
       this.findAllRoomsSection();
-      this.getTaggedStudent();
     },
     getTaggedStudent() {
       let userRoleID = this.$store.state.user.id;
       this.axiosCall(
-        "/rooms-section/getMyClassList/" + userRoleID + "/" + this.filter,
+        "/rooms-section/getMyClassList/" +
+          userRoleID +
+          "/" +
+          this.filter +
+          "/" +
+          this.classRoom,
         "GET",
       ).then((res) => {
         if (res.data && Array.isArray(res.data) && res.data.length > 0) {
@@ -265,7 +279,7 @@ export default {
           this.fadeAwayMessage.type = "error";
           this.fadeAwayMessage.header = "System Message";
           this.fadeAwayMessage.message =
-            "Please contact admin to set you room advisory!";
+            "Please contact admin to set your room advisory!";
         }
       });
     },
@@ -276,6 +290,15 @@ export default {
       ).then((res) => {
         if (res.data) {
           this.roomData = res.data;
+          this.classRoom = res.data.id;
+          this.getTaggedStudent();
+        }
+      });
+    },
+    getListClassRooms() {
+      this.axiosCall("/rooms-section/getListClassRooms", "GET").then((res) => {
+        if (res.data) {
+          this.roomList = res.data;
         }
       });
     },
@@ -283,6 +306,10 @@ export default {
     upgrade() {
       this.viewData = this.roomData;
       this.action = "View";
+    },
+    changeRoom(value) {
+      this.classRoom = value;
+      this.getTaggedStudent();
     },
   },
 };

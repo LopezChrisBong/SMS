@@ -12,7 +12,7 @@
       <v-list dense>
         <v-list-item class="py-4">
           <v-list-item-icon>
-            <v-icon color="primary">mdi-school</v-icon>
+            <v-icon color="orange">mdi-school</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content v-if="!mini">
@@ -49,7 +49,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-chip color="primary" text-color="white" small> Active </v-chip>
+      <v-chip color="green" text-color="white" small> Active </v-chip>
 
       <v-avatar size="36" class="ml-4">
         <v-icon>mdi-account-circle</v-icon>
@@ -63,8 +63,8 @@
       </div>
       <v-card class="pa-6 mt-6" rounded="xl" v-if="pageItem == 1">
         <h3 class="font-weight-bold mb-4">
-          My Schedule {{ roomData.grade_level }}
-          {{ roomData.room_section }}
+          My Schedule {{ roomData ? roomData.grade_level : "" }}
+          {{ roomData ? roomData.room_section : "" }}
         </h3>
 
         <v-data-table

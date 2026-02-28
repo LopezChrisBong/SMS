@@ -194,20 +194,21 @@ export class EnrollStudentController {
     return this.enrollStudentService.getStudentDataByCode(+filter, code, level);
   }
 
-  @Get('studentPortalLogin/:firstName/:lastName/:birthDate/:LRN/:Code')
+  // @Get('studentPortalLogin/:firstName/:lastName/:birthDate/:LRN/:Code')
+  @Get('studentPortalLogin/:birthDate/:LRN')
   studentPortalLogin(
-    @Param('firstName') firstName: string,
-    @Param('lastName') lastName: string,
+    // @Param('firstName') firstName: string,
+    // @Param('lastName') lastName: string,
     @Param('birthDate') birthDate: string,
     @Param('LRN') LRN: string,
-    @Param('Code') Code: string,
+    // @Param('Code') Code: string,
   ) {
     return this.enrollStudentService.studentPortalLogin(
-      firstName,
-      lastName,
+      // firstName,
+      // lastName,
       birthDate,
       LRN,
-      Code,
+      // Code,
     );
   }
 
