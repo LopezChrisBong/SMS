@@ -63,7 +63,8 @@
                   label="Date of Birth"
                   readonly
                   outlined
-                  dense
+                 outlined
+              dense
                   v-bind="attrs"
                   v-on="on"
                   :rules="[rules.required]"

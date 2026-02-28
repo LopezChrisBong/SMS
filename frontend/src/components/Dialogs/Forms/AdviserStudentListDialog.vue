@@ -47,7 +47,8 @@
                         multiple
                         small-chips
                         deletable-chips
-                        dense
+                       outlined
+              dense
                         outlined
                         required
                         label="Employee"
@@ -267,7 +268,8 @@
                     v-model="unUpgradeStudents"
                     small-chips
                     deletable-chips
-                    dense
+                   outlined
+              dense
                     outlined
                     :rules="[formRules.required]"
                     label="Remove Students to Upgrade"

@@ -311,7 +311,8 @@
                     @change="changeFilter()"
                     outlined
                     v-model="selectedFiter"
-                    dense
+                   outlined
+              dense
                     item-text="school_year"
                     item-value="id"
                     :items="schooYearList"
@@ -536,7 +537,7 @@ export default {
     clearInterval(this.interval);
   },
 
-  created: function() {
+  created: function () {
     // this.getMyAssignedModules();
     let userType = this.$store.state.user.user.usertypeID;
 

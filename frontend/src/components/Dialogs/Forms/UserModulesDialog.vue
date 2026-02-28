@@ -24,8 +24,8 @@
                 <v-text-field
                   v-model="description"
                   :rules="[formRules.required]"
-                  dense
                   outlined
+                  dense
                   required
                   label="Description"
                   class="rounded-lg"

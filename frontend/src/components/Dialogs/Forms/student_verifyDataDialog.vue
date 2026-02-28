@@ -1,5 +1,5 @@
 <template>
-  <div class="ma-12 ">
+  <div class="ma-12">
     <!-- <div
         class="pl-2 pt-2 pr-2 mx-2 fill-height"
         style="background-color: white; overflow-y: hidden; overflow-x: hidden"
@@ -46,6 +46,7 @@
                     :items="seniorJuniorList"
                     label="Junior High / Senior High"
                     color="#6DB249"
+                    outlined
                     dense
                     v-model="formdata.seniorJunior"
                   ></v-select>
@@ -61,6 +62,7 @@
                     "
                     label="Semester"
                     color="#6DB249"
+                    outlined
                     dense
                     v-model="transfer.semester"
                   ></v-select>
@@ -75,7 +77,8 @@
                             ? [formRules.required]
                             : []
                         "
-                        dense
+                       outlined
+              dense
                         class="rounded-lg"
                         label="Track"
                         color="#6DB249"
@@ -93,6 +96,7 @@
                     color="#6DB249"
                     item-text="tracks_name"
                     item-value="id"
+                    outlined
                     dense
                     v-model="transfer.track"
                     @change="changeTrackData($event)"
@@ -111,6 +115,7 @@
                     color="#6DB249"
                     item-text="strand_name"
                     item-value="id"
+                    outlined
                     dense
                     v-model="transfer.strand"
                   ></v-select>
@@ -121,6 +126,7 @@
                   <v-text-field
                     v-model="formdata.fname"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="First Name"
@@ -131,6 +137,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.mname"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Middle Name"
@@ -142,6 +149,7 @@
                   <v-text-field
                     v-model="formdata.lname"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Last Name"
@@ -152,6 +160,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.suffix"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Suffix"
@@ -173,6 +182,7 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
+                        outlined
                         dense
                         v-model="formdata.bdate"
                         :rules="[formRules.required]"
@@ -206,6 +216,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.birth_place"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Place of Birth"
@@ -218,6 +229,7 @@
                     :items="sexItem"
                     label="Sex"
                     color="#6DB249"
+                    outlined
                     dense
                     v-model="formdata.sex"
                   ></v-select>
@@ -227,12 +239,14 @@
                     :items="cvl_statusItem"
                     label="Civil Status"
                     color="#6DB249"
+                    outlined
                     dense
                     v-model="formdata.civil_status"
                   ></v-select>
                   <v-text-field
                     v-if="formdata.civil_status == 'Others'"
                     v-model="formdata.civil_status1"
+                    outlined
                     dense
                     class="rounded-lg"
                     color="#6DB249"
@@ -246,6 +260,7 @@
                   <v-text-field
                     v-model="formdata.height"
                     :rules="[formRules.hgtInMtrFormat]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Height (m)"
@@ -257,6 +272,7 @@
                   <v-text-field
                     v-model="formdata.weight"
                     :rules="[formRules.numberRequired]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Weight (kg)"
@@ -268,6 +284,7 @@
                   <v-text-field
                     v-model="formdata.blood_type"
                     :rules="[]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Blood Type"
@@ -279,6 +296,7 @@
                   <v-select
                     :items="dualCtznItem"
                     label="Citizenship (Filipino)"
+                    outlined
                     dense
                     color="#6DB249"
                     v-model="formdata.isFilipino"
@@ -292,6 +310,7 @@
                     :items="dualCtznItem"
                     label="IP's Member"
                     color="#6DB249"
+                    outlined
                     dense
                     v-model="formdata.is_IP"
                   ></v-select>
@@ -299,6 +318,7 @@
                     v-if="formdata.is_IP == 'Yes'"
                     v-model="formdata.ip_Name"
                     :rules="formdata.is_IP == 'Yes' ? [formRules.required] : []"
+                    outlined
                     dense
                     class="rounded-lg"
                     item-text="type"
@@ -313,6 +333,7 @@
                     :items="dualCtznItem"
                     label="4P's Beneficiary"
                     color="#6DB249"
+                    outlined
                     dense
                     v-model="formdata.fourPs"
                   ></v-select>
@@ -322,6 +343,7 @@
                     :rules="
                       formdata.fourPs == 'Yes' ? [formRules.required] : []
                     "
+                    outlined
                     dense
                     class="rounded-lg"
                     item-text="type"
@@ -335,6 +357,7 @@
                   <v-text-field
                     v-model="formdata.mobile_no"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Mobile number"
@@ -345,6 +368,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="formdata.email"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Email address"
@@ -363,6 +387,7 @@
                     :items="dualCtznItem"
                     label="Yes / No:"
                     color="#6DB249"
+                    outlined
                     dense
                     v-model="formdata.disability"
                   ></v-select>
@@ -375,6 +400,7 @@
                     :rules="
                       formdata.disability == 'Yes' ? [formRules.required] : []
                     "
+                    outlined
                     dense
                     class="rounded-lg"
                     label="If Yes, specify the type of disability:"
@@ -395,6 +421,7 @@
                   <v-text-field
                     v-model="formdata.residential_house_no"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="House Number"
@@ -407,6 +434,7 @@
                   <v-text-field
                     v-model="formdata.residential_street"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Street"
@@ -419,6 +447,7 @@
                   <v-text-field
                     v-model="formdata.residential_subd"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Subdivision / Village"
@@ -431,6 +460,7 @@
                   <v-text-field
                     v-model="formdata.residential_brgy"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Barangay"
@@ -443,6 +473,7 @@
                   <v-text-field
                     v-model="formdata.residential_city"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Municipality / City"
@@ -455,6 +486,7 @@
                   <v-text-field
                     v-model="formdata.residential_prov"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Province"
@@ -466,6 +498,7 @@
                   <v-text-field
                     v-model="formdata.residential_zip"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Zip Code"
@@ -481,6 +514,7 @@
                   <v-checkbox
                     v-model="computedSameAddress"
                     label="Is Same Address"
+                    outlined
                     dense
                   ></v-checkbox>
                 </v-col>
@@ -489,6 +523,7 @@
                   <v-text-field
                     v-model="formdata.permanent_house_no"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="House Number"
@@ -501,6 +536,7 @@
                   <v-text-field
                     v-model="formdata.permanent_street"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Street"
@@ -513,6 +549,7 @@
                   <v-text-field
                     v-model="formdata.permanent_subd"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Subdivision / Village"
@@ -525,6 +562,7 @@
                   <v-text-field
                     v-model="formdata.permanent_brgy"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Barangay"
@@ -537,6 +575,7 @@
                   <v-text-field
                     v-model="formdata.permanent_city"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Municipality / City"
@@ -549,6 +588,7 @@
                   <v-text-field
                     v-model="formdata.permanent_prov"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Province"
@@ -561,6 +601,7 @@
                   <v-text-field
                     v-model="formdata.permanent_zip"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Zip Code"
@@ -577,6 +618,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.father_fname"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="First Name"
@@ -587,6 +629,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.father_mname"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Middle Name"
@@ -597,6 +640,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.father_lname"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Last Name"
@@ -607,6 +651,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.father_number"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Phone Number"
@@ -623,6 +668,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.mother_fname"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="First Name"
@@ -633,6 +679,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.mother_mname"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Middle Name"
@@ -643,6 +690,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.mother_lname"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Last Name"
@@ -653,6 +701,7 @@
                 <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                   <v-text-field
                     v-model="family_background.mother_number"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Phone Number"
@@ -669,7 +718,8 @@
                         
                         v-model="computedNoSpouse"
                         label="No Spouse"
-                        dense
+                       outlined
+              dense
                       ></v-checkbox
                       > -->
                   <v-divider></v-divider
@@ -678,6 +728,7 @@
                   <v-text-field
                     v-model="family_background.guardian_fname"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="First Name"
@@ -689,6 +740,7 @@
                   <v-text-field
                     v-model="family_background.guardian_mname"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Middle Name"
@@ -700,6 +752,7 @@
                   <v-text-field
                     v-model="family_background.guardian_lname"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Last Name"
@@ -711,6 +764,7 @@
                   <v-text-field
                     v-model="family_background.guardian_number"
                     :rules="[formRules.required]"
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Phone Number"
@@ -726,7 +780,8 @@
                         
                         v-model="computedNoSpouse"
                         label="No Spouse"
-                        dense
+                       outlined
+              dense
                       ></v-checkbox
                       > -->
                   <v-divider></v-divider
@@ -736,6 +791,7 @@
                     :items="dualCtznItem"
                     label="Tranfered"
                     color="#6DB249"
+                    outlined
                     dense
                     v-model="formdata.transfered"
                     class="mt-2"
@@ -748,6 +804,7 @@
                     :rules="
                       formdata.transfered == 'Yes' ? [formRules.required] : []
                     "
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Last Grade Level Completed"
@@ -762,6 +819,7 @@
                     :rules="
                       formdata.transfered == 'Yes' ? [formRules.required] : []
                     "
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Last School Year Level Completed"
@@ -777,6 +835,7 @@
                     :rules="
                       formdata.transfered == 'Yes' ? [formRules.required] : []
                     "
+                    outlined
                     dense
                     class="rounded-lg"
                     label="Last School Attended"
@@ -792,6 +851,7 @@
                     :rules="
                       formdata.transfered == 'Yes' ? [formRules.required] : []
                     "
+                    outlined
                     dense
                     class="rounded-lg"
                     label="School ID"
@@ -810,6 +870,7 @@
               block
               color="#f5b027"
               @click="confirmSave()"
+              outlined
               dense
               class="white--text"
             >
@@ -853,9 +914,7 @@
     <!-- saving confirmation -->
     <v-dialog v-model="deleteConfirmDialog" persistent max-width="300">
       <v-card>
-        <v-card-title class="text-h6 red white--text">
-          Warning!
-        </v-card-title>
+        <v-card-title class="text-h6 red white--text"> Warning! </v-card-title>
         <div class="pa-4 #3a3b3a--text">
           <div class="text-body-1 mb-1">
             <p style="text-align: justify">
@@ -1021,10 +1080,10 @@ export default {
 
   computed: {
     computedSameAddress: {
-      get: function() {
+      get: function () {
         return this.formdata.isSameAddress;
       },
-      set: function(val) {
+      set: function (val) {
         this.formdata.isSameAddress = val ? true : false;
 
         this.formdata.permanent_zip = val
@@ -1056,7 +1115,7 @@ export default {
     },
 
     computedNoSpouse: {
-      get: function() {
+      get: function () {
         return this.family_background.noSpouse;
       },
     },
@@ -1084,7 +1143,7 @@ export default {
             console.log("All Strand", res.data);
             this.strandList = res.data;
           }
-        }
+        },
       );
     },
     getCountry() {
@@ -1099,7 +1158,7 @@ export default {
             process.env.VUE_APP_SERVER +
               "/pdf-generator/generateMyPDS/" +
               res.data +
-              "/true"
+              "/true",
           );
         });
       } else {
@@ -1108,7 +1167,7 @@ export default {
             process.env.VUE_APP_SERVER +
               "/pdf-generator/generateMyPDS/" +
               res.data +
-              "/false"
+              "/false",
           );
         });
       }
@@ -1213,7 +1272,7 @@ export default {
             this.trackList = res.data;
             this.loading = false;
           }
-        }
+        },
       );
     },
   },

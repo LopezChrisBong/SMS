@@ -71,6 +71,7 @@
           :headers="headers"
           :items="schedule"
           :loading="loading"
+          outlined
           dense
           class="elevation-0"
         >

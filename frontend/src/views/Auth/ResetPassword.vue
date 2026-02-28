@@ -27,9 +27,9 @@
                         : []
                     "
                     label="Email address"
+                    outlined
                     dense
                     required
-                    outlined
                   ></v-text-field>
                 </v-col>
 
@@ -210,7 +210,7 @@ export default {
     OTPInputs() {
       const inputs = document.querySelectorAll("#otp > *[id]");
       for (let i = 0; i < inputs.length; i++) {
-        inputs[i].addEventListener("keydown", function(event) {
+        inputs[i].addEventListener("keydown", function (event) {
           if (event.key === "Backspace") {
             inputs[i].value = "";
             if (i !== 0) inputs[i - 1].focus();
@@ -357,7 +357,7 @@ export default {
                 this.fadeAwayMessage.message = "Error changing password";
                 this.fadeAwayMessage.header = "System Message";
               }
-            }
+            },
           );
         } else {
           this.fadeAwayMessage.show = true;

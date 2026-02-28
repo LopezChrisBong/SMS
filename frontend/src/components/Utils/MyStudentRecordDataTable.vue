@@ -1,10 +1,16 @@
-e<template>
-  <div style="margin-top: 8pt;">
+e
+<template>
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <v-tabs v-model="activeTab" color="#f5b027" align-tabs="left">
-          <v-tab class="gboFontsTab" v-for="tab in tabList" :key="tab.id" @click="changeTab(tab)">
-            {{tab.subject_title}}
+          <v-tab
+            class="gboFontsTab"
+            v-for="tab in tabList"
+            :key="tab.id"
+            @click="changeTab(tab)"
+          >
+            {{ tab.subject_title }}
           </v-tab>
         </v-tabs>
       </v-col>
@@ -57,8 +63,8 @@ e<template>
         <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
@@ -252,7 +258,7 @@ export default {
       // alert(filter);
       this.axiosCall(
         "/subjects/getMyClassRecord/" + filter + "/" + this.tab,
-        "GET"
+        "GET",
       ).then((res) => {
         if (res.data.status != 500 && Array.isArray(res.data)) {
           // res.data.forEach((element, i) => {
@@ -299,27 +305,24 @@ export default {
 };
 </script>
 
-
 <style scoped>
-
-.gboFonts{
-  font-family: 'Segoe UI', !important;
+.gboFonts {
+  font-family: "Segoe UI" !important;
   font-size: 11pt;
 }
 
-.gboFontsTab{
-  font-family: 'Segoe UI', !important;
+.gboFontsTab {
+  font-family: "Segoe UI" !important;
   font-size: 12pt;
 }
 
-.gboFontsTable{
-  font-family: 'Segoe UI', !important;
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
   font-size: 10.5pt;
 }
 
-.custom-table :deep(th) { 
-  font-size: 11pt !important; 
+.custom-table :deep(th) {
+  font-size: 11pt !important;
   line-height: 1.5;
-} 
-
+}
 </style>

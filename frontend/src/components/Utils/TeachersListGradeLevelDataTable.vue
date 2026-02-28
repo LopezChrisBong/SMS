@@ -13,7 +13,8 @@
         <!-- <v-autocomplete
           v-model="section"
           :rules="[formRules.required]"
-          dense
+         outlined
+              dense
           outlined
           @change="changeValueSection($event)"
           label="Section"
@@ -34,7 +35,8 @@
             hide-details
             class="rounded-lg"
             color="#f5b027"
-            dense
+           outlined
+              dense
           ></v-text-field> -->
         <!-- <v-btn
           class="white--text ml-2 rounded-lg"
@@ -86,8 +88,8 @@
         <span class="px-2">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
@@ -442,7 +444,7 @@ export default {
     deleteItem() {
       this.axiosCall(
         "/enroll-student/deleteAvailabilitySchedule" + this.deleteData.availId,
-        "DELETE"
+        "DELETE",
       ).then((res) => {
         if (res.data.status == 200) {
           this.dialog = false;

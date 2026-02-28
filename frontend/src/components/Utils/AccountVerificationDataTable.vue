@@ -75,8 +75,8 @@
         <span class="px-2 gboFonts">Show</span>
         <span class="gboFonts">
           <v-select
-            dense
             outlined
+            dense
             color="#F5B027"
             hide-details
             :value="options.itemsPerPage"

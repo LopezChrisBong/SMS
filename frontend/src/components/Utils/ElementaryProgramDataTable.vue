@@ -29,8 +29,8 @@
         <v-autocomplete
           v-model="section"
           :rules="[formRules.required]"
-          dense
           outlined
+          dense
           @change="changeValueSection($event)"
           label="Section"
           class="rounded-lg"
@@ -50,7 +50,8 @@
             hide-details
             class="rounded-lg"
             color="#f5b027"
-            dense
+           outlined
+              dense
           ></v-text-field> -->
         <v-btn
           class="white--text ml-2 rounded-lg"
@@ -94,6 +95,7 @@
                 :headers="headers"
                 :items="items"
                 :items-per-page="50"
+                outlined
                 dense
                 class="elevation-1"
               >
@@ -137,11 +139,7 @@
                         </v-btn>
                       </template>
 
-                      <v-card
-                        class="pa-4"
-                        max-width="500"
-                        style="width: 500px;"
-                      >
+                      <v-card class="pa-4" max-width="500" style="width: 500px">
                         <v-card-title class="headline">
                           Conflict Information
                         </v-card-title>
@@ -213,8 +211,8 @@
         <span class="px-2">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             color="#f5b027"
             hide-details
             :value="options.itemsPerPage"
@@ -471,7 +469,7 @@ export default {
       try {
         const res = await this.axiosCall(
           "/rooms-section/" + this.activeTab.name,
-          "GET"
+          "GET",
         );
 
         if (res.data.length > 0) {
@@ -519,7 +517,7 @@ export default {
       try {
         const res = await this.axiosCall(
           `/enroll-student/getClassProgramm/${grade}/${section}/${filter}`,
-          "GET"
+          "GET",
         );
 
         if (res) {
@@ -529,7 +527,7 @@ export default {
             this.data.map(async (item, index) => {
               const hasConflict = await this.checkConflict(item);
               this.$set(this.data[index], "hasConflict", hasConflict);
-            })
+            }),
           );
         }
       } catch (error) {
@@ -561,7 +559,7 @@ export default {
                 this.fadeAwayMessage.message = res.data.msg;
               }
             }
-          }
+          },
         );
       } else if (this.tab == 2) {
         this.axiosCall("/my-designation/toggleActive/" + item.id, "PATCH").then(
@@ -580,7 +578,7 @@ export default {
                 this.fadeAwayMessage.message = res.data.msg;
               }
             }
-          }
+          },
         );
       }
     },
@@ -788,7 +786,7 @@ export default {
     deleteItem() {
       this.axiosCall(
         "/enroll-student/deleteAvailabilitySchedule/" + this.deleteData.availId,
-        "DELETE"
+        "DELETE",
       ).then((res) => {
         if (res.data.status == 200) {
           this.initialize();
@@ -830,7 +828,7 @@ export default {
       try {
         const res = await this.axiosCall(
           "/enroll-student/checkConflict/" + JSON.stringify(item),
-          "GET"
+          "GET",
         );
         this.conflictData = res.data;
         if (res.data.status == 200) {
@@ -882,7 +880,7 @@ export default {
           "/" +
           this.section +
           "",
-        "_blank"
+        "_blank",
       );
     },
   },

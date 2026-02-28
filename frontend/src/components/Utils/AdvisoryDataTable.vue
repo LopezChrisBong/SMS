@@ -1,5 +1,6 @@
-e<template>
-  <div style="margin-top: 8pt;">
+e
+<template>
+  <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <div class="pa-3">
@@ -73,8 +74,8 @@ e<template>
         <span class="px-2 gboFonts">Show</span>
         <span>
           <v-select
-            dense
             outlined
+            dense
             color="#f5b027"
             hide-details
             :value="options.itemsPerPage"

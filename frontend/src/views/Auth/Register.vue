@@ -4,7 +4,7 @@
       <v-row align="center" justify="center">
         <v-col align="center" cols="12" md="6">
           <v-card max-width="400" class="rounded-card">
-            <div style="margin:0 auto; width:20%" class="pa-2">
+            <div style="margin: 0 auto; width: 20%" class="pa-2">
               <v-img
                 v-if="limbaanimg == 'Elementary'"
                 src="../../assets/img/limbaanelementary.png"
@@ -76,7 +76,8 @@
                     label="School Level"
                     color="#93CB5B"
                     class="font-size-14"
-                    dense
+                   outlined
+              dense
                     item-text="description"
                     item-value="id"
                     :rules="[formRules.required]"
@@ -102,7 +103,8 @@
                   <v-autocomplete
                     v-model="empStatusID"
                     :rules="[formRules.required]"
-                    dense
+                   outlined
+              dense
                     outlined
                     class="rounded-lg"
                     item-text="description"
@@ -117,7 +119,8 @@
                   <v-autocomplete
                     v-model="positionID"
                     :rules="[formRules.required]"
-                    dense
+                   outlined
+              dense
                     outlined
                     class="rounded-lg"
                     item-text="description"
@@ -173,7 +176,8 @@
                         ? [formRules.required]
                         : []
                     "
-                    dense
+                   outlined
+              dense
                     outlined
                     class="rounded-lg"
                     item-text="name"
@@ -188,7 +192,8 @@
                   <v-autocomplete
                     v-model="officeID"
                     :rules="[formRules.required]"
-                    dense
+                   outlined
+              dense
                     outlined
                     class="rounded-lg"
                     item-text="name"
@@ -315,7 +320,7 @@ export default {
       this.$store.dispatch("setUser", null);
       this.$store.dispatch("setEmail", null);
       this.$store.dispatch("setIsAuthenticated", 0);
-      setTimeout(function() {
+      setTimeout(function () {
         location.reload();
       }, 0);
     }
@@ -414,7 +419,7 @@ export default {
             this.emailError = "";
           }
           this.emailChecking = false;
-        }
+        },
       );
     },
     register() {
