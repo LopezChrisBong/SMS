@@ -104,9 +104,13 @@ export class RoomsSectionController {
     );
   }
 
-  @Get('getMyClassList/:id/:filter')
-  getMyClassList(@Param('id') id: string, @Param('filter') filter: string) {
-    return this.roomsSectionService.getMyClassList(+id, +filter);
+  @Get('getMyClassList/:id/:filter/:roomID')
+  getMyClassList(
+    @Param('id') id: string,
+    @Param('filter') filter: string,
+    @Param('roomID') roomID: string,
+  ) {
+    return this.roomsSectionService.getMyClassList(+id, +filter, +roomID);
   }
 
   @Get('findAllRoomsSection/:id')
@@ -119,6 +123,13 @@ export class RoomsSectionController {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
     return this.roomsSectionService.findAllAddedRooms(curr_user);
+  }
+
+  @Get('getListClassRooms')
+  getListClassRooms(@Headers() headers) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.roomsSectionService.getListClassRooms(curr_user);
   }
 
   @Get(':gradeLevel')

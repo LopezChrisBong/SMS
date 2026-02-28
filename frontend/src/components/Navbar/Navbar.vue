@@ -85,7 +85,7 @@
         </div>
         <div v-if="adviser == true">
           <v-list-item
-            :to="'/' + 'employee/my-advisory'"
+            :to="'/' + 'employee/class-list'"
             router
             class="rounded-lg mx-2"
             active-class="active-link"
@@ -95,7 +95,7 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>Advisory</v-list-item-title>
+              <v-list-item-title>Class List</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </div>

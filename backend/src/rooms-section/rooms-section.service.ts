@@ -236,6 +236,20 @@ export class RoomsSectionService {
     return data;
   }
 
+  async getListClassRooms(curr_user: any) {
+    const data = await this.dataSource.manager
+      .createQueryBuilder(RoomsSection, 'RS')
+      .select(['*'])
+      .leftJoin(Availability, 'av', 'av.roomId = RS.id')
+      .where('av.teacherID = :teacherID', {
+        teacherID: curr_user.userdetail.id,
+      })
+      .groupBy('RS.id')
+      .getRawMany();
+    // console.log(data);
+    return data;
+  }
+
   async findSectionName(gradeLevel: string, section: number) {
     let data = await this.dataSource.manager
       .createQueryBuilder(RoomsSection, 'UD')
@@ -627,6 +641,7 @@ export class RoomsSectionService {
       };
     }
   }
+
   async updateAddRecords(
     createStudentListDto: CreateStudentListDto,
     grade: string,
@@ -647,7 +662,7 @@ export class RoomsSectionService {
       const removeList = JSON.parse(data).map(Number);
 
       const updatedList = studentList.filter((id) => !removeList.includes(id));
-      console.log(updatedList);
+      // console.log(updatedList);
 
       if (conflict[0].conflict == 0) {
         for (let i = 0; i < updatedList.length; i++) {
@@ -752,7 +767,7 @@ export class RoomsSectionService {
     return roomData;
   }
 
-  async getMyClassList(userID: number, filter: number) {
+  async getMyClassList(userID: number, filter: number, roomID: number) {
     try {
       let data = await this.dataSource.manager
         .createQueryBuilder(StudentList, 'SL')
@@ -768,9 +783,10 @@ export class RoomsSectionService {
         .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
         .where('RS.teacherId = :userId', { userId: userID })
         .andWhere('SY.id = :filter', { filter })
+        .andWhere('SL.roomId = :roomID', { roomID })
         .andWhere('ES.statusEnrolled = 1')
         .getRawMany();
-      // console.log('Wal', data);
+      console.log('Wal', roomID);
       if (!data || data.length === 0) {
         const userData = await this.dataSource
           .createQueryBuilder(RoomsSection, 'RS')

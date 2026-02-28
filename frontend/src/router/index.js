@@ -342,7 +342,7 @@ const routes = [
         meta: { title: "My Student Record", authRequired: true },
       },
       {
-        path: "my-advisory",
+        path: "class-list",
         component: Advisory,
         meta: { title: "My Student Record", authRequired: true },
       },

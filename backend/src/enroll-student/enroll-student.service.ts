@@ -1265,21 +1265,20 @@ export class EnrollStudentService {
   }
 
   async studentPortalLogin(
-    firstName: string,
-    lastName: string,
+    // firstName: string,
+    // lastName: string,
     birthDate: string,
     LRN: string,
-    Code: string,
+    // Code: string,
   ) {
-    console.log(firstName, lastName, birthDate, LRN, Code);
     let credentials = await this.dataSource
       .getRepository(EnrollStudent)
       .createQueryBuilder('e')
-      .where('LOWER(e.fname) = LOWER(:fname)', { fname: firstName })
-      .andWhere('LOWER(e.lname) = LOWER(:lname)', { lname: lastName })
+      // .where('LOWER(e.fname) = LOWER(:fname)', { fname: firstName })
+      // .andWhere('LOWER(e.lname) = LOWER(:lname)', { lname: lastName })
       .andWhere('e.bdate = :bdate', { bdate: birthDate })
       .andWhere('e.LRN = :lrn', { lrn: LRN })
-      .andWhere('e.CODE = :code', { code: Code })
+      // .andWhere('e.CODE = :code', { code: Code })
       .getOne();
 
     // console.log(credentials);
@@ -1300,7 +1299,6 @@ export class EnrollStudentService {
       }
     } else {
       console.log('not student');
-
       return {
         msg: 'Student not existed!',
         status: HttpStatus.BAD_REQUEST,

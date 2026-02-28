@@ -12,7 +12,8 @@
         <v-card>
           <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
             <span
-              >{{ action }} {{ grade }} {{ room_section }} Student List</span
+              >{{ action }} {{ data ? data.grade_level : "" }}
+              {{ data ? data.room_section : "" }} Student List</span
             >
             <v-spacer></v-spacer>
             <v-btn icon dark @click="closeD()">
@@ -60,7 +61,7 @@
                 <v-col cols="12" class="elevation-1">
                   <div class="d-flex flex-row-reverse">
                     <v-btn
-                      style="width: 85pt;"
+                      style="width: 85pt"
                       color="#f5b027"
                       medium
                       class="mb-2 ma-2 pa-2"
@@ -77,10 +78,10 @@
                       <span class="gboFontsTab"> Upgrade</span>
                     </v-btn>
                     <v-btn
-                      style="width: 85pt;"
+                      style="width: 85pt"
                       color="#f5b027"
                       medium
-                      class="mb-2 ma-2 pa-2 "
+                      class="mb-2 ma-2 pa-2"
                       outlined
                       @click="employeeDialog = true"
                     >
@@ -110,6 +111,16 @@
                           <v-icon size="20">mdi-trash-can</v-icon
                           ><span class="gboFontsTab"> Delete</span>
                         </v-btn>
+                        <!-- <v-btn
+                          small
+                          color="red"
+                          class="mx-1 gboFontsTable"
+                          outlined
+                          @click="removeStudent(item, index)"
+                        >
+                          <v-icon size="20">mdi-trash-can</v-icon
+                          ><span class="gboFontsTab"> remove</span>
+                        </v-btn> -->
                       </div>
                     </template>
                   </v-data-table>
@@ -122,14 +133,14 @@
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
 
-            <v-btn color="red" style="width: 85pt;" outlined @click="closeD()">
+            <v-btn color="red" style="width: 85pt" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               <span class="gboFontsTab"> Cancel</span>
             </v-btn>
 
             <v-btn
               color="#f5b027"
-              style="width: 85pt;"
+              style="width: 85pt"
               class="white--text"
               @click="save()"
             >
@@ -477,6 +488,10 @@ export default {
       }
     },
 
+    removeStudent(item, index) {
+      console.log(item, index);
+    },
+
     closeD() {
       this.eventHub.$emit("closeadviserStudentListDialog", false);
       this.initialize();
@@ -562,8 +577,12 @@ export default {
     getSchoolYear() {
       this.axiosCall("/enroll-student/getSchoolYear", "GET").then((res) => {
         if (res) {
-          this.nextSchoolYearList = res.data;
-          this.nextSchoolYear = res.data[0].id;
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].status == 1) {
+              this.nextSchoolYearList.push(res.data[i]);
+              this.nextSchoolYear = res.data[i].id;
+            }
+          }
         }
       });
     },
