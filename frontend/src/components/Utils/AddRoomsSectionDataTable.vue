@@ -32,7 +32,7 @@
           &nbsp;Generate Class List
         </v-btn> -->
       </v-col>
-      <v-col cols="12" md="8" class="flex-items justify-end">
+      <v-col cols="12" md="8" class="flex-items justify-end" v-if="tab != 9">
         <v-btn
           class="white--text ml-2 rounded-lg gboFonts"
           :class="

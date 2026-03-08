@@ -4,11 +4,17 @@ import { UpdateEnrollStudentDto } from './dto/update-enroll-student.dto';
 import { In } from 'typeorm';
 import {
   Availability,
+  CallbackElementaryEnrollmentSummary,
+  CallbackEnrollmentSummary,
+  ElementaryEnrollmentSummary,
+  EnrollmentSummary,
   EnrollStudent,
   RoomsSection,
+  StudentEnrollmentHistory,
   StudentList,
   Subject,
   UserDetail,
+  Users,
 } from 'src/entities';
 import { Brackets, DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +24,7 @@ import { CreateSchoolYearDto } from './dto/create-school-year.dto';
 import { SchoolYear } from './entities/scholl-year.entity';
 import { UpdateSchoolYearDto } from './dto/update-school-year.dto';
 import e from 'express';
-
+import { GRADE_STRUCTURE } from './grade-structure.helpers';
 @Injectable()
 export class EnrollStudentService {
   constructor(
@@ -447,6 +453,7 @@ export class EnrollStudentService {
         'ES.school_yearId as school_yearId',
         'ES.grade_level as grade_level',
         'ES.updated_at as updated_at',
+        'ES.LRN as LRN',
       ])
       .andWhere('ES.statusEnrolled = 1')
       .andWhere('ES.seniorJunior IN (:...values)', {
@@ -625,21 +632,33 @@ export class EnrollStudentService {
       school_yearId: filter.id,
       studentId: studentID,
     });
+    if (!studentLister) {
+      return null;
+    }
     let selectRoom = await this.dataSource.manager.findOneBy(RoomsSection, {
       id: studentLister.roomId,
     });
+
+    let adviser = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'ud')
+      .select([
+        "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,' ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
+      ])
+      .where('ud.id = :id', { id: selectRoom.teacherId })
+      .getRawOne();
+
     let data = await this.dataSource.manager
       .createQueryBuilder(Availability, 'A')
       .select([
         'A.id as id',
         "CONCAT(times_slot_from, ' - ', times_slot_to) AS time",
         "IF (!ISNULL(ud.mname)  AND LOWER(ud.mname) != 'n/a', concat(ud.fname, ' ',SUBSTRING(ud.mname, 1, 1) ,' ',ud.lname) ,concat(ud.fname, ' ', ud.lname)) as name",
-        "MAX(CASE WHEN day = 'Monday' THEN CONCAT('Subject: ', sub.subject_title) END) AS Monday",
-        "MAX(CASE WHEN day = 'Tuesday' THEN CONCAT('Subject: ', sub.subject_title) END) AS Tuesday",
-        "MAX(CASE WHEN day = 'Wednesday' THEN CONCAT('Subject: ', sub.subject_title) END) AS Wednesday",
-        "MAX(CASE WHEN day = 'Thursday' THEN CONCAT('Subject: ', sub.subject_title) END) AS Thursday",
-        "MAX(CASE WHEN day = 'Friday' THEN CONCAT('Subject: ', sub.subject_title) END) AS Friday",
-        "MAX(CASE WHEN day = 'Saturday' THEN CONCAT('Subject: ', sub.subject_title) END) AS Saturday",
+        "MAX(CASE WHEN day = 'Monday' THEN CONCAT('', sub.subject_title) END) AS Monday",
+        "MAX(CASE WHEN day = 'Tuesday' THEN CONCAT('', sub.subject_title) END) AS Tuesday",
+        "MAX(CASE WHEN day = 'Wednesday' THEN CONCAT('', sub.subject_title) END) AS Wednesday",
+        "MAX(CASE WHEN day = 'Thursday' THEN CONCAT('', sub.subject_title) END) AS Thursday",
+        "MAX(CASE WHEN day = 'Friday' THEN CONCAT('', sub.subject_title) END) AS Friday",
+        "MAX(CASE WHEN day = 'Saturday' THEN CONCAT('', sub.subject_title) END) AS Saturday",
       ])
       .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
@@ -658,8 +677,8 @@ export class EnrollStudentService {
       `,
       )
       .getRawMany();
-    console.log(selectRoom);
-    return { data: data, roomData: selectRoom };
+    // console.log(adviser);
+    return { data: data, roomData: selectRoom, adviser: adviser };
   }
 
   async updateEnrolledStudent(updateVS: UpdateEnrollStudentDto) {
@@ -727,6 +746,7 @@ export class EnrollStudentService {
         goodMoral: updateVS.goodMoral,
         birthPSA: updateVS.birthPSA,
         schoolCard: updateVS.schoolCard,
+        LRN: updateVS.LRN,
       });
       await queryRunner.commitTransaction();
       return {
@@ -1203,9 +1223,12 @@ export class EnrollStudentService {
     let enrolled = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .select(['COUNT(*) as numberEnrolled'])
-      .where('statusEnrolled = 1')
-      .andWhere('school_yearId = "' + filter + '"')
-      .andWhere('seniorJunior IN (:...values)', {
+      .leftJoin(StudentEnrollmentHistory, 'SEH', 'SEH.student_id = ES.id')
+      .where('ES.statusEnrolled = 1')
+      .andWhere('ES.school_yearId = "' + filter + '"')
+      .andWhere('SEH.school_yearId = "' + filter + '"')
+      .andWhere('ES.isSubmitted = 1')
+      .andWhere('ES.seniorJunior IN (:...values)', {
         values: [catchData, catchData1],
       })
       .getRawMany();
@@ -1213,9 +1236,12 @@ export class EnrollStudentService {
     let verify = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .select(['COUNT(*) as numberVerify'])
-      .where('statusEnrolled = 0')
-      .andWhere('school_yearId = "' + filter + '"')
-      .andWhere('seniorJunior IN (:...values)', {
+      .leftJoin(StudentEnrollmentHistory, 'SEH', 'SEH.student_id = ES.id')
+      .where('ES.statusEnrolled = 0')
+      .andWhere('ES.school_yearId = "' + filter + '"')
+      .andWhere('SEH.school_yearId = "' + filter + '"')
+      .andWhere('ES.isSubmitted = 1')
+      .andWhere('ES.seniorJunior IN (:...values)', {
         values: [catchData, catchData1],
       })
       .getRawMany();
@@ -1304,5 +1330,628 @@ export class EnrollStudentService {
         status: HttpStatus.BAD_REQUEST,
       };
     }
+  }
+
+  async generateSummary() {
+    // 1️ Get active school year
+    const activeSY = await this.dataSource
+      .createQueryBuilder()
+      .select('sy.id', 'id')
+      .from('school_year', 'sy')
+      .where('sy.status = :status', { status: 1 })
+      .getRawOne();
+
+    if (!activeSY) {
+      console.log('No active school year found.');
+      throw new Error('No active school year found.');
+    }
+
+    const schoolYearId = activeSY.id;
+
+    // Delete old summary
+    await this.dataSource
+      .createQueryBuilder()
+      .delete()
+      .from(EnrollmentSummary)
+      .where('school_year_id = :id', { id: schoolYearId })
+      .execute();
+
+    // JUNIOR HIGH (Grade 7–10)
+    const juniorData = await this.dataSource
+      .createQueryBuilder()
+      .select('e.grade_level', 'grade_level')
+      .addSelect(
+        `SUM(CASE WHEN e.sex = 'Male' THEN 1 ELSE 0 END)`,
+        'male_count',
+      )
+      .addSelect(
+        `SUM(CASE WHEN e.sex = 'Female' THEN 1 ELSE 0 END)`,
+        'female_count',
+      )
+      .addSelect('COUNT(*)', 'total_count')
+      .from('enroll_student', 'e')
+      .where('e.school_yearId = :sy', { sy: schoolYearId })
+      .andWhere(`e.grade_level IN ('Grade 7','Grade 8','Grade 9','Grade 10')`)
+      .andWhere('e.statusEnrolled = 1')
+      .groupBy('e.grade_level')
+      .getRawMany();
+
+    // Save junior high
+    for (const row of juniorData) {
+      await this.dataSource.getRepository(EnrollmentSummary).save({
+        school_year_id: schoolYearId,
+        grade_level: row.grade_level,
+        track: null,
+        male_count: Number(row.male_count),
+        female_count: Number(row.female_count),
+        total_count: Number(row.total_count),
+      });
+    }
+
+    // SENIOR HIGH (Grade 11–12 by Track)
+    const seniorData = await this.dataSource
+      .createQueryBuilder()
+      .select('e.grade_level', 'grade_level')
+      .addSelect('e.track', 'track')
+      .addSelect(
+        `SUM(CASE WHEN e.sex = 'Male' THEN 1 ELSE 0 END)`,
+        'male_count',
+      )
+      .addSelect(
+        `SUM(CASE WHEN e.sex = 'Female' THEN 1 ELSE 0 END)`,
+        'female_count',
+      )
+      .addSelect('COUNT(*)', 'total_count')
+      .from('enroll_student', 'e')
+      .where('e.school_yearId = :sy', { sy: schoolYearId })
+      .andWhere(`e.grade_level IN ('Grade 11','Grade 12')`)
+      .andWhere('e.statusEnrolled = 1')
+      .groupBy('e.grade_level')
+      .addGroupBy('e.track')
+      .getRawMany();
+
+    // Save senior high
+    for (const row of seniorData) {
+      await this.dataSource.getRepository(EnrollmentSummary).save({
+        school_year_id: schoolYearId,
+        grade_level: row.grade_level,
+        track: row.track,
+        male_count: Number(row.male_count),
+        female_count: Number(row.female_count),
+        total_count: Number(row.total_count),
+      });
+    }
+    console.log({ message: 'Enrollment summary generated successfully.' });
+    return { message: 'Enrollment summary generated successfully.' };
+  }
+  async generateSummaryElementary() {
+    //  Get active school year
+    const activeSY = await this.dataSource
+      .createQueryBuilder()
+      .select('sy.id', 'id')
+      .from('school_year', 'sy')
+      .where('sy.status = :status', { status: 1 })
+      .getRawOne();
+
+    if (!activeSY) {
+      console.log('No active school year found.');
+      throw new Error('No active school year found.');
+    }
+
+    const schoolYearId = activeSY.id;
+
+    // Delete old data for this SY
+    await this.dataSource
+      .createQueryBuilder()
+      .delete()
+      .from(ElementaryEnrollmentSummary)
+      .where('school_year_id = :id', { id: schoolYearId })
+      .execute();
+
+    // Query Elementary (Kinder 1–2, Grade 1–6)
+    const data = await this.dataSource
+      .createQueryBuilder()
+      .select('e.grade_level', 'grade_level')
+      .addSelect(
+        `SUM(CASE WHEN e.sex = 'Male' THEN 1 ELSE 0 END)`,
+        'male_count',
+      )
+      .addSelect(
+        `SUM(CASE WHEN e.sex = 'Female' THEN 1 ELSE 0 END)`,
+        'female_count',
+      )
+      .addSelect('COUNT(*)', 'total_count')
+      .from('enroll_student', 'e')
+      .where('e.school_yearId = :sy', { sy: schoolYearId })
+      .andWhere('e.statusEnrolled = 1')
+      .andWhere(
+        `
+        e.grade_level IN (
+          'Kinder 1',
+          'Kinder 2',
+          'Grade 1','Grade 2','Grade 3',
+          'Grade 4','Grade 5','Grade 6'
+        )
+      `,
+      )
+      .groupBy('e.grade_level')
+      .getRawMany();
+
+    //  Save results
+    for (const row of data) {
+      await this.dataSource.getRepository(ElementaryEnrollmentSummary).save({
+        school_year_id: schoolYearId,
+        grade_level: row.grade_level,
+        male_count: Number(row.male_count),
+        female_count: Number(row.female_count),
+        total_count: Number(row.total_count),
+      });
+    }
+    console.log({ message: 'Elementary summary generated successfully.' });
+    return { message: 'Elementary summary generated successfully.' };
+  }
+  async getDataForForcastingHighSchool() {
+    let oldHighSchool = await this.dataSource.manager
+      .createQueryBuilder(CallbackEnrollmentSummary, 'CE')
+      .select([
+        'CE.id as id',
+        'CE.school_year_from as school_year_from',
+        'CE.school_year_to as school_year_to',
+        'CE.grade_level as grade_level',
+        'CE.track as track',
+        'CE.male_count as male_count',
+        'CE.female_count as female_count',
+        'CE.total_count as total_count',
+      ])
+      .getRawMany();
+    // console.log('oldHighSchool', oldHighSchool);
+    let summaryData = await this.dataSource.manager
+      .createQueryBuilder(EnrollmentSummary, 'ES')
+      .select([
+        'ES.id as id',
+        'ES.grade_level as grade_level',
+        'ES.male_count as male_count',
+        'ES.female_count as female_count',
+        'ES.total_count as total_count',
+        'SY.school_year_from as school_year_from',
+        'SY.school_year_to as school_year_to',
+        'ES.track as track',
+      ])
+      .leftJoin(SchoolYear, 'SY', 'SY.id = ES.school_year_id')
+      .getRawMany();
+    // console.log('summaryData', summaryData);
+    // let newArr = [...oldHighSchool, ...summaryData];
+    let newArr = [...oldHighSchool];
+    // console.log(newArr);
+    let year = 5;
+    const forecasted = await this.generateCohortForecast(newArr, Number(year));
+    // console.log(forecasted);
+    return forecasted.forecast;
+  }
+
+  async getDataForForcastingElementary() {
+    let oldElementary = await this.dataSource.manager
+      .createQueryBuilder(CallbackElementaryEnrollmentSummary, 'CE')
+      .select([
+        'CE.id as id',
+        'CE.school_year_from as school_year_from',
+        'CE.school_year_to as school_year_to',
+        'CE.grade_level as grade_level',
+        // 'CE.track as track',
+        'CE.male_count as male_count',
+        'CE.female_count as female_count',
+        'CE.total_count as total_count',
+      ])
+      .getRawMany();
+    // console.log('oldHighSchool', oldHighSchool);
+    let summaryData = await this.dataSource.manager
+      .createQueryBuilder(EnrollmentSummary, 'ES')
+      .select([
+        'ES.id as id',
+        'ES.grade_level as grade_level',
+        'ES.male_count as male_count',
+        'ES.female_count as female_count',
+        'ES.total_count as total_count',
+        'SY.school_year_from as school_year_from',
+        'SY.school_year_to as school_year_to',
+        'ES.track as track',
+      ])
+      .leftJoin(SchoolYear, 'SY', 'SY.id = ES.school_year_id')
+      .getRawMany();
+    // console.log('summaryData', summaryData);
+    // let newArr = [...oldHighSchool, ...summaryData];
+    let newArr = [...oldElementary];
+    // console.log('Elementary', newArr);
+    let year = 5;
+    const forecasted = await this.generateCohortForecastElementary(
+      newArr,
+      Number(year),
+    );
+    // console.log(forecasted);
+    return forecasted.forecast;
+  }
+
+  // private readonly STUDENTS_PER_TEACHER = 40;
+  // async generateCohortForecast(enrollments: any[], years) {
+  //   // Group by school year & grade level
+  //   const grouped: Record<string, any> = {};
+
+  //   enrollments.forEach((record) => {
+  //     const yearKey = `${record.school_year_from}-${record.school_year_to}`;
+  //     const grade = record.grade_level;
+
+  //     if (!grouped[yearKey]) grouped[yearKey] = {};
+  //     if (!grouped[yearKey][grade]) grouped[yearKey][grade] = 0;
+
+  //     grouped[yearKey][grade] += record.total_count;
+  //   });
+
+  //   const yearsList = Object.keys(grouped).sort();
+  //   const latestYear = yearsList[yearsList.length - 1];
+
+  //   const baselineGrades = { ...grouped[latestYear] };
+
+  //   //  Estimate Grade 7 intake average (last 3 years)
+  //   const last3Years = yearsList.slice(-3);
+  //   const grade7Average =
+  //     last3Years.reduce((sum, yr) => {
+  //       return sum + (grouped[yr]['Grade 7'] || 0);
+  //     }, 0) / last3Years.length;
+
+  //   let currentGrades = { ...baselineGrades };
+  //   const forecast = [];
+
+  //   for (let i = 1; i <= years; i++) {
+  //     const nextGrades: Record<string, number> = {};
+
+  //     nextGrades['Grade 12'] = currentGrades['Grade 11'] || 0;
+  //     nextGrades['Grade 11'] = currentGrades['Grade 10'] || 0;
+  //     nextGrades['Grade 10'] = currentGrades['Grade 9'] || 0;
+  //     nextGrades['Grade 9'] = currentGrades['Grade 8'] || 0;
+  //     nextGrades['Grade 8'] = currentGrades['Grade 7'] || 0;
+  //     nextGrades['Grade 7'] = Math.round(grade7Average);
+
+  //     const totalStudents = Object.values(nextGrades).reduce(
+  //       (sum, val) => sum + val,
+  //       0,
+  //     );
+
+  //     const teachersNeeded = Math.ceil(
+  //       totalStudents / this.STUDENTS_PER_TEACHER,
+  //     );
+
+  //     const fromYear = parseInt(latestYear.split('-')[0]) + i;
+  //     const toYear = fromYear + 1;
+
+  //     forecast.push({
+  //       schoolYear: `${fromYear}-${toYear}`,
+  //       grades: nextGrades,
+  //       totalStudents,
+  //       teachersNeeded,
+  //     });
+
+  //     currentGrades = nextGrades;
+  //   }
+
+  //   return {
+  //     baselineYear: latestYear,
+  //     baselineGrades,
+  //     forecast,
+  //   };
+  // }
+
+  private readonly STUDENTS_PER_TEACHER = 40;
+
+  async generateCohortForecast(enrollments: any[], years: number) {
+    const grouped: Record<string, any> = {};
+
+    //  Group data
+    enrollments.forEach((record) => {
+      const yearKey = `${record.school_year_from}-${record.school_year_to}`;
+      const grade = record.grade_level;
+
+      if (!grouped[yearKey]) grouped[yearKey] = {};
+      if (!grouped[yearKey][grade]) grouped[yearKey][grade] = 0;
+
+      grouped[yearKey][grade] += record.total_count;
+    });
+
+    const yearsList = Object.keys(grouped).sort();
+    const latestYear = yearsList[yearsList.length - 1];
+    const baselineGrades = { ...grouped[latestYear] };
+
+    // Compute Survival Rates
+    const survivalRates: Record<string, number> = {};
+
+    const transitions = [
+      ['Grade 7', 'Grade 8'],
+      ['Grade 8', 'Grade 9'],
+      ['Grade 9', 'Grade 10'],
+      ['Grade 10', 'Grade 11'],
+      ['Grade 11', 'Grade 12'],
+    ];
+
+    transitions.forEach(([fromGrade, toGrade]) => {
+      let rates: number[] = [];
+
+      for (let i = 0; i < yearsList.length - 1; i++) {
+        const currentYear = yearsList[i];
+        const nextYear = yearsList[i + 1];
+
+        const fromValue = grouped[currentYear][fromGrade] || 0;
+        const toValue = grouped[nextYear][toGrade] || 0;
+
+        if (fromValue > 0) {
+          rates.push(toValue / fromValue);
+        }
+      }
+
+      survivalRates[fromGrade] =
+        rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : 1; // fallback 100%
+    });
+
+    //  Grade 7 Intake Average
+    const last3Years = yearsList.slice(-3);
+    const grade7Average =
+      last3Years.reduce((sum, yr) => {
+        return sum + (grouped[yr]['Grade 7'] || 0);
+      }, 0) / last3Years.length;
+
+    let currentGrades = { ...baselineGrades };
+    const forecast = [];
+
+    // Forecast Loop
+    for (let i = 1; i <= years; i++) {
+      const nextGrades: Record<string, number> = {};
+
+      nextGrades['Grade 12'] = Math.round(
+        (currentGrades['Grade 11'] || 0) * survivalRates['Grade 11'],
+      );
+
+      nextGrades['Grade 11'] = Math.round(
+        (currentGrades['Grade 10'] || 0) * survivalRates['Grade 10'],
+      );
+
+      nextGrades['Grade 10'] = Math.round(
+        (currentGrades['Grade 9'] || 0) * survivalRates['Grade 9'],
+      );
+
+      nextGrades['Grade 9'] = Math.round(
+        (currentGrades['Grade 8'] || 0) * survivalRates['Grade 8'],
+      );
+
+      nextGrades['Grade 8'] = Math.round(
+        (currentGrades['Grade 7'] || 0) * survivalRates['Grade 7'],
+      );
+
+      nextGrades['Grade 7'] = Math.round(grade7Average);
+
+      const totalStudents = Object.values(nextGrades).reduce(
+        (sum, val) => sum + val,
+        0,
+      );
+
+      const teachersNeeded = Math.ceil(
+        totalStudents / this.STUDENTS_PER_TEACHER,
+      );
+
+      const fromYear = parseInt(latestYear.split('-')[0]) + i;
+      const toYear = fromYear + 1;
+
+      forecast.push({
+        schoolYear: `${fromYear}-${toYear}`,
+        grades: nextGrades,
+        totalStudents,
+        teachersNeeded,
+      });
+
+      currentGrades = nextGrades;
+    }
+
+    return {
+      baselineYear: latestYear,
+      baselineGrades,
+      survivalRates,
+      forecast,
+    };
+  }
+
+  async generateCohortForecastElementary(enrollments: any[], years: number) {
+    const grouped: Record<string, any> = {};
+
+    //  Group data
+    enrollments.forEach((record) => {
+      const yearKey = `${record.school_year_from}-${record.school_year_to}`;
+      const grade = record.grade_level;
+
+      if (!grouped[yearKey]) grouped[yearKey] = {};
+      if (!grouped[yearKey][grade]) grouped[yearKey][grade] = 0;
+
+      grouped[yearKey][grade] += record.total_count;
+    });
+
+    const yearsList = Object.keys(grouped).sort();
+    const latestYear = yearsList[yearsList.length - 1];
+    const baselineGrades = { ...grouped[latestYear] };
+
+    // Compute Survival Rates
+    const survivalRates: Record<string, number> = {};
+
+    const transitions = [
+      ['Kindergarten', 'Grade 1'],
+      ['Grade 1', 'Grade 2'],
+      ['Grade 2', 'Grade 3'],
+      ['Grade 3', 'Grade 4'],
+      ['Grade 4', 'Grade 5'],
+      ['Grade 5', 'Grade 6'],
+    ];
+
+    transitions.forEach(([fromGrade, toGrade]) => {
+      let rates: number[] = [];
+
+      for (let i = 0; i < yearsList.length - 1; i++) {
+        const currentYear = yearsList[i];
+        const nextYear = yearsList[i + 1];
+
+        const fromValue = grouped[currentYear][fromGrade] || 0;
+        const toValue = grouped[nextYear][toGrade] || 0;
+
+        if (fromValue > 0) {
+          rates.push(toValue / fromValue);
+        }
+      }
+
+      survivalRates[fromGrade] =
+        rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : 1; // fallback 100%
+    });
+
+    //  Grade 7 Intake Average
+    const last3Years = yearsList.slice(-3);
+    const grade7Average =
+      last3Years.reduce((sum, yr) => {
+        return sum + (grouped[yr]['Kindergarten'] || 0);
+      }, 0) / last3Years.length;
+
+    let currentGrades = { ...baselineGrades };
+    const forecast = [];
+
+    // Forecast Loop
+    for (let i = 1; i <= years; i++) {
+      const nextGrades: Record<string, number> = {};
+
+      nextGrades['Grade 6'] = Math.round(
+        (currentGrades['Grade 5'] || 0) * survivalRates['Grade 5'],
+      );
+
+      nextGrades['Grade 5'] = Math.round(
+        (currentGrades['Grade 4'] || 0) * survivalRates['Grade 4'],
+      );
+
+      nextGrades['Grade 4'] = Math.round(
+        (currentGrades['Grade 3'] || 0) * survivalRates['Grade 3'],
+      );
+
+      nextGrades['Grade 3'] = Math.round(
+        (currentGrades['Grade 2'] || 0) * survivalRates['Grade 2'],
+      );
+
+      nextGrades['Grade 2'] = Math.round(
+        (currentGrades['Grade 1'] || 0) * survivalRates['Grade 1'],
+      );
+
+      nextGrades['Grade 1'] = Math.round(
+        (currentGrades['Kindergarten'] || 0) * survivalRates['Kindergarten'],
+      );
+
+      nextGrades['Kindergarten'] = Math.round(grade7Average);
+
+      const totalStudents = Object.values(nextGrades).reduce(
+        (sum, val) => sum + val,
+        0,
+      );
+
+      const teachersNeeded = Math.ceil(
+        totalStudents / this.STUDENTS_PER_TEACHER,
+      );
+
+      const fromYear = parseInt(latestYear.split('-')[0]) + i;
+      const toYear = fromYear + 1;
+
+      forecast.push({
+        schoolYear: `${fromYear}-${toYear}`,
+        grades: nextGrades,
+        totalStudents,
+        teachersNeeded,
+      });
+
+      currentGrades = nextGrades;
+    }
+
+    return {
+      baselineYear: latestYear,
+      baselineGrades,
+      survivalRates,
+      forecast,
+    };
+  }
+
+  async getEnrollmentChart(sy: number, levelType: string) {
+    const raw = await this.dataSource.query(
+      `
+    SELECT 
+      sl.grade_level,
+      SUM(CASE WHEN sl.status IS NULL THEN 1 ELSE 0 END) AS enrolled,
+      SUM(CASE WHEN sl.status IS NOT NULL THEN 1 ELSE 0 END) AS dropped,
+      COUNT(es.id) AS verification
+
+    FROM student_list sl
+
+    LEFT JOIN enroll_student es
+      ON es.grade_level = sl.grade_level
+      AND es.statusEnrolled = 0
+      AND es.isSubmitted = 1
+      AND es.school_yearId = ?
+
+    WHERE sl.school_yearId = ?
+    GROUP BY sl.grade_level
+    `,
+      [sy, sy],
+    );
+
+    let gradeStructure: string[] = [];
+
+    if (levelType === 'Elementary') {
+      gradeStructure = GRADE_STRUCTURE.ELEMENTARY;
+    }
+
+    if (levelType === 'Junior High') {
+      gradeStructure = GRADE_STRUCTURE.JUNIOR_HIGH;
+    }
+
+    if (levelType === 'Senior High') {
+      gradeStructure = GRADE_STRUCTURE.SENIOR_HIGH;
+    }
+
+    if (levelType === 'High School') {
+      gradeStructure = [
+        'Grade 7',
+        'Grade 8',
+        'Grade 9',
+        'Grade 10',
+        'Grade 11',
+        'Grade 12',
+      ];
+    }
+
+    const formatted = gradeStructure.map((grade) => {
+      const found = raw.find((r) => r.grade_level === grade);
+
+      return {
+        grade_level: grade,
+        enrolled: found ? Number(found.enrolled) : 0,
+        dropped: found ? Number(found.dropped) : 0,
+        verification: found ? Number(found.verification) : 0,
+      };
+    });
+
+    let chartData = {
+      categories: formatted.map((f) => f.grade_level),
+      series: [
+        {
+          name: 'Verification',
+          data: formatted.map((f) => f.verification),
+        },
+        {
+          name: 'Enrolled',
+          data: formatted.map((f) => f.enrolled),
+        },
+        {
+          name: 'Dropped',
+          data: formatted.map((f) => f.dropped),
+        },
+      ],
+    };
+    // console.log(chartData.series);
+    return chartData;
   }
 }

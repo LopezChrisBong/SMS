@@ -14,7 +14,6 @@
         </v-col>
       </v-row>
     </v-card>
-    <AccountVerificationDialog :data="typeData" :action="action" />
   </div>
 </template>
 
@@ -23,8 +22,6 @@ export default {
   components: {
     AccountVerificationDataTable: () =>
       import("../../components/Utils/AccountVerificationDataTable.vue"),
-    AccountVerificationDialog: () =>
-      import("../../components/Dialogs/Forms/AccountVerificationDialog.vue"),
   },
   created() {
     // console.log("created");

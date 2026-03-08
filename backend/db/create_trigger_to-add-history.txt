@@ -1,0 +1,46 @@
+DROP TRIGGER IF EXISTS trg_student_enrollment_update;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_student_enrollment_update
+AFTER UPDATE ON enroll_student
+FOR EACH ROW
+BEGIN
+
+    DECLARE v_count INT DEFAULT 0;
+
+    -- Only run if statusEnrolled or grade_level changed
+    IF (NOT (OLD.statusEnrolled <=> NEW.statusEnrolled)) 
+       OR (NOT (OLD.grade_level <=> NEW.grade_level)) THEN
+
+        -- Check if history already exists for this student + school year
+        SELECT COUNT(*) INTO v_count
+        FROM student_enrollment_history
+        WHERE student_id = NEW.id
+        AND school_yearId = NEW.school_yearId;
+
+        -- Insert only if no duplicate exists
+        IF v_count = 0 THEN
+
+            INSERT INTO student_enrollment_history (
+                student_id,
+                school_yearId,
+                LRN,
+                grade_level,
+                statusEnrolled
+            )
+            VALUES (
+                NEW.id,
+                NEW.school_yearId,
+                NEW.LRN,
+                NEW.grade_level,
+                NEW.statusEnrolled
+            );
+
+        END IF;
+
+    END IF;
+
+END$$
+
+DELIMITER ;

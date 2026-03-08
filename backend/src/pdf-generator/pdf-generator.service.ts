@@ -36,11 +36,16 @@ hbs.registerHelper('teachingExperience', function (dateHired) {
   const hired = dayjs(dateHired);
   const diffYears = today.diff(hired, 'year');
   const diffMonths = today.diff(hired.add(diffYears, 'year'), 'month');
-  const diffDays = today.diff(hired.add(diffYears, 'year').add(diffMonths, 'month'), 'day');
+  const diffDays = today.diff(
+    hired.add(diffYears, 'year').add(diffMonths, 'month'),
+    'day',
+  );
 
   let result = '';
-  if (diffYears > 0) result += `${diffYears} year${diffYears > 1 ? 's, ' : ''} `;
-  if (diffMonths > 0) result += `${diffMonths} month${diffMonths > 1 ? 's &' : ''} `;
+  if (diffYears > 0)
+    result += `${diffYears} year${diffYears > 1 ? 's, ' : ''} `;
+  if (diffMonths > 0)
+    result += `${diffMonths} month${diffMonths > 1 ? 's &' : ''} `;
   if (diffDays > 0) result += `${diffDays}  day${diffDays > 1 ? 's' : ''}`;
   return result.trim() || '0 days';
 });
@@ -54,7 +59,7 @@ hbs.registerHelper('dateFormat', function (value) {
 
 hbs.registerHelper('formatTime', function (time) {
   if (!time) return '';
-  
+
   // Example: convert "13:30:00" → "1:30 PM"
   const date = new Date(`1970-01-01T${time}Z`);
   return date.toLocaleTimeString('en-US', {
@@ -67,7 +72,7 @@ hbs.registerHelper('formatTimeRange', function (range) {
   if (!range) return '';
 
   // Example input: "13:00 - 14:00"
-  const [from, to] = range.split('-').map(t => t.trim());
+  const [from, to] = range.split('-').map((t) => t.trim());
   if (!from || !to) return range;
 
   function formatTime(t) {
@@ -79,13 +84,12 @@ hbs.registerHelper('formatTimeRange', function (range) {
     return d.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: true
+      hour12: true,
     });
   }
 
   return `${formatTime(from)} - ${formatTime(to)}`;
 });
-
 
 hbs.registerHelper('formatAlphanumericDate', function (value) {
   if (value) {
@@ -273,7 +277,7 @@ hbs.registerHelper('eq', function (a, b) {
 });
 
 hbs.registerHelper('or', function () {
-  const args = Array.prototype.slice.call(arguments, 0, -1); 
+  const args = Array.prototype.slice.call(arguments, 0, -1);
   return args.some(Boolean);
 });
 
@@ -352,8 +356,6 @@ hbs.registerHelper('formatGovIDDateIssued', function (val) {
   }
 });
 
-
-
 hbs.registerHelper('math', function (lvalue, operator, rvalue, options) {
   lvalue = parseFloat(lvalue);
   rvalue = parseFloat(rvalue);
@@ -419,20 +421,18 @@ export class PdfGeneratorService {
     return moment(value).format('MMM DD,YYYY');
   }
 
-
-
   async getMySchedule(facultyId: number, filter: number) {
     let mySched = await this.dataSource.manager
       .createQueryBuilder(Availability, 'A')
       .select([
-        "A.id AS id",
+        'A.id AS id',
         "CONCAT(A.times_slot_from, ' - ', A.times_slot_to) AS time",
         "MAX(CASE WHEN A.day = 'Monday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Monday",
         "MAX(CASE WHEN A.day = 'Tuesday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Tuesday",
         "MAX(CASE WHEN A.day = 'Wednesday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Wednesday",
         "MAX(CASE WHEN A.day = 'Thursday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Thursday",
         "MAX(CASE WHEN A.day = 'Friday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Friday",
-        "MAX(CASE WHEN A.day = 'Saturday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Saturday"
+        "MAX(CASE WHEN A.day = 'Saturday' THEN CONCAT(sub.subject_title, '<br><span style=\"font-size:8px\">', room.room_section, '</span>') END) AS Saturday",
       ])
       .leftJoin(RoomsSection, 'room', 'room.id = A.roomId')
       .leftJoin(Subject, 'sub', 'sub.id = A.subjectId')
@@ -442,102 +442,101 @@ export class PdfGeneratorService {
       .orderBy('A.times_slot_from')
       .getRawMany();
 
-          const fixedBlocks = [
-          {
-            time: '7:15 - 7:30',
-            Monday: 'CONVOCATION PROGRAM',
-            Tuesday: '',
-            Wednesday: '',
-            Thursday: '',
-            Friday: '',
-            Saturday: null
-          },
-          {
-            time: '9:30 - 10:00',
-            Monday: 'RECESS - Handwashing Time',
-            Tuesday: '',
-            Wednesday: '',
-            Thursday: '',
-            Friday: '',
-            Saturday: null
-          },
-          {
-            time: '12:00 - 12:30',
-            Monday: 'LUNCH BREAK',
-            Tuesday: '',
-            Wednesday: '',
-            Thursday: '',
-            Friday: '',
-            Saturday: null
-          },
-          {
-            time: '12:30 - 1:00',
-            Monday: 'READING REMEDIATION',
-            Tuesday: '',
-            Wednesday: '',
-            Thursday: '',
-            Friday: '',
-            Saturday: null
-          }
-        ];
+    const fixedBlocks = [
+      {
+        time: '7:15 - 7:30',
+        Monday: 'CONVOCATION PROGRAM',
+        Tuesday: '',
+        Wednesday: '',
+        Thursday: '',
+        Friday: '',
+        Saturday: null,
+      },
+      {
+        time: '9:30 - 10:00',
+        Monday: 'RECESS - Handwashing Time',
+        Tuesday: '',
+        Wednesday: '',
+        Thursday: '',
+        Friday: '',
+        Saturday: null,
+      },
+      {
+        time: '12:00 - 12:30',
+        Monday: 'LUNCH BREAK',
+        Tuesday: '',
+        Wednesday: '',
+        Thursday: '',
+        Friday: '',
+        Saturday: null,
+      },
+      {
+        time: '12:30 - 1:00',
+        Monday: 'READING REMEDIATION',
+        Tuesday: '',
+        Wednesday: '',
+        Thursday: '',
+        Friday: '',
+        Saturday: null,
+      },
+    ];
 
-        function timeToMinutes(timeString: string): number {
-          const firstPart = timeString.split(/[–-]/)[0].trim();
+    function timeToMinutes(timeString: string): number {
+      const firstPart = timeString.split(/[–-]/)[0].trim();
 
-          const match = firstPart.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
-          if (!match) return 0;
+      const match = firstPart.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+      if (!match) return 0;
 
-          const [, hStr, mStr, periodRaw] = match;
-          let h = parseInt(hStr, 10);
-          let m = parseInt(mStr, 10);
-          const period = periodRaw ? periodRaw.toUpperCase() : null;
+      const [, hStr, mStr, periodRaw] = match;
+      let h = parseInt(hStr, 10);
+      let m = parseInt(mStr, 10);
+      const period = periodRaw ? periodRaw.toUpperCase() : null;
 
-          if (period === 'PM' && h < 12) h += 12;
-          if (period === 'AM' && h === 12) h = 0;
+      if (period === 'PM' && h < 12) h += 12;
+      if (period === 'AM' && h === 12) h = 0;
 
-          // 🩵 NEW LOGIC: if no AM/PM, assume PM for hours between 1–6 (like 1:00–6:00)
-          if (!period && h >= 1 && h <= 6) {
-            h += 12;
-          }
+      // 🩵 NEW LOGIC: if no AM/PM, assume PM for hours between 1–6 (like 1:00–6:00)
+      if (!period && h >= 1 && h <= 6) {
+        h += 12;
+      }
 
-          return h * 60 + m;
-        }
-        mySched = [...fixedBlocks, ...mySched].sort(
-          (a, b) => timeToMinutes(a.time) - timeToMinutes(b.time)
-        );
+      return h * 60 + m;
+    }
+    mySched = [...fixedBlocks, ...mySched].sort(
+      (a, b) => timeToMinutes(a.time) - timeToMinutes(b.time),
+    );
 
-        let teacherName =  await this.dataSource.manager
-          .createQueryBuilder(UserDetail, 'UD')
-          .select([ 
-            'UD.*',
-            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
-          ])
-          .where('UD.id = :facultyId', { facultyId })
-          .getRawOne()
-        // console.log('teacherName', mySched);
+    let teacherName = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        'UD.*',
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+      ])
+      .where('UD.id = :facultyId', { facultyId })
+      .getRawOne();
+    // console.log('teacherName', mySched);
 
     let headerImg = join(process.cwd(), '/static/img/header.png');
     // let headerImg = join(process.cwd(), '/../static/img/header.png');
     let footerImg = join(process.cwd(), '/static/img/footer.png');
     // let footerImg = join(process.cwd(), '/../static/img/footer.png');
 
-
     const data = [
       {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
         footer_img: this.base64_encode(footerImg, 'headerfooter'),
-        mySched:mySched,
+        mySched: mySched,
         year: filter,
-        teacherName:teacherName
+        teacherName: teacherName,
         // month:getmonth
       },
     ];
 
     // console.log(data);
     try {
-      const browser = await puppeteer.launch({ 
+      const browser = await puppeteer.launch({
         headless: 'new',
-        args: ['--no-sandbox']
+        args: ['--no-sandbox'],
       });
       const page = await browser.newPage();
       // compile(template_name, data)
@@ -566,67 +565,66 @@ export class PdfGeneratorService {
     }
   }
 
-  async getAllUnderLoadFaculty(filter:number, status :number){
-         let query = this.dataSource.manager
-          .createQueryBuilder(UserDetail, 'UD')
-          .select([
-            "A.*",
-            "A.id as id",
-            "UD.education as education",
-            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
-           
-          ])
-          .leftJoin(Availability, 'A', 'A.teacherID = UD.id')
-          .where('A.school_yearId = :filter', { filter })
-          .andWhere('UD.status = :status', { status: status })
-          let rawData = await query.getRawMany();
-          // console.log(rawData)
-          let load = []
-          rawData.forEach(hours => {
-            const obj = load.find(teacher=> teacher.teacherID === hours.teacherID)
-            if(obj){
-              obj.hours = Number(obj.hours) + Number(hours.hours)
-            }else{
-              load.push(hours)
-            }
-          })
-          for (let i = 0; i < load.length; i++) {
-            let loadedHour = Number(load[i].hours) - 40
-            // let loadedHour = 40 - 40
-            if(loadedHour > 0){
-              Object.assign(load[i], {overload:loadedHour});
-            }else{
-              let data = loadedHour * (-1)
-              Object.assign(load[i], {underload:data});
-            }
-          }
-            // console.log(load)
+  async getAllUnderLoadFaculty(filter: number, status: number) {
+    let query = this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'UD')
+      .select([
+        'A.*',
+        'A.id as id',
+        'UD.education as education',
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+      ])
+      .leftJoin(Availability, 'A', 'A.teacherID = UD.id')
+      .where('A.school_yearId = :filter', { filter })
+      .andWhere('UD.status = :status', { status: status });
+    let rawData = await query.getRawMany();
+    // console.log(rawData)
+    let load = [];
+    rawData.forEach((hours) => {
+      const obj = load.find((teacher) => teacher.teacherID === hours.teacherID);
+      if (obj) {
+        obj.hours = Number(obj.hours) + Number(hours.hours);
+      } else {
+        load.push(hours);
+      }
+    });
+    for (let i = 0; i < load.length; i++) {
+      let loadedHour = Number(load[i].hours) - 40;
+      // let loadedHour = 40 - 40
+      if (loadedHour > 0) {
+        Object.assign(load[i], { overload: loadedHour });
+      } else {
+        let data = loadedHour * -1;
+        Object.assign(load[i], { underload: data });
+      }
+    }
+    // console.log(load)
 
-            let newLoader = []
-            for (let i = 0; i < load.length; i++) {
-              if( load[i].underload != -0){
-                newLoader.push(load[i])
-              }
-            }
-            // console.log(newLoader)
+    let newLoader = [];
+    for (let i = 0; i < load.length; i++) {
+      if (load[i].underload != -0) {
+        newLoader.push(load[i]);
+      }
+    }
+    // console.log(newLoader)
 
-        let headerImg = join(process.cwd(), '/static/img/header.png');
-        let footerImg = join(process.cwd(), '/static/img/footer.png');
-        
-        // let headerImg = join(process.cwd(), '/../static/img/header.png');
-        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
-        const data = [
-        {
+    let headerImg = join(process.cwd(), '/static/img/header.png');
+    let footerImg = join(process.cwd(), '/static/img/footer.png');
+
+    // let headerImg = join(process.cwd(), '/../static/img/header.png');
+    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    const data = [
+      {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
         footer_img: this.base64_encode(footerImg, 'headerfooter'),
-        load:newLoader
+        load: newLoader,
         // name:gradeLevel == 'Grade 11' || gradeLevel == 'Grade 12'? arr[0].name: arr.name,
-        },
+      },
     ];
     try {
-      const browser = await puppeteer.launch({ 
+      const browser = await puppeteer.launch({
         headless: 'new',
-        args: ['--no-sandbox']
+        args: ['--no-sandbox'],
       });
       const page = await browser.newPage();
       // compile(template_name, data)
@@ -655,68 +653,75 @@ export class PdfGeneratorService {
     }
   }
 
-  async getClassProgramm(filter:number, status :number, grade_level:string, roomID:number){
+  async getClassProgramm(
+    filter: number,
+    status: number,
+    grade_level: string,
+    roomID: number,
+  ) {
     // console.log(filter, status, grade_level, roomID)
-         let roomData = await this.dataSource.manager
-          .createQueryBuilder(RoomsSection,'rs')
-          .select([
-            'rs.*',
-            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
-          ])
-          .leftJoin(UserDetail,'ud','rs.teacherId = ud.id')
-          .where('rs.id = :roomID', { roomID })
-          .getRawOne()
+    let roomData = await this.dataSource.manager
+      .createQueryBuilder(RoomsSection, 'rs')
+      .select([
+        'rs.*',
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+      ])
+      .leftJoin(UserDetail, 'ud', 'rs.teacherId = ud.id')
+      .where('rs.id = :roomID', { roomID })
+      .getRawOne();
 
-          let schoolYear = await this.dataSource.manager
-          .createQueryBuilder(SchoolYear,'sy')
-          .where('sy.id = '+filter)
-          .getRawOne()
-        // console.log(schoolYear)
+    let schoolYear = await this.dataSource.manager
+      .createQueryBuilder(SchoolYear, 'sy')
+      .where('sy.id = ' + filter)
+      .getRawOne();
+    // console.log(schoolYear)
 
-         let query = this.dataSource.manager
-          .createQueryBuilder(RoomsSection, 'RS')
-          .select([
-            "A.*",
-            "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
-            "S.subject_title as subject_title",
-          ])
-          .leftJoin(Availability, 'A', 'A.roomId = RS.id')
-          .leftJoin(UserDetail, 'UD', 'UD.id = A.teacherID')
-          .leftJoin(Subject, 'S', 'S.id = A.subjectId')
-          .where('A.school_yearId = :filter', { filter })
-          .andWhere('UD.status = :status', { status: status })
-          .andWhere('A.grade_level = :grade_level', { grade_level: grade_level })
-          .andWhere('A.roomID = :roomID', { roomID: roomID })
-          let rawData = await query.getRawMany();
-          // console.log(rawData) 
-        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-          const uniqueTimes = [
-            ...new Set(
-              rawData.map(
-                (item) => `${item.times_slot_from} - ${item.times_slot_to}`
-              )
-            ),
-          ];
+    let query = this.dataSource.manager
+      .createQueryBuilder(RoomsSection, 'RS')
+      .select([
+        'A.*',
+        "IF (!ISNULL(UD.mname) AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ', SUBSTRING(UD.mname, 1, 1), ' ', UD.lname), concat(UD.fname, ' ', UD.lname)) as name",
+        'S.subject_title as subject_title',
+      ])
+      .leftJoin(Availability, 'A', 'A.roomId = RS.id')
+      .leftJoin(UserDetail, 'UD', 'UD.id = A.teacherID')
+      .leftJoin(Subject, 'S', 'S.id = A.subjectId')
+      .where('A.school_yearId = :filter', { filter })
+      .andWhere('UD.status = :status', { status: status })
+      .andWhere('A.grade_level = :grade_level', { grade_level: grade_level })
+      .andWhere('A.roomID = :roomID', { roomID: roomID });
+    let rawData = await query.getRawMany();
+    // console.log(rawData)
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const uniqueTimes = [
+      ...new Set(
+        rawData.map(
+          (item) => `${item.times_slot_from} - ${item.times_slot_to}`,
+        ),
+      ),
+    ];
 
-          const formatted = uniqueTimes.map((time) => {
-            const [from, to] = time.split(' - ');
-            const row: any = { time };
+    const formatted = uniqueTimes.map((time) => {
+      const [from, to] = time.split(' - ');
+      const row: any = { time };
 
-            days.forEach((day) => {
-              const match = rawData.find(
-                (r) =>
-                  r.day === day &&
-                  r.times_slot_from === from &&
-                  r.times_slot_to === to
-              );
+      days.forEach((day) => {
+        const match = rawData.find(
+          (r) =>
+            r.day === day &&
+            r.times_slot_from === from &&
+            r.times_slot_to === to,
+        );
 
-              row[day] = match ? `${match.subject_title}<br><span style='font-size:10px'>${match.name}</span>` : '';
-            });
+        row[day] = match
+          ? `${match.subject_title}<br><span style='font-size:10px'>${match.name}</span>`
+          : '';
+      });
 
-            return row;
-          });
-          // console.log(formatted)
-        const breaks = [
+      return row;
+    });
+    // console.log(formatted)
+    const breaks = [
       {
         time: '07:15 - 07:30',
         Monday: '',
@@ -772,30 +777,29 @@ export class PdfGeneratorService {
       (a, b) => this.getMinutes(a.time) - this.getMinutes(b.time),
     );
 
-        
-          let newSchedule = this.sortSchedule(fullSchedule)
-          console.log(newSchedule)
+    let newSchedule = this.sortSchedule(fullSchedule);
+    console.log(newSchedule);
 
-        let headerImg = join(process.cwd(), '/static/img/header.png');
-        let footerImg = join(process.cwd(), '/static/img/footer.png');
-        
-        // let headerImg = join(process.cwd(), '/../static/img/header.png');
-        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
-        const data = [
-        {
+    let headerImg = join(process.cwd(), '/static/img/header.png');
+    let footerImg = join(process.cwd(), '/static/img/footer.png');
+
+    // let headerImg = join(process.cwd(), '/../static/img/header.png');
+    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    const data = [
+      {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
         footer_img: this.base64_encode(footerImg, 'headerfooter'),
-        mySched:newSchedule,
+        mySched: newSchedule,
         schoolYear,
         roomData,
-        grade_level
+        grade_level,
         // name:gradeLevel == 'Grade 11' || gradeLevel == 'Grade 12'? arr[0].name: arr.name,
-        },
+      },
     ];
     try {
-      const browser = await puppeteer.launch({ 
+      const browser = await puppeteer.launch({
         headless: 'new',
-        args: ['--no-sandbox']
+        args: ['--no-sandbox'],
       });
       const page = await browser.newPage();
       // compile(template_name, data)
@@ -834,29 +838,28 @@ export class PdfGeneratorService {
     return totalMinutes;
   }
 
- sortSchedule(schedule: any[]) {
-  return schedule.sort((a, b) => {
-    const timeA = this.convertTo24Hour(a.time.split(' - ')[0]);
-    const timeB = this.convertTo24Hour(b.time.split(' - ')[0]);
-    return timeA - timeB;
-  });
-}
+  sortSchedule(schedule: any[]) {
+    return schedule.sort((a, b) => {
+      const timeA = this.convertTo24Hour(a.time.split(' - ')[0]);
+      const timeB = this.convertTo24Hour(b.time.split(' - ')[0]);
+      return timeA - timeB;
+    });
+  }
 
-convertTo24Hour(time: string): number {
-  // Example input: "01:00", "07:15"
-  const [hours, minutes] = time.split(':').map(Number);
+  convertTo24Hour(time: string): number {
+    // Example input: "01:00", "07:15"
+    const [hours, minutes] = time.split(':').map(Number);
 
-  // Detect AM/PM manually
-  let h = hours;
-  if (time.toLowerCase().includes('pm') && h !== 12) h += 12;
-  if (time.toLowerCase().includes('am') && h === 12) h = 0;
+    // Detect AM/PM manually
+    let h = hours;
+    if (time.toLowerCase().includes('pm') && h !== 12) h += 12;
+    if (time.toLowerCase().includes('am') && h === 12) h = 0;
 
-  // Treat times before 7:00 as PM if your schedule starts early (like 7:15 AM)
-  if (h < 7) h += 12; 
+    // Treat times before 7:00 as PM if your schedule starts early (like 7:15 AM)
+    if (h < 7) h += 12;
 
-  return h * 60 + minutes; // Convert to minutes for easy comparison
-}
- 
+    return h * 60 + minutes; // Convert to minutes for easy comparison
+  }
 
   async getQRCode(id: string) {
     let d = await QRCode.toDataURL(id)
@@ -896,47 +899,42 @@ convertTo24Hour(time: string): number {
       console.log(e);
     }
   }
- 
-  async getSchoolForm2(school_yearID:number, roomID:number,subjectID:number, attendanceDate:string, teacherID:number){
+
+  async getSchoolForm2(
+    school_yearID: number,
+    roomID: number,
+    subjectID: number,
+    attendanceDate: string,
+    teacherID: number,
+  ) {
     // console.log(filter,roomID,subjectID,date)
     let attendance;
     let rawData;
-    let month ;
-     if(attendanceDate == '1'){
-      month = 'January'
-    }
-    else if( attendanceDate == '2'){
-      month = 'February'
-    }
-    else if( attendanceDate == '3'){
-      month = 'March'
-    }
-    else if( attendanceDate == '4'){
-      month = 'April'
-    }
-    else if( attendanceDate == '5'){
-      month = 'May'
-    }
-    else if( attendanceDate == '6'){
-      month = 'June'
-    }
-    else if( attendanceDate == '7'){
-      month = 'July'
-    }
-    else if( attendanceDate == '8'){
-      month = 'August'
-    }
-    else if( attendanceDate == '9'){
-      month = 'September'
-    }
-    else if( attendanceDate == '10'){
-      month = 'October'
-    }
-    else if( attendanceDate == '11'){
-      month = 'November'
-    }
-    else if( attendanceDate == '12'){
-      month = 'December'
+    let month;
+    if (attendanceDate == '1') {
+      month = 'January';
+    } else if (attendanceDate == '2') {
+      month = 'February';
+    } else if (attendanceDate == '3') {
+      month = 'March';
+    } else if (attendanceDate == '4') {
+      month = 'April';
+    } else if (attendanceDate == '5') {
+      month = 'May';
+    } else if (attendanceDate == '6') {
+      month = 'June';
+    } else if (attendanceDate == '7') {
+      month = 'July';
+    } else if (attendanceDate == '8') {
+      month = 'August';
+    } else if (attendanceDate == '9') {
+      month = 'September';
+    } else if (attendanceDate == '10') {
+      month = 'October';
+    } else if (attendanceDate == '11') {
+      month = 'November';
+    } else if (attendanceDate == '12') {
+      month = 'December';
     }
     let teacherData = await this.dataSource.manager
       .createQueryBuilder(UserDetail, 'UD')
@@ -944,46 +942,45 @@ convertTo24Hour(time: string): number {
         "IF (!ISNULL(UD.mname)  AND LOWER(UD.mname) != 'n/a', concat(UD.fname, ' ',SUBSTRING(UD.mname, 1, 1) ,' ',UD.lname) ,concat(UD.fname, ' ', UD.lname)) as name",
         'UD.id as id',
         'RS.room_section as room_section',
-        'RS.grade_level as grade_level'
+        'RS.grade_level as grade_level',
       ])
       .leftJoin(RoomsSection, 'RS', 'RS.teacherID = UD.id')
       .where('UD.id = :teacherID', { teacherID })
       .andWhere('RS.id = :roomID', { roomID })
       .getRawOne();
 
-     let schoolYear = await this.dataSource.manager
-          .createQueryBuilder(SchoolYear, 'SY')
-          .select([
-            // "*",
-            "CONCAT(school_year_from, ' - ', school_year_to) AS school_year",
-          "CONCAT(school_year_from, '-06-01') as startDate,CONCAT(school_year_to, '-05-31') as endDate"
-          ])
-          .where('SY.id = :school_yearID', { school_yearID })
-          .getRawOne();
+    let schoolYear = await this.dataSource.manager
+      .createQueryBuilder(SchoolYear, 'SY')
+      .select([
+        // "*",
+        "CONCAT(school_year_from, ' - ', school_year_to) AS school_year",
+        "CONCAT(school_year_from, '-06-01') as startDate,CONCAT(school_year_to, '-05-31') as endDate",
+      ])
+      .where('SY.id = :school_yearID', { school_yearID })
+      .getRawOne();
 
-          
-        const dates = await this.dataSource.query(
-        `
+    const dates = await this.dataSource.query(
+      `
         SELECT DISTINCT attendanceDate
         FROM student_attendance
         WHERE roomID = ? AND subjectID = ? AND school_yearID = ?
         ORDER BY attendanceDate
         `,
-        [roomID, subjectID, school_yearID]
-      );
-       
-      if (!dates.length) {
-      attendance = false
-      }else{
-      attendance = true
-        const dateColumns = dates
+      [roomID, subjectID, school_yearID],
+    );
+
+    if (!dates.length) {
+      attendance = false;
+    } else {
+      attendance = true;
+      const dateColumns = dates
         .map(
           (d) =>
-            `COALESCE(MAX(CASE WHEN a.attendanceDate = '${d.attendanceDate}' THEN a.attendance END), 0) AS \`${d.attendanceDate}\``
+            `COALESCE(MAX(CASE WHEN a.attendanceDate = '${d.attendanceDate}' THEN a.attendance END), 0) AS \`${d.attendanceDate}\``,
         )
         .join(', ');
-     
-          const sql = `
+
+      const sql = `
           SELECT 
             CONCAT(s.lname, ' ', s.fname) AS student_name,
             ${dateColumns}
@@ -994,52 +991,53 @@ convertTo24Hour(time: string): number {
           ORDER BY student_name
         `;
 
-         rawData =  await this.dataSource.query(sql, [roomID, subjectID, school_yearID, attendanceDate])
-         }
-           
-            console.log('rawData',roomID, subjectID, school_yearID, attendanceDate);
+      rawData = await this.dataSource.query(sql, [
+        roomID,
+        subjectID,
+        school_yearID,
+        attendanceDate,
+      ]);
+    }
 
-        let newData
-        let updatedRow
-         if(attendance === true){
-          newData = await this.transformSchoolForm2(rawData,month)
-          updatedRow = newData.rows.map((row) => {
-          return row.map((val, idx) => {
-            // First column is student_name, last two are absent/tardy counters → keep them as-is
-            if (idx === 0 || idx >= row.length - 2) return val;
-            if (val === "0") return "✖";       
-            if (val === "3") return "▨";       
-            if (val === "2") return "◻";       
-            if (val) return "✔";               
-            return "";                          
-          });
+    console.log('rawData', roomID, subjectID, school_yearID, attendanceDate);
+
+    let newData;
+    let updatedRow;
+    if (attendance === true) {
+      newData = await this.transformSchoolForm2(rawData, month);
+      updatedRow = newData.rows.map((row) => {
+        return row.map((val, idx) => {
+          // First column is student_name, last two are absent/tardy counters → keep them as-is
+          if (idx === 0 || idx >= row.length - 2) return val;
+          if (val === '0') return '✖';
+          if (val === '3') return '▨';
+          if (val === '2') return '◻';
+          if (val) return '✔';
+          return '';
         });
-        
-         }
+      });
+    }
 
+    let headerImg = join(process.cwd(), '/static/img/header.png');
+    let footerImg = join(process.cwd(), '/static/img/footer.png');
 
-
-        let headerImg = join(process.cwd(), '/static/img/header.png');
-        let footerImg = join(process.cwd(), '/static/img/footer.png');
-        
-        // let headerImg = join(process.cwd(), '/../static/img/header.png');
-        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
-        const data = [
-        {
+    // let headerImg = join(process.cwd(), '/../static/img/header.png');
+    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    const data = [
+      {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
         // footer_img: this.base64_encode(footerImg, 'headerfooter'),
-        schoolYear:schoolYear,
-        teacherData:teacherData,
-        rawData:newData,
-        updatedRow:updatedRow,
-        month:month
-  
-        },
+        schoolYear: schoolYear,
+        teacherData: teacherData,
+        rawData: newData,
+        updatedRow: updatedRow,
+        month: month,
+      },
     ];
     try {
-      const browser = await puppeteer.launch({ 
+      const browser = await puppeteer.launch({
         headless: 'new',
-        args: ['--no-sandbox']
+        args: ['--no-sandbox'],
       });
       const page = await browser.newPage();
       // compile(template_name, data)
@@ -1062,158 +1060,167 @@ convertTo24Hour(time: string): number {
     } catch (e) {
       console.log(e);
     }
-}
- 
-async transformSchoolForm2(data: any[], selectedMonth: string) {
-  const allDates = [...new Set(
-    data.flatMap(d => Object.keys(d).filter(k => k !== "student_name"))
-  )].sort();
+  }
 
-  const months: Record<string, number[]> = {};
-  allDates.forEach(dateStr => {
-    const date = new Date(dateStr);
-    const monthName = date.toLocaleString("default", { month: "long" });
-    const year = date.getFullYear();
-    const month = date.getMonth();
+  async transformSchoolForm2(data: any[], selectedMonth: string) {
+    const allDates = [
+      ...new Set(
+        data.flatMap((d) => Object.keys(d).filter((k) => k !== 'student_name')),
+      ),
+    ].sort();
 
-    if (monthName === selectedMonth) {
-      const totalDays = new Date(year, month + 1, 0).getDate();
+    const months: Record<string, number[]> = {};
+    allDates.forEach((dateStr) => {
+      const date = new Date(dateStr);
+      const monthName = date.toLocaleString('default', { month: 'long' });
+      const year = date.getFullYear();
+      const month = date.getMonth();
 
-      if (!months[monthName]) {
-        months[monthName] = Array.from({ length: totalDays }, (_, i) => i + 1);
+      if (monthName === selectedMonth) {
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        if (!months[monthName]) {
+          months[monthName] = Array.from(
+            { length: totalDays },
+            (_, i) => i + 1,
+          );
+        }
       }
-    }
-  });
-
-  const headers = [
-    { type: "fixed", label: "Learner's Name" },
-    ...Object.entries(months).map(([month, days]) => ({
-      type: "month",
-      month: "1st row for date of " + month,
-      days
-    })),
-    { type: "fixed", label: "Absent" },
-    { type: "fixed", label: "Present" }
-  ];
-
-  const rows = data.map(d => {
-    const row: (string | number)[] = [d.student_name];
-    let absent = 0, present = 0;
-
-    Object.entries(months).forEach(([month, days]) => {
-      days.forEach(day => {
-        const year = new Date(allDates[0]).getFullYear(); // take year from dataset
-        const monthIndex = new Date(`${month} 1, ${year}`).getMonth();
-        const dateStr = `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-
-        const val = d[dateStr] ?? "";
-        row.push(val);
-
-        if (val === "0") absent++;
-        if (val === "1") present++;
-      });
     });
 
-    // row.push(absent, tardy);
-    row.push(absent,present);
-    return row;
-  });
+    const headers = [
+      { type: 'fixed', label: "Learner's Name" },
+      ...Object.entries(months).map(([month, days]) => ({
+        type: 'month',
+        month: '1st row for date of ' + month,
+        days,
+      })),
+      { type: 'fixed', label: 'Absent' },
+      { type: 'fixed', label: 'Present' },
+    ];
 
-  return { headers, rows };
-}
+    const rows = data.map((d) => {
+      const row: (string | number)[] = [d.student_name];
+      let absent = 0,
+        present = 0;
 
-  async getAllStudenList(filter:number, id:number, grade:string){
+      Object.entries(months).forEach(([month, days]) => {
+        days.forEach((day) => {
+          const year = new Date(allDates[0]).getFullYear(); // take year from dataset
+          const monthIndex = new Date(`${month} 1, ${year}`).getMonth();
+          const dateStr = `${year}-${String(monthIndex + 1).padStart(
+            2,
+            '0',
+          )}-${String(day).padStart(2, '0')}`;
+
+          const val = d[dateStr] ?? '';
+          row.push(val);
+
+          if (val === '0') absent++;
+          if (val === '1') present++;
+        });
+      });
+
+      // row.push(absent, tardy);
+      row.push(absent, present);
+      return row;
+    });
+
+    return { headers, rows };
+  }
+
+  async getAllStudenList(filter: number, id: number, grade: string) {
     let rawData_male = await this.dataSource.manager
       .createQueryBuilder(StudentList, 'SL')
       .select([
-        "*",
-        "SL.id as studentListId",
-       "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",  
-        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
-            ])
+        '*',
+        'SL.id as studentListId',
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name",
+      ])
       .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
       .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
-      .where('SL.school_yearId = "'+filter+'"')
+      .where('SL.school_yearId = "' + filter + '"')
       .andWhere('ES.sex = "Male"')
-      .andWhere('SL.grade_level = "'+grade+'"')
-      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('SL.grade_level = "' + grade + '"')
+      .andWhere('SL.roomId = "' + id + '"')
       .andWhere('ES.statusEnrolled = 1')
       .orderBy('ES.lname')
       .getRawMany();
     let count_male = await this.dataSource.manager
       .createQueryBuilder(StudentList, 'SL')
       .select([
-        "*",
-        "SL.id as studentListId",
-       "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name", 
-        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
-            ])
+        '*',
+        'SL.id as studentListId',
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name",
+      ])
       .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
       .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
-      .where('SL.school_yearId = "'+filter+'"')
+      .where('SL.school_yearId = "' + filter + '"')
       .andWhere('ES.sex = "Male"')
-      .andWhere('SL.grade_level = "'+grade+'"')
-      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('SL.grade_level = "' + grade + '"')
+      .andWhere('SL.roomId = "' + id + '"')
       .andWhere('ES.statusEnrolled = 1')
       .orderBy('ES.lname')
       .getCount();
 
-       let rawData_female = await this.dataSource.manager
+    let rawData_female = await this.dataSource.manager
       .createQueryBuilder(StudentList, 'SL')
       .select([
-        "*",
-        "SL.id as studentListId",
-        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name", 
-        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
-            ])
+        '*',
+        'SL.id as studentListId',
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name",
+      ])
       .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
       .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
-      .where('SL.school_yearId = "'+filter+'"')
+      .where('SL.school_yearId = "' + filter + '"')
       .andWhere('ES.sex = "Female"')
-      .andWhere('SL.grade_level = "'+grade+'"')
-      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('SL.grade_level = "' + grade + '"')
+      .andWhere('SL.roomId = "' + id + '"')
       .andWhere('ES.statusEnrolled = 1')
       .orderBy('ES.lname')
       .getRawMany();
 
-      let count_female = await this.dataSource.manager
+    let count_female = await this.dataSource.manager
       .createQueryBuilder(StudentList, 'SL')
       .select([
-        "*",
-        "SL.id as studentListId",
-        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name", 
-        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name", 
-            ])
+        '*',
+        'SL.id as studentListId',
+        "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.lname, ' ',SUBSTRING(ES.mname, 1, 1) ,' ',ES.fname) ,concat(ES.lname, ' ', ES.fname)) as name",
+        "IF (!ISNULL(ES.guardian_mname)  AND LOWER(ES.guardian_mname) != 'n/a', concat(ES.guardian_fname, ' ',SUBSTRING(ES.guardian_mname, 1, 1) ,' ',ES.guardian_lname) ,concat(ES.guardian_fname, ' ', ES.guardian_lname)) as guardian_name",
+      ])
       .leftJoin(RoomsSection, 'room', 'room.id = SL.roomId')
       .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
-      .where('SL.school_yearId = "'+filter+'"')
+      .where('SL.school_yearId = "' + filter + '"')
       .andWhere('ES.sex = "Female"')
-      .andWhere('SL.grade_level = "'+grade+'"')
-      .andWhere('SL.roomId = "'+id+'"')
+      .andWhere('SL.grade_level = "' + grade + '"')
+      .andWhere('SL.roomId = "' + id + '"')
       .andWhere('ES.statusEnrolled = 1')
       .orderBy('ES.lname')
       .getCount();
 
-        let headerImg = join(process.cwd(), '/static/img/header.png');
-        let footerImg = join(process.cwd(), '/static/img/footer.png');
-        
-        // let headerImg = join(process.cwd(), '/../static/img/header.png');
-        // let footerImg = join(process.cwd(), '/../static/img/footer.png');
-        const data = [
-        {
+    let headerImg = join(process.cwd(), '/static/img/header.png');
+    let footerImg = join(process.cwd(), '/static/img/footer.png');
+
+    // let headerImg = join(process.cwd(), '/../static/img/header.png');
+    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    const data = [
+      {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
         footer_img: this.base64_encode(footerImg, 'headerfooter'),
-        rawData_male:rawData_male ? rawData_male:[],
-        rawData_female:rawData_female ? rawData_female:[],
+        rawData_male: rawData_male ? rawData_male : [],
+        rawData_female: rawData_female ? rawData_female : [],
         count_male,
         count_female,
-        total_student:count_female+ count_male
-        },
+        total_student: count_female + count_male,
+      },
     ];
     try {
-      const browser = await puppeteer.launch({ 
+      const browser = await puppeteer.launch({
         headless: 'new',
-        args: ['--no-sandbox']
+        args: ['--no-sandbox'],
       });
       const page = await browser.newPage();
       // compile(template_name, data)
@@ -1230,11 +1237,11 @@ async transformSchoolForm2(data: any[], selectedMonth: string) {
         },
         landscape: false,
         printBackground: true,
-        });
+      });
       await browser.close();
       return buffer;
     } catch (e) {
       console.log(e);
     }
-}
+  }
 }
