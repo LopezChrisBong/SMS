@@ -1,9 +1,8 @@
-e
 <template>
   <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
-        <div class="pa-3">
+        <div class="pa-3" v-if="roomList.length > 0">
           <v-autocomplete
             v-model="classRoom"
             item-text="room_section"
@@ -15,6 +14,9 @@ e
             :items="roomList"
             @change="changeRoom"
           ></v-autocomplete>
+        </div>
+        <div v-else class="pa-3">
+          {{ roomData ? roomData.room_section : "" }}
         </div>
       </v-col>
       <v-spacer></v-spacer>
@@ -55,18 +57,46 @@ e
         @pagination="pagination"
         hide-default-footer
       >
-        <!-- <template v-slot:[`item.actions`]="{ item }">
-          <v-btn
-            class="mx-2 gboFontsTable"
-            small
-            color="green"
-            outlined
-            @click="viewItem(item)"
+        <template v-slot:[`item.status`]="{ item }">
+          <v-menu
+            offset-y
+            top
+            :value="activeMenu === item.id"
+            @input="(val) => (activeMenu = val ? item.id : null)"
+            :close-on-content-click="false"
           >
-            <v-icon class="gboFontsTable" size="20">mdi-pencil</v-icon>
-            Attendance
-          </v-btn>
-        </template> -->
+            <template v-slot:activator="{ on, attrs }">
+              <v-chip
+                v-bind="attrs"
+                v-on="on"
+                class="chip-status-4 white--text"
+                :color="
+                  item.status == 1 ? 'blue' : item.status == 2 ? 'green' : 'red'
+                "
+                small
+                v-if="item.status != null"
+              >
+                <span>
+                  {{
+                    item.status == 1
+                      ? "Transferred"
+                      : item.status == 2
+                      ? "Drop"
+                      : "Dead"
+                  }}
+                </span>
+              </v-chip>
+            </template>
+
+            <v-card width="250">
+              <v-card-title class="text-subtitle-2"> Remarks </v-card-title>
+
+              <v-card-text>
+                {{ item.remarks || "No remarks available" }}
+              </v-card-text>
+            </v-card>
+          </v-menu>
+        </template>
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
@@ -158,8 +188,16 @@ export default {
   },
   data: () => ({
     search: "",
+    activeMenu: null,
     headers: [
       { text: "Student Name", value: "name", align: "start" },
+      {
+        text: "Status",
+        value: "status",
+        align: "center",
+        sortable: false,
+        width: 200,
+      },
       {
         text: "Sex",
         value: "sex",

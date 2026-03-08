@@ -20,7 +20,7 @@
                 <v-list-item-title
                   color="#808191"
                   class="grey--text px-2 py-3 py-3 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
-                  >Overall Enrolled Student
+                  >Overall Enrolled Student / For Verification
                 </v-list-item-title>
               </v-col>
             </v-row>
@@ -30,20 +30,53 @@
           <v-card class="card-style" style="margin-top: 10pt">
             <v-row>
               <v-col cols="12" class="pt-16 text-center">
-                <p class="text-h1">15</p>
+                <p class="text-h1">
+                  {{
+                    this.$store.state.user.user.assignedModuleID == 3
+                      ? totalStudent
+                      : totalStudentElementary
+                  }}
+                </p>
               </v-col>
               <v-col cols="12 ">
                 <v-divider></v-divider>
                 <v-list-item-title
                   color="#808191"
                   class="grey--text px-2 py-3 py-3 text-subtitle-1 font-weight-medium w-full d-flex justify-center"
-                  >Average Number of Enrollees per Day per Year Level
+                  >Projected Enrollment (Next SY)
                 </v-list-item-title>
               </v-col>
             </v-row>
           </v-card>
         </v-col>
-
+        <v-col lg="6" xl="6" md="6" sm="12" xs="12">
+          <ForecastLineChart
+            :forecastData="
+              $store.state.user.user.assignedModuleID == 3
+                ? forecastData
+                : forecastDataElementary
+            "
+          />
+        </v-col>
+        <v-col lg="6" xl="6" md="6" sm="12" xs="12"
+          ><ForecastBarChart
+            :forecastData="
+              $store.state.user.user.assignedModuleID == 3
+                ? forecastData
+                : forecastDataElementary
+            "
+        /></v-col>
+        <v-col cols="12">
+          <div class="d-flex justify-center">
+            <ForecastGradeBarChart
+              :forecastData="
+                $store.state.user.user.assignedModuleID == 3
+                  ? forecastData
+                  : forecastDataElementary
+              "
+            />
+          </div>
+        </v-col>
         <v-col lg="6" xl="6" md="6" sm="12" xs="12">
           <v-card class="card-style">
             <v-row>
@@ -79,7 +112,7 @@
           </v-card>
         </v-col>
 
-        <v-col lg="6" xl="6" md="6" sm="12" xs="12">
+        <!-- <v-col lg="6" xl="6" md="6" sm="12" xs="12">
           <v-card class="card-style">
             <v-row>
               <v-col cols="12" class="pt-16">
@@ -96,12 +129,12 @@
               </v-col>
             </v-row>
           </v-card>
-        </v-col>
-        <v-col lg="6" xl="6" md="6" sm="12" xs="12">
+        </v-col> -->
+        <v-col cols="12">
           <v-card class="card-style">
             <v-row>
               <v-col cols="12" class="pt-16">
-                <AreaChart :data="maleFemale" />
+                <AreaChart />
               </v-col>
               <v-col cols="12 ">
                 <v-divider></v-divider>
@@ -124,18 +157,26 @@
 import PieChart from "../../components/Charts/NewCharts/Pie.vue";
 import PieChart1 from "../../components/Charts/NewCharts/Bar.vue";
 import AreaChart from "../../components/Charts/AreaChart.vue";
-import LineChartVue from "../../components/Charts/LineChart.vue";
+// import LineChartVue from "../../components/Charts/LineChart.vue";
+import ForecastLineChart from "../../components/Charts/ForecastLineChart.vue";
+import ForecastBarChart from "../../components/Charts/ForecastBarChart.vue";
+import ForecastGradeBarChart from "../../components/Charts/ForecastGradeBarChart.vue";
 export default {
   components: {
     PieChart,
     PieChart1,
     AreaChart,
-    LineChartVue,
+    // LineChartVue,
+    ForecastLineChart,
+    ForecastBarChart,
+    ForecastGradeBarChart,
   },
   data: () => ({
     mini: false,
     upcoming_bdays: [],
     hasUpcomingBday: false,
+    forecastData: [],
+    forecastDataElementary: [],
     head_data: {},
     dispatchWorks: null,
     cancelledWorks: null,
@@ -152,8 +193,11 @@ export default {
     today: null,
     activeCalendar: null,
     tracked: {},
+    totalStudent: null,
+    totalStudentElementary: null,
     teaching: null,
     nonTeaching: null,
+    demographics: [],
     isCalendarFocus: false,
     bdays: [],
     colors: ["#1867c0", "#fb8c00", "#000000"],
@@ -185,11 +229,65 @@ export default {
       return map;
     },
   },
+  watch: {
+    "$store.getters.getFilterSelected"() {
+      this.initialize();
+    },
+  },
   methods: {
     initialize() {
       this.getTeachingNonTeachingCount();
       this.getMaleFemaleCount();
       this.getTotalEnrolledStudent();
+
+      const moduleID = Number(this.$store.state.user.user.assignedModuleID);
+
+      if (moduleID === 3 || moduleID === 21) {
+        // this.getEnrollmentSummary();
+        // this.getEnrollmentElementarySummary();
+        this.getDataForForcastingHighSchool();
+        this.getDataForForcastingElementary();
+      }
+    },
+    getEnrollmentSummary() {
+      this.axiosCall("/enroll-student/generate", "POST", {}).then((res) => {
+        if (res) {
+          console.log(res.data);
+        }
+      });
+    },
+    getEnrollmentElementarySummary() {
+      this.axiosCall("/enroll-student/generateElementary", "POST", {}).then(
+        (res) => {
+          if (res) {
+            console.log(res.data);
+          }
+        },
+      );
+    },
+    getDataForForcastingHighSchool() {
+      this.axiosCall(
+        "/enroll-student/getDataForForcastingHighSchool",
+        "GET",
+      ).then((res) => {
+        if (res) {
+          // console.log("getDataForForcastingHighSchool", res.data);
+          this.forecastData = res.data;
+          this.totalStudent = res.data[1].totalStudents;
+        }
+      });
+    },
+    getDataForForcastingElementary() {
+      this.axiosCall(
+        "/enroll-student/getDataForForcastingElementary",
+        "GET",
+      ).then((res) => {
+        if (res) {
+          console.log("getDataForForcastingElementary", res.data);
+          this.forecastDataElementary = res.data;
+          this.totalStudentElementary = res.data[1].totalStudents;
+        }
+      });
     },
 
     getDayOnDate() {
@@ -209,109 +307,6 @@ export default {
     open(event) {
       alert(event.title);
     },
-    // getUpComingBdays() {
-    //   this.axiosCall("/user-details/getBdayToday", "GET").then(
-    //     (res) => {
-    //       if (res) {
-    //         this.today = res.data.today;
-    //         this.activeCalendar = res.data.today;
-    //         this.tracked = res.data.data;
-    //         console.log("tracked", this.tracked);
-    //       }
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // },
-
-    // shiftCalendar(move) {
-    //   this.isCalendarFocus = false;
-    //   let date = new Date(this.activeCalendar);
-    //   if (move == "prev") {
-    //     date.setMonth(date.getMonth() - 1);
-    //   } else {
-    //     date.setMonth(date.getMonth() + 1);
-    //   }
-    //   this.activeCalendar = date.toLocaleDateString();
-
-    //   this.axiosCall("/user-details/shiftCalendar/" + date, "GET").then(
-    //     (res) => {
-    //       if (res) {
-    //         this.today = res.data.today;
-    //         this.tracked = res.data.data;
-    //       }
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // },
-
-    // getMyDirectHead() {
-    //   this.axiosCall("/user-details/getMyDirectHead", "GET").then(
-    //     (res) => {
-    //       console.log(res.data);
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // },
-
-    // getMyDirectHeadCount() {
-    //   this.axiosCall("/my-direct-head/getMyDirectHeadCount", "GET").then(
-    //     (res) => {
-    //       if (res.data) {
-    //         this.getIfHasDirectHead();
-    //         Object.assign(this.head_data, { should_open: false });
-    //       } else {
-    //         this.getIfHasDirectHead();
-    //         Object.assign(this.head_data, { should_open: true });
-    //       }
-    //     }
-    //   );
-    // },
-
-    // getIfHasDirectHead() {
-    //   this.axiosCall("/my-direct-head/getIfHasDirectHead", "GET").then(
-    //     (res) => {
-    //       console.log("hasdirecthead", res.data);
-    //       this.head_data = res.data;
-    //     }
-    //   );
-    // },
-
-    // getEmployeeStats() {
-    //   this.axiosCall("/user-details/getEmployeeStats", "GET").then(
-    //     (res) => {
-    //       if (res.data) {
-    //         this.datas = {
-    //           label: [
-    //             "Permanent",
-    //             "Temporary",
-    //             "Casual",
-    //             "COS",
-    //             "JO",
-    //             "Coterminous",
-    //           ],
-
-    //           data: [
-    //             res.data.permanent,
-    //             res.data.temporary,
-    //             res.data.casual,
-    //             res.data.COS,
-    //             res.data.JO,
-    //             res.data.coterminous,
-    //           ],
-    //         };
-    //       }
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // },
 
     getMaleFemaleCount() {
       this.axiosCall("/user-details/getMaleFemaleCount", "GET").then(
@@ -361,6 +356,7 @@ export default {
           if (res.data) {
             console.log("Data Enroled", res.data.enrolledData);
             console.log("Data Verify", res.data.verifyData);
+            this.demographics = res.data;
             this.enrollData = res.data.enrolledData;
             this.verifyData = res.data.verifyData;
           }

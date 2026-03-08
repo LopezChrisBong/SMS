@@ -18,7 +18,7 @@
         <v-card outlined class="pa-3">
           <v-card-title>
             <v-icon color="primary" class="mr-2">mdi-book-open-variant</v-icon>
-            <span class="text-h6">{{ subject.name }}</span>
+            <span class="text-h6">{{ subject.subject_title }}</span>
           </v-card-title>
 
           <v-card-text>
@@ -44,7 +44,13 @@
           <v-divider></v-divider>
 
           <v-card-actions>
-            <v-btn text small color="primary" @click="viewSubject(subject)">
+            <v-btn
+              text
+              small
+              color="primary"
+              :to="'/' + 'employee/my-student-record'"
+              router
+            >
               <v-icon small left>mdi-eye</v-icon>
               View Details
             </v-btn>
@@ -60,36 +66,33 @@ export default {
   name: "TeacherDashboard",
   data() {
     return {
-      subjects: [
-        {
-          id: 1,
-          name: "Mathematics 10",
-          present: 25,
-          absent: 5,
-        },
-        {
-          id: 2,
-          name: "Science 9",
-          present: 28,
-          absent: 2,
-        },
-        {
-          id: 3,
-          name: "English 8",
-          present: 27,
-          absent: 3,
-        },
-      ],
+      subjects: [],
     };
   },
+  mounted() {
+    this.getMySubjectList();
+  },
   methods: {
-    viewSubject(subject) {
-      // This could navigate to subject details
-      console.log("Viewing subject:", subject);
-      this.$router.push({
-        name: "SubjectAttendance",
-        params: { id: subject.id },
-      });
+    async getMySubjectList() {
+      const res = await this.axiosCall("/subjects/getMySubjects", "GET");
+
+      if (res.data && res.data.length > 0) {
+        let data = res.data;
+
+        // Flatten if needed
+        if (Array.isArray(data[0])) {
+          data = data[0];
+        }
+
+        // Format titles + mark first as active
+        data = data.map((item, index) => ({
+          ...item,
+          subject_title: this.toTitleCase(item.subject_title),
+          active: index === 0,
+        }));
+        this.subjects = data;
+        console.log(data);
+      }
     },
   },
 };

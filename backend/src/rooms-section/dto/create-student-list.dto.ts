@@ -15,4 +15,13 @@ export class CreateStudentListDto {
 
   @ApiProperty()
   strandId: number;
+
+  @ApiProperty()
+  status: number;
+
+  @ApiProperty()
+  remarks: string;
+
+  @ApiProperty()
+  data: string;
 }

@@ -20,6 +20,7 @@ import { CreateAddStudentRoomDto } from './dto/create-add-student-room.dto';
 import { CreateStudentAttendanceDto } from './dto/create-student-attendance.dto';
 import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
 import { currentUser } from 'src/shared/jwtDecode';
+import { UpdateStudentListDto } from './dto/update-student-list.dto';
 @Controller('rooms-section')
 export class RoomsSectionController {
   constructor(private readonly roomsSectionService: RoomsSectionService) {}
@@ -56,20 +57,18 @@ export class RoomsSectionController {
     return this.roomsSectionService.genStrandRecord(grade, +filter, +strand);
   }
 
-  @Post('updateAddRecords/:grade/:sy/:room/:data')
+  @Post('updateAddRecords/:grade/:sy/:room')
   updateAddRecords(
     @Body() createStudentListDto: CreateStudentListDto,
     @Param('grade') grade: string,
     @Param('sy') sy: string,
     @Param('room') room: string,
-    @Param('data') data: string,
   ) {
     return this.roomsSectionService.updateAddRecords(
       createStudentListDto,
       grade,
       +sy,
       +room,
-      data,
     );
   }
 
@@ -243,6 +242,28 @@ export class RoomsSectionController {
     @Body() updateAddStrandDto: UpdateAddStrandDto,
   ) {
     return this.roomsSectionService.updateStrand(+id, updateAddStrandDto);
+  }
+
+  @Patch('updateStudentList/:id')
+  updateStudentList(
+    @Param('id') id: string,
+    @Body() updateStudentListDto: UpdateStudentListDto,
+  ) {
+    return this.roomsSectionService.updateStudentList(
+      +id,
+      updateStudentListDto,
+    );
+  }
+
+  @Patch('updateStudentStatus/:id')
+  updateStudentStatus(
+    @Param('id') id: string,
+    @Body() updateStudentListDto: UpdateStudentListDto,
+  ) {
+    return this.roomsSectionService.updateStudentStatus(
+      +id,
+      updateStudentListDto,
+    );
   }
 
   @Delete(':id')

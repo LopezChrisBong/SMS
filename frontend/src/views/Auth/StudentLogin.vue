@@ -144,8 +144,8 @@
             class="text-justify text-body-1 mb-4 pa-2"
             style="border: 1px solid orange; border-radius: 10px"
           >
-            Please select grade level accordingly beacuse it is the basis for
-            your enrollment.
+            Please select the appropriate grade level, as it will serve as the
+            basis for your enrollment.
           </div>
           <div class="pa-6">
             <v-btn

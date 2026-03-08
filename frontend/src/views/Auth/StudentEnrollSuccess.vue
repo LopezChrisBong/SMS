@@ -6,7 +6,7 @@
           <v-card max-width="500" class="rounded-card">
             <div class="justify-center pa-4">
               <h3 style="color: #f5b027; width: 70%" class="mb-4 mt-4">
-                You have successfully submitted your partial enrollment form!
+                You have successfully submitted your enrollment form!
               </h3>
               <p
                 class="text-caption text-gray-100"
@@ -28,13 +28,7 @@
 
             <v-col cols="12" class="pa-0">
               <div
-                class="
-                    d-flex
-                    justify-center
-                    pt-8
-                    pb-3
-                    text-caption text-gray-100
-                  "
+                class="d-flex justify-center pt-8 pb-3 text-caption text-gray-100"
               >
                 <!-- Already have an account?
                    <router-link class="pl-2" to="/login"> Sign In</router-link> -->

@@ -1,0 +1,9 @@
+CREATE TABLE student_enrollment_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    school_yearId INT,
+    LRN VARCHAR(50),
+    grade_level VARCHAR(50),
+    statusEnrolled INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

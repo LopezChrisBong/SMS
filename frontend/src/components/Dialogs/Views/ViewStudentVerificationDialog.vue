@@ -21,6 +21,19 @@
           <v-card-text style="max-height: 700px" class="my-5">
             <v-row class="ma-5">
               <v-col cols="12">
+                <v-text-field
+                  outlined
+                  dense
+                  v-model="lrn"
+                  :rules="action == 'View' ? [] : [formRules.required]"
+                  chips
+                  :readonly="readonly"
+                  small-chips
+                  label="LRN / Student ID"
+                  color="#6DB249"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
                 <div>
                   <h3>
                     <strong>Personal Information</strong>
@@ -38,8 +51,6 @@
                   small-chips
                   label="Firstname"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -52,8 +63,6 @@
                   small-chips
                   label="Middle Name"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -67,8 +76,6 @@
                   small-chips
                   label="Last Name"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -81,8 +88,6 @@
                   small-chips
                   label="Suffix"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -96,8 +101,6 @@
                   small-chips
                   label="Birth Date"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -111,8 +114,6 @@
                   small-chips
                   label="Birth Place"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -126,8 +127,6 @@
                   small-chips
                   label="Sex"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -141,8 +140,6 @@
                   small-chips
                   label="Civil Status"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -155,8 +152,6 @@
                   small-chips
                   label="Height(m)"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -169,8 +164,6 @@
                   small-chips
                   label="Weight(kg)"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -183,8 +176,6 @@
                   small-chips
                   label="Blood Type"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -199,8 +190,6 @@
                   small-chips
                   label="Citizenship"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -213,8 +202,6 @@
                   small-chips
                   label="IP's Member"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -227,8 +214,6 @@
                   small-chips
                   label="4P's Member"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -242,8 +227,6 @@
                   small-chips
                   label="Mobile No."
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -256,8 +239,6 @@
                   small-chips
                   label="Email Address"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -270,8 +251,6 @@
                   small-chips
                   label="Disability"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <!--Address-->
@@ -293,8 +272,6 @@
                   small-chips
                   label="House Number"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -309,8 +286,6 @@
                   small-chips
                   label="Street"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -325,8 +300,6 @@
                   small-chips
                   label="Subdivision / Village"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -341,8 +314,6 @@
                   small-chips
                   label="Barangay"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -356,8 +327,6 @@
                   small-chips
                   label="Municipality / City"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -371,8 +340,6 @@
                   small-chips
                   label="Province"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -387,8 +354,6 @@
                   small-chips
                   label="Zip Code"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <!--Family-->
@@ -409,8 +374,6 @@
                   small-chips
                   label="Fathers Firstname"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -423,8 +386,6 @@
                   small-chips
                   label="Fathers Middlename"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -438,8 +399,6 @@
                   small-chips
                   label="Fathers Lastname"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -453,8 +412,6 @@
                   small-chips
                   label="Fathers Contact Number"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -468,8 +425,6 @@
                   small-chips
                   label="Mothers Firtsname "
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -483,8 +438,6 @@
                   small-chips
                   label="Mothers Middlename "
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -498,8 +451,6 @@
                   small-chips
                   label="Mothers Lastname "
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -513,8 +464,6 @@
                   small-chips
                   label="Mothers Contact Number "
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -529,8 +478,6 @@
                   small-chips
                   label="Guardians Firstname"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -545,8 +492,6 @@
                   small-chips
                   label="Guardians Middlename"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -561,8 +506,6 @@
                   small-chips
                   label="Guardians Lastname"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
 
@@ -577,8 +520,6 @@
                   small-chips
                   label="Guardians Contact Number"
                   color="#6DB249"
-                  v-bind="attrs"
-                  v-on="on"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
@@ -756,7 +697,9 @@ export default {
       disability: null,
       disability_desc: null,
       email: null,
+      edit: false,
       father_fname: null,
+      lrn: null,
       father_lname: null,
       father_mname: null,
       father_number: null,
@@ -832,6 +775,7 @@ export default {
           this.disability = data.disability;
           this.disability_desc = data.disability_desc;
           this.email = data.email;
+          this.lrn = data.LRN;
           this.father_fname = data.father_fname;
           this.father_lname = data.father_lname;
           this.father_mname = data.father_mname;
@@ -964,6 +908,7 @@ export default {
           transfered: this.transfered,
           weight: this.weight,
           update_type: 2,
+          LRN: this.lrn,
         };
 
         this.axiosCall(
