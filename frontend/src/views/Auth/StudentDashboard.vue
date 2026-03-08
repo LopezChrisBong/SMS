@@ -62,10 +62,15 @@
         <p>Loading, please wait...</p>
       </div>
       <v-card class="pa-6 mt-6" rounded="xl" v-if="pageItem == 1">
-        <h3 class="font-weight-bold mb-4">
+        <h3 class="font-weight-bold mb-4" v-if="schedule">
           My Schedule {{ roomData ? roomData.grade_level : "" }}
-          {{ roomData ? roomData.room_section : "" }}
+          {{ roomData ? roomData.room_section : "" }} <br />
+          Adviser:
+          <span class="text-uppercase">{{
+            advisorName ? advisorName.name : ""
+          }}</span>
         </h3>
+        <h3 v-else>You are not Enrolled to the current school year!</h3>
 
         <v-data-table
           :headers="headers"
@@ -99,6 +104,7 @@ export default {
     return {
       drawer: true,
       mini: false,
+      advisorName: null,
       roomData: null,
       loadingState: false,
       studentData: null,
@@ -174,6 +180,7 @@ export default {
           console.log(res.data);
           this.schedule = res.data.data;
           this.roomData = res.data.roomData;
+          this.advisorName = res.data.adviser;
           this.loading = false;
         }
       });
