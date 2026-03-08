@@ -44,11 +44,12 @@
 
             <!-- Search Button -->
             <v-btn
+              large
               color="#f5b027"
               class="white--text rounded-lg"
               @click="searchStudent()"
             >
-              <v-icon left small>mdi-magnify</v-icon>
+              <v-icon left>mdi-magnify</v-icon>
               Search
             </v-btn>
           </div>
@@ -803,19 +804,25 @@
       </v-card>
 
       <!-- ================= ACTION BUTTONS ================= -->
-      <v-row class="mt-8">
-        <v-col cols="12" md="6" v-if="action != 'Update'">
-          <v-btn block large color="grey lighten-2" @click="confirmSave(1)">
+      <v-row class="mt-8 d-flex justify-center">
+        <v-col cols="auto" v-if="action != 'Update'" class="">
+          <v-btn
+            large
+            color="grey lighten-2"
+            class="rounded-lg"
+            min-width="220"
+            @click="confirmSave(1)"
+          >
             Save Draft
           </v-btn>
         </v-col>
 
-        <v-col cols="12" md="6">
+        <v-col cols="auto">
           <v-btn
-            block
             large
             color="#f5b027"
-            class="white--text"
+            min-width="220"
+            class="white--text rounded-lg"
             @click="confirmSave(2)"
           >
             Submit Enrollment

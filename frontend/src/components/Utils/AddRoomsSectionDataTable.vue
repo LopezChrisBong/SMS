@@ -32,9 +32,11 @@
           &nbsp;Generate Class List
         </v-btn> -->
       </v-col>
-      <v-col cols="12" md="8" class="flex-items justify-end">
+      <v-col cols="12" md="8" class="d-flex justify-end">
         <v-btn
-          class="white--text ml-2 rounded-lg gboFonts"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts mr-2"
           :class="
             generatedCount != 0
               ? 'd-none'
@@ -45,23 +47,24 @@
               : ''
           "
           :color="$vuetify.theme.themes.light.submitBtns"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          v-if="$store.state.user.user.isAdminApproved == 1"
           :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           @click="generateClassRecord()"
         >
-          <v-icon left> mdi-database-check-outline </v-icon>
+          <v-icon left>mdi-database-check-outline</v-icon>
           Generate Class List
         </v-btn>
+
         <v-btn
           height="40"
           style="width: auto; background-color: #f5b027"
           class="white--text rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
-          v-if="this.$store.state.user.user.isAdminApproved == 1"
+          v-if="$store.state.user.user.isAdminApproved == 1"
           :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           @click="add()"
         >
-          <v-icon class="gboFonts" left> mdi-plus-box-outline </v-icon>
+          <v-icon class="gboFonts" left>mdi-plus-box-outline</v-icon>
           Add New
         </v-btn>
       </v-col>
@@ -1098,12 +1101,12 @@ export default {
 
 .gboFontsTab {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

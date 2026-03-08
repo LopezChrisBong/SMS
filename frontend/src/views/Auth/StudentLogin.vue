@@ -132,50 +132,59 @@
       </v-col>
     </v-row>
     <v-dialog v-model="openModalEnroll" persistent max-width="400">
-      <v-card class="rounded-xl pa-2">
-        <v-card-title class="d-flex align-center gap-2 pb-2">
-          <span class="text-h6 font-weight-bold"> Select Grade Level </span>
+      <v-card class="rounded-xl">
+        <!-- TITLE -->
+        <v-card-title class="text-h6 font-weight-medium">
+          Select Grade Level
         </v-card-title>
 
         <v-divider></v-divider>
 
-        <v-card-text class="py-3">
+        <!-- CONTENT -->
+        <v-card-text class="py-4">
           <div
-            class="text-justify text-body-1 mb-4 pa-2"
-            style="border: 1px solid orange; border-radius: 10px"
+            class="pa-3 mb-4 text-body-2"
+            style="
+              border: 1px solid #ffa726;
+              border-radius: 8px;
+              background: #fff8e1;
+            "
           >
-            Please select grade level accordingly beacuse it is the basis for
-            your enrollment.
+            Please select the appropriate grade level. This will serve as the
+            basis for your enrollment.
           </div>
-          <div class="pa-6">
-            <v-btn
-              @click="doEnroll('Elementary')"
-              block
-              color="orange"
-              class="white--text"
-              >elementary</v-btn
-            >
-            <v-btn
-              @click="doEnroll('High School')"
-              block
-              color="orange"
-              class="white--text my-6"
-              >high school</v-btn
-            >
-          </div>
+
+          <v-btn
+            @click="doEnroll('Elementary')"
+            block
+            color="orange"
+            class="white--text mb-3"
+          >
+            Elementary
+          </v-btn>
+
+          <v-btn
+            @click="doEnroll('High School')"
+            block
+            color="orange"
+            class="white--text"
+          >
+            High School
+          </v-btn>
         </v-card-text>
 
         <v-divider></v-divider>
 
-        <v-card-actions class="px-6 py-4">
-          <v-btn @click="openModalEnroll = false" outlined color="red"
-            >Close</v-btn
+        <!-- ACTION -->
+        <v-card-actions class="justify-end">
+          <v-btn
+            @click="openModalEnroll = false"
+            outlined
+            color="red"
+            class="rounded-lg"
           >
-          <v-spacer></v-spacer>
-
-          <!-- <v-btn @click="doEnroll()" color="pink" outlined>
-            Confirm
-          </v-btn> -->
+            Close
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -319,12 +319,12 @@ export default {
 
 .gboFontsTab {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

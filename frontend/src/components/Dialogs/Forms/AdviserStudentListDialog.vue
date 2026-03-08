@@ -59,13 +59,10 @@
                       ></v-autocomplete>
                     </v-col> -->
                 <v-col cols="12" class="elevation-1">
-                  <div class="d-flex flex-row-reverse">
+                  <div class="d-flex flex-row-reverse mb-2">
                     <v-btn
-                      style="width: 85pt"
-                      color="#f5b027"
-                      medium
-                      class="mb-2 ma-2 pa-2"
-                      outlined
+                      style="width: 90pt; background-color: #f5b027"
+                      class="white--text ml-2 rounded-lg"
                       @click="
                         data
                           ? data.grade_level == 'Grade 12'
@@ -75,18 +72,16 @@
                       "
                     >
                       <v-icon center medium> mdi-chart-line-variant </v-icon>
-                      <span class="gboFontsTab"> Upgrade</span>
+                      Upgrade
                     </v-btn>
+
                     <v-btn
-                      style="width: 85pt"
-                      color="#f5b027"
-                      medium
-                      class="mb-2 ma-2 pa-2"
-                      outlined
+                      style="width: 70pt; background-color: #f5b027"
+                      class="white--text ml-2 rounded-lg"
                       @click="employeeDialog = true"
                     >
-                      <v-icon size="25">mdi-plus</v-icon
-                      ><span class="gboFontsTab"> Add</span>
+                      <v-icon size="25">mdi-plus</v-icon>
+                      Add
                     </v-btn>
                   </div>
                   <v-data-table
@@ -104,7 +99,7 @@
                         <v-btn
                           small
                           color="red"
-                          class="mx-1 gboFontsTable"
+                          class="my-2 mx-2 gboFontsTable rounded-lg"
                           outlined
                           @click="deleteItem(item, index)"
                         >
@@ -123,7 +118,13 @@
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
 
-            <v-btn color="red" style="width: 85pt" outlined @click="closeD()">
+            <v-btn
+              color="red"
+              class="rounded-lg"
+              style="width: 85pt"
+              outlined
+              @click="closeD()"
+            >
               <v-icon>mdi-close-circle-outline</v-icon>
               <span class="gboFontsTab"> Cancel</span>
             </v-btn>
@@ -131,7 +132,7 @@
             <v-btn
               color="#f5b027"
               style="width: 85pt"
-              class="white--text"
+              class="white--text rounded-lg"
               @click="save()"
             >
               <v-icon>mdi-check-circle</v-icon>
@@ -146,11 +147,11 @@
       persistent
       eager
       scrollable
-      max-width="700px"
+      max-width="600px"
     >
       <v-form ref="employeeDialogForm" @submit.prevent>
-        <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+        <v-card class="rounded-xl">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>Add Student</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="employeeDialog = false">
@@ -167,7 +168,6 @@
                     multiple
                     small-chips
                     deletable-chips
-                    dense
                     outlined
                     required
                     label="Students"
@@ -186,12 +186,21 @@
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
 
-            <v-btn color="red" outlined @click="employeeDialog = false">
+            <v-btn
+              color="red"
+              class="rounded-lg"
+              outlined
+              @click="employeeDialog = false"
+            >
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
 
-            <v-btn color="#f5b027" class="white--text" @click="saveStudent()">
+            <v-btn
+              color="#f5b027"
+              class="white--text rounded-lg"
+              @click="saveStudent()"
+            >
               <v-icon>mdi-check-circle</v-icon>
               Save
             </v-btn>
@@ -205,11 +214,11 @@
       persistent
       eager
       scrollable
-      max-width="700px"
+      max-width="600px"
     >
       <v-form ref="updateClassListDialogForm" @submit.prevent>
-        <v-card>
-          <v-card-title dark class="dialog-header pt-5 pb-5 pl-6">
+        <v-card class="rounded-xl">
+          <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>Upgrade Class List</span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="updateClassListDialog = false">
@@ -223,7 +232,6 @@
                 <v-col cols="12">
                   <v-autocomplete
                     v-model="nextSchoolYear"
-                    dense
                     outlined
                     required
                     label="School Year"
@@ -237,7 +245,6 @@
                 <v-col cols="12">
                   <v-autocomplete
                     v-model="nextClass"
-                    dense
                     outlined
                     required
                     small-chips
@@ -278,12 +285,21 @@
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
 
-            <v-btn color="red" outlined @click="updateClassListDialog = false">
+            <v-btn
+              color="red"
+              class="rounded-lg"
+              outlined
+              @click="updateClassListDialog = false"
+            >
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
 
-            <v-btn color="#f5b027" class="white--text" @click="updateStudent()">
+            <v-btn
+              color="#f5b027"
+              class="white--text rounded-lg"
+              @click="updateStudent()"
+            >
               <v-icon>mdi-check-circle</v-icon>
               Save
             </v-btn>
@@ -586,7 +602,7 @@ export default {
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

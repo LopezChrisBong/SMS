@@ -26,7 +26,7 @@ e
           ></v-text-field>
           <v-btn
             class="white--text ml-2 rounded-lg"
-            color="orange"
+            color="#f5b027"
             @click="upgrade()"
           >
             <v-icon center medium> mdi-eye-outline </v-icon>
@@ -296,16 +296,24 @@ export default {
 
 .gboFontsTab {
   font-family: "Segoe UI" !important;
-  font-size: 12pt;
+  font-size: 11pt;
 }
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
-.custom-table :deep(th) {
+/* HEADER */
+.custom-table :deep(.v-data-table-header th) {
+  font-family: "Segoe UI" !important;
+  font-size: 13pt !important;
+  font-weight: 600 !important;
+}
+
+/* TABLE VALUES */
+.custom-table :deep(.v-data-table__wrapper tbody td) {
+  font-family: "Segoe UI" !important;
   font-size: 11pt !important;
-  line-height: 1.5;
 }
 </style>
