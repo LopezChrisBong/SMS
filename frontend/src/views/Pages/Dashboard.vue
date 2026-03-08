@@ -7,6 +7,7 @@
         width: 100%;
         background-color: rgba(255, 255, 255, 0.4);
       "
+      v-if="$store.state.user.user.assignedModuleID != 3"
     >
       <v-row class="mx-4">
         <v-col lg="6" xl="6" md="6" sm="12" xs="12">
@@ -150,6 +151,9 @@
         </v-col>
       </v-row>
     </v-card>
+    <v-card v-else>
+      <HeadHighSchoolDashboard />
+    </v-card>
   </div>
 </template>
 
@@ -161,6 +165,7 @@ import AreaChart from "../../components/Charts/AreaChart.vue";
 import ForecastLineChart from "../../components/Charts/ForecastLineChart.vue";
 import ForecastBarChart from "../../components/Charts/ForecastBarChart.vue";
 import ForecastGradeBarChart from "../../components/Charts/ForecastGradeBarChart.vue";
+import HeadHighSchoolDashboard from "./HeadHighSchoolDashboard.vue";
 export default {
   components: {
     PieChart,
@@ -170,6 +175,7 @@ export default {
     ForecastLineChart,
     ForecastBarChart,
     ForecastGradeBarChart,
+    HeadHighSchoolDashboard,
   },
   data: () => ({
     mini: false,

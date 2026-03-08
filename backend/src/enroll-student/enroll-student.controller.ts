@@ -259,6 +259,16 @@ export class EnrollStudentController {
     return this.enrollStudentService.getStudentSchedule(+studentID);
   }
 
+  @Get('getCombinedForecasts')
+  getCombinedForecasts() {
+    return this.enrollStudentService.getCombinedForecasts();
+  }
+
+  @Get('getTeacherRoomNeedForecasts')
+  getTeacherRoomNeedForecasts() {
+    return this.enrollStudentService.getTeacherRoomNeedForecasts();
+  }
+
   @Get('getClassProgramm/:grade/:section/:filter')
   getMyCoreTime(
     @Param('grade') grade: string,

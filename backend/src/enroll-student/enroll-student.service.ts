@@ -1233,6 +1233,18 @@ export class EnrollStudentService {
       })
       .getRawMany();
 
+    let enrolledStudents = await this.dataSource.manager
+      .createQueryBuilder(EnrollStudent, 'ES')
+      .leftJoin(StudentEnrollmentHistory, 'SEH', 'SEH.student_id = ES.id')
+      .where('ES.statusEnrolled = 1')
+      .andWhere('ES.school_yearId = "' + filter + '"')
+      .andWhere('SEH.school_yearId = "' + filter + '"')
+      .andWhere('ES.isSubmitted = 1')
+      .andWhere('ES.seniorJunior IN (:...values)', {
+        values: [catchData, catchData1],
+      })
+      .getRawMany();
+
     let verify = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .select(['COUNT(*) as numberVerify'])
@@ -1246,12 +1258,21 @@ export class EnrollStudentService {
       })
       .getRawMany();
 
-    // console.log('Enrolled',enrolled[0].numberEnrolled)
-    // console.log('Verify',verify[0].numberVerify)
+    let fmcount = 0;
+    let mcount = 0;
+    for (let i = 0; i < enrolledStudents.length; i++) {
+      console.log(enrolledStudents[i].ES_sex);
+      if (enrolledStudents[i].ES_sex == 'Female') {
+        fmcount += 1;
+      } else {
+        mcount += 1;
+      }
+    }
+
     let enrolledData = parseInt(enrolled[0].numberEnrolled);
     let verifyData = parseInt(verify[0].numberVerify);
 
-    return { enrolledData, verifyData };
+    return { enrolledData, verifyData, fmcount, mcount };
   }
 
   async getStudentDataByCode(filter: number, code: string, level: string) {
@@ -1953,5 +1974,21 @@ export class EnrollStudentService {
     };
     // console.log(chartData.series);
     return chartData;
+  }
+
+  async getCombinedForecasts() {
+    const data = await this.dataSource.query(
+      `SELECT * FROM student_combinedforecasts`,
+    );
+
+    return data;
+  }
+
+  async getTeacherRoomNeedForecasts() {
+    const data = await this.dataSource.query(
+      `SELECT * FROM report_forcasteddata_by_gradelevel`,
+    );
+    // console.log(data);
+    return data;
   }
 }
