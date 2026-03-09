@@ -43,6 +43,36 @@
         <template v-slot:[`item.name`]="{ item }">
           <span class="gboFontsTable">{{ item.name }}</span>
         </template>
+        <template v-slot:[`item.birthPSA`]="{ item }">
+          <div class="d-flex justify-center align-center">
+            <span class="gboFontsTable text-center">
+              <v-checkbox
+                :input-value="notDeault(item.birthPSA)"
+                readonly
+              ></v-checkbox>
+            </span>
+          </div>
+        </template>
+        <template v-slot:[`item.goodMoral`]="{ item }">
+          <div class="d-flex justify-center align-center">
+            <span class="gboFontsTable text-center">
+              <v-checkbox
+                :input-value="notDeault(item.goodMoral)"
+                readonly
+              ></v-checkbox>
+            </span>
+          </div>
+        </template>
+        <template v-slot:[`item.schoolCard`]="{ item }">
+          <div class="d-flex justify-center align-center">
+            <span class="gboFontsTable text-center">
+              <v-checkbox
+                :input-value="notDeault(item.schoolCard)"
+                readonly
+              ></v-checkbox>
+            </span>
+          </div>
+        </template>
         <template v-slot:[`item.updated_at`]="{ item }">
           <span class="gboFontsTable">{{ formatDate(item.updated_at) }}</span>
         </template>
@@ -57,7 +87,7 @@
               @click="editItem(item)"
             >
               <v-icon size="20">{{
-                tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
+                tab == 1 ? "mdi-pencil-outline" : "mdi-pencil"
               }}</v-icon>
               {{ tab == 1 ? "Verify" : "Update" }}
             </v-btn>
@@ -217,8 +247,12 @@ export default {
   data: () => ({
     search: "",
     qrCodedialog: false,
+    checkbox: false,
     headers: [
       { text: "Name", value: "name", align: "start" },
+      { text: "PSA", value: "birthPSA", align: "center" },
+      { text: "Form 137", value: "schoolCard", align: "center" },
+      { text: "Good Moral", value: "goodMoral", align: "center" },
       {
         text: "Actions",
         value: "actions",
@@ -264,6 +298,7 @@ export default {
     options: {},
     action: null,
     paginationData: {},
+    qrText: null,
     formdata: [],
     work_dates_menu: false,
     dialogConfirmDelete: false,
@@ -314,7 +349,14 @@ export default {
     pagination(data) {
       this.paginationData = data;
     },
-
+    notDeault(item) {
+      let datastring = item.substring(7, 0);
+      if (datastring == "default") {
+        return false;
+      } else {
+        return true;
+      }
+    },
     initialize() {
       this.loading = true;
       this.tab = 1;

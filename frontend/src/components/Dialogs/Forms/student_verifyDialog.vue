@@ -505,6 +505,7 @@ export default {
     },
     accept() {
       if (this.$refs.UserVerifyFormref.validate()) {
+        let filter = this.$store.getters.getFilterSelected;
         let data = {
           id: this.verifyModel.id,
           grade_level: this.verifyModel.grade_level,
@@ -513,7 +514,7 @@ export default {
           schoolCard: this.verifyModel.schoolCard,
           picture: this.verifyModel.picture,
           seniorJunior: this.seniorJunior,
-          schoo_yearId: this.verifyModel.schoo_yearId,
+          schoo_yearId: filter,
           update_type: this.action == "Verify" ? 1 : 2,
           statusEnrolled: true,
         };

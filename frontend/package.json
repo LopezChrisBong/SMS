@@ -10,7 +10,7 @@
   "dependencies": {
     "@bachdgvn/vue-otp-input": "^1.0.8",
     "axios": "^0.21.4",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "chartjs-plugin-datalabels": "^1.0.0",
     "core-js": "^3.6.5",
     "encrypt-storage": "^2.2.10",
@@ -20,7 +20,7 @@
     "secure-ls": "^1.2.6",
     "sweetalert2": "^11.15.2",
     "vue": "^2.6.11",
-    "vue-chartjs": "^3.4.2",
+    "vue-chartjs": "^3.5.1",
     "vue-json-to-csv": "^1.1.8",
     "vue-pdf-embed": "^1.1.6",
     "vue-qr-generator": "^3.0.1",
@@ -31,7 +31,8 @@
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

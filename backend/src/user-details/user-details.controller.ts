@@ -60,61 +60,66 @@ export class UserDetailsController {
   @UseGuards(JWTAuthGuard)
   @ApiBearerAuth()
   @Get('getAllUsersToVerify')
-  getAllUsersToVerify(
-    @Headers() headers
-  ) {
+  getAllUsersToVerify(@Headers() headers) {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
     return this.userDetailsService.getAllUsersToVerify(curr_user);
   }
 
-
   @UseGuards(JWTAuthGuard)
   @ApiBearerAuth()
   @Get('getAllVerifiedUser')
-  getAllVerifiedUser(
-    @Headers() headers
-  ) {
+  getAllVerifiedUser(@Headers() headers) {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
     return this.userDetailsService.getAllVerifiedUser(curr_user);
   }
 
   @Get('getAllVerifiedUser/TeachingRole/:grade')
-  TeachingRole(@Param('grade') grade: string, @Headers() headers ) {
+  TeachingRole(@Param('grade') grade: string, @Headers() headers) {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
-    return this.userDetailsService.TeachingRole(grade,curr_user);
+    return this.userDetailsService.TeachingRole(grade, curr_user);
   }
 
-    @Get('getAllVerifiedUser/TeachingAdvisoryRole/:grade/:roomID')
-  TeachingAdvisoryRole(@Param('grade') grade: string,@Param('roomID') roomID: string,  @Headers() headers ) {
+  @Get('getAllVerifiedUser/TeachingAdvisoryRole/:grade/:roomID')
+  TeachingAdvisoryRole(
+    @Param('grade') grade: string,
+    @Param('roomID') roomID: string,
+    @Headers() headers,
+  ) {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
-    return this.userDetailsService.TeachingAdvisoryRole(grade,+roomID,curr_user);
+    return this.userDetailsService.TeachingAdvisoryRole(
+      grade,
+      +roomID,
+      curr_user,
+    );
   }
 
   @Get('getAdviser/RoomAdvisory/:id/:grade')
-  TeachingRoleAdvisory( @Param('id') id: number,@Param('grade') grade: string, @Headers() headers ) {
+  TeachingRoleAdvisory(
+    @Param('id') id: number,
+    @Param('grade') grade: string,
+    @Headers() headers,
+  ) {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
-    return this.userDetailsService.TeachingRoleAdvisory(id,grade, curr_user);
+    return this.userDetailsService.TeachingRoleAdvisory(id, grade, curr_user);
   }
 
   @Get('getAllVerifiedUser/TeachingRoleSched')
-  TeachingRoleSched( @Headers() headers ) {
+  TeachingRoleSched(@Headers() headers) {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
     return this.userDetailsService.TeachingRoleSched(curr_user);
   }
   @Get('facultyLoads/allFacultyList')
-  allFacultyList( @Headers() headers ) {
+  allFacultyList(@Headers() headers) {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
     return this.userDetailsService.allFacultyList(curr_user);
   }
-
-  
 
   @UseGuards(JWTAuthGuard)
   @ApiBearerAuth()
@@ -122,7 +127,6 @@ export class UserDetailsController {
   updateVerifiedUser(@Body() updateVU: UpdateVerifiedUser) {
     return this.userDetailsService.updateVerifiedUser(updateVU);
   }
-
 
   @Get()
   findAll() {
@@ -155,15 +159,13 @@ export class UserDetailsController {
     return this.userDetailsService.getPersonalInfo(curr_user);
   }
 
-
-  
   @Get('getProfileImg/:filename')
   getProfileImg(
     @Param('filename') filename: string,
     @Response({ passthrough: true }) res,
   ): StreamableFile {
     let file;
-   
+
     // file = createReadStream(join(process.cwd(), '/../upload_img/' + filename));
     file = createReadStream(join(process.cwd(), '/upload_img/' + filename));
     res.set({
@@ -176,8 +178,6 @@ export class UserDetailsController {
     return new StreamableFile(file);
   }
 
-
-  
   @UseGuards(JWTAuthGuard)
   @ApiBearerAuth()
   // Image uploading
@@ -250,21 +250,22 @@ export class UserDetailsController {
   @ApiBearerAuth()
   @Get('getTeachingNon')
   getTeachingNon(@Headers() headers) {
-    return this.userDetailsService.getTeachingNon();
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.getTeachingNon(curr_user);
   }
 
   @UseGuards(JWTAuthGuard)
   @ApiBearerAuth()
   @Get('getMaleFemaleCount')
   getMaleFemaleCount(@Headers() headers) {
-    return this.userDetailsService.getMaleFemaleCount();
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.userDetailsService.getMaleFemaleCount(curr_user);
   }
 
-  
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userDetailsService.remove(+id);
   }
-
-
 }

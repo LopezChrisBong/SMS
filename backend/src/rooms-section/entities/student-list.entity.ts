@@ -1,4 +1,3 @@
-
 import { Exclude } from 'class-transformer';
 import { UserDetail } from 'src/entities';
 import {
@@ -13,64 +12,63 @@ import {
 
 @Entity()
 export class StudentList {
+  @PrimaryGeneratedColumn({ type: 'int' })
+  id: number;
 
-    @PrimaryGeneratedColumn({ type: 'int' })
-    id: number
+  @Column({
+    type: 'int',
+    nullable: false,
+  })
+  studentId: number;
 
-    @Column(
-      {  
-        type:'int',
-        nullable:false
-      }
-    )
-    studentId:number
+  @Column({
+    type: 'int',
+    nullable: false,
+  })
+  roomId: number;
 
-    @Column(
-        {  
-          type:'int',
-          nullable:false
-        }
-      )
-      roomId:number
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  grade_level: string;
 
-      @Column(
-        {  
-          type:'varchar',
-          nullable:false
-        }
-      )
-      grade_level:string
+  @Column({
+    type: 'int',
+    nullable: false,
+  })
+  school_yearId: number;
 
-      @Column(
-        {  
-          type:'int',
-          nullable:false
-        }
-      )
-      school_yearId:number
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  strandId: number;
 
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  status: number; //1 - transfer, 2 - drop, 3 - dead
 
-      @Column(
-        {  
-          type:'int',
-          nullable:true
-        }
-      )
-      strandId:number
+  @Column({
+    type: 'longtext',
+    nullable: true,
+  })
+  remarks: string;
 
+  @CreateDateColumn({
+    nullable: false,
+    type: 'datetime',
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  createdAt: Date;
 
-      @CreateDateColumn({
-        nullable: false,
-        type: 'datetime',
-        name: 'created_at',
-        default: () => 'CURRENT_TIMESTAMP(6)',
-      })
-      createdAt: Date;
-    
-      @UpdateDateColumn({
-        default: () => 'CURRENT_TIMESTAMP(6)',
-        name: 'updated_at',
-        type: 'datetime',
-      })
-      updatedAt: Date;
+  @UpdateDateColumn({
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    name: 'updated_at',
+    type: 'datetime',
+  })
+  updatedAt: Date;
 }

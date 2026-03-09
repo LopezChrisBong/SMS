@@ -1,13 +1,22 @@
-e
 <template>
   <div style="margin-top: 8pt">
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
-        <div class="pa-5" style="text-transform: uppercase; font-weight: 600">
-          {{
-            roomData ? roomData.grade_level + " " + roomData.room_section : ""
-          }}
-          Student List
+        <div class="pa-3" v-if="roomList.length > 0">
+          <v-autocomplete
+            v-model="classRoom"
+            item-text="room_section"
+            item-value="roomId"
+            outlined
+            color="#f5b027"
+            dense
+            class="rounded-lg gboFontsTab"
+            :items="roomList"
+            @change="changeRoom"
+          ></v-autocomplete>
+        </div>
+        <div v-else class="pa-3">
+          {{ roomData ? roomData.room_section : "" }}
         </div>
       </v-col>
       <v-spacer></v-spacer>
@@ -28,6 +37,7 @@ e
             class="white--text ml-2 rounded-lg"
             color="#f5b027"
             @click="upgrade()"
+            v-if="classRoom ? classRoom == roomData.id : ''"
           >
             <v-icon center medium> mdi-eye-outline </v-icon>
             View
@@ -47,18 +57,46 @@ e
         @pagination="pagination"
         hide-default-footer
       >
-        <!-- <template v-slot:[`item.actions`]="{ item }">
-          <v-btn
-            class="mx-2 gboFontsTable"
-            small
-            color="green"
-            outlined
-            @click="viewItem(item)"
+        <template v-slot:[`item.status`]="{ item }">
+          <v-menu
+            offset-y
+            top
+            :value="activeMenu === item.id"
+            @input="(val) => (activeMenu = val ? item.id : null)"
+            :close-on-content-click="false"
           >
-            <v-icon class="gboFontsTable" size="20">mdi-pencil</v-icon>
-            Attendance
-          </v-btn>
-        </template> -->
+            <template v-slot:activator="{ on, attrs }">
+              <v-chip
+                v-bind="attrs"
+                v-on="on"
+                class="chip-status-4 white--text"
+                :color="
+                  item.status == 1 ? 'blue' : item.status == 2 ? 'green' : 'red'
+                "
+                small
+                v-if="item.status != null"
+              >
+                <span>
+                  {{
+                    item.status == 1
+                      ? "Transferred"
+                      : item.status == 2
+                      ? "Drop"
+                      : "Dead"
+                  }}
+                </span>
+              </v-chip>
+            </template>
+
+            <v-card width="250">
+              <v-card-title class="text-subtitle-2"> Remarks </v-card-title>
+
+              <v-card-text>
+                {{ item.remarks || "No remarks available" }}
+              </v-card-text>
+            </v-card>
+          </v-menu>
+        </template>
       </v-data-table>
     </v-card>
     <v-row class="mb-2 mx-5" align="center">
@@ -150,8 +188,16 @@ export default {
   },
   data: () => ({
     search: "",
+    activeMenu: null,
     headers: [
       { text: "Student Name", value: "name", align: "start" },
+      {
+        text: "Status",
+        value: "status",
+        align: "center",
+        sortable: false,
+        width: 200,
+      },
       {
         text: "Sex",
         value: "sex",
@@ -166,16 +212,17 @@ export default {
         sortable: false,
         width: 200,
       },
-      {
-        text: "CODE",
-        value: "CODE",
-        align: "center",
-        sortable: false,
-        width: 200,
-      },
+      // {
+      //   text: "CODE",
+      //   value: "CODE",
+      //   align: "center",
+      //   sortable: false,
+      //   width: 200,
+      // },
     ],
     data: [],
-    verified: [],
+    roomList: [],
+    classRoom: null,
     perPageChoices: [
       { text: "5", value: 5 },
       { text: "10", value: 10 },
@@ -241,13 +288,18 @@ export default {
 
     initialize() {
       this.filter = this.$store.getters.getFilterSelected;
+      this.getListClassRooms();
       this.findAllRoomsSection();
-      this.getTaggedStudent();
     },
     getTaggedStudent() {
       let userRoleID = this.$store.state.user.id;
       this.axiosCall(
-        "/rooms-section/getMyClassList/" + userRoleID + "/" + this.filter,
+        "/rooms-section/getMyClassList/" +
+          userRoleID +
+          "/" +
+          this.filter +
+          "/" +
+          this.classRoom,
         "GET",
       ).then((res) => {
         if (res.data && Array.isArray(res.data) && res.data.length > 0) {
@@ -265,7 +317,7 @@ export default {
           this.fadeAwayMessage.type = "error";
           this.fadeAwayMessage.header = "System Message";
           this.fadeAwayMessage.message =
-            "Please contact admin to set you room advisory!";
+            "Please contact admin to set your room advisory!";
         }
       });
     },
@@ -276,6 +328,15 @@ export default {
       ).then((res) => {
         if (res.data) {
           this.roomData = res.data;
+          this.classRoom = res.data.id;
+          this.getTaggedStudent();
+        }
+      });
+    },
+    getListClassRooms() {
+      this.axiosCall("/rooms-section/getListClassRooms", "GET").then((res) => {
+        if (res.data) {
+          this.roomList = res.data;
         }
       });
     },
@@ -283,6 +344,10 @@ export default {
     upgrade() {
       this.viewData = this.roomData;
       this.action = "View";
+    },
+    changeRoom(value) {
+      this.classRoom = value;
+      this.getTaggedStudent();
     },
   },
 };

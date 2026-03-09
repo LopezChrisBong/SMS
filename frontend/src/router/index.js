@@ -226,6 +226,9 @@ const routes = [
         meta: { title: "Utilities - Users", authRequired: true },
       },
 
+
+      
+
       // {
       //   path: "404",
       //   component: NotFound,
@@ -342,7 +345,7 @@ const routes = [
         meta: { title: "My Student Record", authRequired: true },
       },
       {
-        path: "my-advisory",
+        path: "class-list",
         component: Advisory,
         meta: { title: "My Student Record", authRequired: true },
       },

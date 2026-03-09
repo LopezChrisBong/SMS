@@ -22,6 +22,7 @@ import { CreateStudentListDto } from './dto/create-student-list.dto';
 import { CreateAddStudentRoomDto } from './dto/create-add-student-room.dto';
 import { CreateStudentAttendanceDto } from './dto/create-student-attendance.dto';
 import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
+import { UpdateStudentListDto } from './dto/update-student-list.dto';
 
 @Injectable()
 export class RoomsSectionService {
@@ -233,6 +234,20 @@ export class RoomsSectionService {
       .addOrderBy('RS.room_section', 'ASC')
       .getRawMany();
 
+    return data;
+  }
+
+  async getListClassRooms(curr_user: any) {
+    const data = await this.dataSource.manager
+      .createQueryBuilder(RoomsSection, 'RS')
+      .select(['*'])
+      .leftJoin(Availability, 'av', 'av.roomId = RS.id')
+      .where('av.teacherID = :teacherID', {
+        teacherID: curr_user.userdetail.id,
+      })
+      .groupBy('RS.id')
+      .getRawMany();
+    console.log('2313213213', data);
     return data;
   }
 
@@ -627,57 +642,187 @@ export class RoomsSectionService {
       };
     }
   }
+
   async updateAddRecords(
     createStudentListDto: CreateStudentListDto,
     grade: string,
     sy: number,
     room: number,
-    data: string,
   ) {
+    let roomData = await this.dataSource.manager.findOneBy(RoomsSection, {
+      id: room,
+    });
+    let strandData = await this.dataSource.manager.findOneBy(AddStrand, {
+      id: roomData.strandId,
+    });
     try {
-      let conflict = await this.dataSource.manager
-        .createQueryBuilder(StudentList, 'ES')
-        .select(['COUNT(*) as conflict'])
-        .where('grade_level = "' + grade + '"')
-        .andWhere('school_yearId = ' + sy + '')
-        .andWhere('roomId = ' + room + '')
-        .getRawMany();
+      let studentsData = JSON.parse(createStudentListDto.data);
+      let elementary = [
+        'Kinder 1',
+        'Kinder 2',
+        'Grade 1',
+        'Grade 2',
+        'Grade 3',
+        'Grade 4',
+        'Grade 5',
+      ];
+      let junior = ['Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10'];
+      if (studentsData.count == 1) {
+        let conflict = await this.dataSource.manager
+          .createQueryBuilder(StudentList, 'ES')
+          .select(['COUNT(*) as conflict'])
+          .where('grade_level = "' + grade + '"')
+          .andWhere('school_yearId = ' + sy + '')
+          .andWhere('roomId = ' + room + '')
+          .getRawMany();
+        // console.log(conflict[0].conflict);
+        const promoted = studentsData.promoted;
+        const notPromoted = studentsData.notPromoted;
 
-      const studentList = JSON.parse(JSON.stringify(createStudentListDto));
-      const removeList = JSON.parse(data).map(Number);
+        if (conflict[0].conflict == 0) {
+          for (let i = 0; i < promoted.length; i++) {
+            // console.log(promoted[i].id);
+            let updateClassRecord = this.dataSource.manager.create(
+              StudentList,
+              {
+                studentId: promoted[i].id,
+                roomId: room,
+                grade_level: grade,
+                school_yearId: sy,
+              },
+            );
+            await this.dataSource.manager.save(updateClassRecord);
 
-      const updatedList = studentList.filter((id) => !removeList.includes(id));
-      console.log(updatedList);
+            this.dataSource.manager.update(EnrollStudent, promoted[i].id, {
+              grade_level: grade,
+              school_yearId: sy,
+              seniorJunior: elementary.includes(grade)
+                ? 'Elementary'
+                : junior.includes(grade)
+                ? 'Junior High'
+                : 'Senior High',
+              strand: elementary.includes(grade)
+                ? null
+                : junior.includes(grade)
+                ? null
+                : roomData.strandId.toString(),
+              track: elementary.includes(grade)
+                ? null
+                : junior.includes(grade)
+                ? null
+                : strandData.trackId.toString(),
+              semester: junior.includes(grade) ? null : '1',
+            });
+          }
 
-      if (conflict[0].conflict == 0) {
-        for (let i = 0; i < updatedList.length; i++) {
-          let updateClassRecord = this.dataSource.manager.create(StudentList, {
-            studentId: updatedList[i],
-            roomId: room,
-            grade_level: grade,
-            school_yearId: sy,
-          });
-          await this.dataSource.manager.save(updateClassRecord);
+          for (let i = 0; i < notPromoted.length; i++) {
+            let updateClassRecord = this.dataSource.manager.create(
+              StudentList,
+              {
+                studentId: notPromoted[i].id,
+                roomId: studentsData.roomID,
+                grade_level: studentsData.gradeLevel,
+                school_yearId: sy,
+              },
+            );
+            await this.dataSource.manager.save(updateClassRecord);
 
-          this.dataSource.manager.update(EnrollStudent, updatedList[i], {
-            grade_level: grade,
-            school_yearId: sy,
-          });
+            this.dataSource.manager.update(EnrollStudent, notPromoted[i].id, {
+              school_yearId: sy,
+            });
+          }
+          return {
+            msg: 'Upgrade successfully!',
+            status: HttpStatus.CREATED,
+          };
         }
-        // for (let index = 0; index < removeList.length; index++) {
-        //   this.dataSource.manager.update(EnrollStudent, removeList[index], {
-        //     statusEnrolled: false,
-        //   });
-        // }
+        return {
+          msg: 'Conflict on updating classlist, Please check duplicate school year, room name!',
+          status: HttpStatus.BAD_REQUEST,
+          count: 2,
+        };
+      } else {
+        // console.log(studentsData.count);
+
+        const promoted = studentsData.promoted;
+        const notPromoted = studentsData.notPromoted;
+        for (let i = 0; i < promoted.length; i++) {
+          // console.log(promoted[i].id);
+          let conflict = await this.dataSource.manager
+            .createQueryBuilder(StudentList, 'ES')
+            .select(['COUNT(*) as conflict'])
+            .where('grade_level = "' + grade + '"')
+            .andWhere('school_yearId = ' + sy + '')
+            .andWhere('roomId = ' + room + '')
+            .andWhere('studentId = ' + promoted[i].id + '')
+            .getRawMany();
+          // console.log(conflict[0].conflict);
+          if (conflict[0].conflict == 0) {
+            let updateClassRecord = this.dataSource.manager.create(
+              StudentList,
+              {
+                studentId: promoted[i].id,
+                roomId: room,
+                grade_level: grade,
+                school_yearId: sy,
+              },
+            );
+            await this.dataSource.manager.save(updateClassRecord);
+
+            this.dataSource.manager.update(EnrollStudent, promoted[i].id, {
+              grade_level: grade,
+              school_yearId: sy,
+              seniorJunior: elementary.includes(grade)
+                ? 'Elementary'
+                : junior.includes(grade)
+                ? 'Junior High'
+                : 'Senior High',
+              strand: elementary.includes(grade)
+                ? null
+                : junior.includes(grade)
+                ? null
+                : roomData.strandId.toString(),
+              track: elementary.includes(grade)
+                ? null
+                : junior.includes(grade)
+                ? null
+                : strandData.trackId.toString(),
+              semester: junior.includes(grade) ? null : '1',
+            });
+          }
+        }
+
+        for (let i = 0; i < notPromoted.length; i++) {
+          let conflict = await this.dataSource.manager
+            .createQueryBuilder(StudentList, 'ES')
+            .select(['COUNT(*) as conflict'])
+            .where('grade_level = "' + grade + '"')
+            .andWhere('school_yearId = ' + sy + '')
+            .andWhere('roomId = ' + room + '')
+            .andWhere('studentId = ' + notPromoted[i].id + '')
+            .getRawMany();
+          if (conflict[0].conflict == 0) {
+            let updateClassRecord = this.dataSource.manager.create(
+              StudentList,
+              {
+                studentId: notPromoted[i].id,
+                roomId: studentsData.roomID,
+                grade_level: studentsData.gradeLevel,
+                school_yearId: sy,
+              },
+            );
+            await this.dataSource.manager.save(updateClassRecord);
+
+            this.dataSource.manager.update(EnrollStudent, notPromoted[i].id, {
+              school_yearId: sy,
+            });
+          }
+        }
         return {
           msg: 'Upgrade successfully!',
           status: HttpStatus.CREATED,
         };
       }
-      return {
-        msg: 'Conflict on updating classlist, Please check duplicate school year, room name!',
-        status: HttpStatus.BAD_REQUEST,
-      };
     } catch (error) {
       return {
         msg: 'Something went wrong!' + error,
@@ -752,7 +897,7 @@ export class RoomsSectionService {
     return roomData;
   }
 
-  async getMyClassList(userID: number, filter: number) {
+  async getMyClassList(userID: number, filter: number, roomID: number) {
     try {
       let data = await this.dataSource.manager
         .createQueryBuilder(StudentList, 'SL')
@@ -761,16 +906,18 @@ export class RoomsSectionService {
           'SL.id as id',
           'RS.room_section as room_name',
           'RS.id as roomID',
+          'SL.status as status',
           "IF (!ISNULL(ES.mname)  AND LOWER(ES.mname) != 'n/a', concat(ES.fname, ' ',SUBSTRING(ES.mname, 1, 1) ,'. ',ES.lname) ,concat(ES.fname, ' ', ES.lname)) as name",
         ])
         .leftJoin(RoomsSection, 'RS', 'RS.id = SL.roomId')
         .leftJoin(SchoolYear, 'SY', 'SY.id = SL.school_yearId')
         .leftJoin(EnrollStudent, 'ES', 'ES.id = SL.studentId')
-        .where('RS.teacherId = :userId', { userId: userID })
+        // .where('RS.teacherId = :userId', { userId: userID })
         .andWhere('SY.id = :filter', { filter })
+        .andWhere('SL.roomId = :roomID', { roomID })
         .andWhere('ES.statusEnrolled = 1')
         .getRawMany();
-      // console.log('Wal', data);
+      console.log('Wal', roomID);
       if (!data || data.length === 0) {
         const userData = await this.dataSource
           .createQueryBuilder(RoomsSection, 'RS')
@@ -836,6 +983,56 @@ export class RoomsSectionService {
       this.dataSource.manager.update(AddStrand, id, {
         strand_name: updateAddStrandDto.strand_name,
         trackId: updateAddStrandDto.trackId,
+      });
+      return {
+        msg: 'Updated successfully!',
+        status: HttpStatus.CREATED,
+      };
+    } catch (error) {
+      return {
+        msg: 'Something went wrong!' + error,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
+
+  async updateStudentList(
+    id: number,
+    updateStudentListDto: UpdateStudentListDto,
+  ) {
+    try {
+      let stundetData = await this.dataSource.manager.findOneBy(StudentList, {
+        studentId: id,
+        school_yearId: updateStudentListDto.school_yearId,
+      });
+      this.dataSource.manager.update(StudentList, stundetData.id, {
+        roomId: updateStudentListDto.roomId,
+      });
+      return {
+        msg: 'Updated successfully!',
+        status: HttpStatus.CREATED,
+      };
+    } catch (error) {
+      return {
+        msg: 'Something went wrong!' + error,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
+
+  async updateStudentStatus(
+    id: number,
+    updateStudentListDto: UpdateStudentListDto,
+  ) {
+    try {
+      let stundetData = await this.dataSource.manager.findOneBy(StudentList, {
+        studentId: id,
+        school_yearId: updateStudentListDto.school_yearId,
+      });
+      console.log(stundetData);
+      this.dataSource.manager.update(StudentList, stundetData.id, {
+        status: updateStudentListDto.status,
+        remarks: updateStudentListDto.remarks,
       });
       return {
         msg: 'Updated successfully!',

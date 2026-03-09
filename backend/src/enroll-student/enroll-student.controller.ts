@@ -194,20 +194,21 @@ export class EnrollStudentController {
     return this.enrollStudentService.getStudentDataByCode(+filter, code, level);
   }
 
-  @Get('studentPortalLogin/:firstName/:lastName/:birthDate/:LRN/:Code')
+  // @Get('studentPortalLogin/:firstName/:lastName/:birthDate/:LRN/:Code')
+  @Get('studentPortalLogin/:birthDate/:LRN')
   studentPortalLogin(
-    @Param('firstName') firstName: string,
-    @Param('lastName') lastName: string,
+    // @Param('firstName') firstName: string,
+    // @Param('lastName') lastName: string,
     @Param('birthDate') birthDate: string,
     @Param('LRN') LRN: string,
-    @Param('Code') Code: string,
+    // @Param('Code') Code: string,
   ) {
     return this.enrollStudentService.studentPortalLogin(
-      firstName,
-      lastName,
+      // firstName,
+      // lastName,
       birthDate,
       LRN,
-      Code,
+      // Code,
     );
   }
 
@@ -231,6 +232,21 @@ export class EnrollStudentController {
     return this.enrollStudentService.getSchoolYearGenerate(grade, +filter);
   }
 
+  @Get('getDataForForcastingHighSchool')
+  async getDataForForcastingHighSchool() {
+    return this.enrollStudentService.getDataForForcastingHighSchool();
+  }
+
+  @Get('getEnrollmentChart/:sy')
+  getChart(@Param('sy') sy: number, @Query('levelType') levelType: string) {
+    return this.enrollStudentService.getEnrollmentChart(sy, levelType);
+  }
+
+  @Get('getDataForForcastingElementary')
+  async getDataForForcastingElementary() {
+    return this.enrollStudentService.getDataForForcastingElementary();
+  }
+
   @Get('MySchedule/:filter')
   MySchedule(@Headers() headers, @Param('filter') filter: string) {
     var head_str = headers.authorization;
@@ -241,6 +257,16 @@ export class EnrollStudentController {
   @Get('getStudentSchedule/:studentID')
   getStudentSchedule(@Param('studentID') studentID: string) {
     return this.enrollStudentService.getStudentSchedule(+studentID);
+  }
+
+  @Get('getCombinedForecasts')
+  getCombinedForecasts() {
+    return this.enrollStudentService.getCombinedForecasts();
+  }
+
+  @Get('getTeacherRoomNeedForecasts')
+  getTeacherRoomNeedForecasts() {
+    return this.enrollStudentService.getTeacherRoomNeedForecasts();
   }
 
   @Get('getClassProgramm/:grade/:section/:filter')
@@ -328,5 +354,15 @@ export class EnrollStudentController {
   @Delete('deleteAvailabilitySchedule/:id')
   remove(@Param('id') id: string) {
     return this.enrollStudentService.remove(+id);
+  }
+
+  @Post('generate')
+  async generate() {
+    return this.enrollStudentService.generateSummary();
+  }
+
+  @Post('generateElementary')
+  async generateElementary() {
+    return this.enrollStudentService.generateSummaryElementary();
   }
 }

@@ -14,7 +14,12 @@
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="12" md="4" class="d-flex justify-end">
+      <v-col
+        cols="12"
+        md="4"
+        class="d-flex justify-space-between"
+        v-if="tab != 9"
+      >
         <!--   <v-btn
             v-else
             class="white--text ml-2 rounded-lg"

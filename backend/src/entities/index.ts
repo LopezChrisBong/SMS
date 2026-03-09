@@ -1,9 +1,13 @@
-
 import { AssignedModule } from 'src/assigned-modules/entities/assigned-module.entity';
 import { Users } from 'src/auth/entities/auth.entity';
 import { Availability } from 'src/enroll-student/entities/availability.entity';
+import { CallbackElementaryEnrollmentSummary } from 'src/enroll-student/entities/callback-elementary-enrollment-summary.entity';
+import { CallbackEnrollmentSummary } from 'src/enroll-student/entities/callback-enrollment-summary.entity';
+import { ElementaryEnrollmentSummary } from 'src/enroll-student/entities/elementary-enrollment-summary.entity';
 import { EnrollStudent } from 'src/enroll-student/entities/enroll-student.entity';
+import { EnrollmentSummary } from 'src/enroll-student/entities/enrollment-summary.entity';
 import { SchoolYear } from 'src/enroll-student/entities/scholl-year.entity';
+import { StudentEnrollmentHistory } from 'src/enroll-student/entities/student-history.entity';
 import { AddStrand } from 'src/rooms-section/entities/add-strand.entity';
 import { AddTracks } from 'src/rooms-section/entities/add-tracks.entity';
 import { RoomsSection } from 'src/rooms-section/entities/rooms-section.entity';
@@ -36,7 +40,12 @@ const entities = [
   Subject,
   TeacherGradeLevel,
   GradeLevel,
-  StudentAttendance
+  StudentAttendance,
+  EnrollmentSummary,
+  ElementaryEnrollmentSummary,
+  CallbackEnrollmentSummary,
+  CallbackElementaryEnrollmentSummary,
+  StudentEnrollmentHistory,
 ];
 
 export {
@@ -57,7 +66,12 @@ export {
   Subject,
   TeacherGradeLevel,
   GradeLevel,
-  StudentAttendance
+  StudentAttendance,
+  EnrollmentSummary,
+  ElementaryEnrollmentSummary,
+  CallbackEnrollmentSummary,
+  CallbackElementaryEnrollmentSummary,
+  StudentEnrollmentHistory,
 };
 
 export default entities;

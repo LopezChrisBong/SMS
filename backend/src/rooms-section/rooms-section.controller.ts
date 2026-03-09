@@ -20,6 +20,7 @@ import { CreateAddStudentRoomDto } from './dto/create-add-student-room.dto';
 import { CreateStudentAttendanceDto } from './dto/create-student-attendance.dto';
 import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
 import { currentUser } from 'src/shared/jwtDecode';
+import { UpdateStudentListDto } from './dto/update-student-list.dto';
 @Controller('rooms-section')
 export class RoomsSectionController {
   constructor(private readonly roomsSectionService: RoomsSectionService) {}
@@ -56,20 +57,18 @@ export class RoomsSectionController {
     return this.roomsSectionService.genStrandRecord(grade, +filter, +strand);
   }
 
-  @Post('updateAddRecords/:grade/:sy/:room/:data')
+  @Post('updateAddRecords/:grade/:sy/:room')
   updateAddRecords(
     @Body() createStudentListDto: CreateStudentListDto,
     @Param('grade') grade: string,
     @Param('sy') sy: string,
     @Param('room') room: string,
-    @Param('data') data: string,
   ) {
     return this.roomsSectionService.updateAddRecords(
       createStudentListDto,
       grade,
       +sy,
       +room,
-      data,
     );
   }
 
@@ -104,9 +103,13 @@ export class RoomsSectionController {
     );
   }
 
-  @Get('getMyClassList/:id/:filter')
-  getMyClassList(@Param('id') id: string, @Param('filter') filter: string) {
-    return this.roomsSectionService.getMyClassList(+id, +filter);
+  @Get('getMyClassList/:id/:filter/:roomID')
+  getMyClassList(
+    @Param('id') id: string,
+    @Param('filter') filter: string,
+    @Param('roomID') roomID: string,
+  ) {
+    return this.roomsSectionService.getMyClassList(+id, +filter, +roomID);
   }
 
   @Get('findAllRoomsSection/:id')
@@ -119,6 +122,13 @@ export class RoomsSectionController {
     var head_str = headers.authorization;
     const curr_user = currentUser(head_str);
     return this.roomsSectionService.findAllAddedRooms(curr_user);
+  }
+
+  @Get('getListClassRooms')
+  getListClassRooms(@Headers() headers) {
+    var head_str = headers.authorization;
+    const curr_user = currentUser(head_str);
+    return this.roomsSectionService.getListClassRooms(curr_user);
   }
 
   @Get(':gradeLevel')
@@ -232,6 +242,28 @@ export class RoomsSectionController {
     @Body() updateAddStrandDto: UpdateAddStrandDto,
   ) {
     return this.roomsSectionService.updateStrand(+id, updateAddStrandDto);
+  }
+
+  @Patch('updateStudentList/:id')
+  updateStudentList(
+    @Param('id') id: string,
+    @Body() updateStudentListDto: UpdateStudentListDto,
+  ) {
+    return this.roomsSectionService.updateStudentList(
+      +id,
+      updateStudentListDto,
+    );
+  }
+
+  @Patch('updateStudentStatus/:id')
+  updateStudentStatus(
+    @Param('id') id: string,
+    @Body() updateStudentListDto: UpdateStudentListDto,
+  ) {
+    return this.roomsSectionService.updateStudentStatus(
+      +id,
+      updateStudentListDto,
+    );
   }
 
   @Delete(':id')
