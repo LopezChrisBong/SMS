@@ -88,7 +88,7 @@
               outlined
               @click="printMySched(item)"
             >
-              <v-icon size="20">mdi-printer-outline</v-icon>
+              <v-icon>mdi-printer-outline</v-icon>
               Loads
             </v-btn>
           </div>
@@ -478,7 +478,7 @@ export default {
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

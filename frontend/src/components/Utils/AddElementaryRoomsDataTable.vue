@@ -14,12 +14,7 @@
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col
-        cols="12"
-        md="4"
-        class="d-flex justify-space-between"
-        v-if="tab != 9"
-      >
+      <v-col cols="12" md="4" class="d-flex justify-end" v-if="tab != 9">
         <!--   <v-btn
             v-else
             class="white--text ml-2 rounded-lg"
@@ -44,7 +39,9 @@
               dense
         ></v-text-field> -->
         <v-btn
-          class="white--text ml-2 rounded-lg"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts mr-2"
           :class="generatedCount == 0 ? '' : 'd-none'"
           :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
           :color="$vuetify.theme.themes.light.submitBtns"
@@ -55,7 +52,9 @@
           Generate Class List
         </v-btn>
         <v-btn
-          class="white--text ml-2 rounded-lg"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           :style="$vuetify.breakpoint.smAndUp ? {} : { fontSize: '10px' }"
@@ -78,6 +77,7 @@
     </v-row>
     <v-card class="ma-5 dt-container" elevation="0" outlined>
       <v-data-table
+        class="custom-table"
         :headers="tab == 9 ? header1 : headers"
         :items="data"
         :items-per-page="10"
@@ -88,15 +88,15 @@
         hide-default-footer
       >
         <template v-slot:[`item.index`]="{ index }">
-          <span>{{
+          <span class="gboFontsTable">{{
             (options.page - 1) * options.itemsPerPage + index + 1
           }}</span>
         </template>
         <template v-slot:[`item.room_section`]="{ item }">
-          <span>{{ item.room_section }}</span>
+          <span class="gboFontsTable">{{ item.room_section }}</span>
         </template>
         <template v-slot:[`item.name`]="{ item }">
-          <span>{{ item.name }}</span>
+          <span class="gboFontsTable">{{ item.name }}</span>
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <div class="text-no-wrap" style="padding: 4px">
@@ -121,23 +121,24 @@
               <v-icon size="14">mdi-printer-outline</v-icon>Print
             </v-btn>
             <v-btn
-              x-small
-              color="blue"
-              class="my-2 mx-2"
+              small
+              color="#48A111"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="14">mdi-pencil-outline</v-icon>Update
+              <v-icon class="gboFontsTable">mdi-pencil-outline</v-icon
+              >&nbsp;Update
             </v-btn>
             <v-btn
-              x-small
               v-if="generatedCount == 0"
+              small
               color="red"
               outlined
-              class="my-2 mx-2"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               @click="confirmDelete(item)"
             >
-              <v-icon size="14">mdi-delete-off</v-icon>Delete
+              <v-icon class="gboFontsTable">mdi-delete-off</v-icon>&nbsp;Delete
             </v-btn>
           </div>
         </template>
@@ -1044,3 +1045,18 @@ export default {
   },
 };
 </script>
+<style scoped>
+.gboFonts,
+.gboFontsTab,
+.gboFontsTable {
+  font-family: "Segoe UI" !important;
+  font-size: 11pt !important;
+}
+
+/* Correct selector for Vuetify table */
+.custom-table :deep(.v-data-table__wrapper table th),
+.custom-table :deep(.v-data-table__wrapper table td) {
+  font-family: "Segoe UI" !important;
+  font-size: 11pt !important;
+}
+</style>

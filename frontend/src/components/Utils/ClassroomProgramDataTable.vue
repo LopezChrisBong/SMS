@@ -195,8 +195,7 @@
                         outlined
                         @click="editItem(item)"
                       >
-                        <v-icon size="20" class="gboFontsTable"
-                          >mdi-pencil-outline</v-icon
+                        <v-icon class="gboFontsTable">mdi-pencil-outline</v-icon
                         >&nbsp;Update
                       </v-btn>
                       <v-btn
@@ -206,8 +205,7 @@
                         outlined
                         @click="confirmDelete(item)"
                       >
-                        <v-icon size="20" class="gboFontsTable"
-                          >mdi-delete-off</v-icon
+                        <v-icon class="gboFontsTable">mdi-delete-off</v-icon
                         >&nbsp;Delete
                       </v-btn>
                     </div>
@@ -777,7 +775,7 @@ export default {
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

@@ -140,7 +140,7 @@
             </v-btn>
             <v-btn
               color="#f5b027"
-              class="white--text"
+              class="white--text rounded-lg"
               v-if="action == 'Update'"
               @click="checkConflict('UPDATE')"
             >

@@ -81,12 +81,12 @@
             <v-btn
               style="width: 80pt"
               small
-              class="gboFontsTable"
-              color="grey"
+              color="#48A111"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="20">{{
+              <v-icon>{{
                 tab == 1 ? "mdi-pencil-outline" : "mdi-pencil"
               }}</v-icon>
               {{ tab == 1 ? "Verify" : "Update" }}
@@ -94,24 +94,25 @@
 
             <v-btn
               style="width: 80pt"
-              class="mx-2"
               small
-              color="green"
+              class="my-2 mx-2 gboFontsTable rounded-lg"
+              color="#758A93"
               outlined
               @click="viewItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-eye</v-icon>
+              <v-icon class="gboFontsTable">mdi-eye</v-icon>
               View
             </v-btn>
             <v-btn
               style="width: 80pt"
               small
+              class="my-2 mx-2 gboFontsTable rounded-lg"
+              color="#f5b027"
               v-if="tab == 2"
-              color="orange"
               outlined
               @click="viewQRItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-qrcode</v-icon>
+              <v-icon class="gboFontsTable">mdi-qrcode</v-icon>
               QR
             </v-btn>
           </div>
@@ -191,37 +192,52 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="qrCodedialog" max-width="400px">
-      <v-card>
-        <v-card-title dark class="dialog-header">
-          <span>QR Code</span>
-          <v-spacer></v-spacer>
-          <!-- <v-btn icon dark @click="qrCodedialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn> -->
-          <v-btn color="orange" class="white--text" @click="printQRCode()">
-            <!-- <v-icon>mdi-printer</v-icon> -->
-            Print
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col class="mt-2 mb-1 d-flex justify-center">
-              <qr-code :size="150" :text="qrText"></qr-code>
-            </v-col>
-            <v-col class="d-flex justify-center" cols="12" v-if="viewQRData"
-              ><h2>Student: {{ "  " + viewQRData.name }}</h2></v-col
-            >
-          </v-row>
-        </v-card-text>
-        <!--    <v-card-actions>
+    <v-dialog v-model="qrCodedialog" max-width="420px">
+      <v-card class="rounded-xl elevation-4">
+        <!-- HEADER -->
+        <v-card-title class="dialog-header px-6 py-3">
+          <span class="text-h6 font-weight-medium">QR Code</span>
           <v-spacer></v-spacer>
 
-          <v-btn color="orange" class="white--text" @click="printQRCode()">
-            <v-icon>mdi-printer</v-icon> 
+          <!-- optional close button if needed -->
+          <!--
+      <v-btn icon @click="qrCodedialog = false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+      -->
+        </v-card-title>
+
+        <!-- CONTENT -->
+        <v-card-text class="px-6 pt-6 pb-2">
+          <v-row>
+            <!-- QR CODE -->
+            <v-col cols="12" class="d-flex justify-center mb-2">
+              <div class="qr-container">
+                <qr-code :size="150" :text="qrText"></qr-code>
+              </div>
+            </v-col>
+
+            <!-- STUDENT NAME -->
+            <v-col cols="12" class="d-flex justify-center" v-if="viewQRData">
+              <div class="student-label">
+                Student: <strong>{{ viewQRData.name }}</strong>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-text>
+
+        <!-- ACTIONS -->
+        <v-card-actions class="px-6 pb-5 justify-center">
+          <v-btn
+            color="orange"
+            class="white--text rounded-lg px-6"
+            elevation="1"
+            @click="printQRCode()"
+          >
+            <v-icon left small>mdi-printer</v-icon>
             Print
           </v-btn>
-        </v-card-actions>-->
+        </v-card-actions>
       </v-card>
     </v-dialog>
     <fade-away-message-component
@@ -463,7 +479,7 @@ export default {
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

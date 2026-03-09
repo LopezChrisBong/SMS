@@ -637,14 +637,14 @@
           </v-card-actions>
           <v-card-actions class="pa-5" v-if="action == 'Update'">
             <v-spacer></v-spacer>
-            <v-btn color="red" outlined @click="closeD()">
+            <v-btn color="red" class="rounded-lg" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               Close
             </v-btn>
             <v-btn
               v-if="readonly == true"
-              :color="$vuetify.theme.themes.light.submitBtns"
-              class="white--text"
+              color="#f5b027"
+              class="white--text rounded-lg"
               @click="readonly = false"
             >
               <v-icon>mdi-pencil</v-icon>
@@ -652,8 +652,8 @@
             </v-btn>
             <v-btn
               v-if="readonly == false"
-              :color="$vuetify.theme.themes.light.submitBtns"
-              class="white--text"
+              color="#f5b027"
+              class="white--text rounded-lg"
               @click="accept()"
             >
               <v-icon>mdi-pencil </v-icon>

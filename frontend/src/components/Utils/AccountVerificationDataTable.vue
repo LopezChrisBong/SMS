@@ -51,9 +51,7 @@
             @click="editItem(item)"
             class="mx-2 gboFontsTablewhite--text rounded-lg"
           >
-            <v-icon size="20">{{
-              tab == 1 ? "mdi-pencil-outline" : "mdi-eye"
-            }}</v-icon>
+            <v-icon>{{ tab == 1 ? "mdi-pencil-outline" : "mdi-eye" }}</v-icon>
             &nbsp;{{ tab == 1 ? "Verify" : "View" }}
           </v-btn>
 
@@ -64,8 +62,7 @@
             :class="tab == 2 ? 'd-none' : ''"
             @click="deleteItem(item)"
           >
-            <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon
-            >&nbsp;Delete
+            <v-icon class="gboFontsTable">mdi-delete-off</v-icon>&nbsp;Delete
           </v-btn>
         </template>
       </v-data-table>
@@ -319,12 +316,12 @@ export default {
 
 .gboFontsTab {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

@@ -45,13 +45,12 @@
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
-            class="mx-2 gboFontsTable"
-            small
+            class="mx-2 gboFontsTable rounded-lg"
             color="green"
             outlined
             @click="viewItem(item)"
           >
-            <v-icon class="gboFontsTable" size="20">mdi-pencil</v-icon>
+            <v-icon class="gboFontsTable">mdi-pencil</v-icon>
             Attendance
           </v-btn>
         </template>
@@ -317,7 +316,7 @@ export default {
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

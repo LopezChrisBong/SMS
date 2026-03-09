@@ -17,7 +17,8 @@
       <v-spacer></v-spacer>
       <v-col cols="12" md="8" class="flex-items justify-end">
         <v-btn
-          style="width: 125pt; background-color: #f5b027"
+          height="40"
+          style="width: 90pt; background-color: #f5b027"
           class="white--text ml-2 rounded-lg"
           :color="$vuetify.theme.themes.light.submitBtns"
           @click="printMySched()"
@@ -443,7 +444,7 @@ export default {
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

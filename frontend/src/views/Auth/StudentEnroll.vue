@@ -46,6 +46,7 @@
 
               <!-- Search Button -->
               <v-btn
+                min-height="45"
                 color="orange"
                 class="white--text rounded-lg"
                 @click="searchStudent()"
@@ -957,30 +958,32 @@
         </v-card>
 
         <!-- ================= ACTION BUTTONS ================= -->
-        <v-row class="mt-10" justify="end">
-          <!-- Save Draft -->
-          <v-col cols="auto" v-if="action !== 'Update'">
+        <v-row class="mt-10" justify="center" no-gutters>
+          <v-col cols="auto" class="mr-2" v-if="action !== 'Update'">
             <v-btn
+              width="200"
+              height="40"
               size="large"
               color="grey"
               flat
               prepend-icon="mdi-content-save-outline"
-              class="white--text"
+              class="white--text rounded-lg"
               @click="confirmSave(1)"
             >
               Save Draft
             </v-btn>
           </v-col>
 
-          <!-- Submit / Update -->
           <v-col cols="auto">
             <v-btn
+              width="200"
+              height="40"
               size="large"
-              color="orange"
+              color="#f5b027"
               flat
               prepend-icon="mdi-send"
               elevation="3"
-              class="white--text font-weight-bold"
+              class="white--text font-weight-bold rounded-lg"
               @click="confirmSave(2)"
             >
               {{
@@ -992,39 +995,51 @@
       </v-card>
     </v-form>
     <!-- ================= CONFIRMATION DIALOG ================= -->
-    <v-dialog v-model="confirmDialog" max-width="420">
-      <v-card class="rounded-xl pa-4">
-        <v-card-title class="text-h6 font-weight-bold">
-          {{ action == "Update" ? "Update" : confirmAction }} Confirmation
-        </v-card-title>
+    <v-dialog v-model="confirmDialog" persistent max-width="380">
+      <v-card class="rounded-xl elevation-3">
+        <!-- ICON + TITLE -->
+        <div class="text-center pt-6 px-6">
+          <v-avatar size="56" color="#e8f5e9">
+            <v-icon color="#4caf50" size="32">mdi-check-circle-outline</v-icon>
+          </v-avatar>
 
-        <v-card-text class="py-4">
-          <div
+          <div class="text-h6 font-weight-bold mt-3">
+            {{
+              action == "Update"
+                ? "Update Confirmation"
+                : confirmAction + " Confirmation"
+            }}
+          </div>
+
+          <p
             v-if="confirmAction == 'Submit'"
-            class="text-body-1 grey--text text--darken-2"
+            class="text-body-2 grey--text text--darken-1 mt-2"
           >
             Are you sure you want to submit this enrollment?
-            <br />
-          </div>
+          </p>
 
-          <div v-else class="text-body-1 grey--text text--darken-2">
+          <p v-else class="text-body-2 grey--text text--darken-1 mt-2">
             Please click <strong>Save</strong> to partially save your input.
-            <br />
-            <strong class="text-justify">
-              Your Enrollment Form has been successfully submitted for
-              assessment and verification.
-            </strong>
-          </div>
-        </v-card-text>
+          </p>
+        </div>
 
-        <v-card-actions class="px-4 py-3">
-          <v-spacer></v-spacer>
-
-          <v-btn outlined color="orange" @click="confirmDialog = false">
+        <!-- ACTION BUTTONS -->
+        <v-card-actions class="justify-end px-6 pb-5">
+          <v-btn
+            outlined
+            color="grey darken-1"
+            class="rounded-lg"
+            @click="confirmDialog = false"
+          >
             Cancel
           </v-btn>
 
-          <v-btn color="orange" class="white--text ml-2" @click="saveUpdate">
+          <v-btn
+            color="#4caf50"
+            class="white--text rounded-lg ml-2"
+            elevation="1"
+            @click="saveUpdate"
+          >
             <v-icon left small>mdi-check</v-icon>
             {{ action == "Update" ? "Update" : confirmAction }}
           </v-btn>

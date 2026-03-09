@@ -25,7 +25,6 @@
                     v-model="verifyModel.usertypeID"
                     :rules="userId == 3 ? [formRules.required] : []"
                     outlined
-                    dense
                     class="rounded-lg gboFonts"
                     item-text="description"
                     item-value="id"
@@ -39,7 +38,6 @@
                   <v-autocomplete
                     v-model="verifyModel.user_roleID"
                     outlined
-                    dense
                     :rules="[formRules.required]"
                     class="rounded-lg gboFonts"
                     item-text="description"
@@ -94,7 +92,7 @@
               Cancel
             </v-btn>
             <v-btn
-              :color="$vuetify.theme.themes.light.submitBtns"
+              color="#f5b027"
               class="white--text rounded-lg"
               @click="accept()"
             >

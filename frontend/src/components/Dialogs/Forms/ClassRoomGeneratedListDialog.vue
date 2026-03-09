@@ -72,7 +72,7 @@
                           : updateable()
                       "
                     >
-                      <v-icon size="20">mdi-pencil</v-icon
+                      <v-icon>mdi-pencil</v-icon
                       ><span class="gboFontsTab"> Update</span>
                     </v-btn>
                     <v-btn
@@ -106,7 +106,7 @@
                           outlined
                           @click="deleteItem(item, index)"
                         >
-                          <v-icon size="20">mdi-trash-can</v-icon
+                          <v-icon>mdi-trash-can</v-icon
                           ><span class="gboFontsTab"> Delete</span>
                         </v-btn>
                       </div>
@@ -588,7 +588,7 @@ export default {
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

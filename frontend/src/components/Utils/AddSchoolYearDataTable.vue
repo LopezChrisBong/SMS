@@ -66,8 +66,7 @@
               outlined
               @click="editItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon
-              >Update
+              <v-icon class="gboFontsTable">mdi-pencil-outline</v-icon>Update
             </v-btn>
           </div>
         </template>
@@ -480,7 +479,7 @@ export default {
 
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 10.5pt;
+  font-size: 11pt;
 }
 
 .custom-table :deep(th) {

@@ -3,13 +3,15 @@
     <v-row class="mx-2">
       <v-col cols="12">
         <v-btn
-          class="white--text ml-2 rounded-lg"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="classProgramms()"
         >
           <v-icon left> mdi-printer-outline </v-icon>
-          Class Programm
+          Class Program
         </v-btn>
       </v-col>
       <v-col cols="12" md="8" class="flex-items">
@@ -33,7 +35,7 @@
           dense
           @change="changeValueSection($event)"
           label="Section"
-          class="rounded-lg"
+          class="rounded-lg mr-2"
           item-text="room_section"
           item-value="id"
           color="#93CB5B"
@@ -54,7 +56,9 @@
               dense
           ></v-text-field> -->
         <v-btn
-          class="white--text ml-2 rounded-lg"
+          height="40"
+          style="width: auto; background-color: #f5b027"
+          class="white--text rounded-lg gboFonts"
           :color="$vuetify.theme.themes.light.submitBtns"
           v-if="this.$store.state.user.user.isAdminApproved == 1"
           @click="add()"
