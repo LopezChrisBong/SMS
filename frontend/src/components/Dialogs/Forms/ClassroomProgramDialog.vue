@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" eager scrollable max-width="900px">
+    <v-dialog v-model="dialog" eager scrollable max-width="600px">
       <v-form ref="UserVerifyFormref" @submit.prevent>
-        <v-card>
+        <v-card class="rounded-xl">
           <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span
               >{{ action }} {{ grade }} {{ className }} Faculty Schedule
@@ -93,13 +93,10 @@
                     </v-time-picker>
                   </v-dialog>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="12">
                   <v-autocomplete
                     v-model="day"
                     :rules="[formRules.required]"
-                    outlined
-                    dense
-                    class="rounded-lg"
                     item-text="name"
                     item-value="name"
                     label="Select Day"
@@ -112,9 +109,6 @@
                   <v-autocomplete
                     v-model="teacher"
                     :rules="[formRules.required]"
-                    outlined
-                    dense
-                    class="rounded-lg"
                     item-text="name"
                     item-value="id"
                     label="Teacher to assign"
@@ -124,13 +118,10 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col cols="12" md="12">
+                <v-col cols="12" md="6">
                   <v-autocomplete
                     v-model="subject"
-                    outlined
-                    dense
                     :rules="[formRules.required]"
-                    class="rounded-lg"
                     item-text="subject_title"
                     item-value="id"
                     label="Subject Title Name"
@@ -162,13 +153,13 @@
 
           <v-card-actions class="pa-5">
             <v-spacer></v-spacer>
-            <v-btn color="red" outlined @click="closeD()">
+            <v-btn color="red" class="rounded-lg" outlined @click="closeD()">
               <v-icon>mdi-close-circle-outline</v-icon>
               Cancel
             </v-btn>
             <v-btn
               :color="$vuetify.theme.themes.light.submitBtns"
-              class="white--text"
+              class="white--text rounded-lg"
               @click="accept()"
             >
               <v-icon>mdi-check-circle</v-icon>

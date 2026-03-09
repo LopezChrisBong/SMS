@@ -14,12 +14,7 @@
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col
-        cols="12"
-        md="4"
-        class="d-flex justify-space-between"
-        v-if="tab != 9"
-      >
+      <v-col cols="12" md="4" class="d-flex justify-end" v-if="tab != 9">
         <!--   <v-btn
             v-else
             class="white--text ml-2 rounded-lg"
@@ -132,7 +127,7 @@
               outlined
               @click="editItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon
+              <v-icon class="gboFontsTable">mdi-pencil-outline</v-icon
               >&nbsp;Update
             </v-btn>
             <v-btn
@@ -143,8 +138,7 @@
               class="my-2 mx-2 gboFontsTable rounded-lg"
               @click="confirmDelete(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon
-              >&nbsp;Delete
+              <v-icon class="gboFontsTable">mdi-delete-off</v-icon>&nbsp;Delete
             </v-btn>
           </div>
         </template>
@@ -1052,24 +1046,16 @@ export default {
 };
 </script>
 <style scoped>
-.gboFonts {
-  font-family: "Segoe UI" !important;
-  font-size: 11pt;
-}
-
-.gboFontsTab {
-  font-family: "Segoe UI" !important;
-  font-size: 11pt;
-}
-
+.gboFonts,
+.gboFontsTab,
 .gboFontsTable {
   font-family: "Segoe UI" !important;
-  font-size: 11pt;
+  font-size: 11pt !important;
 }
 
-/* FINAL FIX */
-.custom-table :deep(th),
-.custom-table :deep(td) {
+/* Correct selector for Vuetify table */
+.custom-table :deep(.v-data-table__wrapper table th),
+.custom-table :deep(.v-data-table__wrapper table td) {
   font-family: "Segoe UI" !important;
   font-size: 11pt !important;
 }

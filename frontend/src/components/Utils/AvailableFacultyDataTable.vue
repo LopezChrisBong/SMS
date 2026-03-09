@@ -88,7 +88,7 @@
               outlined
               @click="printMySched(item)"
             >
-              <v-icon size="20">mdi-printer-outline</v-icon>
+              <v-icon>mdi-printer-outline</v-icon>
               Loads
             </v-btn>
           </div>

@@ -78,9 +78,7 @@
                   outlined
                   @click="viewAttendance()"
                 >
-                  <v-icon size="20" class="mx-2 gboFonts"
-                    >mdi-printer-eye</v-icon
-                  >
+                  <v-icon class="mx-2 gboFonts">mdi-printer-eye</v-icon>
                   Atendance
                 </v-btn>
               </v-col>
@@ -138,7 +136,7 @@
                       outlined
                       @click="viewQRItem(item)"
                     >
-                      <v-icon size="20">mdi-qrcode</v-icon>
+                      <v-icon>mdi-qrcode</v-icon>
                       <span class="gboFontsTable"> QR</span>
                     </v-btn>
                   </template>

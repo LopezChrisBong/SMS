@@ -56,7 +56,7 @@
               outlined
               @click="editItem(item)"
             >
-              <v-icon size="20" class="gboFontsTable">mdi-pencil-outline</v-icon
+              <v-icon class="gboFontsTable">mdi-pencil-outline</v-icon
               >&nbsp;Update
             </v-btn>
             <v-btn
@@ -66,8 +66,7 @@
               outlined
               @click="confirmDelete(item)"
             >
-              <v-icon size="20" class="gboFontsTable">mdi-delete-off</v-icon
-              >&nbsp;Delete
+              <v-icon class="gboFontsTable">mdi-delete-off</v-icon>&nbsp;Delete
             </v-btn>
           </div>
         </template>
@@ -112,34 +111,43 @@
 
     <AddStrandDialog :data="coreTimeData" :action="action" :grade="gradeName" />
 
-    <v-dialog v-model="confirmDialog" persistent max-width="400">
-      <v-card color="white rounded-xl">
-        <div class="pa-5 #3a3b3a--text">
-          <div class="text-h6 mb-1">WARNING!</div>
-          <div class="text-body-1 mb-1">
-            <p style="text-align: justify">
-              <v-icon class="mt-n2" color="white">mdi-alert</v-icon> &nbsp; Are
-              you sure you want to delete this information?<br /><br />
-              Please note that
-              <b>this action is irreversible.</b>
-            </p>
-          </div>
+    <v-dialog v-model="confirmDialog" persistent max-width="380">
+      <v-card class="rounded-xl elevation-3">
+        <!-- ICON + TITLE -->
+        <div class="text-center pt-6 px-6">
+          <v-avatar size="56" color="#fff3cd">
+            <v-icon color="#f5b027" size="32">mdi-alert-outline</v-icon>
+          </v-avatar>
+
+          <div class="text-h6 font-weight-bold mt-3">Delete Confirmation</div>
+
+          <p class="text-body-2 grey--text text--darken-1 mt-2">
+            Are you sure you want to delete this information?
+          </p>
+
+          <p class="text-body-2 red--text text--darken-1">
+            This action cannot be undone.
+          </p>
         </div>
 
-        <!-- <v-card-title class="text-h5">
-                    Are you sure you want to proceed?
-                  </v-card-title> -->
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red rounded-lg" outlined @click="confirmDialog = false">
-            Close
+        <!-- ACTION BUTTONS -->
+        <v-card-actions class="justify-end px-6 pb-5">
+          <v-btn
+            outlined
+            color="grey darken-1"
+            class="rounded-lg"
+            @click="confirmDialog = false"
+          >
+            Cancel
           </v-btn>
+
           <v-btn
             color="#f5b027"
-            class="white--text rounded-lg"
+            class="white--text rounded-lg ml-2"
+            elevation="1"
             @click="deleteItem()"
           >
-            Confirm
+            Delete
           </v-btn>
         </v-card-actions>
       </v-card>

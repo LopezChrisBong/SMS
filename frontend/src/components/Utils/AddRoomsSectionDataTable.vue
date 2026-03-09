@@ -123,7 +123,7 @@
               outlined
               @click="editItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon
+              <v-icon class="gboFontsTable">mdi-pencil-outline</v-icon
               >&nbsp;Update
             </v-btn>
             <v-btn
@@ -134,7 +134,7 @@
               outlined
               @click="addStudent(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-eye-outline</v-icon
+              <v-icon class="gboFontsTable">mdi-eye-outline</v-icon
               >&nbsp;Students
             </v-btn>
 
@@ -146,8 +146,7 @@
               outlined
               @click="printClassList(item)"
             >
-              <v-icon class="gboFontsTable" size="20"
-                >mdi-printer-outline</v-icon
+              <v-icon class="gboFontsTable">mdi-printer-outline</v-icon
               >&nbsp;Print
             </v-btn>
             <v-btn
@@ -158,8 +157,7 @@
               class="my-2 mx-2 gboFontsTable rounded-lg"
               @click="confirmDelete(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-delete-off</v-icon
-              >&nbsp;Delete
+              <v-icon class="gboFontsTable">mdi-delete-off</v-icon>&nbsp;Delete
             </v-btn>
           </div>
         </template>

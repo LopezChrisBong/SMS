@@ -54,7 +54,7 @@
               outlined
               @click="editItem(item)"
             >
-              <v-icon class="gboFontsTable" size="20">mdi-pencil-outline</v-icon
+              <v-icon class="gboFontsTable">mdi-pencil-outline</v-icon
               >&nbsp;Update
             </v-btn>
           </div>

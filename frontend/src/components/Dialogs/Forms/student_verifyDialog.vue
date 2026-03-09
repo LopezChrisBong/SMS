@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="dialog" eager scrollable max-width="600px">
       <v-form ref="UserVerifyFormref" @submit.prevent>
-        <v-card>
+        <v-card class="rounded-xl">
           <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
             <span>{{ action == "Verify" ? "Enroll" : action }} Student</span>
             <v-spacer></v-spacer>
@@ -16,7 +16,9 @@
               <v-row>
                 <v-col cols="12">
                   <v-btn
+                    min-height="40"
                     color="blue"
+                    class="rounded-lg"
                     block
                     @click="viewPicture()"
                     :class="edit ? 'd-none' : ''"
@@ -26,7 +28,6 @@
                   <v-file-input
                     outlined
                     v-model="picture"
-                    dense
                     class="rounded-lg"
                     :class="edit ? '' : 'd-none'"
                     label="2x2 Picture"
@@ -38,7 +39,9 @@
                 </v-col>
                 <v-col cols="12">
                   <v-btn
+                    min-height="40"
                     color="blue"
+                    class="rounded-lg"
                     block
                     @click="viewSchoolCard()"
                     :class="edit ? 'd-none' : ''"
@@ -48,7 +51,6 @@
                   <v-file-input
                     outlined
                     v-model="schoolCard"
-                    dense
                     class="rounded-lg"
                     :class="edit ? '' : 'd-none'"
                     label="Student Card"
@@ -61,7 +63,9 @@
 
                 <v-col cols="12">
                   <v-btn
+                    min-height="40"
                     color="blue"
+                    class="rounded-lg"
                     block
                     @click="viewPSA()"
                     :class="edit ? 'd-none' : ''"
@@ -71,7 +75,6 @@
                   <v-file-input
                     outlined
                     v-model="birthPSA"
-                    dense
                     class="rounded-lg"
                     :class="edit ? '' : 'd-none'"
                     label="Birth Certificate / PSA"
@@ -83,7 +86,9 @@
                 </v-col>
                 <v-col cols="12">
                   <v-btn
+                    min-height="40"
                     color="blue"
+                    class="rounded-lg"
                     block
                     @click="viewGoodMoral()"
                     :class="edit ? 'd-none' : ''"
@@ -93,7 +98,6 @@
                   <v-file-input
                     outlined
                     v-model="goodMoral"
-                    dense
                     class="rounded-lg"
                     :class="edit ? '' : 'd-none'"
                     label="Good Moral"
@@ -109,7 +113,6 @@
                     v-model="verifyModel.schoo_yearId"
                     :rules="action == 'Update' ? [formRules.required] : []"
                     outlined
-                    dense
                     class="rounded-lg"
                     item-text="school_year"
                     item-value="id"
@@ -125,7 +128,6 @@
                     v-model="seniorJunior"
                     :rules="action == 'Update' ? [formRules.required] : []"
                     outlined
-                    dense
                     class="rounded-lg"
                     label="School Year"
                     color="#93CB5B"
@@ -139,7 +141,6 @@
                     v-model="verifyModel.grade_level"
                     :rules="action == 'Update' ? [formRules.required] : []"
                     outlined
-                    dense
                     class="rounded-lg"
                     :class="edit ? 'd-none' : ''"
                     item-text="description"
@@ -167,6 +168,7 @@
             <v-spacer></v-spacer>
             <v-btn
               color="red"
+              class="rounded-lg"
               outlined
               @click="closeD()"
               :class="edit ? 'd-none' : ''"
@@ -177,6 +179,7 @@
 
             <v-btn
               color="red"
+              class="rounded-lg"
               outlined
               @click="edit = false"
               :class="edit ? '' : 'd-none'"
@@ -187,8 +190,8 @@
 
             <v-btn
               v-if="action == 'Update'"
-              :color="$vuetify.theme.themes.light.submitBtns"
-              class="white--text"
+              color="#f5b027"
+              class="white--text rounded-lg"
               @click="edit = true"
               :class="edit ? 'd-none' : ''"
             >
@@ -196,8 +199,8 @@
               Edit Files
             </v-btn>
             <v-btn
-              :color="$vuetify.theme.themes.light.submitBtns"
-              class="white--text"
+              color="#f5b027"
+              class="white--text rounded-lg"
               :class="edit ? 'd-none' : ''"
               @click="accept()"
             >
@@ -206,9 +209,9 @@
             </v-btn>
 
             <v-btn
-              :color="$vuetify.theme.themes.light.submitBtns"
+              color="#f5b027"
               :class="edit ? '' : 'd-none'"
-              class="white--text"
+              class="white--text rounded-lg"
               @click="updateWithFile()"
             >
               <v-icon>mdi-check-circle</v-icon>
