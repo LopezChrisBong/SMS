@@ -78,7 +78,9 @@
               </div>
             </div>
 
-            <v-icon size="40" color="deep-purple"> mdi-door </v-icon>
+            <v-icon size="40" color="deep-purple">
+              mdi-google-classroom
+            </v-icon>
           </div>
         </v-card>
       </v-col>

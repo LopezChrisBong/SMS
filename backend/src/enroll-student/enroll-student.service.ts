@@ -1224,7 +1224,7 @@ export class EnrollStudentService {
       catchData1 = 'Senior High';
     }
 
-    let enrolled = await this.dataSource.manager
+    let enrolled1 = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .select(['COUNT(*) as numberEnrolled'])
       .leftJoin(StudentEnrollmentHistory, 'SEH', 'SEH.student_id = ES.id')
@@ -1234,10 +1234,13 @@ export class EnrollStudentService {
       .andWhere('ES.isSubmitted = 1')
       .andWhere('ES.seniorJunior IN (:...values)', {
         values: [catchData, catchData1],
-      })
-      .getRawMany();
+      });
+    if (gradeLevel !== 'All' || gradeLevel == null) {
+      enrolled1.andWhere('ES.grade_level = :gradeLevel', { gradeLevel });
+    }
+    let enrolled = await enrolled1.getRawMany();
 
-    let enrolledStudents = await this.dataSource.manager
+    let enrolledStudents1 = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
       .leftJoin(StudentEnrollmentHistory, 'SEH', 'SEH.student_id = ES.id')
       .where('ES.statusEnrolled = 1')
@@ -1246,8 +1249,13 @@ export class EnrollStudentService {
       .andWhere('ES.isSubmitted = 1')
       .andWhere('ES.seniorJunior IN (:...values)', {
         values: [catchData, catchData1],
-      })
-      .getRawMany();
+      });
+    if (gradeLevel !== 'All' || gradeLevel == null) {
+      enrolledStudents1.andWhere('ES.grade_level = :gradeLevel', {
+        gradeLevel,
+      });
+    }
+    let enrolledStudents = await enrolledStudents1.getRawMany();
 
     let verify = await this.dataSource.manager
       .createQueryBuilder(EnrollStudent, 'ES')
