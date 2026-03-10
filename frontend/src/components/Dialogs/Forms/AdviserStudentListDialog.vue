@@ -874,6 +874,9 @@ export default {
       this.initialize();
       this.dialog = false;
       this.updateClassListDialog = false;
+      this.studentList = [];
+      this.promotedList = [];
+      this.currentYear = true;
     },
 
     save() {
