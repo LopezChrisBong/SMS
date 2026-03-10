@@ -1209,8 +1209,12 @@ export class EnrollStudentService {
     }
   }
 
-  async getTotalEnrolledStudent(filter: number, status: number) {
-    // console.log('status',status)
+  async getTotalEnrolledStudent(
+    filter: number,
+    status: number,
+    gradeLevel: string,
+  ) {
+    console.log('gradeLevel', gradeLevel);
     let catchData;
     let catchData1;
     if (status == 1) {
@@ -1258,10 +1262,65 @@ export class EnrollStudentService {
       })
       .getRawMany();
 
+    let teacherData = await this.dataSource.manager
+      .createQueryBuilder(UserDetail, 'ud')
+      .leftJoin(Users, 'us', 'us.id = ud.userID')
+      .where('us.isAdminApproved = 1');
+
+    if (status == 1) {
+      teacherData.andWhere('ud.status = 1');
+    } else {
+      teacherData.andWhere('ud.status = 2');
+    }
+
+    let teacherDataCount = await teacherData.getRawMany();
+    let countTeacher = teacherDataCount.length;
+    let teacherf = 0;
+    let teacherm = 0;
+    for (let i = 0; i < teacherDataCount.length; i++) {
+      if (teacherDataCount[i].ud_sex == 'Female') {
+        teacherf += 1;
+      } else {
+        teacherm += 1;
+      }
+    }
+
+    let roomCount = await this.dataSource.manager.createQueryBuilder(
+      RoomsSection,
+      'rs',
+    );
+    if (status == 1) {
+      roomCount.where('rs.grade_level IN (:...values)', {
+        values: [
+          'Kinder 1',
+          'Kinder 2',
+          'Grade 1',
+          'Grade 2',
+          'Grade 3',
+          'Grade 4',
+          'Grade 5',
+          'Grade 6',
+        ],
+      });
+    } else {
+      roomCount.where('rs.grade_level IN (:...values)', {
+        values: [
+          'Grade 7',
+          'Grade 8',
+          'Grade 9',
+          'Grade 10',
+          'Grade 11',
+          'Grade 12',
+        ],
+      });
+    }
+    let countRoom = await roomCount.getCount();
+    // console.log('countRoom', countRoom);
+
     let fmcount = 0;
     let mcount = 0;
     for (let i = 0; i < enrolledStudents.length; i++) {
-      console.log(enrolledStudents[i].ES_sex);
+      // console.log(enrolledStudents[i].ES_sex);
       if (enrolledStudents[i].ES_sex == 'Female') {
         fmcount += 1;
       } else {
@@ -1272,7 +1331,16 @@ export class EnrollStudentService {
     let enrolledData = parseInt(enrolled[0].numberEnrolled);
     let verifyData = parseInt(verify[0].numberVerify);
 
-    return { enrolledData, verifyData, fmcount, mcount };
+    return {
+      enrolledData,
+      verifyData,
+      fmcount,
+      mcount,
+      countTeacher,
+      teacherf,
+      teacherm,
+      countRoom,
+    };
   }
 
   async getStudentDataByCode(filter: number, code: string, level: string) {
@@ -1980,7 +2048,7 @@ export class EnrollStudentService {
     const data = await this.dataSource.query(
       `SELECT * FROM student_combinedforecasts`,
     );
-
+    // console.log(data);
     return data;
   }
 
@@ -1988,7 +2056,7 @@ export class EnrollStudentService {
     const data = await this.dataSource.query(
       `SELECT * FROM report_forcasteddata_by_gradelevel`,
     );
-    // console.log(data);
+
     return data;
   }
 }
