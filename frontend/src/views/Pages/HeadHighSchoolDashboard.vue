@@ -223,51 +223,51 @@ export default {
       this.buildRoomForecastChart();
     },
 
-    // buildChartWithoutPoly() {
-    //   const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
-
-    //   const gradeData = this.allForecastData.filter(
-    //     (d) => d.gradeyr_level === gradeNumber,
-    //   );
-
-    //   const labels = gradeData.map((d) => d.allYear);
-
-    //   const actual = gradeData.map((d) => d.actual_students);
-
-    //   const linear = gradeData.map((d) =>
-    //     d.linear_regression ? Number(d.linear_regression) : null,
-    //   );
-
-    //   const smoothing = gradeData.map((d) => Number(d.exponential_smoothing));
-
-    //   this.forecastChart = {
-    //     labels: labels,
-    //     datasets: [
-    //       {
-    //         label: "Actual Students",
-    //         data: actual,
-    //         borderColor: "#42A5F5",
-    //         fill: false,
-    //       },
-    //       {
-    //         label: "Linear Regression",
-    //         data: linear,
-    //         borderColor: "#66BB6A",
-    //         borderDash: [5, 5],
-    //         fill: false,
-    //       },
-    //       {
-    //         label: "Exponential Smoothing",
-    //         data: smoothing,
-    //         borderColor: "#FFA726",
-    //         borderDash: [8, 5],
-    //         fill: false,
-    //       },
-    //     ],
-    //   };
-    // },
-
     buildChart() {
+      const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
+
+      const gradeData = this.allForecastData.filter(
+        (d) => d.gradeyr_level === gradeNumber,
+      );
+
+      const labels = gradeData.map((d) => d.allYear);
+
+      const actual = gradeData.map((d) => d.actual_students);
+
+      const linear = gradeData.map((d) =>
+        d.linear_regression ? Number(d.linear_regression) : null,
+      );
+
+      const smoothing = gradeData.map((d) => Number(d.exponential_smoothing));
+
+      this.forecastChart = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Actual Students",
+            data: actual,
+            borderColor: "#42A5F5",
+            fill: false,
+          },
+          {
+            label: "Linear Regression",
+            data: linear,
+            borderColor: "#66BB6A",
+            borderDash: [5, 5],
+            fill: false,
+          },
+          {
+            label: "Exponential Smoothing",
+            data: smoothing,
+            borderColor: "#FFA726",
+            borderDash: [8, 5],
+            fill: false,
+          },
+        ],
+      };
+    },
+
+    buildChartWithPoly() {
       const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
 
       const gradeData = this.allForecastData.filter(

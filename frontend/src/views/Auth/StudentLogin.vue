@@ -150,10 +150,6 @@
               background: #fff8e1;
             "
           >
-<<<<<<< HEAD
-            Please select the appropriate grade level. This will serve as the
-            basis for your enrollment.
-=======
             Please select the appropriate grade level, as it will serve as the
             basis for your enrollment.
           </div>
@@ -172,7 +168,6 @@
               class="white--text my-6"
               >high school</v-btn
             >
->>>>>>> 61c852f1e56fbd288b20f3d2217b2060ceac54db
           </div>
 
           <v-btn
