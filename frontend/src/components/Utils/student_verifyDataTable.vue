@@ -1,5 +1,6 @@
 <template>
   <div style="margin-top: 8pt">
+    <!-- TOP BAR -->
     <v-row class="mx-2">
       <v-col cols="12" md="5" class="pa-0">
         <v-tabs v-model="activeTab" color="#f5b027" align-tabs="left">
@@ -13,7 +14,9 @@
           </v-tab>
         </v-tabs>
       </v-col>
+
       <v-spacer></v-spacer>
+
       <v-col cols="12" md="4">
         <v-text-field
           v-model="search"
@@ -28,233 +31,210 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-card class="ma-5 dt-container" elevation="0" outlined>
-      <v-data-table
-        class="custom-table"
-        :headers="tab == 1 ? headers : headers1"
-        :items="data"
-        :items-per-page="10"
-        :search="search"
-        :options.sync="options"
-        :loading="loading"
-        @pagination="pagination"
-        hide-default-footer
-      >
-        <template v-slot:[`item.name`]="{ item }">
-          <span class="gboFontsTable">{{ item.name }}</span>
-        </template>
-        <template v-slot:[`item.birthPSA`]="{ item }">
-          <div class="d-flex justify-center align-center">
-            <span class="gboFontsTable text-center">
-              <v-checkbox
-                :input-value="notDeault(item.birthPSA)"
-                readonly
-              ></v-checkbox>
-            </span>
-          </div>
-        </template>
-        <template v-slot:[`item.goodMoral`]="{ item }">
-          <div class="d-flex justify-center align-center">
-            <span class="gboFontsTable text-center">
-              <v-checkbox
-                :input-value="notDeault(item.goodMoral)"
-                readonly
-              ></v-checkbox>
-            </span>
-          </div>
-        </template>
-        <template v-slot:[`item.schoolCard`]="{ item }">
-          <div class="d-flex justify-center align-center">
-            <span class="gboFontsTable text-center">
-              <v-checkbox
-                :input-value="notDeault(item.schoolCard)"
-                readonly
-              ></v-checkbox>
-            </span>
-          </div>
-        </template>
-        <template v-slot:[`item.updated_at`]="{ item }">
-          <span class="gboFontsTable">{{ formatDate(item.updated_at) }}</span>
-        </template>
-        <template v-slot:[`item.actions`]="{ item }">
-          <div class="d-flex">
-            <v-btn
-              style="width: 80pt"
-              small
-              color="#48A111"
-              class="my-2 mx-2 gboFontsTable rounded-lg"
-              outlined
-              @click="editItem(item)"
-            >
-              <v-icon>{{
-                tab == 1 ? "mdi-pencil-outline" : "mdi-pencil"
-              }}</v-icon>
-              {{ tab == 1 ? "Verify" : "Update" }}
-            </v-btn>
 
-            <v-btn
-              style="width: 80pt"
-              small
-              class="my-2 mx-2 gboFontsTable rounded-lg"
-              color="#758A93"
-              outlined
-              @click="viewItem(item)"
-            >
-              <v-icon class="gboFontsTable">mdi-eye</v-icon>
-              View
+    <!-- TABLE + PREVIEW -->
+    <v-row class="ma-5">
+      <!-- TABLE -->
+      <v-col :cols="showPreview ? 8 : 12">
+        <v-card class="dt-container" elevation="0" outlined>
+          <v-data-table
+            class="custom-table"
+            :headers="headers"
+            :items="data"
+            :items-per-page="10"
+            :search="search"
+            :options.sync="options"
+            :loading="loading"
+            @pagination="pagination"
+            hide-default-footer
+          >
+            <!-- NAME -->
+            <template v-slot:[`item.name`]="{ item }">
+              <span class="gboFontsTable">{{ item.name }}</span>
+            </template>
+            <template v-slot:[`item.documents`]="{ item }">
+              <div class="d-flex flex-column align-start">
+                <!-- PSA -->
+                <v-btn
+                  v-if="item.birthPSA && !item.birthPSA.startsWith('default')"
+                  small
+                  outlined
+                  color="primary"
+                  class="my-1 rounded-lg"
+                  elevation="0"
+                  @click="
+                    previewDocument(item.birthPSA, 'PSA Birth Certificate')
+                  "
+                >
+                  PSA
+                </v-btn>
+
+                <!-- FORM 137 -->
+                <v-btn
+                  v-if="
+                    item.schoolCard && !item.schoolCard.startsWith('default')
+                  "
+                  small
+                  outlined
+                  color="primary"
+                  class="my-1 rounded-lg"
+                  elevation="0"
+                  @click="previewDocument(item.schoolCard, 'Form 137')"
+                >
+                  FORM 137
+                </v-btn>
+
+                <!-- GOOD MORAL -->
+                <v-btn
+                  v-if="item.goodMoral && !item.goodMoral.startsWith('default')"
+                  small
+                  outlined
+                  color="primary"
+                  class="my-1 rounded-lg"
+                  elevation="0"
+                  @click="
+                    previewDocument(item.goodMoral, 'Good Moral Certificate')
+                  "
+                >
+                  GOOD MORAL
+                </v-btn>
+                <!-- Picture -->
+                <v-btn
+                  v-if="item.picture && !item.picture.startsWith('default')"
+                  small
+                  outlined
+                  color="primary"
+                  class="my-1 rounded-lg"
+                  elevation="0"
+                  @click="previewDocument(item.picture, '2x2 Picture')"
+                >
+                  2x2 Picture
+                </v-btn>
+              </div>
+            </template>
+
+            <!-- ACTIONS -->
+            <template v-slot:[`item.actions`]="{ item }">
+              <div class="d-flex">
+                <v-btn
+                  v-if="activeTab === 0"
+                  style="width: 80pt"
+                  small
+                  color="#f5b027"
+                  class="my-2 mx-2 gboFontsTable rounded-lg"
+                  outlined
+                  @click="enrollStudent(item)"
+                >
+                  <v-icon left>mdi-check</v-icon>
+                  Enroll
+                </v-btn>
+
+                <v-btn
+                  style="width: 80pt"
+                  small
+                  class="my-2 mx-2 gboFontsTable rounded-lg"
+                  color="#758A93"
+                  outlined
+                  @click="viewItem(item)"
+                >
+                  <v-icon>mdi-eye</v-icon>
+                  View
+                </v-btn>
+              </div>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-col>
+
+      <!-- PREVIEW PANEL -->
+      <v-col cols="4" v-if="showPreview">
+        <v-card outlined height="100%" class="rounded-xl">
+          <v-card-title height="20%">
+            {{ previewTitle }}
+
+            <v-spacer></v-spacer>
+
+            <v-btn icon @click="closePreview">
+              <v-icon>mdi-close</v-icon>
             </v-btn>
+          </v-card-title>
+
+          <v-divider></v-divider>
+
+          <v-card-text class="text-center">
+            <div v-if="previewImage">
+              <!-- IMAGE -->
+              <img
+                v-if="!previewImage.endsWith('.pdf')"
+                :src="previewImage"
+                style="max-width: 100%; max-height: 500px"
+              />
+
+              <!-- PDF -->
+              <iframe
+                v-else
+                :src="previewImage"
+                width="100%"
+                height="500"
+              ></iframe>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <ViewAccountVerificationDialog :data="viewData" :action="action" />
+      <v-dialog v-model="missingDialog" persistent max-width="380">
+        <v-card class="rounded-xl elevation-3">
+          <!-- HEADER -->
+          <div class="px-6 pt-6">
+            <!-- ICON + TITLE (ONE ROW LEFT) -->
+            <div class="d-flex align-center">
+              <v-avatar size="44" color="#fff3cd">
+                <v-icon color="#f5b027" size="26"
+                  >mdi-file-alert-outline</v-icon
+                >
+              </v-avatar>
+
+              <div class="text-h6 font-weight-bold ml-3">Missing Documents</div>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <p class="text-body-2 grey--text text--darken-1 mt-3">
+              The student cannot be enrolled because the following documents are
+              missing:
+            </p>
+
+            <!-- MISSING LIST -->
+            <ul class="mt-2">
+              <li
+                v-for="doc in missingDocs"
+                :key="doc"
+                class="red--text text--darken-1"
+              >
+                {{ doc }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- ACTION BUTTON -->
+          <v-card-actions class="justify-end px-6 pb-5">
             <v-btn
-              style="width: 80pt"
-              small
-              class="my-2 mx-2 gboFontsTable rounded-lg"
               color="#f5b027"
-              v-if="tab == 2"
-              outlined
-              @click="viewQRItem(item)"
+              class="white--text rounded-lg"
+              elevation="1"
+              @click="missingDialog = false"
             >
-              <v-icon class="gboFontsTable">mdi-qrcode</v-icon>
-              QR
+              OK
             </v-btn>
-          </div>
-        </template>
-      </v-data-table>
-    </v-card>
-    <v-row class="mb-2 mx-5" align="center">
-      <v-col cols="auto" class="mr-auto text-truncate flex-items" no-gutters>
-        <span class="px-2">Show</span>
-        <span>
-          <v-select
-            outlined
-            dense
-            color="#f5b027"
-            hide-details
-            :value="options.itemsPerPage"
-            style="max-width: 90px"
-            class="rounded-lg"
-            @change="options.itemsPerPage = parseInt($event, 10)"
-            :items="perPageChoices"
-          >
-          </v-select>
-        </span>
-        <span class="px-2"> Entries </span>
-      </v-col>
-
-      <v-col cols="auto" class="mr-auto text-truncate" no-gutters>
-        Showing {{ paginationData.pageStart + 1 }} to
-        {{ paginationData.pageStop }} of
-        {{ paginationData.itemsLength }} entries
-      </v-col>
-      <v-col cols="auto">
-        <v-pagination
-          v-model="options.page"
-          class="rounded-lg"
-          :total-visible="7"
-          :color="$vuetify.theme.themes.light.submitBtns"
-          :length="paginationData.pageCount"
-        >
-        </v-pagination>
-      </v-col>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
-
-    <AccountVerificationDialog :data="updateData" :action="action" />
-
-    <ViewAccountVerificationDialog :data="viewData" :action="action" />
-
-    <v-dialog v-model="dialogConfirmDelete" max-width="500">
-      <v-card>
-        <v-card-title class="text-h5"> Confirmation </v-card-title>
-
-        <v-card-text style="font-size: 17px">
-          Are you sure you want to delete this item ?
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="teal darken-3"
-            outlined
-            @click="dialogConfirmDelete = false"
-          >
-            Cancel
-          </v-btn>
-
-          <v-btn
-            :color="$vuetify.theme.themes.light.submitBtns"
-            class="white--text"
-            @click="
-              confirmDelete();
-              dialogConfirmDelete = false;
-            "
-          >
-            Confirm
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="qrCodedialog" max-width="420px">
-      <v-card class="rounded-xl elevation-4">
-        <!-- HEADER -->
-        <v-card-title class="dialog-header px-6 py-3">
-          <span class="text-h6 font-weight-medium">QR Code</span>
-          <v-spacer></v-spacer>
-
-          <!-- optional close button if needed -->
-          <!--
-      <v-btn icon @click="qrCodedialog = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-      -->
-        </v-card-title>
-
-        <!-- CONTENT -->
-        <v-card-text class="px-6 pt-6 pb-2">
-          <v-row>
-            <!-- QR CODE -->
-            <v-col cols="12" class="d-flex justify-center mb-2">
-              <div class="qr-container">
-                <qr-code :size="150" :text="qrText"></qr-code>
-              </div>
-            </v-col>
-
-            <!-- STUDENT NAME -->
-            <v-col cols="12" class="d-flex justify-center" v-if="viewQRData">
-              <div class="student-label">
-                Student: <strong>{{ viewQRData.name }}</strong>
-              </div>
-            </v-col>
-          </v-row>
-        </v-card-text>
-
-        <!-- ACTIONS -->
-        <v-card-actions class="px-6 pb-5 justify-center">
-          <v-btn
-            color="orange"
-            class="white--text rounded-lg px-6"
-            elevation="1"
-            @click="printQRCode()"
-          >
-            <v-icon left small>mdi-printer</v-icon>
-            Print
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <fade-away-message-component
-      displayType="variation2"
-      v-model="fadeAwayMessage.show"
-      :message="fadeAwayMessage.message"
-      :header="fadeAwayMessage.header"
-      :top="fadeAwayMessage.top"
-      :type="fadeAwayMessage.type"
-    ></fade-away-message-component>
   </div>
 </template>
+
 <script>
 export default {
   components: {
-    AccountVerificationDialog: () =>
-      import("../../components/Dialogs/Forms/student_verifyDialog.vue"),
     ViewAccountVerificationDialog: () =>
       import(
         "../../components/Dialogs/Views/ViewStudentVerificationDialog.vue"
@@ -262,13 +242,23 @@ export default {
   },
   data: () => ({
     search: "",
-    qrCodedialog: false,
-    checkbox: false,
+    loading: false,
+    missingDialog: false,
+    missingDocs: [],
+    viewData: null,
+    viewDialog: false,
+    action: "",
+    /* Preview */
+    zoomImage: null,
+    showZoom: false,
+    previewImage: null,
+    previewTitle: "",
+    showPreview: false,
+
+    /* Table */
     headers: [
       { text: "Name", value: "name", align: "start" },
-      { text: "PSA", value: "birthPSA", align: "center" },
-      { text: "Form 137", value: "schoolCard", align: "center" },
-      { text: "Good Moral", value: "goodMoral", align: "center" },
+      { text: "Document Requirements", value: "documents", align: "left" },
       {
         text: "Actions",
         value: "actions",
@@ -277,117 +267,70 @@ export default {
         width: 200,
       },
     ],
-    headers1: [
-      { text: "Name", value: "name", align: "start" },
-      { text: "Enrolled", value: "updated_at", align: "center" },
-      {
-        text: "Actions",
-        value: "actions",
-        align: "center",
-        sortable: false,
-        width: 200,
-      },
-    ],
+
     data: [],
-    verified: [],
-    perPageChoices: [
-      { text: "5", value: 5 },
-      { text: "10", value: 10 },
-      { text: "20", value: 20 },
-      { text: "50", value: 50 },
-      { text: "100", value: 100 },
-      { text: "250", value: 250 },
-      { text: "500", value: 500 },
-    ],
-    activeTab: { id: 1, name: "For Verification" },
-    tab: 1,
+    options: {},
+    paginationData: {},
+
+    /* Tabs */
     tabList: [
       { id: 1, name: "For Verification" },
       { id: 2, name: "Enrolled" },
     ],
-    totalCount: 0,
-    viewQRData: null,
-    deleteData: null,
-    updateData: null,
-    viewData: null,
-    loading: false,
-    options: {},
-    action: null,
-    paginationData: {},
-    qrText: null,
-    formdata: [],
-    work_dates_menu: false,
-    dialogConfirmDelete: false,
+    activeTab: { id: 1, name: "For Verification" },
+
+    /* Notification */
     fadeAwayMessage: {
       show: false,
       type: "success",
-      header: "Successfully Deleted!",
+      header: "System Message",
       message: "",
       top: 10,
     },
   }),
 
   mounted() {
-    this.eventHub.$on("closeAccountsVerificationDialog", () => {
-      if (this.tab == 1) {
-        this.initialize();
-      } else if (this.tab == 2) {
-        this.getVerifiedUsers();
-      }
-    });
-    this.eventHub.$on("closeAccountsVerificatioDataDialog", () => {
-      if (this.tab == 1) {
-        this.initialize();
-      } else if (this.tab == 2) {
-        this.getVerifiedUsers();
-      }
-    });
-  },
-  beforeDestroy() {
-    this.eventHub.$off("closeAccountsVerificationDialog");
-    this.eventHub.$off("closeAccountsVerificatioDataDialog");
-  },
-
-  watch: {
-    options: {
-      handler() {
-        if (this.tab == 1) {
-          this.initialize();
-        } else if (this.tab == 2) {
-          this.getVerifiedUsers();
-        }
-      },
-      deep: true,
-    },
+    this.initialize();
   },
 
   methods: {
+    /* ----------------------------------
+       UTILITIES
+    ----------------------------------- */
+
+    validFile(file) {
+      return file && !file.startsWith("default");
+    },
+
     pagination(data) {
       this.paginationData = data;
     },
-    notDeault(item) {
-      let datastring = item.substring(7, 0);
-      if (datastring == "default") {
-        return false;
-      } else {
-        return true;
-      }
-    },
+
+    /* ----------------------------------
+       LOAD DATA
+    ----------------------------------- */
+
     initialize() {
       this.loading = true;
-      this.tab = 1;
-      this.activeTab = { id: 1, name: "For Verification" };
-      this.axiosCall("/enroll-student/EnrollStudent", "GET").then((res) => {
-        if (res) {
-          console.log("Enrolled", res.data);
-          let data = res.data;
-          data.forEach((element, i) => {
-            data[i].name = this.toTitleCase(element.name);
-          });
 
-          this.data = data;
-          this.loading = false;
-        }
+      this.axiosCall("/enroll-student/EnrollStudent", "GET").then((res) => {
+        let data = res.data;
+
+        data = data.filter((student) => {
+          return (
+            student.birthPSA !== "default" &&
+            student.picture !== "default" &&
+            student.schoolCard !== "default" &&
+            student.goodMoral !== "default"
+          );
+        });
+
+        data.forEach((element, i) => {
+          data[i].name = this.toTitleCase(element.name);
+        });
+
+        this.data = data;
+        this.loading = false;
       });
     },
 
@@ -395,73 +338,146 @@ export default {
       this.loading = true;
 
       this.axiosCall("/enroll-student/EnrolledStudent", "GET").then((res) => {
-        if (res) {
-          let data = res.data;
-          data.forEach((element, i) => {
-            data[i].name = this.toTitleCase(element.name);
-          });
-          this.data = data;
-          this.loading = false;
-        }
+        let data = res.data;
+
+        data = data.filter((student) => {
+          return (
+            student.birthPSA !== "default" &&
+            student.picture !== "default" &&
+            student.schoolCard !== "default" &&
+            student.goodMoral !== "default"
+          );
+        });
+
+        data.forEach((element, i) => {
+          data[i].name = this.toTitleCase(element.name);
+        });
+
+        this.data = data;
+        this.loading = false;
       });
     },
+
+    /* ----------------------------------
+       TAB SWITCH
+    ----------------------------------- */
 
     changeTab(tab) {
       this.activeTab = tab;
 
-      if (tab.id == 1) {
+      if (tab.id === 1) {
         this.initialize();
-        this.tab = tab.id;
-      } else if (tab.id == 2) {
+      } else {
         this.getVerifiedUsers();
-        this.tab = tab.id;
       }
     },
-    // deleteItem(item) {
-    //   this.dialogConfirmDelete = true;
-    //   this.deleteData = item;
-    // },
+
+    /* ----------------------------------
+       ENROLL STUDENT
+    ----------------------------------- */
+
+    enrollStudent(item) {
+      let missing = [];
+
+      if (!item.birthPSA || item.birthPSA.startsWith("default"))
+        missing.push("PSA Birth Certificate");
+
+      if (!item.schoolCard || item.schoolCard.startsWith("default"))
+        missing.push("Form 137");
+
+      if (!item.goodMoral || item.goodMoral.startsWith("default"))
+        missing.push("Good Moral Certificate");
+
+      if (missing.length > 0) {
+        this.missingDocs = missing;
+        this.missingDialog = true;
+        return;
+      }
+
+      let filter = this.$store.getters.getFilterSelected;
+
+      let data = {
+        id: item.id,
+        grade_level: item.grade_level,
+        goodMoral: item.goodMoral,
+        birthPSA: item.birthPSA,
+        schoolCard: item.schoolCard,
+        picture: item.picture,
+        seniorJunior: item.seniorJunior,
+        schoo_yearId: filter,
+        update_type: 1,
+        statusEnrolled: true,
+      };
+
+      this.axiosCall(
+        "/enroll-student/updateEnrolledStudent",
+        "POST",
+        data,
+      ).then((res) => {
+        if (res.data.status == 200) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "success";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = res.data.msg;
+
+          this.initialize();
+        } else {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = res.data.msg;
+        }
+      });
+    },
+
+    /* ----------------------------------
+       DOCUMENT PREVIEW
+    ----------------------------------- */
+
+    previewDocument(file, title) {
+      if (!file) return;
+
+      let datastring = file.substring(7, 0);
+
+      if (datastring == "default") {
+        this.fadeAwayMessage.show = true;
+        this.fadeAwayMessage.type = "info";
+        this.fadeAwayMessage.header = "System Message";
+        this.fadeAwayMessage.message =
+          "No file Uploaded, This file is not required";
+        return;
+      }
+
+      this.previewTitle = title;
+      this.previewImage =
+        process.env.VUE_APP_SERVER + "/enroll-student/view/studentFile/" + file;
+
+      this.showPreview = true;
+    },
+
+    closePreview() {
+      this.showPreview = false;
+      this.previewImage = null;
+      this.previewTitle = "";
+    },
+
+    /* ----------------------------------
+       ACTION BUTTONS
+    ----------------------------------- */
+
     editItem(item) {
-      this.updateData = [{ id: null }];
-      setTimeout(() => {
-        this.updateData = item;
-        this.action = this.tab == 1 ? "Verify" : "Update";
-      }, 100);
+      this.updateData = item;
+      this.action = "Verify";
     },
 
     viewItem(item) {
-      console.log(item);
-      if (this.tab == 1) {
-        this.viewData = item;
-        this.action = "View";
-      } else {
-        this.viewData = item;
-        this.action = "Update";
-      }
+      this.viewData = null;
+
+      this.$nextTick(() => {
+        this.viewData = { ...item }; // force new object reference
+        this.action = this.activeTab.id === 1 ? "View" : "Update";
+      });
     },
-    viewQRItem(item) {
-      console.log(item);
-      this.viewQRData = item;
-      this.qrCodedialog = true;
-      if (item.id) {
-        this.qrText = item.id.toString();
-        this.dialog = true;
-      }
-    },
-    printQRCode() {
-      const url =
-        process.env.VUE_APP_SERVER + "/pdf-generator/getQRCode/" + this.qrText;
-      window.open(url);
-    },
-    // confirmDelete() {
-    //   this.axiosCall("/request-type/" + this.deleteData.id, "DELETE").then(
-    //     () => {
-    //       this.fadeAwayMessage.show = true;
-    //       this.itemData = null;
-    //       this.initialize();
-    //     }
-    //   );
-    // },
   },
 };
 </script>
@@ -484,6 +500,5 @@ export default {
 
 .custom-table :deep(th) {
   font-size: 11pt !important;
-  line-height: 1.5;
 }
 </style>

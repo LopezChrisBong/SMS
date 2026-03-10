@@ -20,92 +20,11 @@
                     color="blue"
                     class="rounded-lg"
                     block
-                    @click="viewPicture()"
                     :class="edit ? 'd-none' : ''"
+                    @click="previewDialog = true"
                   >
-                    picture
+                    Preview All Documents
                   </v-btn>
-                  <v-file-input
-                    outlined
-                    v-model="picture"
-                    class="rounded-lg"
-                    :class="edit ? '' : 'd-none'"
-                    label="2x2 Picture"
-                    color="#6DB249"
-                    accept=".png, .jpeg, .jpg"
-                    :clearable="false"
-                  >
-                  </v-file-input>
-                </v-col>
-                <v-col cols="12">
-                  <v-btn
-                    min-height="40"
-                    color="blue"
-                    class="rounded-lg"
-                    block
-                    @click="viewSchoolCard()"
-                    :class="edit ? 'd-none' : ''"
-                  >
-                    Student Card
-                  </v-btn>
-                  <v-file-input
-                    outlined
-                    v-model="schoolCard"
-                    class="rounded-lg"
-                    :class="edit ? '' : 'd-none'"
-                    label="Student Card"
-                    color="#6DB249"
-                    accept=".pdf"
-                    :clearable="false"
-                  >
-                  </v-file-input>
-                </v-col>
-
-                <v-col cols="12">
-                  <v-btn
-                    min-height="40"
-                    color="blue"
-                    class="rounded-lg"
-                    block
-                    @click="viewPSA()"
-                    :class="edit ? 'd-none' : ''"
-                  >
-                    Birth Certificate / PSA
-                  </v-btn>
-                  <v-file-input
-                    outlined
-                    v-model="birthPSA"
-                    class="rounded-lg"
-                    :class="edit ? '' : 'd-none'"
-                    label="Birth Certificate / PSA"
-                    color="#6DB249"
-                    accept=".pdf"
-                    :clearable="false"
-                  >
-                  </v-file-input>
-                </v-col>
-                <v-col cols="12">
-                  <v-btn
-                    min-height="40"
-                    color="blue"
-                    class="rounded-lg"
-                    block
-                    @click="viewGoodMoral()"
-                    :class="edit ? 'd-none' : ''"
-                  >
-                    Good Moral
-                  </v-btn>
-                  <v-file-input
-                    outlined
-                    v-model="goodMoral"
-                    class="rounded-lg"
-                    :class="edit ? '' : 'd-none'"
-                    label="Good Moral"
-                    color="#6DB249"
-                    accept=".pdf"
-                    :clearable="false"
-                  >
-                  </v-file-input>
                 </v-col>
 
                 <v-col cols="12" v-if="action == 'Update'">
@@ -162,6 +81,107 @@
               </v-row>
             </v-container>
           </v-card-text>
+
+          <v-dialog v-model="previewDialog" max-width="700px">
+            <v-dialog v-model="previewDialog" max-width="900px" scrollable>
+              <v-card class="rounded-xl">
+                <v-card-title class="dialog-header pt-3 pb-3 pl-6">
+                  Student Documents Preview
+                  <v-spacer></v-spacer>
+                  <v-btn icon @click="previewDialog = false">
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <!-- Picture -->
+                      <v-col cols="12" md="6">
+                        <v-card outlined>
+                          <v-card-title>2x2 Picture</v-card-title>
+
+                          <v-card-text>
+                            <v-img
+                              v-if="picture"
+                              :src="getFileUrl(picture)"
+                              contain
+                              max-height="300"
+                            ></v-img>
+
+                            <div v-else class="text-center grey--text">
+                              No Image Uploaded
+                            </div>
+                          </v-card-text>
+                        </v-card>
+                      </v-col>
+
+                      <!-- Student Card -->
+                      <v-col cols="12" md="6">
+                        <v-card outlined>
+                          <v-card-title>Student Card</v-card-title>
+
+                          <v-card-text>
+                            <iframe
+                              v-if="schoolCard"
+                              :src="getFileUrl(schoolCard)"
+                              width="100%"
+                              height="300"
+                            ></iframe>
+
+                            <div v-else class="text-center grey--text">
+                              No File Uploaded
+                            </div>
+                          </v-card-text>
+                        </v-card>
+                      </v-col>
+
+                      <!-- PSA -->
+                      <v-col cols="12" md="6">
+                        <v-card outlined>
+                          <v-card-title>Birth Certificate / PSA</v-card-title>
+
+                          <v-card-text>
+                            <iframe
+                              v-if="birthPSA"
+                              :src="getFileUrl(birthPSA)"
+                              width="100%"
+                              height="300"
+                            ></iframe>
+
+                            <div v-else class="text-center grey--text">
+                              No File Uploaded
+                            </div>
+                          </v-card-text>
+                        </v-card>
+                      </v-col>
+
+                      <!-- Good Moral -->
+                      <v-col cols="12" md="6">
+                        <v-card outlined>
+                          <v-card-title>Good Moral</v-card-title>
+
+                          <v-card-text>
+                            <iframe
+                              v-if="goodMoral"
+                              :src="getFileUrl(goodMoral)"
+                              width="100%"
+                              height="300"
+                            ></iframe>
+
+                            <div v-else class="text-center grey--text">
+                              No File Uploaded
+                            </div>
+                          </v-card-text>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+          </v-dialog>
+
           <v-divider></v-divider>
 
           <v-card-actions class="pa-5">
@@ -248,6 +268,7 @@ export default {
         grade_level: null,
         schoo_yearId: null,
       },
+      previewDialog: false,
       seniorJunior: null,
       passedList: ["Yes", "No"],
       userRoleList: [],
@@ -473,6 +494,12 @@ export default {
     },
   },
   methods: {
+    getFileUrl(file) {
+      return (
+        process.env.VUE_APP_SERVER + "/enroll-student/view/studentFile/" + file
+      );
+    },
+
     initialize() {
       this.getUserType();
       this.getAssignedModules();
