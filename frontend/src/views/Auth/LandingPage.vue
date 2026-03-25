@@ -205,9 +205,9 @@ export default {
   background: white;
   color: #065f46;
   border: none;
-  padding: 10px 22px;
+  padding: 10px 50px;
   border-radius: 999px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -288,7 +288,7 @@ export default {
 }
 
 .requirements-card span {
-  color: #0f766e;
+  color: #147452;
   font-weight: 700;
 }
 
