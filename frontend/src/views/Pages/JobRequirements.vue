@@ -1,10 +1,16 @@
 <template>
   <div class="apply-page">
     <div class="overlay"></div>
-
+    <!-- Loading Overlay -->
+    <div v-if="loadingState" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Loading, please wait...</p>
+    </div>
     <div class="glass-container">
       <!-- TITLE -->
-      <h2 class="title">Application for {{ jobTitle || "Position" }}</h2>
+      <h2 class="title" style="text-transform: uppercase">
+        Application for {{ jobData.position_title || "Position" }}
+      </h2>
       <div class="steps-wrapper" :style="{ '--steps': steps.length }">
         <!-- PROGRESS LINE -->
         <div class="progress-line">
@@ -38,342 +44,750 @@
       <div class="form-box">
         <!-- STEP 1 -->
         <div v-if="currentStep === 0">
-          <p class="instruction">
-            Instruction: Please enter "N/A" in any required field that does not
-            apply to you.
-          </p>
+          <v-form ref="form1">
+            <p class="instruction">
+              Instruction: Please enter "N/A" in any required field that does
+              not apply to you.
+            </p>
 
-          <div class="grid">
-            <div class="form-group">
-              <label>First Name</label>
-              <input v-model="form.firstName" />
-            </div>
+            <div class="grid">
+              <div class="form-group">
+                <label><span class="red--text">*</span> First Name</label>
+                <!-- <input v-model="form.firstName" :rules="[formRules.required]" /> -->
+                <v-text-field
+                  v-model="form.firstname"
+                  label="Firstname"
+                  outlined
+                  color="green"
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
 
-            <div class="form-group">
-              <label>Middle Name</label>
-              <input v-model="form.middleName" />
-            </div>
+              <div class="form-group">
+                <label><span class="red--text">*</span> Middle Name</label>
+                <!-- <input v-model="form.middleName" /> -->
+                <v-text-field
+                  v-model="form.mi"
+                  label="Middle Name"
+                  outlined
+                  color="green"
+                  dense
+                />
+              </div>
 
-            <div class="form-group">
-              <label>Last Name</label>
-              <input v-model="form.lastName" />
-            </div>
+              <div class="form-group">
+                <label><span class="red--text">*</span> Last Name</label>
+                <!-- <input v-model="form.lastName" /> -->
+                <v-text-field
+                  v-model="form.lastname"
+                  label="Lastname"
+                  outlined
+                  color="green"
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
 
-            <div class="form-group">
-              <label>Suffix</label>
-              <input v-model="form.suffix" />
-            </div>
+              <div class="form-group">
+                <label>Suffix</label>
+                <!-- <input v-model="form.suffix" /> -->
+                <v-text-field
+                  v-model="form.suffix"
+                  label="Suffix"
+                  outlined
+                  color="green"
+                  dense
+                />
+              </div>
 
-            <div class="form-group">
-              <label>Email Address</label>
-              <input v-model="form.email" />
-            </div>
+              <div class="form-group">
+                <label><span class="red--text">*</span> Email Address</label>
+                <!-- <input v-model="form.email" /> -->
+                <v-text-field
+                  v-model="form.email"
+                  label="Email"
+                  outlined
+                  dense
+                  color="green"
+                  type="email"
+                  :rules="[formRules.required, formRules.email]"
+                />
+              </div>
 
-            <div class="form-group">
-              <label>Phone Number</label>
-              <input v-model="form.phone" />
-            </div>
+              <div class="form-group">
+                <label><span class="red--text">*</span> Phone Number</label>
+                <!-- <input v-model="form.phone" /> -->
+                <v-text-field
+                  v-model="form.number"
+                  label="Phone Number"
+                  color="green"
+                  type="text"
+                  maxlength="11"
+                  @keypress="onlyDigits"
+                  @input="cleanDigits"
+                  :rules="[contactNoRule]"
+                  outlined
+                  dense
+                />
+              </div>
 
-            <div class="form-group">
-              <label>Religion</label>
-              <input v-model="form.religion" />
-            </div>
+              <div class="form-group">
+                <label><span class="red--text">*</span> Religion</label>
+                <!-- <input v-model="form.religion" /> -->
+                <v-text-field
+                  v-model="form.religion"
+                  color="green"
+                  label="Religion"
+                  outlined
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
 
-            <div class="form-group">
-              <label>Sex</label>
-              <input v-model="form.sex" />
-            </div>
+              <div class="form-group">
+                <label><span class="red--text">*</span> SOGIE</label>
+                <!-- <input v-model="form.sex" /> -->
+                <v-select
+                  v-model="form.gender"
+                  color="green"
+                  :items="genderOptions"
+                  label="SOGIE"
+                  outlined
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
 
-            <div class="form-group">
-              <label>Birth Date</label>
-              <input type="date" v-model="form.birthDate" />
-            </div>
+              <div class="form-group">
+                <label><span class="red--text">*</span> Birth Date</label>
+                <!-- <input type="date" v-model="form.birthDate" /> -->
+                <v-text-field
+                  outlined
+                  label="*Birth Date"
+                  v-model="form.birth"
+                  :rules="[formRules.required]"
+                  dense
+                  required
+                  type="date"
+                  :max="BdaymaxDate"
+                  class="text-uppercase"
+                  @input="calculateAge(form.birth)"
+                />
+              </div>
 
-            <div class="form-group full">
-              <label>Address (Prk./Brgy./City/Municipality)</label>
-              <input v-model="form.address" />
+              <div class="form-group full">
+                <label
+                  ><span class="red--text">*</span> Address
+                  (Prk./Brgy./City/Municipality)</label
+                >
+                <!-- <input v-model="form.address" /> -->
+                <v-text-field
+                  v-model="form.address"
+                  label="Address (Prk./Brgy./City/Municipality)"
+                  outlined
+                  color="green"
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
             </div>
-          </div>
+          </v-form>
         </div>
 
         <!-- STEP 2 -->
         <div v-if="currentStep === 1">
-          <p class="instruction">
-            Instruction: Please enter "N/A" in any required field that does not
-            apply to you.
-          </p>
-          <div class="grid1">
-            <div class="form-group full1">
-              <label>Highest Educational Attainement</label>
-              <input v-model="form.highest_education" />
+          <v-form ref="form2">
+            <p class="instruction">
+              Instruction: Please enter "N/A" in any required field that does
+              not apply to you.
+            </p>
+            <div class="grid1">
+              <div class="form-group full1">
+                <label
+                  ><span class="red--text">*</span> Highest Educational
+                  Attainement</label
+                >
+                <!-- <input v-model="form.highest_education" /> -->
+                <v-select
+                  v-model="form.educQualification"
+                  :items="educationOptions"
+                  label="Highest Educational Attainment"
+                  color="green"
+                  outlined
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
+              <div
+                class="form-group"
+                v-if="
+                  form.educQualification == 'Vocational' ||
+                  form.educQualification == 'College Level'
+                "
+              >
+                <label><span class="red--text">*</span> Course </label>
+                <!-- <input type="date" v-model="form.bachelor" /> -->
+                <v-text-field
+                  v-model="form.educQualificationGrad"
+                  label="Course"
+                  color="green"
+                  outlined
+                  :rules="
+                    form.educQualification == 'Vocational' ||
+                    form.educQualification == 'College Level'
+                      ? [formRules.required]
+                      : []
+                  "
+                  dense
+                />
+              </div>
+              <div
+                class="form-group"
+                v-if="form.educQualification == 'College Level'"
+              >
+                <label><span class="red--text">*</span> Earned Unit </label>
+                <!-- <input type="date" v-model="form.bachelor_year_unit" /> -->
+                <v-text-field
+                  v-model="form.earnedUnits"
+                  label="Earned Units"
+                  color="green"
+                  :rules="
+                    form.educQualification == 'College Level'
+                      ? [formRules.required]
+                      : []
+                  "
+                  outlined
+                  dense
+                />
+              </div>
+              <div
+                class="form-group"
+                v-if="
+                  form.educQualification == 'College Graduate' ||
+                  form.educQualification == 'Post Graduate'
+                "
+              >
+                <label><span class="red--text">*</span> Bachelors Degree</label>
+                <!-- <input type="date" v-model="form.masters" /> -->
+                <v-text-field
+                  v-model="form.collegeGradCourse"
+                  label="Bachelors Degree"
+                  outlined
+                  :rules="
+                    form.educQualification == 'College Graduate' ||
+                    form.educQualification == 'Post Graduate'
+                      ? [formRules.required]
+                      : []
+                  "
+                  dense
+                  color="green"
+                />
+              </div>
+              <div
+                class="form-group"
+                v-if="
+                  form.educQualification == 'College Graduate' ||
+                  form.educQualification == 'Post Graduate'
+                "
+              >
+                <label
+                  ><span class="red--text">*</span> Year Graduated/Earned
+                  Unit</label
+                >
+                <!-- <input type="date" v-model="form.bachelor_year_unit" /> -->
+                <v-text-field
+                  v-model="form.yearGraduated"
+                  label="Year Graduated/ Earned Unit"
+                  outlined
+                  color="green"
+                  :rules="
+                    form.educQualification == 'College Graduate' ||
+                    form.educQualification == 'Post Graduate'
+                      ? [formRules.required]
+                      : []
+                  "
+                  dense
+                />
+              </div>
+              <div
+                class="form-group"
+                v-if="form.educQualification == 'Post Graduate'"
+              >
+                <label><span class="red--text">*</span> Master's Degree </label>
+                <!-- <input type="date" v-model="form.masters" /> -->
+                <v-text-field
+                  v-model="form.masterGradCourse"
+                  label="Master's Degree"
+                  outlined
+                  color="green"
+                  :rules="
+                    form.educQualification == 'Post Graduate'
+                      ? [formRules.required]
+                      : []
+                  "
+                  dense
+                />
+              </div>
+              <div
+                class="form-group"
+                v-if="form.educQualification == 'Post Graduate'"
+              >
+                <label
+                  ><span class="red--text">*</span> Year Graduated/Earned
+                  Unit</label
+                >
+                <!-- <input type="date" v-model="form.bachelor_year_unit" /> -->
+                <v-text-field
+                  v-model="form.yearGraduatedMasteral"
+                  label="Year Graduated/ Earned Unit 'N/A if not applicable'"
+                  outlined
+                  color="green"
+                  :rules="
+                    form.educQualification == 'Post Graduate'
+                      ? [formRules.required]
+                      : []
+                  "
+                  dense
+                />
+              </div>
+              <div
+                class="form-group"
+                v-if="form.educQualification == 'Post Graduate'"
+              >
+                <label><span class="red--text">*</span> Doctorate Degree</label>
+                <!-- <input type="date" v-model="form.bachelor" /> -->
+                <v-text-field
+                  v-model="form.doctoralGradCourse"
+                  label="Doctorate Degree 'N/A if not applicable'"
+                  color="green"
+                  outlined
+                  dense
+                  :rules="
+                    form.educQualification == 'Post Graduate'
+                      ? [formRules.required]
+                      : []
+                  "
+                />
+              </div>
+              <div
+                class="form-group"
+                v-if="form.educQualification == 'Post Graduate'"
+              >
+                <label
+                  ><span class="red--text">*</span> Year Graduated/Earned
+                  Unit</label
+                >
+                <!-- <input type="date" v-model="form.bachelor_year_unit" /> -->
+                <v-text-field
+                  v-model="form.yearGraduatedDoctoral"
+                  label="Year Graduated/ Earned Unit"
+                  outlined
+                  dense
+                  color="green"
+                  :rules="
+                    form.educQualification == 'Post Graduate'
+                      ? [formRules.required]
+                      : []
+                  "
+                />
+              </div>
             </div>
-            <div class="form-group">
-              <label>Bachelor Degree/Course </label>
-              <input type="date" v-model="form.bachelor" />
-            </div>
-            <div class="form-group">
-              <label>Year Graduated/Earned Unit</label>
-              <input type="date" v-model="form.bachelor_year_unit" />
-            </div>
-            <div class="form-group">
-              <label>Master's Degree </label>
-              <input type="date" v-model="form.masters" />
-            </div>
-            <div class="form-group">
-              <label>Year Graduated/Earned Unit</label>
-              <input type="date" v-model="form.bachelor_year_unit" />
-            </div>
-            <div class="form-group">
-              <label>Doctorate Degree</label>
-              <input type="date" v-model="form.bachelor" />
-            </div>
-            <div class="form-group">
-              <label>Year Graduated/Earned Unit</label>
-              <input type="date" v-model="form.bachelor_year_unit" />
-            </div>
-          </div>
+          </v-form>
         </div>
 
         <!-- STEP 3 -->
         <div v-if="currentStep === 2" class="gaps">
-          <p class="instruction">
-            Instruction: Please enter "N/A" in any required field that does not
-            apply to you.
-          </p>
-          <div class="grid">
-            <div class="form-group full">
-              <label>Highest Educational Attainement</label>
-              <input v-model="form.highest_education" />
+          <v-form ref="form3">
+            <p class="instruction">
+              Instruction: Please enter "N/A" in any required field that does
+              not apply to you.
+            </p>
+            <div class="grid">
+              <div class="form-group full">
+                <label
+                  ><span class="red--text">*</span> Latest Company/Agency</label
+                >
+                <!-- <input v-model="form.highest_education" /> -->
+                <v-text-field
+                  v-model="form.companyAgency"
+                  label="Latest Company/Agency"
+                  color="green"
+                  outlined
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
             </div>
-          </div>
-          <div class="grid1">
-            <div class="form-group">
-              <label>Present/Latest Position</label>
-              <input v-model="form.latest_organization" />
+            <div class="grid1">
+              <div class="form-group">
+                <label
+                  ><span class="red--text">*</span> Present/Latest
+                  Position</label
+                >
+                <!-- <input v-model="form.latest_organization" /> -->
+                <v-text-field
+                  v-model="form.presentposition"
+                  label="Present/Latest Position"
+                  color="green"
+                  outlined
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
+
+              <div class="form-group">
+                <label
+                  ><span class="red--text">*</span> Status of Employment</label
+                >
+                <!-- <input type="text" v-model="form.status_employement" /> -->
+                <v-text-field
+                  v-model="form.statusEmployment"
+                  label="Status of Employment"
+                  color="green"
+                  outlined
+                  dense
+                  :rules="[formRules.required]"
+                />
+              </div>
             </div>
-
-            <div class="form-group">
-              <label>Status of Employment</label>
-              <input type="text" v-model="form.status_employement" />
+            <div class="form-group full1">
+              <label><span class="red--text">*</span> Eligibility</label>
+              <!-- <input v-model="form.eligibility" /> -->
+              <v-text-field
+                v-model="form.eligibilityForm"
+                color="green"
+                label="Eligibility"
+                outlined
+                dense
+                :rules="[formRules.required]"
+              />
             </div>
-          </div>
-          <div class="form-group full1">
-            <label>Eligibility</label>
-            <input v-model="form.eligibility" />
-          </div>
-          <p class="instruction">
-            Instruction: Kindly check if you belong to any of the following:
-          </p>
+            <p class="instruction">
+              Instruction: Kindly check if you belong to any of the following:
+            </p>
 
-          <div class="checkbox-group">
-            <!-- PWD -->
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.isPwd" />
-              Person with Disability - if yes, specify
-            </label>
-            <input
-              v-if="form.isPwd"
-              type="text"
-              class="full"
-              placeholder="Please specify"
-              v-model="form.pwdDetails"
-            />
+            <div class="checkbox-group">
+              <!-- PWD -->
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="form.pwdChecked" />
+                Person with Disability - if yes, specify
+              </label>
+              <!-- <input
+                v-if="form.pwdChecked"
+                type="text"
+                class="full"
+                placeholder="Please specify"
+                v-model="form.pwd"
+              /> -->
+              <v-text-field
+                v-model="form.pwd"
+                placeholder="Please specify"
+                outlined
+                class="full"
+                color="green"
+                dense
+                :rules="[formRules.required]"
+                v-if="form.pwdChecked"
+              />
 
-            <!-- Pregnant -->
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.isPregnant" />
-              Pregnant
-            </label>
+              <!-- Pregnant -->
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="form.pregnant" />
+                Pregnant
+              </label>
 
-            <!-- Indigenous -->
-            <label class="checkbox-item">
-              <input type="checkbox" v-model="form.isIndigenous" />
-              Indigenous community - if yes, specify
-            </label>
-            <input
-              v-if="form.isIndigenous"
-              type="text"
-              class="full"
-              placeholder="Specify Indigenous community"
-              v-model="form.indigenousDetails"
-            />
-          </div>
+              <!-- Indigenous -->
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="form.indigenousChecked" />
+                Indigenous community - if yes, specify
+              </label>
+              <!-- <input
+                v-if="form.isIndigenous"
+                type="text"
+                class="full"
+                placeholder="Specify Indigenous community"
+                v-model="form.indigenousDetails"
+              /> -->
+              <v-text-field
+                v-if="form.indigenousChecked"
+                v-model="form.indigenous"
+                placeholder="Specify Indigenous community"
+                outlined
+                class="full"
+                color="green"
+                dense
+                :rules="[formRules.required]"
+              />
+            </div>
+          </v-form>
         </div>
 
         <!-- STEP 4 -->
         <div v-if="currentStep === 3">
-          <p class="instruction">
-            INSTRUCTION: Upload PDF files only. If multiple pages, merge into
-            one (1) file.
-          </p>
+          <v-form ref="form4">
+            <p class="instruction">
+              INSTRUCTION: Upload PDF files only. If multiple pages, merge into
+              one (1) file.
+            </p>
 
-          <div class="upload-list">
-            <div
-              class="upload-item"
-              v-for="item in uploadFields"
-              :key="item.key"
-            >
-              <!-- LABEL -->
-              <div class="upload-header">
-                <label>
-                  {{ item.label }}
-                  <span v-if="item.required">*</span>
-                </label>
-              </div>
-
-              <!-- BOX -->
-              <div class="upload-box">
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  @change="handleFile($event, item.key)"
-                />
-
-                <!-- EMPTY STATE -->
-                <div v-if="!form[item.key]" class="upload-placeholder">
-                  Click to upload PDF
+            <div class="upload-list">
+              <div
+                class="upload-item"
+                v-for="item in uploadFields"
+                :key="item.key"
+              >
+                <!-- LABEL -->
+                <div class="upload-header">
+                  <label>
+                    {{ item.label }}
+                    <span v-if="item.required">*</span>
+                  </label>
                 </div>
 
-                <!-- FILE PREVIEW -->
-                <div v-else class="file-preview">
-                  <span class="file-tag">
-                    {{ form[item.key].name }}
-                  </span>
+                <!-- BOX -->
+                <div class="upload-box">
+                  <v-file-input
+                    v-model="form[item.key]"
+                    accept="application/pdf"
+                    prepend-icon="mdi-file-pdf-box"
+                    show-size
+                    counter
+                    clearable
+                    :rules="item.required ? [formRules.required] : []"
+                    :label="item.label + (item.required ? ' *Required' : '')"
+                  >
+                  </v-file-input>
 
-                  <span class="file-size">
-                    ({{ formatSize(form[item.key].size) }})
-                  </span>
+                  <!-- FILE PREVIEW -->
+                  <div v-if="form[item.key]" class="file-preview">
+                    <span class="file-tag">
+                      {{ form[item.key].name }}
+                    </span>
 
-                  <button @click="removeFile(item.key)">✕</button>
+                    <span class="file-size">
+                      ({{ formatSize(form[item.key].size) }})
+                    </span>
+
+                    <button @click="removeFile(item.key)">✕</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </v-form>
         </div>
 
         <!-- STEP 5 -->
         <div v-if="currentStep === 4" class="review-container">
           <!-- PERSONAL -->
-          <div class="review-section">
-            <h3>Personal Information</h3>
+          <v-form ref="form5">
+            <div class="review-section">
+              <h3>Personal Information</h3>
 
-            <div class="review-grid">
-              <div class="review-item">
-                <span class="label">Full Name</span>
-                <span class="value">
-                  {{ form.firstName }} {{ form.middleName }} {{ form.lastName }}
-                </span>
-              </div>
+              <div class="review-grid">
+                <div class="review-item">
+                  <span class="label">Full Name</span>
+                  <span class="value">
+                    {{ form.firstname }} {{ form.mi }}
+                    {{ form.lastname }}
+                  </span>
+                </div>
 
-              <div class="review-item">
-                <span class="label">Email</span>
-                <span class="value">{{ form.email }}</span>
-              </div>
+                <div class="review-item">
+                  <span class="label">Email</span>
+                  <span class="value">{{ form.email }}</span>
+                </div>
 
-              <div class="review-item">
-                <span class="label">Phone</span>
-                <span class="value">{{ form.phone }}</span>
-              </div>
+                <div class="review-item">
+                  <span class="label">Phone</span>
+                  <span class="value">{{ form.number }}</span>
+                </div>
 
-              <div class="review-item">
-                <span class="label">Sex</span>
-                <span class="value">{{ form.sex }}</span>
-              </div>
+                <div class="review-item">
+                  <span class="label">SOGIE</span>
+                  <span class="value">{{ form.gender }}</span>
+                </div>
 
-              <div class="review-item full">
-                <span class="label">Address</span>
-                <span class="value">{{ form.address }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- EDUCATION -->
-          <div class="review-section">
-            <h3>Education</h3>
-
-            <div class="review-grid">
-              <div class="review-item">
-                <span class="label">Highest Attainment</span>
-                <span class="value">{{ form.highest_education }}</span>
-              </div>
-
-              <div class="review-item">
-                <span class="label">Bachelor</span>
-                <span class="value">{{ form.bachelor }}</span>
+                <div class="review-item full">
+                  <span class="label">Address</span>
+                  <span class="value">{{ form.address }}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- EMPLOYMENT -->
-          <div class="review-section">
-            <h3>Employment</h3>
+            <!-- EDUCATION -->
+            <div class="review-section">
+              <h3>Education</h3>
 
-            <div class="review-grid">
-              <div class="review-item">
-                <span class="label">Latest Position</span>
-                <span class="value">{{ form.latest_organization }}</span>
-              </div>
+              <div class="review-grid">
+                <div class="review-item">
+                  <span class="label">Highest Attainment</span>
+                  <span class="value">{{ form.educQualification }}</span>
+                </div>
 
-              <div class="review-item">
-                <span class="label">Status</span>
-                <span class="value">{{ form.status_employement }}</span>
-              </div>
-
-              <div class="review-item">
-                <span class="label">Eligibility</span>
-                <span class="value">{{ form.eligibility }}</span>
-              </div>
-
-              <!-- CHECKBOX INFO -->
-              <div class="review-item full" v-if="form.isPwd">
-                <span class="label">PWD</span>
-                <span class="value">{{ form.pwdDetails }}</span>
-              </div>
-
-              <div class="review-item" v-if="form.isPregnant">
-                <span class="label">Pregnant</span>
-                <span class="value">Yes</span>
-              </div>
-
-              <div class="review-item full" v-if="form.isIndigenous">
-                <span class="label">Indigenous</span>
-                <span class="value">{{ form.indigenousDetails }}</span>
+                <div class="review-item">
+                  <span class="label">Bachelor</span>
+                  <span class="value">{{
+                    form.educQualification == "College Graduate"
+                      ? form.collegeGradCourse
+                      : form.educQualification == "Post Graduate"
+                      ? form.doctoralGradCourse
+                        ? form.doctoralGradCourse
+                        : form.masterGradCourse
+                      : form.educQualification == "Vocational"
+                      ? form.educQualificationGrad
+                      : form.educQualification == "College Level"
+                      ? form.educQualificationGrad
+                      : "N/A"
+                  }}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- FILES -->
-          <div class="review-section">
-            <h3>Uploaded Files</h3>
+            <!-- EMPLOYMENT -->
+            <div class="review-section">
+              <h3>Employment</h3>
 
-            <div class="file-list">
-              <div
-                v-for="item in uploadedFiles"
-                :key="item.key"
-                class="file-row"
-              >
-                <span class="file-label">{{ item.label }}</span>
+              <div class="review-grid">
+                <div class="review-item">
+                  <span class="label">Latest Company/Agency </span>
+                  <span class="value">{{ form.companyAgency }}</span>
+                </div>
 
-                <span class="file-tag">
-                  {{ form[item.key].name }}
-                </span>
+                <div class="review-item">
+                  <span class="label">Latest Position</span>
+                  <span class="value">{{ form.presentposition }}</span>
+                </div>
+
+                <div class="review-item">
+                  <span class="label">Eligibility</span>
+                  <span class="value">{{ form.eligibilityForm }}</span>
+                </div>
+
+                <!-- CHECKBOX INFO -->
+                <div class="review-item full" v-if="form.pwdChecked">
+                  <span class="label">PWD</span>
+                  <span class="value">{{ form.pwd }}</span>
+                </div>
+
+                <div class="review-item" v-if="form.pregnant">
+                  <span class="label">Pregnant</span>
+                  <span class="value">Yes</span>
+                </div>
+
+                <div class="review-item full" v-if="form.indigenousChecked">
+                  <span class="label">Indigenous</span>
+                  <span class="value">{{ form.indigenous }}</span>
+                </div>
               </div>
             </div>
-          </div>
+
+            <!-- FILES -->
+            <div class="review-section">
+              <h3>Uploaded Files</h3>
+
+              <div class="file-list">
+                <div
+                  v-for="item in uploadedFiles"
+                  :key="item.key"
+                  class="file-row"
+                >
+                  <span class="file-label">{{ item.label }}</span>
+
+                  <span class="file-tag">
+                    {{ form[item.key].name }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </v-form>
         </div>
       </div>
 
       <!-- ACTIONS -->
       <div class="actions">
-        <button class="cancel" @click="prevStep" :disabled="currentStep === 0">
-          Return
+        <button class="cancel" @click="prevStep">
+          {{ currentStep == 0 ? "Return" : "Back" }}
         </button>
 
-        <button class="apply" @click="nextStep">
+        <button class="apply" @click="nextStep" :loading="BTNloading">
           {{ currentStep === 4 ? "Submit" : "Next" }}
         </button>
       </div>
     </div>
+    <div v-if="returnDialog" class="privacy-overlay">
+      <div class="privacy-modal">
+        <h4>Return Confirmation</h4>
+        <v-alert type="info" outlined class="mt-4">
+          You have made changes into this form! do you want to return? all
+          changes will be reset.
+        </v-alert>
+
+        <div class="actions">
+          <button class="cancel" @click="returnDialog = false">Cancel</button>
+
+          <button class="apply" @click="close()">Confirm</button>
+        </div>
+      </div>
+    </div>
+    <v-dialog
+      v-model="successSubmitDialog"
+      max-width="600"
+      scrollable
+      persistent
+    >
+      <v-card>
+        <v-card-title
+          class="white--text"
+          style="background: rgba(0, 0, 0, 0.6)"
+        >
+          Successfully submitted
+          <v-spacer></v-spacer>
+          <!-- <v-btn icon dark @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn> -->
+        </v-card-title>
+
+        <v-card-text style="text-align: justify; font-size: 14px">
+          <v-alert type="info" outlined class="mt-4"
+            >An email has been sent to the email address provided in your
+            application. Please check your spam or junk folder in case the
+            message was filtered.
+          </v-alert>
+        </v-card-text>
+
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <!-- <v-btn color="red" dark @click="returnDialog = false">
+            close
+          </v-btn> -->
+
+          <v-btn
+            style="
+              background-image: linear-gradient(
+                to bottom right,
+                #013d1f,
+                #009e08
+              );
+            "
+            dark
+            @click="ok()"
+          >
+            Ok
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <fade-away-message-component
+      displayType="variation2"
+      v-model="fadeAwayMessage.show"
+      :message="fadeAwayMessage.message"
+      :header="fadeAwayMessage.header"
+      :top="fadeAwayMessage.top"
+      :type="fadeAwayMessage.type"
+    ></fade-away-message-component>
   </div>
 </template>
 
@@ -381,8 +795,10 @@
 export default {
   data() {
     return {
-      jobTitle: "",
+      jobData: "",
       currentStep: 0,
+      returnDialog: false,
+      genderOptions: ["Man", "Woman", "Non-binary", "Prefer not to say"],
       steps: [
         "Personal Info",
         "Education",
@@ -390,57 +806,93 @@ export default {
         "Upload Files",
         "Review",
       ],
-      uploadFields: [
-        {
-          key: "applicationLetter",
-          label: "Application Letter",
-          required: true,
-        },
-        { key: "pds", label: "Personal Data Sheet (PDS)", required: true },
-        { key: "performance", label: "Performance Rating", required: false },
-        {
-          key: "eligibilityFile",
-          label: "Certificate of Eligibility/Rating",
-          required: true,
-        },
-        { key: "tor", label: "Transcript of Records", required: true },
-        { key: "coe", label: "Certificate of Employment", required: false },
-        {
-          key: "training",
-          label: "Certificate/s of Training",
-          required: false,
-        },
+      loadingState: false,
+      // uploadFields: [
+      //   {
+      //     key: "application",
+      //     label: "Application Letter",
+      //     required: true,
+      //   },
+      //   { key: "pds", label: "Personal Data Sheet (PDS)", required: true },
+      //   {
+      //     key: "performance",
+      //     label: "Performance Rating",
+      //     required:
+      //       this.jobData?.performance_rating === "required" ? true : false,
+      //   },
+      //   {
+      //     key: "eligibility",
+      //     label: "Certificate of Eligibility/Rating",
+      //     required: true,
+      //   },
+      //   { key: "TOR", label: "Transcript of Records", required: true },
+      //   {
+      //     key: "employment",
+      //     label: "Certificate of Employment",
+      //     required: false,
+      //   },
+      //   {
+      //     key: "seminars",
+      //     label: "Certificate/s of Training",
+      //     required: false,
+      //   },
+      // ],
+      toReturn: true,
+      educationOptions: [
+        "Elementary Level",
+        "Elementary Graduate",
+        "High School Level",
+        "High School Graduate",
+        "Vocational",
+        "College Level",
+        "College Graduate",
+        "Post Graduate",
       ],
-
+      successSubmitDialog: false,
       form: {
-        firstName: "",
-        middleName: "",
-        lastName: "",
+        firstname: "",
+        mi: "",
+        lastname: "",
         suffix: "",
         email: "",
-        phone: "",
+        number: "",
         religion: "",
-        sex: "",
-        birthDate: "",
+        gender: null,
+        birth: null,
         address: "",
-        education: "",
-        school: "",
-        yearGrad: "",
-        company: "",
-        position: "",
-        experience: "",
-        isPwd: false,
-        pwdDetails: "",
-        isPregnant: false,
-        isIndigenous: false,
-        indigenousDetails: "",
-        applicationLetter: null,
+        educQualification: null,
+        educQualificationGrad: "",
+        companyAgency: "",
+        presentposition: "",
+        statusEmployment: "",
+        eligibilityForm: "",
+        pwdChecked: false,
+        pwd: "",
+        pregnant: false,
+        indigenousChecked: false,
+        indigenous: "",
+        application: null,
         pds: null,
         performance: null,
-        eligibilityFile: null,
-        tor: null,
-        coe: null,
-        training: null,
+        eligibility: null,
+        TOR: null,
+        employment: null,
+        seminars: null,
+        earnedUnits: null,
+        collegeGradCourse: null,
+        yearGraduated: null,
+        masterGradCourse: null,
+        yearGraduatedMasteral: null,
+        doctoralGradCourse: null,
+        yearGraduatedDoctoral: null,
+      },
+      BTNloading: false,
+      fadeAwayMessage: {
+        show: false,
+        type: "success",
+        header: "Successfully Added!",
+        message: "",
+        top: 10,
       },
     };
   },
@@ -451,6 +903,83 @@ export default {
     },
     uploadedFiles() {
       return this.uploadFields.filter((item) => this.form[item.key]);
+    },
+    uploadFields() {
+      return [
+        {
+          key: "application",
+          label: "Application Letter",
+          required: true,
+        },
+        {
+          key: "pds",
+          label: "Personal Data Sheet (PDS)",
+          required: true,
+        },
+        {
+          key: "performance",
+          label: "Performance Rating",
+          required:
+            this.jobData?.performance_rating
+              ?.toString()
+              .toLowerCase()
+              .trim() === "required"
+              ? true
+              : false,
+        },
+        {
+          key: "eligibility",
+          label: "Certificate of Eligibility/Rating",
+          required:
+            this.jobData?.certificate_eligibility
+              ?.toString()
+              .toLowerCase()
+              .trim() === "required"
+              ? true
+              : false,
+        },
+        {
+          key: "TOR",
+          label: "Transcript of Records",
+          required:
+            this.jobData?.transcript_record?.toString().toLowerCase().trim() ===
+            "required"
+              ? true
+              : false,
+        },
+        {
+          key: "employment",
+          label: "Certificate of Employment",
+          required:
+            this.jobData?.certificate_employment
+              ?.toString()
+              .toLowerCase()
+              .trim() === "required"
+              ? true
+              : false,
+        },
+        {
+          key: "seminars",
+          label: "Certificate/s of Training",
+          required:
+            this.jobData?.certificate_training
+              ?.toString()
+              .toLowerCase()
+              .trim() === "required"
+              ? true
+              : false,
+        },
+      ];
+    },
+    BdaymaxDate() {
+      return new Date().toISOString().split("T")[0];
+    },
+    contactNoRule() {
+      return (v) => {
+        if (!v || v.length !== 11) return "Contact number must be 11 digits";
+        if (!/^0/.test(v)) return "Contact number must start with 0.";
+        return true;
+      };
     },
   },
 
@@ -464,6 +993,7 @@ export default {
       }
 
       this.form[field] = file;
+      // console.log(this.form);
     },
 
     removeFile(field) {
@@ -474,23 +1004,447 @@ export default {
       return (size / 1024).toFixed(1) + " kb";
     },
     nextStep() {
-      if (this.currentStep < 4) {
-        this.currentStep++;
+      if (this.currentStep === 0) {
+        if (this.$refs.form1.validate()) {
+          this.currentStep++;
+        }
+      } else if (this.currentStep === 1) {
+        if (this.$refs.form2.validate()) {
+          this.currentStep++;
+        }
+      } else if (this.currentStep === 2) {
+        if (this.$refs.form3.validate()) {
+          this.currentStep++;
+        }
+      } else if (this.currentStep === 3) {
+        if (this.$refs.form4.validate()) {
+          this.currentStep++;
+        }
       } else {
-        alert("Submitted!");
+        this.submit();
       }
     },
 
     prevStep() {
       if (this.currentStep > 0) {
         this.currentStep--;
+      } else {
+        if (this.toReturn) {
+          localStorage.removeItem("jobData");
+          this.$router.push("/job-posting");
+        } else {
+          this.returnDialog = true;
+        }
+      }
+    },
+    close() {
+      localStorage.removeItem("jobData");
+      this.$router.push("/job-posting");
+    },
+    ok() {
+      this.loadingState = false;
+      setTimeout(() => {
+        this.loadingState = false;
+        localStorage.removeItem("jobData");
+        this.$router.push("/job-posting");
+      }, 1500);
+    },
+    onlyDigits(event) {
+      if (!/^\d$/.test(event.key)) {
+        event.preventDefault();
+      }
+    },
+    cleanDigits(event) {
+      event.target.value = event.target.value.replace(/\D/g, "");
+    },
+    calculateAge(birthDate) {
+      if (!birthDate) return;
+
+      const currentDate = new Date();
+      if (new Date(birthDate) > currentDate) {
+        this.form.birth = null;
+        this.fadeAwayMessage.show = true;
+        this.fadeAwayMessage.type = "error";
+        this.fadeAwayMessage.header = "System Message";
+        this.fadeAwayMessage.message = "Invalid Input. Check your date entry";
+      }
+
+      const diffTime = currentDate - new Date(birthDate);
+      const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      this.form.age = Math.floor(totalDays / 365.25);
+      // this.months = Math.floor((totalDays % 365.25) / 30.4375);
+      // this.days = Math.floor((totalDays % 365.25) % 30.4375);
+    },
+    submit() {
+      this.BTNloading = true;
+      this.loadingState = true;
+      this.checkFileHaveValue();
+      const fd = new FormData();
+      let application = this.form.application;
+      let pds = this.form.pds;
+      let performance = this.form.performance;
+      let eligibility = this.form.eligibility;
+      let tor = this.form.TOR;
+      let employment = this.form.employment;
+      let seminars = this.form.seminars;
+      const arrayData = [
+        application,
+        pds,
+        performance,
+        eligibility,
+        tor,
+        employment,
+        seminars,
+      ];
+      for (let i = 0; i < arrayData.length; i++) {
+        const element = arrayData[i];
+        fd.append("file", element);
+      }
+      let data = {
+        firstname: this.form.firstname,
+        position: this.jobData.position_title,
+        positionID: this.jobData.id,
+        mi: this.form.mi,
+        lastname: this.form.lastname,
+        suffix: this.form.suffix,
+        email: this.form.email,
+        phone_number: this.form.number,
+        relegion: this.form.religion,
+        sogie_value: this.form.gender,
+        birth: this.form.birth,
+        education: this.jobData.education
+          ? this.jobData.education
+          : this.jobData.job_posting_content,
+        address: this.form.address,
+        educ_qualification: this.form.educQualification,
+        educ_qualification_grad: this.form.educQualificationGrad,
+        company_agency: this.form.companyAgency,
+        present_position: this.form.presentposition,
+        status_employment: this.form.statusEmployment,
+        eligibility_form: this.form.eligibilityForm,
+        pwd_check: this.form.pwdChecked == false ? "" : "checked",
+        pwd_value: this.form.pwd,
+        pregnant_check: this.form.pregnant == false ? "" : "checked",
+        indigenous_check: this.form.indigenousChecked == false ? "" : "checked",
+        indigenous_value: this.form.indigenous,
+        earned_Units: this.form.earnedUnits,
+        college_grad_course: this.form.collegeGradCourse,
+        year_graduated: this.form.yearGraduated,
+        master_grad_course: this.form.masterGradCourse,
+        year_graduated_masteral: this.form.yearGraduatedMasteral,
+        doctoral_grad_course: this.form.doctoralGradCourse,
+        year_graduated_doctoral: this.form.yearGraduatedDoctoral,
+        work_experience: this.jobData.experience,
+        work_eligibility: this.jobData.eligibility,
+        work_training: this.jobData.training,
+        item: this.jobData.plantilla_item,
+        unit_department: this.jobData.unit_department,
+        inclusive_from: this.jobData.date_from,
+        inclusive_to: this.jobData.date_to,
+      };
+      fd.append("body", JSON.stringify(data));
+      console.log(data, fd);
+      this.axiosCall("/job-applicant/multiple", "POST", fd).then((res) => {
+        if (res.data.status == 200 || res.data.status == 201) {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "success";
+          this.fadeAwayMessage.message = res.data.msg;
+          this.fadeAwayMessage.header = "System Message";
+
+          setTimeout(() => {
+            this.loadingState = false;
+            this.successSubmitDialog = true;
+            // this.$router.push("/job-posting");
+          }, 1500);
+        } else {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = res.data.msg;
+        }
+      });
+    },
+    checkFileHaveValue() {
+      if (this.form.application) {
+        let originalFile = null;
+
+        if (this.form.application) {
+          originalFile = this.form.application;
+        }
+
+        if (originalFile) {
+          const cleanLastName = this.form.lastname
+            .replace(/\s/g, "")
+            .replace(/%20/g, "");
+
+          const renamedFile = new File(
+            [originalFile],
+            `ApplicationLetter_${cleanLastName}.pdf`,
+            {
+              type: originalFile.type,
+              lastModified: originalFile.lastModified,
+            },
+          );
+
+          renamedFile.file_type_uploaded = "application";
+
+          this.form.application = renamedFile;
+        }
+      } else {
+        const cleanLastName = this.form.lastname
+          .replace(/\s/g, "")
+          .replace(/%20/g, "");
+        this.form.application = new File(
+          ["default content"],
+          `defaultApplication_${cleanLastName}.pdf`,
+          {
+            type: "application/pdf",
+          },
+        );
+      }
+      if (this.form.pds) {
+        let originalFile = null;
+
+        if (this.form.pds) {
+          originalFile = this.form.pds;
+        }
+
+        if (originalFile) {
+          const cleanLastName = this.form.lastname
+            .replace(/\s/g, "")
+            .replace(/%20/g, "");
+
+          const renamedFile = new File(
+            [originalFile],
+            `PDSLetter_${cleanLastName}.pdf`,
+            {
+              type: originalFile.type,
+              lastModified: originalFile.lastModified,
+            },
+          );
+
+          renamedFile.file_type_uploaded = "application";
+
+          this.form.pds = renamedFile;
+        }
+      } else {
+        const cleanLastName = this.form.lastname
+          .replace(/\s/g, "")
+          .replace(/%20/g, "");
+        this.form.pds = new File(
+          ["default content"],
+          `defaultPds_${cleanLastName}.pdf`,
+          {
+            type: "application/pdf",
+          },
+        );
+      }
+      if (this.form.performance) {
+        let originalFile = null;
+
+        if (this.form.performance) {
+          originalFile = this.form.performance;
+        }
+
+        if (originalFile) {
+          const cleanLastName = this.form.lastname
+            .replace(/\s/g, "")
+            .replace(/%20/g, "");
+
+          const renamedFile = new File(
+            [originalFile],
+            `PerformanceLetter_${cleanLastName}.pdf`,
+            {
+              type: originalFile.type,
+              lastModified: originalFile.lastModified,
+            },
+          );
+
+          renamedFile.file_type_uploaded = "application";
+
+          this.form.performance = renamedFile;
+        }
+      } else {
+        const cleanLastName = this.form.lastname
+          .replace(/\s/g, "")
+          .replace(/%20/g, "");
+        this.form.performance = new File(
+          ["default content"],
+          `defaultPerformance_${cleanLastName}.pdf`,
+          {
+            type: "application/pdf",
+          },
+        );
+      }
+      if (this.form.eligibility) {
+        let originalFile = null;
+
+        if (this.form.eligibility) {
+          originalFile = this.form.eligibility;
+        }
+
+        if (originalFile) {
+          const cleanLastName = this.form.lastname
+            .replace(/\s/g, "")
+            .replace(/%20/g, "");
+
+          const renamedFile = new File(
+            [originalFile],
+            `EligibilityLetter_${cleanLastName}.pdf`,
+            {
+              type: originalFile.type,
+              lastModified: originalFile.lastModified,
+            },
+          );
+
+          renamedFile.file_type_uploaded = "application";
+
+          this.form.eligibility = renamedFile;
+        }
+      } else {
+        const cleanLastName = this.form.lastname
+          .replace(/\s/g, "")
+          .replace(/%20/g, "");
+        this.form.eligibility = new File(
+          ["default content"],
+          `defaultEligibility_${cleanLastName}.pdf`,
+          {
+            type: "application/pdf",
+          },
+        );
+      }
+      if (this.form.TOR) {
+        let originalFile = null;
+
+        if (this.form.TOR) {
+          originalFile = this.form.TOR;
+        }
+
+        if (originalFile) {
+          const cleanLastName = this.form.lastname
+            .replace(/\s/g, "")
+            .replace(/%20/g, "");
+
+          const renamedFile = new File(
+            [originalFile],
+            `TORLetter_${cleanLastName}.pdf`,
+            {
+              type: originalFile.type,
+              lastModified: originalFile.lastModified,
+            },
+          );
+
+          renamedFile.file_type_uploaded = "application";
+
+          this.form.TOR = renamedFile;
+        }
+      } else {
+        const cleanLastName = this.form.lastname
+          .replace(/\s/g, "")
+          .replace(/%20/g, "");
+        this.form.TOR = new File(
+          ["default content"],
+          `defaultTOR_${cleanLastName}.pdf`,
+          {
+            type: "application/pdf",
+          },
+        );
+      }
+      if (this.form.employment) {
+        let originalFile = null;
+
+        if (this.form.employment) {
+          originalFile = this.form.employment;
+        }
+
+        if (originalFile) {
+          const cleanLastName = this.form.lastname
+            .replace(/\s/g, "")
+            .replace(/%20/g, "");
+
+          const renamedFile = new File(
+            [originalFile],
+            `EmploymentLetter_${cleanLastName}.pdf`,
+            {
+              type: originalFile.type,
+              lastModified: originalFile.lastModified,
+            },
+          );
+
+          renamedFile.file_type_uploaded = "application";
+
+          this.form.employment = renamedFile;
+        }
+      } else {
+        const cleanLastName = this.form.lastname
+          .replace(/\s/g, "")
+          .replace(/%20/g, "");
+        this.form.employment = new File(
+          ["default content"],
+          `defaultEmployment_${cleanLastName}.pdf`,
+          {
+            type: "application/pdf",
+          },
+        );
+      }
+      if (this.form.seminars) {
+        let originalFile = null;
+
+        if (this.form.seminars) {
+          originalFile = this.form.seminars;
+        }
+
+        if (originalFile) {
+          const cleanLastName = this.form.lastname
+            .replace(/\s/g, "")
+            .replace(/%20/g, "");
+
+          const renamedFile = new File(
+            [originalFile],
+            `SeminarLetter_${cleanLastName}.pdf`,
+            {
+              type: originalFile.type,
+              lastModified: originalFile.lastModified,
+            },
+          );
+
+          renamedFile.file_type_uploaded = "application";
+
+          this.form.seminars = renamedFile;
+        }
+      } else {
+        const cleanLastName = this.form.lastname
+          .replace(/\s/g, "")
+          .replace(/%20/g, "");
+        this.form.seminars = new File(
+          ["default content"],
+          `defaultSeminar_${cleanLastName}.pdf`,
+          {
+            type: "application/pdf",
+          },
+        );
       }
     },
   },
+  watch: {
+    form: {
+      handler(newVal, oldVal) {
+        console.log("Form changed", newVal, oldVal);
+        this.toReturn = false;
+      },
+      deep: true,
+    },
+  },
   mounted() {
-    if (this.$route.query.title) {
-      this.jobTitle = this.$route.query.title;
+    if (!localStorage.getItem("jobData")) {
+      if (this.$route.query && this.$route.query.job) {
+        this.jobData = this.$route.query.job;
+        localStorage.setItem("jobData", JSON.stringify(this.$route.query.job));
+      }
+    } else {
+      this.jobData = JSON.parse(localStorage.getItem("jobData"));
     }
+    console.log(this.jobData);
   },
 };
 </script>
@@ -503,11 +1457,11 @@ export default {
   background-size: cover;
   display: flex;
   justify-content: center;
-
+  align-items: center;
   font-family: "Poppins", sans-serif;
   font-weight: 100;
-  align-items: flex-start;
-  padding-top: 130px;
+  /* align-items: flex-start; */
+  /* padding-top: 95px; */
 }
 
 .overlay {
@@ -1054,5 +2008,102 @@ input {
     height: 24px;
     font-size: 11px;
   }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* OVERLAY */
+.privacy-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+
+  padding: 15px; /* ✅ prevent edge cut on small devices */
+}
+
+/* MODAL */
+.privacy-modal {
+  width: 500px;
+  max-width: 100%;
+  max-height: 90vh; /* ✅ prevent overflow */
+
+  overflow-y: auto; /* ✅ scroll inside modal */
+
+  padding: 18px;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: white;
+
+  animation: fadeIn 0.3s ease;
+}
+
+/* TEXT FIX */
+.privacy-modal p {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 10px 0;
+  text-align: justify; /* ✅ better readability */
+}
+
+/* HEADINGS */
+.privacy-modal h2 {
+  font-size: 18px !important;
+  font-weight: 600;
+  text-align: center;
+}
+
+.privacy-modal h4 {
+  font-size: 15px !important;
+  font-weight: 300;
+  margin: 10px 0;
+  text-align: left;
+}
+
+/* ACTIONS */
+.privacy-modal .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap; /* ✅ prevents button overflow */
 }
 </style>
