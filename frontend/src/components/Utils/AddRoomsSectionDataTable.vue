@@ -155,7 +155,7 @@
               color="red"
               outlined
               class="my-2 mx-2 gboFontsTable rounded-lg"
-              @click="confirmDelete(item)"
+              @click="confirmDeleteItem(item)"
             >
               <v-icon class="gboFontsTable">mdi-delete-off</v-icon>&nbsp;Delete
             </v-btn>
@@ -1049,10 +1049,10 @@ export default {
             this.fadeAwayMessage.type = "success";
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
-            this.confirmDialog = false;
+            this.confirmDelete = false;
             this.initialize();
           } else if (res.data.status == 400) {
-            this.confirmDialog = false;
+            this.confirmDelete = false;
             this.fadeAwayMessage.show = true;
             this.fadeAwayMessage.type = "error";
             this.fadeAwayMessage.header = "System Message";
@@ -1061,8 +1061,8 @@ export default {
         },
       );
     },
-    confirmDelete(item) {
-      this.confirmDialog = true;
+    confirmDeleteItem(item) {
+      this.confirmDelete = true;
       this.deleteData = item;
     },
 

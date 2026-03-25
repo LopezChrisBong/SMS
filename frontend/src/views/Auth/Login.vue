@@ -160,7 +160,6 @@ export default {
     }
     this.limbaanimg = localStorage.getItem("level");
     console.log("Limbaan", this.limbaanimg);
-    this.getSchoolYear();
     if (this.$store.state.user) {
       if (!this.$store.state.user.usertype.id) {
         //this.deleteToken();
