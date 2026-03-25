@@ -1049,10 +1049,10 @@ export default {
             this.fadeAwayMessage.type = "success";
             this.fadeAwayMessage.header = "System Message";
             this.fadeAwayMessage.message = res.data.msg;
-            this.confirmDialog = false;
+            this.confirmDelete = false;
             this.initialize();
           } else if (res.data.status == 400) {
-            this.confirmDialog = false;
+            this.confirmDelete = false;
             this.fadeAwayMessage.show = true;
             this.fadeAwayMessage.type = "error";
             this.fadeAwayMessage.header = "System Message";

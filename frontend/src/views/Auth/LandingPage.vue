@@ -221,7 +221,7 @@ export default {
   margin-top: 35px;
   display: flex;
   align-items: center;
-  width: 80%;
+  width: 90%;
   height: 130px;
 
   background: rgba(20, 116, 82, 0.9); /* 👈 use rgba */

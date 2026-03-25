@@ -2054,9 +2054,9 @@ export class EnrollStudentService {
 
   async getCombinedForecasts() {
     const data = await this.dataSource.query(
-      `SELECT * FROM student_combinedforecasts`,
+      `SELECT * FROM report_forcasteddata_by_gradelevel`,
     );
-    // console.log(data);
+    console.log(data);
     return data;
   }
 

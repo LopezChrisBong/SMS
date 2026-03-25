@@ -4,7 +4,7 @@
 
     <div class="modal" v-if="job">
       <!-- HEADER -->
-      <h2 class="title">{{ display(job.title) }}</h2>
+      <h2 class="title">{{ job ? job.position_title : "" }}</h2>
       <div class="badge">Available</div>
 
       <!-- TOP GRID -->
@@ -13,24 +13,26 @@
         <div class="card">
           <div class="row">
             <span>Item No.:</span>
-            <b>{{ display(job.item_no) }}</b>
+            <b>{{ job.plantilla_item || "N/A" }}</b>
           </div>
 
           <div class="row">
             <span>Salary Grade:</span>
             <b :class="job.salara_grade ? 'pill' : ''">
-              {{ display(job.salara_grade) }}
+              {{ job.salary_grade == 0 ? "N/A" : "SG " + job.salary_grade }}
             </b>
           </div>
 
           <div class="row">
-            <span>Monthly Salary:</span>
-            <b>{{ display(job.salary) }}</b>
+            <span>
+              {{ job.salary_grade == 0 ? "Salary" : "Monthly Salary" }}</span
+            >
+            <b>₱{{ display(job.monthly_salary) }}</b>
           </div>
 
           <div class="row">
             <span>Department:</span>
-            <b>{{ display(job.department) }}</b>
+            <b>{{ display(job.unit_department) }}</b>
           </div>
         </div>
 
@@ -38,7 +40,7 @@
         <div class="card">
           <div class="row">
             <span>Assignment:</span>
-            <b>{{ display(job.assignment) }}</b>
+            <b>{{ display(job.place_assignment) }}</b>
           </div>
 
           <div class="row">
@@ -57,17 +59,17 @@
       <div class="details">
         <div class="section">
           <b>Experience:</b>
-          <p>{{ display(job.experience) }}</p>
+          <div class="section-content" v-html="job.experience"></div>
         </div>
 
         <div class="section">
           <b>Education:</b>
-          <p>{{ display(job.education) }}</p>
+          <div class="section-content" v-html="job.job_posting_content"></div>
         </div>
 
         <div class="section">
           <b>Training:</b>
-          <p>{{ display(job.training) }}</p>
+          <div class="section-content" v-html="job.training"></div>
         </div>
       </div>
 
@@ -158,7 +160,7 @@ export default {
       this.$router.push({
         path: "/jobrequirements",
         query: {
-          title: this.job.title, // ✅ send title
+          job: this.job,
         },
       });
     },

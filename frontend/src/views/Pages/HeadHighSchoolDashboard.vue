@@ -347,6 +347,85 @@ export default {
       this.buildTeacherForecastChart();
       this.buildRoomForecastChart();
     },
+    buildChart() {
+      let gradeData = [];
+
+      if (this.selectedLevel === "All") {
+        const yearMap = {};
+
+        this.allForecastData.forEach((d) => {
+          const year = d.allYear;
+
+          if (!yearMap[year]) {
+            yearMap[year] = {
+              year: year,
+              actual: 0,
+              forecast: 0,
+              hasActual: false,
+            };
+          }
+
+          if (d.actual_students !== null && d.actual_students !== undefined) {
+            yearMap[year].actual += Number(d.actual_students);
+            yearMap[year].hasActual = true;
+          }
+
+          yearMap[year].forecast += Number(d.forecasted_students);
+        });
+
+        gradeData = Object.values(yearMap).map((y) => ({
+          year: y.year,
+          actual: y.hasActual ? y.actual : null, // ⭐ this stops the line
+          forecast: y.forecast,
+        }));
+      } else {
+        const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
+
+        gradeData = this.allForecastData
+          .filter((d) => d.gradeyr_level === gradeNumber)
+          .map((d) => ({
+            year: d.allYear,
+            actual: d.actual_students ? Number(d.actual_students) : null,
+            forecast: Number(d.forecasted_students),
+          }));
+      }
+      gradeData.sort((a, b) => a.year - b.year);
+      const labels = gradeData.map((d) => d.year);
+
+      const actual = gradeData.map((d) => d.actual);
+
+      //  ONLY SHOW FORECAST AFTER ACTUAL
+      // find last actual index
+      const lastActualIndex = actual
+        .map((v) => v !== null && v !== 0)
+        .lastIndexOf(true);
+
+      // build forecast dataset
+      const smoothing = gradeData.map((d, i) => {
+        if (i === lastActualIndex) return actual[i]; // connection point
+        if (i > lastActualIndex) return d.forecast; // forecast values
+        return null;
+      });
+
+      this.forecastChart = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Actual",
+            data: actual,
+            borderColor: "#42A5F5",
+            fill: false,
+          },
+          {
+            label: "Forecasted",
+            data: smoothing,
+            borderColor: "#FFA726",
+            borderDash: [8, 5],
+            fill: false,
+          },
+        ],
+      };
+    },
     //     buildChart() {
     //   const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
 
@@ -393,68 +472,68 @@ export default {
     //   };
     // },
 
-    buildChart() {
-      let gradeData = [];
+    // buildChart() {
+    //   let gradeData = [];
 
-      if (this.selectedLevel === "All") {
-        const yearMap = {};
+    //   if (this.selectedLevel === "All") {
+    //     const yearMap = {};
 
-        this.allForecastData.forEach((d) => {
-          const year = d.allYear;
+    //     this.allForecastData.forEach((d) => {
+    //       const year = d.allYear;
 
-          if (!yearMap[year]) {
-            yearMap[year] = {
-              year: year,
-              actual: 0,
-              forecast: 0,
-            };
-          }
+    //       if (!yearMap[year]) {
+    //         yearMap[year] = {
+    //           year: year,
+    //           actual: 0,
+    //           forecast: 0,
+    //         };
+    //       }
 
-          // sum actual
-          if (d.actual_students) {
-            yearMap[year].actual += Number(d.actual_students);
-          }
+    //       // sum actual
+    //       if (d.actual_students) {
+    //         yearMap[year].actual += Number(d.actual_students);
+    //       }
 
-          // sum exponential smoothing
-          yearMap[year].forecast += Number(d.exponential_smoothing);
-        });
+    //       // sum exponential smoothing
+    //       yearMap[year].forecast += Number(d.exponential_smoothing);
+    //     });
 
-        gradeData = Object.values(yearMap);
-      } else {
-        const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
+    //     gradeData = Object.values(yearMap);
+    //   } else {
+    //     const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
 
-        gradeData = this.allForecastData
-          .filter((d) => d.gradeyr_level === gradeNumber)
-          .map((d) => ({
-            year: d.allYear,
-            actual: d.actual_students,
-            forecast: Number(d.exponential_smoothing),
-          }));
-      }
+    //     gradeData = this.allForecastData
+    //       .filter((d) => d.gradeyr_level === gradeNumber)
+    //       .map((d) => ({
+    //         year: d.allYear,
+    //         actual: d.actual_students,
+    //         forecast: Number(d.exponential_smoothing),
+    //       }));
+    //   }
 
-      const labels = gradeData.map((d) => d.year);
-      const actual = gradeData.map((d) => d.actual);
-      const smoothing = gradeData.map((d) => d.forecast);
+    //   const labels = gradeData.map((d) => d.year);
+    //   const actual = gradeData.map((d) => d.actual);
+    //   const smoothing = gradeData.map((d) => d.forecast);
 
-      this.forecastChart = {
-        labels: labels,
-        datasets: [
-          {
-            label: "Actual",
-            data: actual,
-            borderColor: "#42A5F5",
-            fill: false,
-          },
-          {
-            label: "Forecasted",
-            data: smoothing,
-            borderColor: "#FFA726",
-            borderDash: [8, 5],
-            fill: false,
-          },
-        ],
-      };
-    },
+    //   this.forecastChart = {
+    //     labels: labels,
+    //     datasets: [
+    //       {
+    //         label: "Actual",
+    //         data: actual,
+    //         borderColor: "#42A5F5",
+    //         fill: false,
+    //       },
+    //       {
+    //         label: "Forecasted",
+    //         data: smoothing,
+    //         borderColor: "#FFA726",
+    //         borderDash: [8, 5],
+    //         fill: false,
+    //       },
+    //     ],
+    //   };
+    // },
 
     // buildChartWithPoly() {
     //   const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
@@ -569,14 +648,23 @@ export default {
               year: year,
               actual: 0,
               forecast: 0,
+              hasActual: false,
             };
           }
 
-          yearMap[year].actual += Number(d.teacher_count || 0);
+          if (d.teacher_count !== null && d.teacher_count !== undefined) {
+            yearMap[year].actual += Number(d.teacher_count);
+            yearMap[year].hasActual = true;
+          }
+
           yearMap[year].forecast += Number(d.teachers_needed || 0);
         });
 
-        gradeData = Object.values(yearMap);
+        gradeData = Object.values(yearMap).map((y) => ({
+          year: y.year,
+          actual: y.hasActual ? y.actual : null, // ⭐ stops the line
+          forecast: y.forecast,
+        }));
       } else {
         const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
 
@@ -584,27 +672,47 @@ export default {
           .filter((d) => d.gradeyr_level === gradeNumber)
           .map((d) => ({
             year: d.allYear,
-            actual: Number(d.teacher_count),
-            forecast: Number(d.teachers_needed),
+            actual: d.teacher_count !== null ? Number(d.teacher_count) : null,
+            forecast:
+              d.teachers_needed !== null ? Number(d.teachers_needed) : null,
           }));
       }
 
+      //  SORT YEARS
+      gradeData.sort((a, b) => a.year - b.year);
+
       const labels = gradeData.map((d) => d.year);
+
+      const actual = gradeData.map((d) => d.actual);
+
+      //  FIND LAST ACTUAL INDEX
+      const lastActualIndex = actual
+        .map((v) => v !== null && v !== 0)
+        .lastIndexOf(true);
+
+      // ⭐ BUILD FORECAST DATASET
+      const forecast = gradeData.map((d, i) => {
+        if (i === lastActualIndex) return actual[i]; // connect lines
+        if (i > lastActualIndex) return d.forecast; // forecast after
+        return null;
+      });
 
       this.teacherForecastChart = {
         labels: labels,
         datasets: [
           {
             label: "Actual",
-            data: gradeData.map((d) => d.actual),
+            data: actual,
             borderColor: "#42A5F5",
+            tension: 0.4,
             fill: false,
           },
           {
             label: "Forecasted",
-            data: gradeData.map((d) => d.forecast),
+            data: forecast,
             borderColor: "#EF5350",
             borderDash: [5, 5],
+            tension: 0.4,
             fill: false,
           },
         ],
@@ -652,14 +760,24 @@ export default {
               year: year,
               actual: 0,
               forecast: 0,
+              hasActual: false,
             };
           }
 
-          yearMap[year].actual += Number(d.room_count || 0);
+          // only add real room data
+          if (d.room_count !== null && d.room_count !== undefined) {
+            yearMap[year].actual += Number(d.room_count);
+            yearMap[year].hasActual = true;
+          }
+
           yearMap[year].forecast += Number(d.classrooms_needed || 0);
         });
 
-        gradeData = Object.values(yearMap);
+        gradeData = Object.values(yearMap).map((y) => ({
+          year: y.year,
+          actual: y.hasActual ? y.actual : null, // ⭐ stops the line
+          forecast: y.forecast,
+        }));
       } else {
         const gradeNumber = Number(this.selectedLevel.replace("Grade ", ""));
 
@@ -667,27 +785,46 @@ export default {
           .filter((d) => d.gradeyr_level === gradeNumber)
           .map((d) => ({
             year: d.allYear,
-            actual: Number(d.room_count),
-            forecast: Number(d.classrooms_needed),
+            actual: d.room_count !== null ? Number(d.room_count) : null,
+            forecast:
+              d.classrooms_needed !== null ? Number(d.classrooms_needed) : null,
           }));
       }
 
+      //  SORT YEARS
+      gradeData.sort((a, b) => a.year - b.year);
+
       const labels = gradeData.map((d) => d.year);
+      const actual = gradeData.map((d) => d.actual);
+
+      //  FIND LAST ACTUAL INDEX
+      const lastActualIndex = actual
+        .map((v) => v !== null && v !== 0)
+        .lastIndexOf(true);
+
+      //  BUILD FORECAST DATASET
+      const forecast = gradeData.map((d, i) => {
+        if (i === lastActualIndex) return actual[i]; // connect point
+        if (i > lastActualIndex) return d.forecast; // future forecast
+        return null;
+      });
 
       this.roomForecastChart = {
         labels: labels,
         datasets: [
           {
             label: "Actual",
-            data: gradeData.map((d) => d.actual),
+            data: actual,
             borderColor: "#66BB6A",
+            tension: 0.4,
             fill: false,
           },
           {
             label: "Forecasted",
-            data: gradeData.map((d) => d.forecast),
+            data: forecast,
             borderColor: "#FFA726",
             borderDash: [5, 5],
+            tension: 0.4,
             fill: false,
           },
         ],
