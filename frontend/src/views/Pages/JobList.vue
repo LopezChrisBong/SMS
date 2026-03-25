@@ -24,29 +24,31 @@
             :class="getClass(index)"
           >
             <div class="top">
-              <h3>{{ job.title }}</h3>
+              <h3>{{ job.position_title }}</h3>
               <div class="badge">Available</div>
             </div>
 
             <div class="content">
               <div class="row">
                 <span class="label">Monthly Salary:</span>
-                <span class="value">{{ job.salary }}</span>
+                <span class="value">₱{{ job.monthly_salary }}</span>
               </div>
 
               <div class="row">
                 <span class="label">Department:</span>
-                <span class="value">{{ job.department }}</span>
+                <span class="value">{{ job.unit_department }}</span>
               </div>
 
               <div class="row">
                 <span class="label">Assignment:</span>
-                <span class="value">{{ job.assignment }}</span>
+                <span class="value">{{ job.place_assignment }}</span>
               </div>
 
               <div class="row exp-row">
                 <span class="label">Experience:</span>
-                <span class="value exp">{{ job.experience }}</span>
+                <span class="value exp"
+                  ><div v-html="job.experience"></div
+                ></span>
               </div>
             </div>
 
@@ -132,6 +134,7 @@ export default {
   },
 
   mounted() {
+    this.initialize();
     this.$nextTick(() => {
       this.updateSizes();
     });
@@ -153,6 +156,13 @@ export default {
   },
 
   methods: {
+    initialize() {
+      this.axiosCall("/job-posting/DnscPage/active", "GET").then((res) => {
+        if (res) {
+          this.jobs = res.data;
+        }
+      });
+    },
     updateSizes() {
       const viewport = this.$el.querySelector(".viewport");
       const card = this.$el.querySelector(".card");

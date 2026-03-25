@@ -516,10 +516,10 @@ export class PdfGeneratorService {
       .getRawOne();
     // console.log('teacherName', mySched);
 
-    let headerImg = join(process.cwd(), '/static/img/header.png');
-    // let headerImg = join(process.cwd(), '/../static/img/header.png');
-    let footerImg = join(process.cwd(), '/static/img/footer.png');
-    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    // let headerImg = join(process.cwd(), '/static/img/header.png');
+    let headerImg = join(process.cwd(), '/../static/img/header.png');
+    // let footerImg = join(process.cwd(), '/static/img/footer.png');
+    let footerImg = join(process.cwd(), '/../static/img/footer.png');
 
     const data = [
       {
@@ -608,11 +608,11 @@ export class PdfGeneratorService {
     }
     // console.log(newLoader)
 
-    let headerImg = join(process.cwd(), '/static/img/header.png');
-    let footerImg = join(process.cwd(), '/static/img/footer.png');
+    // let headerImg = join(process.cwd(), '/static/img/header.png');
+    // let footerImg = join(process.cwd(), '/static/img/footer.png');
 
-    // let headerImg = join(process.cwd(), '/../static/img/header.png');
-    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    let headerImg = join(process.cwd(), '/../static/img/header.png');
+    let footerImg = join(process.cwd(), '/../static/img/footer.png');
     const data = [
       {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
@@ -780,11 +780,11 @@ export class PdfGeneratorService {
     let newSchedule = this.sortSchedule(fullSchedule);
     console.log(newSchedule);
 
-    let headerImg = join(process.cwd(), '/static/img/header.png');
-    let footerImg = join(process.cwd(), '/static/img/footer.png');
+    // let headerImg = join(process.cwd(), '/static/img/header.png');
+    // let footerImg = join(process.cwd(), '/static/img/footer.png');
 
-    // let headerImg = join(process.cwd(), '/../static/img/header.png');
-    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    let headerImg = join(process.cwd(), '/../static/img/header.png');
+    let footerImg = join(process.cwd(), '/../static/img/footer.png');
     const data = [
       {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
@@ -1018,11 +1018,11 @@ export class PdfGeneratorService {
       });
     }
 
-    let headerImg = join(process.cwd(), '/static/img/header.png');
-    let footerImg = join(process.cwd(), '/static/img/footer.png');
+    // let headerImg = join(process.cwd(), '/static/img/header.png');
+    // let footerImg = join(process.cwd(), '/static/img/footer.png');
 
-    // let headerImg = join(process.cwd(), '/../static/img/header.png');
-    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    let headerImg = join(process.cwd(), '/../static/img/header.png');
+    let footerImg = join(process.cwd(), '/../static/img/footer.png');
     const data = [
       {
         header_img: this.base64_encode(headerImg, 'headerfooter'),
@@ -1201,11 +1201,11 @@ export class PdfGeneratorService {
       .orderBy('ES.lname')
       .getCount();
 
-    let headerImg = join(process.cwd(), '/static/img/header.png');
-    let footerImg = join(process.cwd(), '/static/img/footer.png');
+    // let headerImg = join(process.cwd(), '/static/img/header.png');
+    // let footerImg = join(process.cwd(), '/static/img/footer.png');
 
-    // let headerImg = join(process.cwd(), '/../static/img/header.png');
-    // let footerImg = join(process.cwd(), '/../static/img/footer.png');
+    let headerImg = join(process.cwd(), '/../static/img/header.png');
+    let footerImg = join(process.cwd(), '/../static/img/footer.png');
     const data = [
       {
         header_img: this.base64_encode(headerImg, 'headerfooter'),

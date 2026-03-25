@@ -98,7 +98,6 @@
                     :headers="headers"
                     :items="studentList"
                     :items-per-page="10"
-                    hide-default-footer
                     class="custom-table"
                   >
                     <template v-slot:[`item.name`]="{ item }">
@@ -271,7 +270,7 @@
       <v-form ref="updateClassListDialogForm" @submit.prevent>
         <v-card>
           <v-card-title dark class="dialog-header pt-3 pb-3 pl-6">
-            <span>Upgrade Class List </span>
+            <span>Promote Class List </span>
             <v-spacer></v-spacer>
             <v-btn icon dark @click="updateClassListDialog = false">
               <v-icon>mdi-close</v-icon>
@@ -303,7 +302,7 @@
                     deletable-chips
                     chips
                     :rules="[formRules.required]"
-                    label="Room List"
+                    :label="`Room List (${nextGradeLevel})`"
                     :items="nextClassRoomList"
                     item-text="room_section"
                     item-value="id"
@@ -870,10 +869,14 @@ export default {
     },
 
     closeD() {
+      location.reload();
       this.eventHub.$emit("closeadviserStudentListDialog", false);
       this.initialize();
       this.dialog = false;
       this.updateClassListDialog = false;
+      this.studentList = [];
+      this.promotedList = [];
+      this.currentYear = true;
     },
 
     save() {

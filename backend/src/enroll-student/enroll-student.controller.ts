@@ -177,12 +177,17 @@ export class EnrollStudentController {
     return this.enrollStudentService.AddClassStudent(grade);
   }
 
-  @Get('getTotalEnrolledStudent/:filter/:status')
+  @Get('getTotalEnrolledStudent/:filter/:status/:gradeLevel')
   getTotalEnrolledStudent(
     @Param('filter') filter: string,
     @Param('status') status: string,
+    @Param('gradeLevel') gradeLevel: string,
   ) {
-    return this.enrollStudentService.getTotalEnrolledStudent(+filter, +status);
+    return this.enrollStudentService.getTotalEnrolledStudent(
+      +filter,
+      +status,
+      gradeLevel,
+    );
   }
 
   @Get('getStudentDataByCode/:filter/:code/:level')
@@ -316,8 +321,8 @@ export class EnrollStudentController {
     }
 
     const file = createReadStream(
-      join(process.cwd(), '/student_file/' + data),
-      // join(process.cwd(), '/../student_file/' + data),
+      // join(process.cwd(), '/student_file/' + data),
+      join(process.cwd(), '/../student_file/' + data),
     );
     res.set({
       'Content-Type': content_type,

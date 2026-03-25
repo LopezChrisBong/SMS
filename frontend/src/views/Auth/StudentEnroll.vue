@@ -1086,8 +1086,9 @@
             Confirm Save
           </v-btn>
         </v-card-actions>
-      </v-card> </v-dialog
-    ><v-dialog>
+      </v-card>
+    </v-dialog>
+    <v-dialog>
       <template v-slot:activator="{ on, attrs }">
         <!-- Add Contribution Button -->
         <v-btn
@@ -1390,7 +1391,7 @@ export default {
 
     confirmSave(item) {
       if (item == 1) {
-        if (this.grade_level && this.formdata.LRN) {
+        if (this.grade_level && this.formdata.lrn) {
           this.confirmAction = item == 1 ? "Save" : "Submit";
           this.confirmDialog = true;
         } else {

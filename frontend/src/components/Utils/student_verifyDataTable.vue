@@ -384,9 +384,10 @@ export default {
 
       if (!item.schoolCard || item.schoolCard.startsWith("default"))
         missing.push("Form 137");
-
-      if (!item.goodMoral || item.goodMoral.startsWith("default"))
-        missing.push("Good Moral Certificate");
+      if (item.transfered == 1) {
+        if (!item.goodMoral || item.goodMoral.startsWith("default"))
+          missing.push("Good Moral Certificate");
+      }
 
       if (missing.length > 0) {
         this.missingDocs = missing;

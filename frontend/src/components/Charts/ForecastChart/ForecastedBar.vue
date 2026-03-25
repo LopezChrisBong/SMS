@@ -1,10 +1,10 @@
 <template>
-  <v-card class="pa-4 mt-4" style="width: 100%">
-    <v-card-title>Grade Distribution Forecast</v-card-title>
+  <div class="pa-4 mt-4" style="width: 100%">
+    <!-- <v-card-title>Grade Distribution Forecast</v-card-title> -->
     <div style="height: 400px">
       <canvas ref="canvas"></canvas>
     </div>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -12,7 +12,7 @@ import { Bar } from "vue-chartjs";
 
 export default {
   extends: Bar,
-  props: ["forecastData"],
+  props: ["forecastData", "selectedLevel"],
 
   mounted() {
     if (this.forecastData && this.forecastData.length) {
@@ -30,13 +30,16 @@ export default {
       deep: true,
       immediate: true,
     },
+    selectedLevel() {
+      this.renderGradeChart();
+    },
   },
 
   methods: {
     renderGradeChart() {
       const formattedData = this.forecastData;
 
-      const grades = [
+      const allGrades = [
         "Grade 7",
         "Grade 8",
         "Grade 9",
@@ -45,6 +48,12 @@ export default {
         "Grade 12",
       ];
 
+      let grades = allGrades;
+
+      if (this.selectedLevel !== "All") {
+        grades = allGrades.filter((g) => g === this.selectedLevel);
+      }
+
       if (this.$data._chart) {
         this.$data._chart.destroy();
       }
@@ -52,15 +61,24 @@ export default {
       this.renderChart(
         {
           labels: formattedData.map((i) => i.schoolYear),
-          datasets: grades.map((grade, index) => {
-            const hue = index * 50;
-
+          // datasets: grades.map((grade, index) => {
+          datasets: grades.map((grade) => {
+            // const hue = index * 50;
+            const gradeColors = {
+              "Grade 7": "#e53935",
+              "Grade 8": "#d4b21f",
+              "Grade 9": "#5cd21f",
+              "Grade 10": "#2ecc71",
+              "Grade 11": "#3498db",
+              "Grade 12": "#4b2dd1",
+            };
             return {
               label: grade,
               data: formattedData.map(
                 (i) => (i.grades && i.grades[grade]) || 0,
               ),
-              backgroundColor: `hsl(${hue},70%,50%)`,
+              // backgroundColor: `hsl(${hue},70%,50%)`,
+              backgroundColor: gradeColors[grade],
             };
           }),
         },
