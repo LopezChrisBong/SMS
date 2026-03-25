@@ -37,6 +37,10 @@ import MyStudentRecord from "../views/Pages/MyStudentRecord.vue";
 import StudentLogin from "../views/Auth/StudentLogin.vue";
 import StudentDashboard from "../views/Auth/StudentDashboard.vue";
 import Advisory from "../views/Pages/Advisory.vue";
+import JobList from "../views/Pages/JobList.vue";
+import JobDetails from "../views/Pages/JobDetails.vue";
+import JobRequirements from "../views/Pages/JobRequirements.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -50,6 +54,26 @@ const routes = [
         path: "landing",
         alias: "/landing",
         component: LandingPage,
+        meta: { authRequired: false },
+      },
+      {
+        path: "joblist",
+        alias: "/joblist",
+        component: JobList,
+        meta: { authRequired: false },
+      },
+      {
+        path: "jobdetails",
+        alias: "/jobdetails",
+        name: "JobDetails",
+        component: JobDetails,
+        meta: { authRequired: false },
+      },
+      {
+        path: "jobrequirements",
+        alias: "/jobrequirements",
+        name: "JobRequirements",
+        component: JobRequirements,
         meta: { authRequired: false },
       },
       {
@@ -86,15 +110,14 @@ const routes = [
       {
         path: "student-login",
         component: StudentLogin,
-        meta: {authRequired: false },
+        meta: { authRequired: false },
       },
       {
         path: "student-dashboard",
-        alias:'/student-dashboard',
+        alias: "/student-dashboard",
         component: StudentDashboard,
-        meta: {authRequired: false },
+        meta: { authRequired: false },
       },
-      
     ],
   },
   {
@@ -226,9 +249,6 @@ const routes = [
         meta: { title: "Utilities - Users", authRequired: true },
       },
 
-
-      
-
       // {
       //   path: "404",
       //   component: NotFound,
@@ -349,9 +369,6 @@ const routes = [
         component: Advisory,
         meta: { title: "My Student Record", authRequired: true },
       },
-      
-
-      
     ],
   },
   //security

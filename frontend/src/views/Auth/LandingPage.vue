@@ -1,216 +1,479 @@
 <template>
-  <div>
-    <v-container fluid fill-height class="content">
-      <v-row align="center" justify="center">
-        <v-col align="center" cols="12" md="6">
-          <v-form ref="Formref">
-            <v-row class="mx-5 pt-6">
-              <v-col cols="12" class="pa-0 mb-2">
-                <div class="d-flex justify-space-between">
-                  <div
-                    :style="
-                      $vuetify.breakpoint.smAndDown
-                        ? 'margin:0 auto; width:60%'
-                        : 'margin:0 auto; width:33%'
-                    "
-                  >
-                    <v-img src="../../assets/img/limbaanelementary.png"></v-img>
-                  </div>
-                  <div
-                    :style="
-                      $vuetify.breakpoint.smAndDown
-                        ? 'margin:0 auto; width:60%'
-                        : 'margin:0 auto; width:30%'
-                    "
-                  >
-                    <v-img src="../../assets/img/limbaanlogo.png"></v-img>
-                  </div>
-                </div>
+  <div class="page">
+    <div class="container">
+      <!-- LEFT -->
+      <div class="left">
+        <div class="group-1">
+          <div class="title">WE ARE <span>HIRING!</span></div>
 
-                <div
-                  :class="$vuetify.breakpoint.smAndDown ? 'text-h5' : 'text-h3'"
-                  color="#123E4D"
-                  align="center"
-                >
-                  <!-- <b style="color: #f5b027"
-                    >Welcome to <span style="color: #f5b027"></span>LIFE!</b
-                  > -->
-                  <v-img
-                    src="../../assets/img/Screenshot_2024-12-20_093502-removebg-preview.png"
-                  ></v-img>
-                </div>
-                <!-- <div
-                  :class="
-                    $vuetify.breakpoint.smAndDown
-                      ? 'text-subtitle-1 mb-3 mt-3'
-                      : 'text-h5 mb-5'
-                  "
-                  color="#123E4D"
-                  align="center"
-                >
-                  <b
-                    >Limbaan Integrated Faculty
-                    <br v-if="$vuetify.breakpoint.smAndDown" />
-                    <span v-else> - </span> Loading and Enrollment System</b
-                  >
-                </div> -->
-              </v-col>
+          <p class="subtitle">Shape the future with us.</p>
 
-              <v-col cols="12" md="6" class="pa-0 px-4 mt-n2">
-                <div class="d-flex justify-center mb-3">
-                  <v-btn
-                    :color="$vuetify.theme.themes.light.submitBtns"
-                    class="white--text font-size-14 rounded-lg"
-                    :class="$vuetify.breakpoint.smAndDown ? 'pa-5' : ' pa-8'"
-                    :loading="isLoading"
-                    style="width: 300px;"
-                    @click="dologin('Elementary')"
-                    >LIMBAAN ELEMENTARY SCHOOL</v-btn
-                  >
-                </div>
-              </v-col>
-              <v-col cols="12" md="6" class="pa-0 px-4 mt-n2">
-                <div class="d-flex justify-center mb-3">
-                  <v-btn
-                    :color="$vuetify.theme.themes.light.submitBtns"
-                    class="white--text font-size-14 rounded-lg"
-                    :class="$vuetify.breakpoint.smAndDown ? 'pa-5' : ' pa-8'"
-                    :loading="isLoading"
-                    style="width: 300px;"
-                    :style="
-                      $vuetify.breakpoint.smAndDown
-                        ? 'margin-top:1rem'
-                        : 'width: 300px;'
-                    "
-                    @click="dologin('High School')"
-                    >LIMBAAN NATIONAL HIGH SCHOOL</v-btn
-                  >
-                </div>
-              </v-col>
-              <v-col cols="12">
-                <div class="d-flex justify-center mb-3">
-                  <v-btn
-                    :color="$vuetify.theme.themes.light.submitBtns"
-                    class="white--text font-size-14 rounded-lg"
-                    :class="$vuetify.breakpoint.smAndDown ? 'pa-5' : ' pa-8'"
-                    :loading="isLoading"
-                    style="width: 300px;"
-                    :style="
-                      $vuetify.breakpoint.smAndDown
-                        ? 'margin-top:0px'
-                        : 'width: 300px;'
-                    "
-                    @click="studentPortal()"
-                    >Student Portal</v-btn
-                  >
-                </div>
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-col>
-      </v-row>
-    </v-container>
-    <fade-away-message-component
-      displayType="variation2"
-      v-model="fadeAwayMessage.show"
-      :message="fadeAwayMessage.message"
-      :header="fadeAwayMessage.header"
-      :top="fadeAwayMessage.top"
-      :type="fadeAwayMessage.type"
-    ></fade-away-message-component>
+          <p class="description">
+            Davao del Norte State College is now accepting applications from
+            qualified individuals for various teaching, non-teaching, and
+            support positions.
+          </p>
+        </div>
+        <div class="group-2">
+          <button class="apply-btn" @click="ApplyNow">APPLY NOW</button>
+        </div>
+
+        <!-- CATEGORY BAR -->
+
+        <div class="category-bar group-3">
+          <div class="category">
+            <div class="icon">
+              <img src="../../assets/img/teaching.png" alt="" />
+            </div>
+            <div class="label">
+              <strong>TEACHING</strong>
+              <small>POSITIONS</small>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="category">
+            <div class="icon">
+              <img src="../../assets/img/non_teaching.png" alt="" />
+            </div>
+            <div class="label">
+              <strong>NON-TEACHING</strong>
+              <small>POSITIONS</small>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="category">
+            <div class="icon">
+              <img src="../../assets/img/support.png" alt="" />
+            </div>
+            <div class="label">
+              <strong>SUPPORT</strong>
+              <small>POSITIONS</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right">
+        <div class="requirements-card">
+          <h2>Application <span>Requirements</span></h2>
+
+          <ul>
+            <li>
+              Application Letter (addressed to the College President - DR. JOY
+              M. SOROSSA)
+            </li>
+            <li>
+              <div>
+                Fully accomplished Personal Data Sheet (PDS) with recent
+                passport-sized picture (CS Form No. 212, Revised 2017), which
+                can be downloaded at
+                <a
+                  href="https://www.csc.gov.ph"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="link"
+                >
+                  www.csc.gov.ph
+                </a>
+              </div>
+            </li>
+            <li>
+              Performance rating in the present position for one (1) year (if
+              applicable).
+            </li>
+            <li>
+              Certificate of Eligibility/Rating or Professional License as proof
+              of Eligibility.
+            </li>
+            <li>
+              Transcript of Records, including Diploma, Special Order and/or
+              Certificate of Authenticity and Validity (CAV) as proof of highest
+              education attained declared in PDS.
+            </li>
+            <li>
+              Certificate of Employment/Service Contract as proof of experience;
+              and
+            </li>
+            <li>
+              Certificate of Training/Seminar/Conference as proof of
+              training/seminars attended declared in PDS.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// import axios from "axios";
 export default {
-  name: "login",
-  mounted() {
-    this.getSchoolYear();
-    if (this.$store.state.user) {
-      if (!this.$store.state.user.usertype.id) {
-        //this.deleteToken();
-        setTimeout(function() {
-          location.reload();
-        }, 0);
-      }
-    }
+  name: "HiringPage",
+  components: {},
+  data() {
+    return {
+      applyNow: false,
+    };
   },
   methods: {
-    dologin(item) {
-      localStorage.setItem("level", item);
-      this.$router.push("/login");
-    },
-    studentPortal() {
-      this.$router.push("/student-login");
+    ApplyNow() {
+      this.$router.push("/joblist");
     },
   },
-  data: () => ({
-    isLoading: false,
-    email: "",
-    password: "",
-    show1: false,
-    show2: false,
-    fadeAwayMessage: {
-      show: false,
-      type: "success",
-      header: "Successfully Added!",
-      message: "",
-      top: 10,
-    },
-  }),
 };
 </script>
 
 <style scoped>
-.registerLink:hover {
-  cursor: pointer;
-  text-decoration: underline;
+/* PAGE BASE */
+.page {
+  min-height: 100vh;
+  background-image: url("../../assets/img/bg_img.png");
+  background-size: cover; /* fill the whole screen */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat; /* prevent tiling */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
 }
-.content {
-  /* background-color: #f5b027; */
-  background: url("../../assets/img/bglogin.jpg");
-  background-position: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100vw 100vh;
+
+/* MAIN CONTAINER */
+.container {
+  width: 92%;
+  max-width: 2100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 150px;
+  color: white;
 }
+
+/* GROUPS  */
+
+.group-1 {
+  display: flex;
+  flex-direction: column;
+  gap: -20px; /* 👈 controls spacing inside the group */
+}
+
+/* LEFT SIDE */
+.left {
+  flex: 1;
+  max-width: 1500px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 75px; /* 👈 controls spacing between group-1, group-2, group-3 */
+}
+
+/* TITLE */
 .title {
-  color: #fff;
-  font-size: 35px !important;
-  position: relative;
-  font-weight: bold;
-  line-height: 40px;
+  font-size: 80px !important;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.1; /* important */
 }
-.title .underline {
+
+.title span {
+  color: #e5ff1f;
+}
+
+/* TEXT */
+.subtitle {
+  margin-top: 15px;
+  font-size: 26px;
+  opacity: 0.9;
+}
+
+.description {
+  margin-top: 12px;
+  max-width: 850px;
+  line-height: 1.4;
+  font-size: 26px;
+  opacity: 0.95;
+  font-weight: 300;
+}
+
+/* BUTTON */
+.apply-btn {
+  margin-top: 25px;
+  background: white;
+  color: #065f46;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.apply-btn:hover {
+  transform: scale(1.05);
+}
+
+/* CATEGORY BAR */
+.category-bar {
+  margin-top: 35px;
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height: 130px;
+
+  background: rgba(20, 116, 82, 0.9); /* 👈 use rgba */
+  backdrop-filter: blur(2px); /* stronger blur */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.category {
+  flex: 1;
+  text-align: center;
+  padding: 18px 20px;
+}
+
+.icon {
+  font-size: 22px;
+  margin-bottom: 1px;
+}
+
+.icon img {
+  width: 40px;
+}
+
+.label strong {
+  display: block;
+  font-size: 18px;
+}
+
+.label small {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* DIVIDER */
+.divider {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  height: 50px;
+}
+
+/* RIGHT SIDE */
+.right {
+  flex: 1;
   display: flex;
   justify-content: center;
-  margin-top: 15px;
 }
-.title .underline .u1 {
-  background: #fff;
-  width: 70%;
-  height: 5px;
-  margin: 0 5px;
+
+/* CARD */
+.requirements-card {
+  width: 620px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #333;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
-.title .underline .u2 {
-  background: #fff;
-  width: 5%;
-  height: 5px;
-  margin: 0 5px;
+/* CARD TITLE */
+.requirements-card h2 {
+  font-size: 25px;
+  margin-bottom: 15px;
+  text-align: center;
 }
-.lp-img {
-  -webkit-filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.09));
-  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.09));
+
+.requirements-card span {
+  color: #0f766e;
+  font-weight: 700;
+}
+
+/* LIST */
+.requirements-card ul {
+  list-style: none; /* remove default bullets */
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.requirements-card li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+/* CIRCLE CHECK ICON */
+/* ICON */
+.requirements-card li::before {
+  content: "✔";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+  min-width: 22px; /* 👈 IMPORTANT */
+
+  background: #16a34a;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+
   border-radius: 50%;
-  background: #fff;
+  margin-top: 4px;
+
+  flex-shrink: 0; /* 👈 prevents shrinking */
 }
-.rounded-card {
-  border-radius: 20px;
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+/* ===== LARGE (≤ 1424px) ===== */
+@media (max-width: 1424px) {
+  .title {
+    margin-top: 20px;
+  }
+
+  .requirements-card {
+    width: 500px;
+  }
+}
+
+/* ===== LAPTOP (≤ 1265px) ===== */
+@media (max-width: 1265px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 60px;
+    margin-top: 30px;
+  }
+
+  .category-bar {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .requirements-card {
+    width: 100%;
+    max-width: 850px;
+  }
+}
+
+/* ===== TABLET (≤ 1024px) ===== */
+@media (max-width: 1024px) {
+  .container {
+    gap: 60px;
+  }
+
+  .title {
+    font-size: 48px;
+  }
+
+  .subtitle,
+  .description {
+    font-size: 25px;
+  }
+
+  .category-bar {
+    height: auto;
+    padding: 10px;
+  }
+
+  .category {
+    padding: 10px;
+  }
+}
+
+/* ===== MOBILE (≤ 768px) ===== */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .left,
+  .right {
+    width: 100%;
+  }
+
+  .left {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 32px;
+    margin-top: 10px;
+  }
+
+  .subtitle,
+  .description {
+    font-size: 20px;
+  }
+
+  .apply-btn {
+    font-size: 13px;
+  }
+
+  .category-bar {
+    width: 100%;
+    height: auto;
+    overflow-x: auto;
+    gap: 10px;
+  }
+
+  .category {
+    min-width: 100px;
+    padding: 8px;
+  }
+
+  .icon img {
+    width: 28px;
+  }
+
+  .label strong {
+    font-size: 12px;
+  }
+
+  .requirements-card {
+    padding: 18px;
+  }
+
+  .requirements-card h2 {
+    font-size: 18px;
+  }
+
+  .requirements-card li {
+    font-size: 14px;
+  }
+}
+
+/* ===== SMALL MOBILE (≤ 480px) ===== */
+@media (max-width: 480px) {
+  .container {
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .apply-btn {
+    width: 100%;
+  }
 }
 </style>
