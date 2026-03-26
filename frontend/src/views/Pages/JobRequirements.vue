@@ -46,8 +46,9 @@
         <div v-if="currentStep === 0">
           <v-form ref="form1">
             <p class="instruction">
-              Instruction: Please enter "N/A" in any required field that does
-              not apply to you.
+              <strong>Instruction:</strong>
+              Please enter "N/A" in any required field that does not apply to
+              you.
             </p>
 
             <div class="grid">
@@ -56,23 +57,21 @@
                 <!-- <input v-model="form.firstName" :rules="[formRules.required]" /> -->
                 <v-text-field
                   v-model="form.firstname"
-                  label="Firstname"
                   outlined
                   color="green"
-                  dense
+                  class="rounded-lg custom-input"
                   :rules="[formRules.required]"
                 />
               </div>
 
               <div class="form-group">
-                <label><span class="red--text">*</span> Middle Name</label>
+                <label> Middle Name (Optional)</label>
                 <!-- <input v-model="form.middleName" /> -->
                 <v-text-field
                   v-model="form.mi"
-                  label="Middle Name"
+                  class="rounded-lg custom-input"
                   outlined
                   color="green"
-                  dense
                 />
               </div>
 
@@ -81,23 +80,21 @@
                 <!-- <input v-model="form.lastName" /> -->
                 <v-text-field
                   v-model="form.lastname"
-                  label="Lastname"
+                  class="rounded-lg custom-input"
                   outlined
                   color="green"
-                  dense
                   :rules="[formRules.required]"
                 />
               </div>
 
               <div class="form-group">
-                <label>Suffix</label>
+                <label>Suffix (Optional)</label>
                 <!-- <input v-model="form.suffix" /> -->
                 <v-text-field
                   v-model="form.suffix"
-                  label="Suffix"
+                  class="rounded-lg custom-input"
                   outlined
                   color="green"
-                  dense
                 />
               </div>
 
@@ -106,9 +103,8 @@
                 <!-- <input v-model="form.email" /> -->
                 <v-text-field
                   v-model="form.email"
-                  label="Email"
+                  class="rounded-lg custom-input"
                   outlined
-                  dense
                   color="green"
                   type="email"
                   :rules="[formRules.required, formRules.email]"
@@ -120,7 +116,7 @@
                 <!-- <input v-model="form.phone" /> -->
                 <v-text-field
                   v-model="form.number"
-                  label="Phone Number"
+                  class="rounded-lg custom-input"
                   color="green"
                   type="text"
                   maxlength="11"
@@ -128,7 +124,6 @@
                   @input="cleanDigits"
                   :rules="[contactNoRule]"
                   outlined
-                  dense
                 />
               </div>
 
@@ -137,10 +132,9 @@
                 <!-- <input v-model="form.religion" /> -->
                 <v-text-field
                   v-model="form.religion"
+                  class="rounded-lg custom-input"
                   color="green"
-                  label="Religion"
                   outlined
-                  dense
                   :rules="[formRules.required]"
                 />
               </div>
@@ -150,11 +144,10 @@
                 <!-- <input v-model="form.sex" /> -->
                 <v-select
                   v-model="form.gender"
+                  class="rounded-lg custom-input"
                   color="green"
                   :items="genderOptions"
-                  label="SOGIE"
                   outlined
-                  dense
                   :rules="[formRules.required]"
                 />
               </div>
@@ -164,14 +157,12 @@
                 <!-- <input type="date" v-model="form.birthDate" /> -->
                 <v-text-field
                   outlined
-                  label="*Birth Date"
                   v-model="form.birth"
                   :rules="[formRules.required]"
-                  dense
                   required
                   type="date"
                   :max="BdaymaxDate"
-                  class="text-uppercase"
+                  class="text-uppercase rounded-lg custom-input"
                   @input="calculateAge(form.birth)"
                 />
               </div>
@@ -184,10 +175,9 @@
                 <!-- <input v-model="form.address" /> -->
                 <v-text-field
                   v-model="form.address"
-                  label="Address (Prk./Brgy./City/Municipality)"
+                  class="rounded-lg custom-input"
                   outlined
                   color="green"
-                  dense
                   :rules="[formRules.required]"
                 />
               </div>
@@ -199,8 +189,8 @@
         <div v-if="currentStep === 1">
           <v-form ref="form2">
             <p class="instruction">
-              Instruction: Please enter "N/A" in any required field that does
-              not apply to you.
+              <strong>Instruction:</strong> Please enter "N/A" in any required
+              field that does not apply to you.
             </p>
             <div class="grid1">
               <div class="form-group full1">
@@ -212,10 +202,9 @@
                 <v-select
                   v-model="form.educQualification"
                   :items="educationOptions"
-                  label="Highest Educational Attainment"
+                  class="rounded-lg custom-input"
                   color="green"
                   outlined
-                  dense
                   :rules="[formRules.required]"
                 />
               </div>
@@ -230,7 +219,7 @@
                 <!-- <input type="date" v-model="form.bachelor" /> -->
                 <v-text-field
                   v-model="form.educQualificationGrad"
-                  label="Course"
+                  class="rounded-lg custom-input"
                   color="green"
                   outlined
                   :rules="
@@ -239,7 +228,6 @@
                       ? [formRules.required]
                       : []
                   "
-                  dense
                 />
               </div>
               <div
@@ -250,7 +238,7 @@
                 <!-- <input type="date" v-model="form.bachelor_year_unit" /> -->
                 <v-text-field
                   v-model="form.earnedUnits"
-                  label="Earned Units"
+                  class="rounded-lg custom-input"
                   color="green"
                   :rules="
                     form.educQualification == 'College Level'
@@ -258,7 +246,6 @@
                       : []
                   "
                   outlined
-                  dense
                 />
               </div>
               <div
@@ -272,7 +259,7 @@
                 <!-- <input type="date" v-model="form.masters" /> -->
                 <v-text-field
                   v-model="form.collegeGradCourse"
-                  label="Bachelors Degree"
+                  class="rounded-lg custom-input"
                   outlined
                   :rules="
                     form.educQualification == 'College Graduate' ||
@@ -280,7 +267,6 @@
                       ? [formRules.required]
                       : []
                   "
-                  dense
                   color="green"
                 />
               </div>
@@ -298,7 +284,7 @@
                 <!-- <input type="date" v-model="form.bachelor_year_unit" /> -->
                 <v-text-field
                   v-model="form.yearGraduated"
-                  label="Year Graduated/ Earned Unit"
+                  class="rounded-lg custom-input"
                   outlined
                   color="green"
                   :rules="
@@ -307,7 +293,6 @@
                       ? [formRules.required]
                       : []
                   "
-                  dense
                 />
               </div>
               <div
@@ -318,7 +303,7 @@
                 <!-- <input type="date" v-model="form.masters" /> -->
                 <v-text-field
                   v-model="form.masterGradCourse"
-                  label="Master's Degree"
+                  class="rounded-lg custom-input"
                   outlined
                   color="green"
                   :rules="
@@ -326,7 +311,6 @@
                       ? [formRules.required]
                       : []
                   "
-                  dense
                 />
               </div>
               <div
@@ -340,7 +324,7 @@
                 <!-- <input type="date" v-model="form.bachelor_year_unit" /> -->
                 <v-text-field
                   v-model="form.yearGraduatedMasteral"
-                  label="Year Graduated/ Earned Unit 'N/A if not applicable'"
+                  class="rounded-lg custom-input"
                   outlined
                   color="green"
                   :rules="
@@ -348,7 +332,6 @@
                       ? [formRules.required]
                       : []
                   "
-                  dense
                 />
               </div>
               <div
@@ -359,10 +342,9 @@
                 <!-- <input type="date" v-model="form.bachelor" /> -->
                 <v-text-field
                   v-model="form.doctoralGradCourse"
-                  label="Doctorate Degree 'N/A if not applicable'"
+                  class="rounded-lg custom-input"
                   color="green"
                   outlined
-                  dense
                   :rules="
                     form.educQualification == 'Post Graduate'
                       ? [formRules.required]
@@ -381,9 +363,8 @@
                 <!-- <input type="date" v-model="form.bachelor_year_unit" /> -->
                 <v-text-field
                   v-model="form.yearGraduatedDoctoral"
-                  label="Year Graduated/ Earned Unit"
+                  class="rounded-lg custom-input"
                   outlined
-                  dense
                   color="green"
                   :rules="
                     form.educQualification == 'Post Graduate'
@@ -400,8 +381,8 @@
         <div v-if="currentStep === 2" class="gaps">
           <v-form ref="form3">
             <p class="instruction">
-              Instruction: Please enter "N/A" in any required field that does
-              not apply to you.
+              <strong>Instruction:</strong> Please enter "N/A" in any required
+              field that does not apply to you.
             </p>
             <div class="grid">
               <div class="form-group full">
@@ -411,10 +392,9 @@
                 <!-- <input v-model="form.highest_education" /> -->
                 <v-text-field
                   v-model="form.companyAgency"
-                  label="Latest Company/Agency"
+                  class="rounded-lg custom-input"
                   color="green"
                   outlined
-                  dense
                   :rules="[formRules.required]"
                 />
               </div>
@@ -428,10 +408,9 @@
                 <!-- <input v-model="form.latest_organization" /> -->
                 <v-text-field
                   v-model="form.presentposition"
-                  label="Present/Latest Position"
+                  class="rounded-lg custom-input"
                   color="green"
                   outlined
-                  dense
                   :rules="[formRules.required]"
                 />
               </div>
@@ -443,10 +422,9 @@
                 <!-- <input type="text" v-model="form.status_employement" /> -->
                 <v-text-field
                   v-model="form.statusEmployment"
-                  label="Status of Employment"
+                  class="rounded-lg custom-input"
                   color="green"
                   outlined
-                  dense
                   :rules="[formRules.required]"
                 />
               </div>
@@ -457,17 +435,22 @@
               <v-text-field
                 v-model="form.eligibilityForm"
                 color="green"
-                label="Eligibility"
+                class="rounded-lg custom-input"
                 outlined
-                dense
                 :rules="[formRules.required]"
               />
             </div>
             <p class="instruction">
-              Instruction: Kindly check if you belong to any of the following:
+              <strong>Instruction:</strong> Kindly check if you belong to any of
+              the following:
             </p>
 
             <div class="checkbox-group">
+              <!-- Pregnant -->
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="form.pregnant" />
+                Pregnant
+              </label>
               <!-- PWD -->
               <label class="checkbox-item">
                 <input type="checkbox" v-model="form.pwdChecked" />
@@ -484,18 +467,11 @@
                 v-model="form.pwd"
                 placeholder="Please specify"
                 outlined
-                class="full"
+                class="full rounded-lg custom-input"
                 color="green"
-                dense
                 :rules="[formRules.required]"
                 v-if="form.pwdChecked"
               />
-
-              <!-- Pregnant -->
-              <label class="checkbox-item">
-                <input type="checkbox" v-model="form.pregnant" />
-                Pregnant
-              </label>
 
               <!-- Indigenous -->
               <label class="checkbox-item">
@@ -514,9 +490,8 @@
                 v-model="form.indigenous"
                 placeholder="Specify Indigenous community"
                 outlined
-                class="full"
+                class="full rounded-lg custom-input"
                 color="green"
-                dense
                 :rules="[formRules.required]"
               />
             </div>
@@ -527,8 +502,8 @@
         <div v-if="currentStep === 3">
           <v-form ref="form4">
             <p class="instruction">
-              INSTRUCTION: Upload PDF files only. If multiple pages, merge into
-              one (1) file.
+              <strong>Instruction:</strong> Upload PDF files only. If multiple
+              pages, merge into one (1) file.
             </p>
 
             <div class="upload-list">
@@ -540,8 +515,8 @@
                 <!-- LABEL -->
                 <div class="upload-header">
                   <label>
-                    {{ item.label }}
                     <span v-if="item.required">*</span>
+                    {{ item.label }}
                   </label>
                 </div>
 
@@ -555,12 +530,12 @@
                     counter
                     clearable
                     :rules="item.required ? [formRules.required] : []"
-                    :label="item.label + (item.required ? ' *Required' : '')"
+                    :label="item.label + (item.required ? ' ' : '')"
                   >
                   </v-file-input>
 
                   <!-- FILE PREVIEW -->
-                  <div v-if="form[item.key]" class="file-preview">
+                  <!-- <div v-if="form[item.key]" class="file-preview">
                     <span class="file-tag">
                       {{ form[item.key].name }}
                     </span>
@@ -570,7 +545,7 @@
                     </span>
 
                     <button @click="removeFile(item.key)">✕</button>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -717,16 +692,16 @@
     </div>
     <div v-if="returnDialog" class="privacy-overlay">
       <div class="privacy-modal">
-        <h4>Return Confirmation</h4>
-        <v-alert type="info" outlined class="mt-4">
+        <h2>Return Confirmation!</h2>
+        <p outlined class="mt-4">
           You have made changes into this form! do you want to return? all
           changes will be reset.
-        </v-alert>
+        </p>
 
         <div class="actions">
-          <button class="cancel" @click="returnDialog = false">Cancel</button>
+          <button class="cancel1" @click="returnDialog = false">Cancel</button>
 
-          <button class="apply" @click="close()">Confirm</button>
+          <button class="apply1" @click="close()">Confirm</button>
         </div>
       </div>
     </div>
@@ -807,36 +782,6 @@ export default {
         "Review",
       ],
       loadingState: false,
-      // uploadFields: [
-      //   {
-      //     key: "application",
-      //     label: "Application Letter",
-      //     required: true,
-      //   },
-      //   { key: "pds", label: "Personal Data Sheet (PDS)", required: true },
-      //   {
-      //     key: "performance",
-      //     label: "Performance Rating",
-      //     required:
-      //       this.jobData?.performance_rating === "required" ? true : false,
-      //   },
-      //   {
-      //     key: "eligibility",
-      //     label: "Certificate of Eligibility/Rating",
-      //     required: true,
-      //   },
-      //   { key: "TOR", label: "Transcript of Records", required: true },
-      //   {
-      //     key: "employment",
-      //     label: "Certificate of Employment",
-      //     required: false,
-      //   },
-      //   {
-      //     key: "seminars",
-      //     label: "Certificate/s of Training",
-      //     required: false,
-      //   },
-      // ],
       toReturn: true,
       educationOptions: [
         "Elementary Level",
@@ -1031,7 +976,7 @@ export default {
       } else {
         if (this.toReturn) {
           localStorage.removeItem("jobData");
-          this.$router.push("/job-posting");
+          this.$router.push("/joblist");
         } else {
           this.returnDialog = true;
         }
@@ -1039,7 +984,7 @@ export default {
     },
     close() {
       localStorage.removeItem("jobData");
-      this.$router.push("/job-posting");
+      this.$router.push("/joblist");
     },
     ok() {
       this.loadingState = false;
@@ -1450,205 +1395,9 @@ export default {
 </script>
 
 <style scoped>
-.apply-page {
-  position: relative;
-  min-height: 100vh;
-  background-image: url("../../assets/img/bg_img.png");
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Poppins", sans-serif;
-  font-weight: 100;
-  /* align-items: flex-start; */
-  /* padding-top: 95px; */
-}
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 4px;
-}
-/* WRAPPER */
-.steps-wrapper {
-  position: relative;
-  margin-bottom: 25px;
-}
-
-/* LINE BACKGROUND */
-.progress-line {
-  position: absolute;
-  top: 15px;
-
-  left: calc(100% / (2 * var(--steps)));
-  right: calc(100% / (2 * var(--steps)));
-
-  height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  z-index: 1;
-}
-/* LINE FILL (ANIMATED) */
-.progress-fill {
-  height: 100%;
-  background: #147452;
-  border-radius: 10px;
-  transition: width 0.4s ease;
-}
-
-/* STEPS */
-.steps {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  z-index: 2;
-}
-
-.step {
-  text-align: center;
-  flex: 1;
-  opacity: 0.5;
-  transition: 0.3s;
-}
-
-.step.active,
-.step.done {
-  opacity: 1;
-}
-
-/* CIRCLE */
-.circle {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: gray;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.3s;
-}
-
-/* ACTIVE */
-.step.active .circle {
-  background: #147452;
-}
-
-/* DONE */
-.step.done .circle {
-  background: #147452;
-  color: white;
-  font-weight: bold;
-}
-
-/* GLASS CONTAINER */
-.glass-container {
-  width: 1020px;
-  max-width: 95%;
-  padding: 25px;
-  border-radius: 20px;
-
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-/* TITLE */
-.title {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px !important;
-}
-
-/* STEPS */
-.steps {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.step {
-  text-align: center;
-  flex: 1;
-  opacity: 0.5;
-  transition: 0.3s;
-}
-
-.step.active {
-  opacity: 1;
-}
-
-.step.done {
-  opacity: 1;
-}
-
-/* CIRCLE */
-.circle {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: rgb(148, 148, 148);
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.3s;
-}
-
-/* ACTIVE */
-.step.active .circle {
-  background: #147452;
-}
-
-/* DONE ✔ */
-.step.done .circle {
-  background: #147452;
-  color: white;
-  font-weight: bold;
-}
-
-/* FORM */
-.form-box {
-  /* background: rgba(255, 255, 255, 0.15); */
-  background: white;
-  padding: 20px;
-  max-height: 50vh;
-  overflow-y: scroll;
-  border-radius: 15px;
-}
-
-.instruction {
-  color: black;
-  font-size: 14px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-}
-.grid1 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-
-  gap: 15px;
-}
+/* ========================= */
+/* GLOBAL */
+/* ========================= */
 .review-container {
   display: flex;
   flex-direction: column;
@@ -1661,6 +1410,7 @@ export default {
   border-radius: 12px;
   padding: 16px;
   border: 1px solid #eee;
+  margin-bottom: 20px;
 }
 
 .review-section h3 {
@@ -1674,6 +1424,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  row-gap: 15px;
 }
 
 .review-item {
@@ -1820,12 +1571,6 @@ export default {
 .file-preview button:hover {
   color: red;
 }
-
-.gaps {
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* adjust spacing */
-}
 .checkbox-group {
   display: flex;
   flex-direction: column;
@@ -1851,195 +1596,6 @@ export default {
 .full {
   grid-column: span 3;
 }
-
-/* INPUT */
-input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid rgb(233, 233, 233);
-  outline: none;
-  font-size: 14px;
-}
-
-/* ACTIONS */
-.actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.cancel,
-.apply {
-  padding: 8px 20px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.cancel {
-  background: rgba(255, 255, 255, 0.3);
-  color: white;
-}
-
-.apply {
-  background: #147452;
-  color: white;
-} /* ========================= */
-/* ✅ RESPONSIVE FIXES ONLY */
-/* ========================= */
-
-/* TABLET */
-@media (max-width: 1024px) {
-  .apply-page {
-    padding-top: 80px;
-  }
-
-  .glass-container {
-    padding: 20px;
-  }
-
-  .form-box {
-    max-height: 60vh; /* ✅ more space for tablet */
-  }
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-  /* 🔥 STACK ALL GRIDS */
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .grid1 {
-    grid-template-columns: 1fr;
-  }
-
-  .full,
-  .full1 {
-    grid-column: span 1;
-  }
-
-  /* 🔥 STEP LABELS SMALLER */
-  .step span {
-    font-size: 11px;
-  }
-
-  .circle {
-    width: 26px;
-    height: 26px;
-    font-size: 12px;
-  }
-
-  /* 🔥 TITLE */
-  .title {
-    font-size: 20px !important;
-  }
-
-  /* 🔥 FORM */
-  .form-box {
-    padding: 15px;
-    max-height: 65vh;
-  }
-
-  /* 🔥 REVIEW GRID */
-  .review-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .review-item.full {
-    grid-column: span 1;
-  }
-
-  /* 🔥 FILE ROW STACK */
-  .file-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-
-  /* 🔥 ACTION BUTTONS */
-  .actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .cancel,
-  .apply {
-    width: 100%;
-  }
-}
-
-/* SMALL PHONES */
-@media (max-width: 480px) {
-  .apply-page {
-    padding-top: 60px;
-  }
-
-  .glass-container {
-    padding: 15px;
-  }
-
-  .form-box {
-    padding: 12px;
-    max-height: 70vh;
-  }
-
-  /* 🔥 STEP TEXT WRAP */
-  .step span {
-    font-size: 10px;
-    white-space: normal;
-  }
-
-  /* 🔥 PROGRESS LINE ALIGN FIX */
-  .progress-line {
-    top: 13px;
-  }
-}
-
-/* EXTRA SMALL DEVICES */
-@media (max-width: 360px) {
-  .title {
-    font-size: 18px !important;
-  }
-
-  .circle {
-    width: 24px;
-    height: 24px;
-    font-size: 11px;
-  }
-}
-
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 6px solid #ccc;
-  border-top: 6px solid #1976d2;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 15px;
-}
-
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 /* OVERLAY */
 .privacy-overlay {
   position: fixed;
@@ -2057,7 +1613,7 @@ input {
 
 /* MODAL */
 .privacy-modal {
-  width: 500px;
+  width: 450px;
   max-width: 100%;
   max-height: 90vh; /* ✅ prevent overflow */
 
@@ -2101,9 +1657,461 @@ input {
 /* ACTIONS */
 .privacy-modal .actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
   margin-top: 15px;
-  flex-wrap: wrap; /* ✅ prevents button overflow */
+}
+
+strong {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.apply-page {
+  position: relative;
+  min-height: 100vh;
+  background-image: url("../../assets/img/bg_img.png");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ========================= */
+/* CONTAINER */
+/* ========================= */
+.glass-container {
+  width: 65%;
+  max-width: 1100px;
+  min-height: 80vh; /* ✅ FIX */
+  height: auto;
+  padding: 25px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+/* TITLE */
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px !important;
+}
+
+/* ========================= */
+/* STEPPER */
+/* ========================= */
+.steps-wrapper {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.progress-line {
+  position: absolute;
+  top: 15px;
+  left: calc(100% / (2 * var(--steps)));
+  right: calc(100% / (2 * var(--steps)));
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #147452;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* ✅ FIX */
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.step {
+  text-align: center;
+  flex: 1 1 60px; /* ✅ FIX */
+  opacity: 0.5;
+}
+
+.step.active,
+.step.done {
+  opacity: 1;
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: gray;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step.active .circle,
+.step.done .circle {
+  background: #147452;
+  color: white;
+}
+
+/* ========================= */
+/* FORM */
+/* ========================= */
+.form-box {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+
+  min-height: 300px;
+  height: 60vh; /* ✅ FIX */
+  overflow-y: auto;
+}
+
+.instruction {
+  color: black;
+  font-size: 14px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 25px;
+}
+
+.grid1 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.full {
+  grid-column: span 3;
+}
+
+.full1 {
+  grid-column: span 2;
+}
+
+/* FORM GROUP */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+/* ========================= */
+/* REVIEW */
+/* ========================= */
+.review-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-section {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #eee;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.review-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-item.full {
+  grid-column: span 2;
+}
+
+.label {
+  font-size: 12px;
+  color: #888;
+}
+
+.value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ========================= */
+/* FILE */
+/* ========================= */
+.file-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.file-tag {
+  background: #147452;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+/* ========================= */
+/* ACTIONS */
+/* ========================= */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel,
+.apply {
+  width: 100px;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+}
+
+.cancel {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.apply {
+  background: #147452;
+  color: white;
+}
+.cancel1,
+.apply1 {
+  width: 20%;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel1 {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.apply1 {
+  background: #147452;
+  color: white;
+}
+/* ========================= */
+/* INPUT FIX */
+/* ========================= */
+::v-deep(.custom-input.v-text-field),
+::v-deep(.custom-input.v-select) {
+  width: 100%;
+}
+/* 🔥 APPLY TO BOTH TEXT + SELECT */
+::v-deep(.custom-input.v-text-field .v-input__control),
+::v-deep(.custom-input.v-select .v-input__control) {
+  min-height: 36px !important;
+  font-size: 14px !important;
+}
+
+/* 🔥 MAIN BOX */
+::v-deep(.custom-input .v-input__slot) {
+  min-height: 36px !important;
+  height: 48px !important;
+  padding: 0 10px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* 🔥 INPUT TEXT */
+::v-deep(.custom-input input) {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100%;
+}
+
+/* 🔥 SELECT TEXT ALIGNMENT */
+::v-deep(.custom-input.v-select .v-select__selections) {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* 🔥 DROPDOWN ICON ALIGN */
+::v-deep(.custom-input .v-input__append-inner) {
+  margin-top: 0 !important;
+  align-items: center;
+  display: flex;
+}
+
+/* 🔥 LABEL FIX */
+::v-deep(.custom-input .v-label) {
+  top: 8px;
+  font-size: 12px;
+}
+/* ========================= */
+/* TABLET */
+/* ========================= */
+@media (max-width: 1024px) {
+  .glass-container {
+    width: 85%;
+  }
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+@media (max-width: 768px) {
+  .glass-container {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .grid,
+  .grid1 {
+    grid-template-columns: 1fr;
+  }
+
+  .full,
+  .full1 {
+    grid-column: span 1;
+  }
+
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-item.full {
+    grid-column: span 1;
+  }
+
+  .file-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .cancel,
+  .apply {
+    width: 15%;
+  }
+
+  .form-box {
+    max-height: none; /* ✅ FIX */
+  }
+}
+
+/* ========================= */
+/* SMALL DEVICES */
+/* ========================= */
+@media (max-width: 480px) {
+  .title {
+    font-size: 18px !important;
+  }
+
+  .step span {
+    font-size: 10px;
+  }
+
+  .circle {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* WRAPPER */
+  .steps-wrapper {
+    position: relative;
+    margin-bottom: 25px;
+  }
+
+  /* LINE BACKGROUND */
+  .progress-line {
+    position: absolute;
+    top: 12px;
+
+    left: calc(100% / (2 * var(--steps)));
+    right: calc(100% / (2 * var(--steps)));
+
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    z-index: 1;
+  }
+  /* LINE FILL (ANIMATED) */
+  .progress-fill {
+    height: 100%;
+    background: #147452;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+
+  /* STEPS */
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    flex-wrap: wrap;
+  }
+
+  .step {
+    flex: 1 1 60px;
+    text-align: center;
+    flex: 1;
+    opacity: 0.5;
+    transition: 0.3s;
+  }
+
+  .step.active,
+  .step.done {
+    opacity: 1;
+  }
+
+  .cancel,
+  .apply {
+    font-size: 13px !important;
+    width: 25%;
+  }
+
+  .cancel1,
+  .apply1 {
+    width: 30%;
+  }
 }
 </style>

@@ -22,7 +22,6 @@
               {{ job.salary_grade == 0 ? "N/A" : "SG " + job.salary_grade }}
             </b>
           </div>
-
           <div class="row">
             <span>
               {{ job.salary_grade == 0 ? "Salary" : "Monthly Salary" }}</span
