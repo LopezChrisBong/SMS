@@ -1,11 +1,65 @@
 <template>
   <div class="page">
-    <!-- LEFT -->
-    <div class="left">
-      <div class="group-1">
-        <div class="title">WE ARE <span>HIRING!</span></div>
+    <div class="container">
+      <!-- LEFT -->
+      <div class="left">
+        <div class="group-1">
+          <div class="title">WE ARE <span>HIRING!</span></div>
+
+          <p class="subtitle">Shape the future with us.</p>
+
+          <p class="description">
+            Davao del Norte State College is now accepting applications from
+            qualified individuals for various teaching, non-teaching, and
+            support positions.
+          </p>
+        </div>
+        <div class="group-2">
+          <button class="apply-btn" @click="ApplyNow">APPLY NOW</button>
+        </div>
+
+        <!-- CATEGORY BAR -->
+
+        <div class="category-bar group-3">
+          <div class="category">
+            <div class="icon">
+              <img src="../../assets/img/teaching.png" alt="" />
+            </div>
+            <div class="label">
+              <strong>TEACHING</strong>
+              <small>POSITIONS</small>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="category">
+            <div class="icon">
+              <img src="../../assets/img/non_teaching.png" alt="" />
+            </div>
+            <div class="label">
+              <strong>NON-TEACHING</strong>
+              <small>POSITIONS</small>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="category">
+            <div class="icon">
+              <img src="../../assets/img/support.png" alt="" />
+            </div>
+            <div class="label">
+              <strong>SUPPORT</strong>
+              <small>POSITIONS</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right">
         <div class="requirements-card">
-          <img src="../../assets/img/dnsc_logo.png" alt="" />
           <h2>Application <span>Requirements</span></h2>
 
           <ul>
@@ -46,13 +100,10 @@
               and
             </li>
             <li>
-              Certificate of Training/Seminar/Conference as proof of training,
-              seminars attended declared in PDS.
+              Certificate of Training/Seminar/Conference as proof of
+              training/seminars attended declared in PDS.
             </li>
           </ul>
-        </div>
-        <div class="group-2">
-          <button class="apply-btn" @click="ApplyNow">APPLY NOW</button>
         </div>
       </div>
     </div>
@@ -81,23 +132,24 @@ export default {
 .page {
   min-height: 100vh;
   background-image: url("../../assets/img/bg_img.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-size: cover; /* fill the whole screen */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat; /* prevent tiling */
+
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 40px;
+  justify-content: center;
   font-family: "Poppins", sans-serif;
 }
 
 /* MAIN CONTAINER */
 .container {
+  width: 92%;
+  max-width: 2100px;
   display: flex;
-  width: 700px;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
+  gap: 150px;
   color: white;
 }
 
@@ -106,35 +158,29 @@ export default {
 .group-1 {
   display: flex;
   flex-direction: column;
+  gap: -20px; /* 👈 controls spacing inside the group */
 }
 
 /* LEFT SIDE */
 .left {
   flex: 1;
+  max-width: 1500px;
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  gap: 75px; /* 👈 controls spacing between group-1, group-2, group-3 */
 }
 
 /* TITLE */
 .title {
-  font-size: 70px !important;
+  font-size: 80px !important;
   font-weight: 800;
   letter-spacing: 1px;
   line-height: 1.1; /* important */
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
-  gap: 10px;
-  color: white;
 }
 
 .title span {
-  color: #fcd212;
+  color: #e5ff1f;
 }
 
 /* TEXT */
@@ -155,19 +201,50 @@ export default {
 
 /* BUTTON */
 .apply-btn {
-  margin-top: 30px;
+  margin-top: 25px;
   background: white;
-  color: #147452;
+  color: #065f46;
   border: none;
-  padding: 10px 50px;
+  padding: 10px 22px;
   border-radius: 999px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .apply-btn:hover {
   transform: scale(1.05);
+}
+
+/* CATEGORY BAR */
+.category-bar {
+  margin-top: 35px;
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height: 130px;
+
+  background: rgba(20, 116, 82, 0.9); /* 👈 use rgba */
+  backdrop-filter: blur(2px); /* stronger blur */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.category {
+  flex: 1;
+  text-align: center;
+  padding: 18px 20px;
+}
+
+.icon {
+  font-size: 22px;
+  margin-bottom: 1px;
+}
+
+.icon img {
+  width: 40px;
 }
 
 .label strong {
@@ -194,12 +271,6 @@ export default {
   justify-content: center;
 }
 
-.group-2 {
-  width: 100%;
-  display: flex;
-  justify-content: center; /* 🔥 */
-}
-
 /* CARD */
 .requirements-card {
   width: 620px;
@@ -209,15 +280,6 @@ export default {
   padding: 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
-.requirements-card img {
-  width: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 8px;
-}
 /* CARD TITLE */
 .requirements-card h2 {
   font-size: 25px;
@@ -226,7 +288,7 @@ export default {
 }
 
 .requirements-card span {
-  color: #147452;
+  color: #0f766e;
   font-weight: 700;
 }
 
@@ -238,15 +300,14 @@ export default {
 
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  text-align: justify;
+  gap: 25px;
 }
 
 .requirements-card li {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1.5;
 }
 /* CIRCLE CHECK ICON */
@@ -261,7 +322,7 @@ export default {
   height: 22px;
   min-width: 22px; /* 👈 IMPORTANT */
 
-  background: #147452;
+  background: #16a34a;
   color: white;
   font-size: 12px;
   font-weight: bold;
@@ -301,32 +362,95 @@ export default {
     margin-top: 30px;
   }
 
+  .category-bar {
+    width: 100%;
+    justify-content: center;
+  }
+
   .requirements-card {
     width: 100%;
     max-width: 850px;
   }
 }
 
-/* ========================= */
-/* RESPONSIVE */
-/* ========================= */
-
-/* TABLET */
+/* ===== TABLET (≤ 1024px) ===== */
 @media (max-width: 1024px) {
+  .container {
+    gap: 60px;
+  }
+
+  .title {
+    font-size: 48px;
+  }
+
+  .subtitle,
+  .description {
+    font-size: 25px;
+  }
+
+  .category-bar {
+    height: auto;
+    padding: 10px;
+  }
+
+  .category {
+    padding: 10px;
+  }
+}
+
+/* ===== MOBILE (≤ 768px) ===== */
+@media (max-width: 768px) {
   .container {
     flex-direction: column;
     gap: 30px;
   }
-}
 
-/* MOBILE */
-@media (max-width: 768px) {
-  .page {
-    padding: 15px;
+  .left,
+  .right {
+    width: 100%;
+  }
+
+  .left {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 32px;
+    margin-top: 10px;
+  }
+
+  .subtitle,
+  .description {
+    font-size: 20px;
+  }
+
+  .apply-btn {
+    font-size: 13px;
+  }
+
+  .category-bar {
+    width: 100%;
+    height: auto;
+    overflow-x: auto;
+    gap: 10px;
+  }
+
+  .category {
+    min-width: 100px;
+    padding: 8px;
+  }
+
+  .icon img {
+    width: 28px;
+  }
+
+  .label strong {
+    font-size: 12px;
   }
 
   .requirements-card {
-    padding: 16px;
+    padding: 18px;
   }
 
   .requirements-card h2 {
@@ -334,27 +458,22 @@ export default {
   }
 
   .requirements-card li {
-    font-size: 13px;
+    font-size: 14px;
+  }
+}
+
+/* ===== SMALL MOBILE (≤ 480px) ===== */
+@media (max-width: 480px) {
+  .container {
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 26px;
   }
 
   .apply-btn {
     width: 100%;
-  }
-}
-
-/* SMALL MOBILE */
-@media (max-width: 480px) {
-  .title {
-    font-size: 35px !important;
-  }
-}
-/* SMALL MOBILE */
-@media (max-width: 320px) {
-  .requirements-card {
-    width: 100%;
-  }
-  .title {
-    font-size: 35px !important;
   }
 }
 </style>
