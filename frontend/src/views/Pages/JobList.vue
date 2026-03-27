@@ -128,6 +128,12 @@
 
       <!-- RIGHT BUTTON -->
       <button class="nav-btn right" @click="next">❯</button>
+
+      <!-- NAV BUTTONS (BOTTOM ON MOBILE) -->
+      <div class="nav-mobile">
+        <button class="nav-btn" @click="prev">❮</button>
+        <button class="nav-btn" @click="next">❯</button>
+      </div>
     </div>
 
     <!-- DATA PRIVACY MODAL -->
@@ -516,6 +522,39 @@ export default {
   right: -70px;
 }
 
+/* DEFAULT: HIDE MOBILE NAV */
+.nav-mobile {
+  display: none;
+}
+
+/* =========================
+   MOBILE FIX
+========================= */
+@media (max-width: 768px) {
+  /* ❌ HIDE SIDE BUTTONS */
+  .nav-btn.left,
+  .nav-btn.right {
+    display: none;
+  }
+
+  /* ✅ SHOW BOTTOM BUTTONS */
+  .nav-mobile {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 20;
+  }
+
+  .nav-mobile .nav-btn {
+    position: relative; /* remove absolute */
+    top: auto;
+    transform: none;
+    width: 45px;
+    height: 45px;
+  }
+}
 .nav-btn:hover {
   background: rgba(255, 255, 255, 0.4);
 }
