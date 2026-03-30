@@ -5,7 +5,7 @@
       <div class="group-1">
         <div class="title">WE ARE <span>HIRING!</span></div>
         <div class="requirements-card">
-          <img src="../../assets/img/DNSC_LOGO.png" alt="" />
+          <img src="../../assets/img/dnsc_logo.png" alt="" />
           <h2>Application <span>Requirements</span></h2>
 
           <ul>
