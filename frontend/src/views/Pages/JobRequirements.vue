@@ -528,8 +528,15 @@
                     prepend-icon="mdi-file-pdf-box"
                     show-size
                     counter
+                    @change="handleFile($event, item.key)"
                     clearable
-                    :rules="item.required ? [formRules.required] : []"
+                    :rules="[
+                      ...(item.required ? [formRules.required] : []),
+                      (file) =>
+                        !file ||
+                        file.type === 'application/pdf' ||
+                        'Only PDF files are allowed',
+                    ]"
                     :label="item.label + (item.required ? ' ' : '')"
                   >
                   </v-file-input>
@@ -705,56 +712,22 @@
         </div>
       </div>
     </div>
-    <v-dialog
-      v-model="successSubmitDialog"
-      max-width="600"
-      scrollable
-      persistent
-    >
-      <v-card>
-        <v-card-title
-          class="white--text"
-          style="background: rgba(0, 0, 0, 0.6)"
-        >
-          Successfully submitted
-          <v-spacer></v-spacer>
-          <!-- <v-btn icon dark @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn> -->
-        </v-card-title>
+    <div v-if="successSubmitDialog" class="privacy-overlay">
+      <div class="privacy-modal">
+        <h2>Successfully submitted.</h2>
+        <p outlined class="mt-4">
+          An email has been sent to the email address provided in your
+          application. Please check your spam or junk folder in case the message
+          was filtered.
+        </p>
 
-        <v-card-text style="text-align: justify; font-size: 14px">
-          <v-alert type="info" outlined class="mt-4"
-            >An email has been sent to the email address provided in your
-            application. Please check your spam or junk folder in case the
-            message was filtered.
-          </v-alert>
-        </v-card-text>
+        <div class="actions">
+          <!-- <button class="cancel1" @click="returnDialog = false">Cancel</button> -->
 
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <!-- <v-btn color="red" dark @click="returnDialog = false">
-            close
-          </v-btn> -->
-
-          <v-btn
-            style="
-              background-image: linear-gradient(
-                to bottom right,
-                #013d1f,
-                #009e08
-              );
-            "
-            dark
-            @click="ok()"
-          >
-            Ok
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+          <button class="apply1" @click="ok()">OK</button>
+        </div>
+      </div>
+    </div>
     <fade-away-message-component
       displayType="variation2"
       v-model="fadeAwayMessage.show"
@@ -929,16 +902,28 @@ export default {
   },
 
   methods: {
-    handleFile(event, field) {
-      const file = event.target.files[0];
+    // handleFile(event, field) {
+    //   const file = event.target.files[0];
 
+    //   if (file && file.type !== "application/pdf") {
+    //     alert("Only PDF files are allowed.");
+    //     return;
+    //   }
+
+    //   this.form[field] = file;
+    //   // console.log(this.form);
+    // },
+    handleFile(file, field) {
       if (file && file.type !== "application/pdf") {
-        alert("Only PDF files are allowed.");
+        this.form[field] = null;
+        this.fadeAwayMessage.show = true;
+        this.fadeAwayMessage.type = "error";
+        this.fadeAwayMessage.header = "System Message";
+        this.fadeAwayMessage.message = "Only PDF files are allowed.";
         return;
       }
 
       this.form[field] = file;
-      // console.log(this.form);
     },
 
     removeFile(field) {
@@ -952,18 +937,38 @@ export default {
       if (this.currentStep === 0) {
         if (this.$refs.form1.validate()) {
           this.currentStep++;
+        } else {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = "Please fill in the required fields.";
         }
       } else if (this.currentStep === 1) {
         if (this.$refs.form2.validate()) {
           this.currentStep++;
+        } else {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = "Please fill in the required fields.";
         }
       } else if (this.currentStep === 2) {
         if (this.$refs.form3.validate()) {
           this.currentStep++;
+        } else {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = "Please fill in the required fields.";
         }
       } else if (this.currentStep === 3) {
         if (this.$refs.form4.validate()) {
           this.currentStep++;
+        } else {
+          this.fadeAwayMessage.show = true;
+          this.fadeAwayMessage.type = "error";
+          this.fadeAwayMessage.header = "System Message";
+          this.fadeAwayMessage.message = "Please upload a valid PDF file only.";
         }
       } else {
         this.submit();
@@ -987,11 +992,11 @@ export default {
       this.$router.push("/joblist");
     },
     ok() {
-      this.loadingState = false;
+      this.loadingState = true;
       setTimeout(() => {
         this.loadingState = false;
         localStorage.removeItem("jobData");
-        this.$router.push("/job-posting");
+        this.$router.push("/joblist");
       }, 1500);
     },
     onlyDigits(event) {
@@ -2112,6 +2117,36 @@ strong {
   .cancel1,
   .apply1 {
     width: 30%;
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

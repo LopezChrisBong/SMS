@@ -25,10 +25,36 @@
             :key="index"
             class="card"
             :class="getClass(index)"
+            @click="handleCardClick(index, job)"
           >
+            <!-- <div
+              style="
+                  position: absolute;
+                  bottom: 0;
+                  left: 0;
+                  border-radius: 20px 20px 20px 20px;
+                  width: 55px;
+                  transform: translate(50%,-160%);
+                  border: 1px solid white;
+                  border-radius: 10px;
+                  align-items: center;
+                  text-align: center;
+                "
+            >
+              {{ index + 1 }} of {{ " " + jobs.length }}
+            </div> -->
             <div class="top">
               <h3>{{ job.position_title || "Administative Aide II" }}</h3>
-              <div class="badge">Available</div>
+              <div class="badge">
+                <span
+                  >{{ index + 1 }} of the {{ " " + jobs.length + " " }}</span
+                >
+                {{
+                  jobs.length === 1
+                    ? "Available Position"
+                    : "Available Positions"
+                }}
+              </div>
             </div>
 
             <div class="grid">
@@ -40,7 +66,7 @@
                 </div>
 
                 <div class="row">
-                  <span>Salary Grade:</span>
+                  <span style="margin-top: 5px">Salary Grade:</span>
                   <b>
                     <span class="pill">
                       {{
@@ -51,10 +77,14 @@
                 </div>
 
                 <div class="row">
-                  <span>{{
+                  <span style="margin-top: 5px">{{
                     job.salary_grade == 0 ? "Salary :" : "Monthly Salary :"
                   }}</span>
-                  <b>₱{{ display(job.monthly_salary) }}</b>
+                  <b>
+                    <span class="pill">
+                      <strong>₱{{ display(job.monthly_salary) }}</strong></span
+                    >
+                  </b>
                 </div>
               </div>
 
@@ -121,7 +151,7 @@
             </div>
 
             <!-- ✅ APPLY NOW BUTTON -->
-            <div class="btn" @click="dataPrivacy(job)">Apply Now</div>
+            <div class="btn" @click.stop="dataPrivacy(job)">Apply Now</div>
           </div>
         </div>
       </div>
@@ -285,6 +315,20 @@ export default {
       this.showDataPrivacy = true;
     },
 
+    handleCardClick(index, job) {
+      const cls = this.getClass(index);
+      console.log("index:", index, "current:", this.current, "class:", cls);
+      if (cls === "active") {
+        // this.dataPrivacy(job);
+        this.next();
+        console.log("1", job);
+      } else if (cls === "right") {
+        this.next();
+      } else if (cls === "left") {
+        this.prev();
+      }
+    },
+
     // ✅ REDIRECT AFTER AGREE
     proceedApply() {
       this.showDataPrivacy = false;
@@ -292,7 +336,7 @@ export default {
       this.$router.push({
         path: "/jobrequirements",
         query: {
-          job: JSON.stringify(this.job), // 🔥 safer for routing
+          job: this.job,
         },
       });
     },
@@ -326,18 +370,29 @@ export default {
     next() {
       if (this.current < this.jobs.length - 1) {
         this.current++;
+      } else {
+        this.current = 0;
       }
     },
 
     prev() {
       if (this.current > 0) {
         this.current--;
+      } else {
+        // this.$router.push("/job-posting");
+        this.current = this.jobs.length - 1;
       }
     },
 
+    // getClass(index) {
+    //   if (index === this.current) return "active";
+    //   if (Math.abs(index - this.current) === 1) return "side";
+    //   return "hidden";
+    // },
     getClass(index) {
       if (index === this.current) return "active";
-      if (Math.abs(index - this.current) === 1) return "side";
+      if (index === this.current - 1) return "left";
+      if (index === this.current + 1) return "right";
       return "hidden";
     },
 
@@ -377,7 +432,7 @@ export default {
 
 .row b {
   text-align: right;
-  font-weight: 100;
+  font-weight: 300;
   font-size: 14px !important;
   word-break: break-word;
   text-align: right;
@@ -416,8 +471,8 @@ export default {
 }
 
 .section-content {
-  opacity: 0.9;
-  font-weight: 100;
+  /* opacity: 0.9; */
+  font-weight: 300;
   font-size: 14px !important;
   margin-left: 10px;
 }
@@ -591,12 +646,13 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background: rgba(255, 255, 255, 0.04);
+  /* background: rgba(255, 255, 255, 0.04); */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   transition: all 0.4s ease;
+  background: rgba(26, 26, 26, 0.4);
 }
 .top {
   display: flex;
@@ -826,6 +882,7 @@ export default {
 
   .card {
     max-width: 600px;
+    cursor: pointer;
   }
 }
 
@@ -878,6 +935,7 @@ export default {
 
   .card {
     width: 380px;
+    cursor: pointer;
   }
   .track {
     gap: 20px;
@@ -886,6 +944,7 @@ export default {
   .card {
     max-width: 100%;
     padding: 15px;
+    cursor: pointer;
   }
 
   .header1 {
@@ -925,6 +984,7 @@ export default {
 
   .card {
     height: 400px;
+    cursor: pointer;
   }
 }
 </style>

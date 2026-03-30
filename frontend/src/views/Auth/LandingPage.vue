@@ -5,7 +5,7 @@
       <div class="group-1">
         <div class="title">WE ARE <span>HIRING!</span></div>
         <div class="requirements-card">
-          <img src="../../assets/img/dnsc_logo.png" alt="" />
+          <img src="../../assets/img/DNSC_LOGO.png" alt="" />
           <h2>Application <span>Requirements</span></h2>
 
           <ul>
@@ -52,7 +52,9 @@
           </ul>
         </div>
         <div class="group-2">
-          <button class="apply-btn" @click="ApplyNow">APPLY NOW</button>
+          <button class="apply-btn" @click="ApplyNow">
+            View Open Positions
+          </button>
         </div>
       </div>
     </div>
@@ -358,3 +360,41 @@ export default {
   }
 }
 </style>
+
+<!-- <template>
+  <div>
+    <div v-if="isLaptopUp">
+      <JobPostLaptopView />
+    </div>
+    <div v-else style="width: 100%;">
+      <JobPostMobileView />
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  components: {
+    JobPostLaptopView: () => import("./JobPostLaptopView.vue"),
+    JobPostMobileView: () => import("./JobPostMobileView.vue"),
+  },
+  data() {
+    return {
+      width: window.innerWidth,
+    };
+  },
+  computed: {
+    isLaptopUp() {
+      return this.width >= 1280;
+    },
+  },
+
+  mounted() {
+    this.initialize();
+    localStorage.setItem("lockedMode", "true");
+    window.addEventListener("resize", () => {
+      this.width = window.innerWidth;
+    });
+  },
+};
+</script> -->
