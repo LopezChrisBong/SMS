@@ -54,7 +54,9 @@
                   <span>{{
                     job.salary_grade == 0 ? "Salary :" : "Monthly Salary :"
                   }}</span>
-                  <b>₱{{ display(job.monthly_salary) }}</b>
+                  <b>
+                    <span class="pill"> <strong>₱100,000</strong></span>
+                  </b>
                 </div>
               </div>
 
@@ -377,7 +379,7 @@ export default {
 
 .row b {
   text-align: right;
-  font-weight: 100;
+  font-weight: 300;
   font-size: 14px !important;
   word-break: break-word;
   text-align: right;
@@ -416,8 +418,7 @@ export default {
 }
 
 .section-content {
-  opacity: 0.9;
-  font-weight: 100;
+  font-weight: 300;
   font-size: 14px !important;
   margin-left: 10px;
 }
@@ -591,7 +592,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(26, 26, 26, 0.4);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -659,7 +660,7 @@ export default {
   background: #147452;
   padding: 7px 10px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 14px !important;
   line-height: 1;
   white-space: nowrap;
 }
