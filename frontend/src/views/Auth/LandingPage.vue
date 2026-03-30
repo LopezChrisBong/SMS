@@ -52,7 +52,9 @@
           </ul>
         </div>
         <div class="group-2">
-          <button class="apply-btn" @click="ApplyNow">APPLY NOW</button>
+          <button class="apply-btn" @click="ApplyNow">
+            View Open Positions
+          </button>
         </div>
       </div>
     </div>
