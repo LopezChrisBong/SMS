@@ -5,8 +5,8 @@
     <!-- HEADER -->
     <div class="header1">
       <p>
-        Interested and qualified applicants should signify their interest and
-        upload the documents not later than April 30, 2026.
+        Interested and qualified applicants should signify their interest and upload the
+        required documents not later than <strong> April 30, 2026.</strong>
       </p>
     </div>
 
@@ -16,10 +16,7 @@
       <button class="nav-btn left" @click="prev">❮</button>
 
       <div class="viewport">
-        <div
-          class="track"
-          :style="{ transform: 'translateX(' + translateX + 'px)' }"
-        >
+        <div class="track" :style="{ transform: 'translateX(' + translateX + 'px)' }">
           <div
             v-for="(job, index) in jobs"
             :key="index"
@@ -45,15 +42,14 @@
             </div> -->
             <div class="top">
               <h3>{{ job.position_title || "Administative Aide II" }}</h3>
-              <div class="badge">
-                <span
-                  >{{ index + 1 }} of the {{ " " + jobs.length + " " }}</span
-                >
-                {{
-                  jobs.length === 1
-                    ? "Available Position"
-                    : "Available Positions"
-                }}
+              <!-- <div class="badge">
+                <span>{{ index + 1 }} of the {{ " " + jobs.length + " " }}</span>
+                {{ jobs.length === 1 ? "Available Position" : "Available Positions" }}
+              </div> -->
+
+              <div class="subtitle">
+                <span>{{ index + 1 }} of the {{ " " + jobs.length + " " }}</span>
+                {{ jobs.length === 1 ? "Available Position" : "Available Positions" }}
               </div>
             </div>
 
@@ -66,24 +62,22 @@
                 </div>
 
                 <div class="row">
-                  <span style="margin-top: 5px">Salary Grade:</span>
+                  <span>Salary Grade:</span>
                   <b>
-                    <span class="pill">
-                      {{
-                        job.salary_grade == 0 ? "N/A" : "SG " + job.salary_grade
-                      }}
-                    </span>
+                    <div class="pill">
+                      {{ job.salary_grade == 0 ? "N/A" : "SG " + job.salary_grade }}
+                    </div>
                   </b>
                 </div>
 
                 <div class="row">
-                  <span style="margin-top: 5px">{{
+                  <span>{{
                     job.salary_grade == 0 ? "Salary :" : "Monthly Salary :"
                   }}</span>
                   <b>
-                    <span class="pill">
-                      <strong>₱{{ display(job.monthly_salary) }}</strong></span
-                    >
+                    <div class="pill">
+                      {{ display(job.monthly_salary) }}
+                    </div>
                   </b>
                 </div>
               </div>
@@ -171,42 +165,37 @@
       <div class="privacy-modal">
         <h2>Data Privacy Statement</h2>
         <p>
-          Davao del Norte State College (DNSC) will gather your name, email
-          address, contact numbers, and other personal details. These details
-          are collected for the purpose of your application for a vacant
-          position.
+          Davao del Norte State College (DNSC) will gather your name, email address,
+          contact numbers, and other personal details. These details are collected for the
+          purpose of your application for a vacant position.
         </p>
 
         <p>
-          The personal information and other requested credentials will be kept
-          for as long as necessary to fulfill the intended purpose. DNSC ensures
-          that this information and documents remain secure and accessible
-          solely to authorized individuals.
+          The personal information and other requested credentials will be kept for as
+          long as necessary to fulfill the intended purpose. DNSC ensures that this
+          information and documents remain secure and accessible solely to authorized
+          individuals.
         </p>
         <p>
-          When it comes time for disposal, it will be done securely to prevent
-          further processing unauthorized access, or disclosure to any third
-          part or the public.
+          When it comes time for disposal, it will be done securely to prevent further
+          processing unauthorized access, or disclosure to any third part or the public.
         </p>
         <p>
-          All actions are taken in strict adherence to the provisions of RA
-          10173, also knows as the Data Privacy Act of 2012, and its
-          implementing rules.
+          All actions are taken in strict adherence to the provisions of RA 10173, also
+          knows as the Data Privacy Act of 2012, and its implementing rules.
         </p>
         <p>
-          By continuing you express your consent for DNSC to collect, process,
-          store, and dispose of your personal information in accordance with RA
-          10173 and its regulations.
+          By continuing you express your consent for DNSC to collect, process, store, and
+          dispose of your personal information in accordance with RA 10173 and its
+          regulations.
         </p>
         <p>
-          All provided information and uploaded credentials will be handled with
-          the utmost confidentiality. Thank you.
+          All provided information and uploaded credentials will be handled with the
+          utmost confidentiality. Thank you.
         </p>
 
         <div class="actions">
-          <button class="cancel" @click="showDataPrivacy = false">
-            Cancel
-          </button>
+          <button class="cancel" @click="showDataPrivacy = false">Cancel</button>
 
           <button class="apply" @click="proceedApply">I Agree</button>
         </div>
@@ -416,40 +405,41 @@ export default {
 .row {
   display: grid;
   grid-template-columns: 92px 1fr;
-  justify-content: start;
-  align-items: start;
-  align-content: start;
-  padding: 8px 12px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 5px 12px;
 }
 
 .row span {
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: 400;
+  font-size: 14px;
   white-space: nowrap;
-  align-self: start;
-  padding: 7px 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-self: flex-start;
+  padding: 3px 12px;
 }
 
 .row b {
   text-align: right;
   font-weight: 300;
   font-size: 14px !important;
-  word-break: break-word;
+
   text-align: right;
-  align-self: start;
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  padding: 7px 5px;
 }
 
 /* DETAILS */
 .details {
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  gap: 6px;
   flex-direction: column;
-  gap: 10px;
-  padding: 7px 4px;
+  padding: 1px 10px;
   flex: 1;
 }
 .section {
@@ -457,10 +447,11 @@ export default {
   flex-direction: column;
   gap: 5px;
   margin: 0;
+  padding: 3px;
 }
 
 .section h4 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 400;
 }
 .section b {
@@ -526,7 +517,7 @@ export default {
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* HEADER */
@@ -537,6 +528,7 @@ export default {
   max-width: 700px;
   font-size: 22px;
   margin-top: 15px;
+  font-weight: 200;
 }
 
 .carousel-container {
@@ -582,34 +574,6 @@ export default {
   display: none;
 }
 
-/* =========================
-   MOBILE FIX
-========================= */
-@media (max-width: 768px) {
-  /* ❌ HIDE SIDE BUTTONS */
-  .nav-btn.left,
-  .nav-btn.right {
-    display: none;
-  }
-
-  /* ✅ SHOW BOTTOM BUTTONS */
-  .nav-mobile {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-    position: relative;
-    z-index: 20;
-  }
-
-  .nav-mobile .nav-btn {
-    position: relative; /* remove absolute */
-    top: auto;
-    transform: none;
-    width: 45px;
-    height: 45px;
-  }
-}
 .nav-btn:hover {
   background: rgba(255, 255, 255, 0.4);
 }
@@ -652,7 +616,7 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   transition: all 0.4s ease;
-  background: rgba(26, 26, 26, 0.4);
+  background: rgba(26, 26, 26, 0.6);
 }
 .top {
   display: flex;
@@ -698,6 +662,13 @@ export default {
   width: fit-content;
 }
 
+.subtitle {
+  font-size: 12px;
+  font-style: italic;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
 /* CONTENT */
 .content {
   display: flex;
@@ -711,20 +682,20 @@ export default {
 .pill {
   display: flex;
   justify-content: center;
-  width: 60%;
+  width: auto;
   background: #147452;
-  padding: 7px 10px;
+  padding: 7px 12px;
   border-radius: 20px;
-  font-size: 14px !important;
-  line-height: 1;
-  white-space: nowrap;
+  font-size: 13px !important;
+  line-height: 0.8;
 }
 .btn {
   width: 25%;
   padding: 10px;
   border-radius: 20px;
   border: none;
-  background: rgba(255, 255, 255, 0.25);
+  /* background: rgba(255, 255, 255, 0.25); */
+  background: #147452;
   color: white;
   font-size: 14px;
   cursor: pointer;
@@ -793,7 +764,7 @@ export default {
 
 /* MODAL */
 .privacy-modal {
-  width: 500px;
+  width: 550px;
   max-width: 100%;
   max-height: 90vh;
   overflow-y: auto;
@@ -809,16 +780,16 @@ export default {
 
 /* TEXT FIX */
 .privacy-modal p {
-  font-size: 14px;
-  opacity: 0.9;
-  margin: 10px 0;
+  font-size: 15px;
+  margin: 20px 0;
   text-align: justify;
+  font-weight: 300;
 }
 
 /* HEADINGS */
 .privacy-modal h2 {
-  font-size: 18px !important;
-  font-weight: 600;
+  font-size: 20px !important;
+  font-weight: 500;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -883,6 +854,34 @@ export default {
   .card {
     max-width: 600px;
     cursor: pointer;
+  }
+}
+/* =========================
+   MOBILE FIX
+========================= */
+@media (max-width: 768px) {
+  /* ❌ HIDE SIDE BUTTONS */
+  .nav-btn.left,
+  .nav-btn.right {
+    display: none;
+  }
+
+  /* ✅ SHOW BOTTOM BUTTONS */
+  .nav-mobile {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 20;
+  }
+
+  .nav-mobile .nav-btn {
+    position: relative; /* remove absolute */
+    top: auto;
+    transform: none;
+    width: 45px;
+    height: 45px;
   }
 }
 
